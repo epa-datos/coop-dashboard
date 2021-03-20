@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
-import { BrowserModule  } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 
-const routes: Routes =[
+const routes: Routes = [
   {
     path: '',
     redirectTo: 'dashboard',
@@ -17,7 +17,10 @@ const routes: Routes =[
     children: [
       {
         path: '',
-        loadChildren: './layouts/admin-layout/admin-layout.module#AdminLayoutModule'
+        loadChildren: () =>
+          import("./layouts/admin-layout/admin-layout.module").then(
+            m => m.AdminLayoutModule
+          )
       }
     ]
   }, {
@@ -26,7 +29,10 @@ const routes: Routes =[
     children: [
       {
         path: '',
-        loadChildren: './layouts/auth-layout/auth-layout.module#AuthLayoutModule'
+        loadChildren: () =>
+          import("./layouts/auth-layout/auth-layout.module").then(
+            m => m.AuthLayoutModule
+          )
       }
     ]
   }, {
@@ -39,8 +45,8 @@ const routes: Routes =[
   imports: [
     CommonModule,
     BrowserModule,
-    RouterModule.forRoot(routes,{
-      useHash: true
+    RouterModule.forRoot(routes, {
+      // useHash: true
     })
   ],
   exports: [
