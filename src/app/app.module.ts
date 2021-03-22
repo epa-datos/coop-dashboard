@@ -17,6 +17,7 @@ import { DatasetsService } from './services/datasets.service';
 import { AmchartsComponent } from './pages/amcharts/amcharts.component';
 import { ForgotPswComponent } from './pages/forgot-psw/forgot-psw.component';
 import { ResetPswComponent } from './pages/reset-psw/reset-psw.component';
+import { CreateAccessComponent } from './pages/create-access/create-access.component';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { ResetPswComponent } from './pages/reset-psw/reset-psw.component';
     AmchartsComponent,
     ForgotPswComponent,
     ResetPswComponent,
+    CreateAccessComponent,
   ],
   providers: [DatasetsService],
   bootstrap: [AppComponent]
