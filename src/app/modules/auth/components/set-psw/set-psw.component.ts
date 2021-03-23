@@ -25,11 +25,11 @@ export class SetPswComponent implements OnInit {
     this.form = this.fb.group({
       password: [
         '',
-        Validators.compose([Validators.required, Validators.minLength(4)])
+        Validators.compose([Validators.required, Validators.minLength(1)])
       ],
       validate_password: [
         '',
-        Validators.compose([Validators.required, Validators.minLength(4)])
+        Validators.compose([Validators.required, Validators.minLength(1)])
       ]
     });
 

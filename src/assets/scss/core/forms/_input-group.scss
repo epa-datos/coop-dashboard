@@ -27,8 +27,8 @@
 		border-bottom: 1px solid $red;
 	}
 
-	&:focus-within{
-		border-bottom: 1px solid $default !important;
+	&:focus-within {
+		border-bottom: 1px solid $primary !important;
 		
 	}
 }
