@@ -1,7 +1,8 @@
 <form role="form" [formGroup]="form" (ngSubmit)="sendFormInfo(password.value, validate_password.value)">
     <div class="form-group mb-3">
         <!-- inputs -->
-        <div class="input-group input-group-alternative">
+        <div class="input-group input-group-alternative"
+            [ngClass]="{'is-invalid': !password.valid && password.touched || !password.valid && password.touched}">
             <div class="input-group-prepend">
                 <span class="input-group-text" [ngClass]="{'text-primary': pwdModeOn}" (click)="pwdModeOn = !pwdModeOn">
                     <i class="ni ni-lock-circle-open"></i>
@@ -16,7 +17,8 @@
     </div>
 
     <div class="form-group">
-        <div class="input-group input-group-alternative">
+        <div class="input-group input-group-alternative"
+            [ngClass]="{'is-invalid': !validate_password.valid && validate_password.touched || !validate_password.valid && validate_password.touched}">
             <div class="input-group-prepend">
                 <span class="input-group-text" [ngClass]="{'text-primary': validate_pwdModeOn}"
                     (click)="validate_pwdModeOn = !validate_pwdModeOn">
