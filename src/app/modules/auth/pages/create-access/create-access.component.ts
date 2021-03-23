@@ -6,10 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./create-access.component.scss']
 })
 export class CreateAccessComponent implements OnInit {
+  user_email: string = 'user_email@test.com';
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  createPassword(newPassword) {
+    console.log('new password', newPassword);
+  }
 }

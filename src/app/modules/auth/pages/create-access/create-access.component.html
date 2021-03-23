@@ -1,14 +1,14 @@
 <div class="header bg-gradient-info pb-7 pt-8 pb-md-7 pt-md-9">
-    <div class="container">
-      <div class="header-body text-center mb-6">
-        <div class="row justify-content-center">
-          <div class="col-lg-5 col-md-6">
-            <h1 class="text-white">Welcome to CO-OP Dashboard</h1>
-          </div>
+  <div class="container">
+    <div class="header-body text-center mb-6">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <h1 class="text-white">Welcome to CO-OP Dashboard</h1>
         </div>
       </div>
     </div>
   </div>
+</div>
 
 <!-- Page content -->
 <div class="container mt--8 pb-5">
@@ -16,15 +16,15 @@
     <div class="col-lg-5 col-md-7">
       <div class="card bg-secondary shadow border-0">
         <div class="card-body px-lg-5 py-lg-5">
-            <div class="text-center text-muted mb-4">
-                <small>
-                    You will have access to this dashboard through the account email <b>user_email@test.com</b>, you just have to create a password</small>
-            </div>
-            <!-- Use password -->
-            <app-set-psw></app-set-psw>
+          <div class="text-center text-muted mb-4">
+            <small>
+              You will have access to this dashboard through the account email <b>{{ user_email }}</b>, you just have to
+              create a password</small>
+          </div>
+          <!-- Use password -->
+          <app-set-psw submitBtnLegend="Use password" (passwordChange)="createPassword($event)"></app-set-psw>
         </div>
       </div>
     </div>
   </div>
 </div>
-  
