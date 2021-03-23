@@ -17,7 +17,8 @@ import { SetPswComponent } from 'src/app/modules/auth/components/set-psw/set-psw
   imports: [
     CommonModule,
     RouterModule.forChild(AuthLayoutRoutes),
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
     // NgbModule
   ],
   declarations: [

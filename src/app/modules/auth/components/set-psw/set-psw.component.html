@@ -1,19 +1,40 @@
-  <form role="form">
-    <div class="form-group mb-3">
+<form role="form" [formGroup]="form" (ngSubmit)="sendFormInfo(password.value, validate_password.value)">
+    <div class="form-group">
+        <!-- inputs -->
+        <div class="input-group input-group-alternative mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" [ngClass]="{'text-primary': pwdModeOn}" (click)="pwdModeOn = !pwdModeOn">
+                    <i class="ni ni-lock-circle-open"></i>
+                </span>
+            </div>
+            <input [formControl]="password" class="form-control" placeholder="Password"
+                [attr.type]="pwdModeOn ? 'text' : 'password'" autocomplete="on">
+        </div>
+
         <div class="input-group input-group-alternative">
             <div class="input-group-prepend">
-                <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                <span class="input-group-text" [ngClass]="{'text-primary': validate_pwdModeOn}"
+                    (click)="validate_pwdModeOn = !validate_pwdModeOn">
+                    <i class="ni ni-lock-circle-open"></i>
+                </span>
             </div>
-            <input class="form-control" placeholder="Password" type="password">
+            <input [formControl]="validate_password" class="form-control" placeholder="Confirm password"
+                [attr.type]="validate_pwdModeOn ? 'text' : 'password'" autocomplete="on">
         </div>
+
+        <!-- error legends -->
+        <small [hidden]="!pwdsNotMatch" class="text-danger">
+            Passwords don't match
+        </small>
+
+        <small [hidden]="!submitErrorLegend" class="text-danger">
+            {{ submitErrorLegend }}
+        </small>
     </div>
-    <div class="input-group input-group-alternative">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-        </div>
-        <input class="form-control" placeholder="Confirm password" type="password">
-    </div>
+
     <div class="text-center">
-        <button type="button" class="btn btn-primary my-4">Use password</button>
+        <button type="submit" class="btn btn-primary my-4" [disabled]="!form.valid || submitting">
+            {{ submitBtnLegend }}
+        </button>
     </div>
 </form>
