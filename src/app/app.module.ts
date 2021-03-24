@@ -1,7 +1,7 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -17,6 +17,7 @@ import { DatasetsService } from './services/datasets.service';
 import { AmchartsComponent } from './pages/amcharts/amcharts.component';
 import { UserService } from './services/user.service';
 import { CookieService } from 'ngx-cookie-service';
+import { SessionInterceptor } from './services/interceptor.service';
 
 @NgModule({
   imports: [
@@ -38,7 +39,12 @@ import { CookieService } from 'ngx-cookie-service';
   providers: [
     DatasetsService,
     UserService,
-    CookieService
+    CookieService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SessionInterceptor,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })
