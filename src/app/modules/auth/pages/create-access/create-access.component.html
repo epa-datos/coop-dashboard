@@ -18,11 +18,19 @@
         <div class="card-body px-lg-5 py-lg-5">
           <div class="text-center text-muted mb-4">
             <small>
-              You will have access to this dashboard through the account email <b>{{ user_email }}</b>, you just have to
+              You will have access to this dashboard through the account email <b>{{ usermail }}</b>, you just have to
               create a password</small>
           </div>
           <!-- Use password -->
-          <app-set-psw submitBtnLegend="Use password" (passwordChange)="createPassword($event)"></app-set-psw>
+          <app-set-psw submitBtnLegend="Use password" (passwordChange)="singup($event)"
+            [submitting]="reqState === 1 || reqState === 2 ? true : false" [submitErrorLegend]="errorMsg"></app-set-psw>
+
+          <div class="text-center">
+            <small class="text-success" *ngIf="reqState === 2">
+              Your <b>credentials</b> have been created successfully. Redirecting to <b>Login page.</b>
+            </small>
+          </div>
+
         </div>
       </div>
     </div>
