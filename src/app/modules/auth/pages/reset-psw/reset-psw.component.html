@@ -1,14 +1,14 @@
 <div class="header bg-gradient-info pb-7 pt-8 pb-md-7 pt-md-9">
-    <div class="container">
-      <div class="header-body text-center mb-6">
-        <div class="row justify-content-center">
-          <div class="col-lg-5 col-md-6">
-            <h1 class="text-white">Change password</h1>
-          </div>
+  <div class="container">
+    <div class="header-body text-center mb-6">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <h1 class="text-white">Change password</h1>
         </div>
       </div>
     </div>
   </div>
+</div>
 <!-- Page content -->
 <div class="container mt--8 pb-5">
   <div class="row justify-content-center">
@@ -16,10 +16,17 @@
       <div class="card bg-secondary shadow border-0">
         <div class="card-body px-lg-5 py-lg-5">
           <!-- Change password -->
-          <app-set-psw></app-set-psw>
+          <app-set-psw submitBtnLegend="Change password" (passwordChange)="resetPsw($event)"
+            [submitting]="reqStatus === 1 || reqStatus === 2 ? true : false" [submitErrorLegend]="errorMsg">
+          </app-set-psw>
+
+          <div class="text-center">
+            <small class="text-success" *ngIf="reqStatus === 2">
+              Your <b>password</b> has been updated successfully. Redirecting to <b>Login page.</b>
+            </small>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-  

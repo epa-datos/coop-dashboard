@@ -102,7 +102,7 @@ export class UserService {
     }
 
     const password = this.hashPsw(psw);
-    return this.http.post(`${this.baseUrl}/users/forgot_password`, { code, password });
+    return this.http.post(`${this.baseUrl}/users/restore_password`, { code, password });
   }
 
   isLoggedIn(): boolean {
