@@ -34,14 +34,17 @@
         </small>
     </div>
 
-    <!-- error legends -->
+    <!-- form error -->
     <small [hidden]="!pwdsNotMatch" class="text-danger">
         Passwords don't match
     </small>
 
-    <small [hidden]="!submitErrorLegend" class="text-danger">
-        {{ submitErrorLegend }}
-    </small>
+    <!-- input error -->
+    <div class="text-center">
+        <small [hidden]="!submitErrorLegend" class="text-danger">
+            {{ submitErrorLegend }}
+        </small>
+    </div>
 
     <div class="text-center">
         <button type="submit" class="btn btn-primary my-4" [disabled]="!form.valid || submitting">
