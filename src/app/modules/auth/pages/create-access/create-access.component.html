@@ -23,10 +23,11 @@
           </div>
           <!-- Use password -->
           <app-set-psw submitBtnLegend="Use password" (passwordChange)="singup($event)"
-            [submitting]="reqState === 1 || reqState === 2 ? true : false" [submitErrorLegend]="errorMsg"></app-set-psw>
+            [submitting]="reqStatus === 1 || reqStatus === 2 ? true : false" [submitErrorLegend]="errorMsg">
+          </app-set-psw>
 
           <div class="text-center">
-            <small class="text-success" *ngIf="reqState === 2">
+            <small class="text-success" *ngIf="reqStatus === 2">
               Your <b>credentials</b> have been created successfully. Redirecting to <b>Login page.</b>
             </small>
           </div>

@@ -10,7 +10,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class CreateAccessComponent implements OnInit {
   usermail: string;
-  reqState: number = 0;
+  reqStatus: number = 0;
   errorMsg: string;
 
   constructor(
@@ -25,23 +25,24 @@ export class CreateAccessComponent implements OnInit {
   }
 
   singup(newPassword) {
-    this.reqState = 1;
+    this.reqStatus = 1;
     this.userService.singup(this.usermail, newPassword)
       .subscribe((newUser: User) => {
 
         if (newUser.id) {
-          this.reqState = 2;
+          this.reqStatus = 2;
+          delete this.errorMsg;
           setTimeout(() => {
             this.router.navigate(['/login']);
           }, 6000);
 
         } else {
-          this.reqState = 3;
+          this.reqStatus = 3;
           this.errorMsg = 'Request failed. Please try again'
         }
       },
         error => {
-          this.reqState = 3;
+          this.reqStatus = 3;
           this.errorMsg = error?.error?.message ? error.error.message : error?.message;
         }
       )
