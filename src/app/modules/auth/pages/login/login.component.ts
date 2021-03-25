@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
             this.rememberPsw();
           }
           this.reqStatus = 2;
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard/investment']);
         },
         error => {
           console.error(`[login.component]: ${error?.error?.message ? error.error.message : error?.message}`);

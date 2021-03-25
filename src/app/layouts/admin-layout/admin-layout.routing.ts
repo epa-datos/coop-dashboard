@@ -9,11 +9,14 @@ import { ChartJsComponent } from 'src/app/pages/chart-js/chart-js.component';
 import { AmchartsComponent } from 'src/app/pages/amcharts/amcharts.component';
 
 export const AdminLayoutRoutes: Routes = [
-    { path: 'dashboard', component: DashboardComponent },
+    { path: 'investment', component: DashboardComponent },
     { path: 'chart-js', component: ChartJsComponent },
     { path: 'amcharts', component: AmchartsComponent },
     { path: 'user-profile', component: UserProfileComponent },
     { path: 'tables', component: TablesComponent },
     { path: 'icons', component: IconsComponent },
-    { path: 'maps', component: MapsComponent }
+    { path: 'maps', component: MapsComponent },
+    { path: 'argentina', component: ChartJsComponent },
+    { path: 'colombia', component: AmchartsComponent },
+    { path: 'mexico', component: ChartJsComponent }
 ];
