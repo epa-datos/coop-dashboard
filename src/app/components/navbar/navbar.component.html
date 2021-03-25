@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <!-- Brand -->
     <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" routerLinkActive="active"
-      [routerLink]="['/dashboard']">{{getTitle()}}</a>
+      [routerLink]="['/dashboard/investment']">{{getTitle()}}</a>
     <!-- User -->
     <ul class="navbar-nav align-items-center d-none d-md-flex">
       <li class="nav-item" ngbDropdown placement="bottom-right">
@@ -27,7 +27,7 @@
             <span>Support</span>
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#!" class="dropdown-item">
+          <a class="dropdown-item" (click)="logout()">
             <i class="ni ni-user-run"></i>
             <span>Logout</span>
           </a>
