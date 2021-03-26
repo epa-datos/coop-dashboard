@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   pwdModeOn: boolean;
   reqStatus: number = 0;
+  errorMsg: string;
 
   redirect: string;
 
@@ -77,6 +78,7 @@ export class LoginComponent implements OnInit {
     if (this.form.valid) {
       this.userService.login(email, password).subscribe(
         () => {
+          delete this.errorMsg;
           if (this.remember_password.value) {
             this.rememberPsw();
           } else {
@@ -86,7 +88,8 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.redirect]);
         },
         error => {
-          console.error(`[login.component]: ${error?.error?.message ? error.error.message : error?.message}`);
+          this.errorMsg = error?.error?.message ? error.error.message : error?.message;
+          console.error(`[login.component]: ${this.errorMsg}`);
           this.reqStatus = 3;
         }
       )

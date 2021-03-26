@@ -56,7 +56,7 @@
             <!-- error message -->
             <div class="text-center mt-4">
               <small class="text-danger" *ngIf="reqStatus === 3">
-                Request Failed. Please try again.
+                {{ errorMsg }}
               </small>
             </div>
 
