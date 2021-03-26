@@ -58,7 +58,6 @@ export class AmchartsComponent implements OnInit, AfterViewInit, OnDestroy {
 
       let chart = am4core.create("chart-inv-month", am4charts.XYChart);
       chart.data = investment_by_month;
-      console.log("data", data)
       // Create axes
 
       let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
@@ -105,7 +104,6 @@ export class AmchartsComponent implements OnInit, AfterViewInit, OnDestroy {
       //   min: am4core.color("#00003f"),
       //   max: am4core.color("#00ace6")
       // });
-      console.log('chart', chart.data)
     });
   }
 
@@ -117,7 +115,6 @@ export class AmchartsComponent implements OnInit, AfterViewInit, OnDestroy {
 
       let chart = am4core.create("chart-inv-country", am4charts.PieChart);
       chart.data = investment_by_country;
-      console.log("data", data)
 
       // Add and configure Series
       let pieSeries = chart.series.push(new am4charts.PieSeries());
@@ -184,7 +181,6 @@ export class AmchartsComponent implements OnInit, AfterViewInit, OnDestroy {
 
       let chart = am4core.create("chart-inv-sector", am4charts.PieChart);
       chart.data = investment_by_sector;
-      console.log("data", chart.data)
 
       // Add and configure Series
       let pieSeries = chart.series.push(new am4charts.PieSeries());
