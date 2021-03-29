@@ -39,10 +39,9 @@
 
               <div *ngIf="reqStatus === 3" class="text-center mb-4">
                 <small class="text-danger">
-                  Request Failed. Please try again.
+                  {{ errorMsg }}
                 </small>
               </div>
-
               <div class="text-center">
                 <button type="submit" class="btn btn-primary my-4" [disabled]="!form.valid || reqStatus === 1">
                   Send password reset email
@@ -57,6 +56,7 @@
               Check your email for a link to reset your password.
             </small>
 
+            <br>
             <button type="button" class="btn btn-light my-4" routerLink="/login">
               Return to Sign in
             </button>

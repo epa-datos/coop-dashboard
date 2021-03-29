@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   pwdModeOn: boolean;
   reqStatus: number = 0;
+  errorMsg: string;
 
   redirect: string;
 
@@ -77,14 +78,18 @@ export class LoginComponent implements OnInit {
     if (this.form.valid) {
       this.userService.login(email, password).subscribe(
         () => {
+          delete this.errorMsg;
           if (this.remember_password.value) {
             this.rememberPsw();
+          } else {
+            this.userService.deleteUserCookieIfExists();
           }
           this.reqStatus = 2;
           this.router.navigate([this.redirect]);
         },
         error => {
-          console.error(`[login.component]: ${error?.error?.message ? error.error.message : error?.message}`);
+          this.errorMsg = error?.error?.message ? error.error.message : error?.message;
+          console.error(`[login.component]: ${this.errorMsg}`);
           this.reqStatus = 3;
         }
       )
@@ -94,7 +99,8 @@ export class LoginComponent implements OnInit {
   rememberPsw() {
     const user = {
       email: this.email.value,
-      anonymous_id: this.userService.hashPsw(this.password.value)
+      // anonymous_id: this.userService.hashPsw(this.password.value)
+      anonymous_id: this.password.value
     }
     this.cookieService.set('coop_user', JSON.stringify(user), 365);
   }

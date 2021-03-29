@@ -30,10 +30,9 @@ export class SessionInterceptor {
           if (err instanceof HttpErrorResponse) {
             if (err.status === 401) {
               // check if user data is in coop_user cookie
-              const user = this.cookieService.get('coop_user') && JSON.parse(this.cookieService.get('coop_user'))
-              console.log(user)
+              const user = this.cookieService.get('coop_user') && JSON.parse(this.cookieService.get('coop_user'));
               if (user) {
-                this.generatePersistSession(user.email, user.anonymous_id)
+                this.generatePersistSession(user.email, user.anonymous_id);
               } else {
                 this.userService.logout();
               }
@@ -46,7 +45,7 @@ export class SessionInterceptor {
   generatePersistSession(email: string, password: string) {
     this.userService.login(email, password).subscribe(
       () => {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard/investment']);
       },
       error => {
         this.userService.logout();

@@ -14,6 +14,7 @@ export class ForgotPswComponent implements OnInit {
 
   form: FormGroup;
   reqStatus: number = 0;
+  errorMsg: string;
 
   constructor(
     private fb: FormBuilder,
@@ -35,10 +36,12 @@ export class ForgotPswComponent implements OnInit {
     this.userService.pswRecoveryRequest(email)
       .subscribe(
         () => {
+          delete this.errorMsg;
           this.reqStatus = 2;
         },
         error => {
-          console.error(`[forgot-psw.component]: ${error?.error?.message ? error.error.message : error?.message}`);
+          this.errorMsg = error?.error?.message ? error.error.message : error?.message
+          console.error(`[forgot-psw.component]: ${this.errorMsg}`);
           this.reqStatus = 3;
         }
       )

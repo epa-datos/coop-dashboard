@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { Subject, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Md5 } from 'ts-md5';
@@ -37,7 +38,8 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private config: Configuration
+    private config: Configuration,
+    private cookieService: CookieService
   ) {
     this._loggedIn = !!window.localStorage.getItem("auth_token");
     this.user.email = !!window.localStorage.getItem("usermail")
@@ -57,7 +59,8 @@ export class UserService {
     if (!psw) {
       return throwError("[user.service]: not psw provided");
     }
-    const password = this.hashPsw(psw);
+    // const password = this.hashPsw(psw);
+    const password = psw;
     return this.http.post(`${this.baseUrl}/users`, { email, password });
   }
 
@@ -74,7 +77,8 @@ export class UserService {
       window.localStorage.clear();
     }
 
-    const password = this.hashPsw(psw);
+    // const password = this.hashPsw(psw);
+    const password = psw;
     return this.http
       .post(`${this.baseUrl}/auth`, { email, password })
       .pipe(
@@ -106,7 +110,8 @@ export class UserService {
       return throwError("[user.service]: not password provided");
     }
 
-    const password = this.hashPsw(psw);
+    // const password = this.hashPsw(psw);
+    const password = psw;
     return this.http.post(`${this.baseUrl}/users/restore_password`, { code, password });
   }
 
@@ -127,5 +132,12 @@ export class UserService {
 
   hashPsw(password: string): string | Int32Array {
     return Md5.hashStr(password);
+  }
+
+  deleteUserCookieIfExists() {
+    const user = this.cookieService.get('coop_user') && JSON.parse(this.cookieService.get('coop_user'));
+    if (user) {
+      this.cookieService.delete('coop_user');
+    }
   }
 }
