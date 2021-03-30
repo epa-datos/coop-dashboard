@@ -8,15 +8,15 @@
             <img src="assets/img/brand/hp-logo.png">
           </div>
 
-          <p class="text-center text-muted bold my-4"><b>Change password</b></p>
+          <p class="text-center text-muted bold my-4"><b>Cambiar contraseña</b></p>
 
-          <app-set-psw submitBtnLegend="Change password" (passwordChange)="resetPsw($event)"
+          <app-set-psw submitBtnLegend="Cambiar contraseña" (passwordChange)="resetPsw($event)"
             [submitting]="reqStatus === 1 || reqStatus === 2 ? true : false" [submitErrorLegend]="errorMsg">
           </app-set-psw>
 
           <div class="text-center">
             <small class="text-success" *ngIf="reqStatus === 2">
-              Your <b>password</b> has been updated successfully. Redirecting to <b>Login page.</b>
+              Tu <b>contraseña</b> se ha actualizado correctamente. Redirigiendo a la página de <b>Inicio de sesión.</b>
             </small>
           </div>
         </div>
