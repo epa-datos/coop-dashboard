@@ -8,7 +8,7 @@
             <img src="assets/img/brand/hp-logo.png">
           </div>
 
-          <p class="text-center text-muted bold my-4"><b>Cambiar contraseña</b></p>
+          <p class="text-center bold my-4"><b>Cambiar contraseña</b></p>
 
           <app-set-psw submitBtnLegend="Cambiar contraseña" (passwordChange)="resetPsw($event)"
             [submitting]="reqStatus === 1 || reqStatus === 2 ? true : false" [submitErrorLegend]="errorMsg">

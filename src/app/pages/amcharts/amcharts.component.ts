@@ -95,6 +95,17 @@ export class AmchartsComponent implements OnInit, AfterViewInit, OnDestroy {
 
       let columnTemplate = series.columns.template;
       columnTemplate.strokeOpacity = 0;
+      chart.colors.list = [
+        am4core.color('#0096d6'),
+        am4core.color('#5603ad'),
+        am4core.color('#a77dcc'),
+        am4core.color('#f799ff'),
+        am4core.color('#cc0766'),
+        am4core.color('#f89934'),
+        am4core.color('#fbc001'),
+        am4core.color('#288000'),
+        am4core.color('#2f9998')
+      ]
       // chart.responsive.enabled = true;
 
       // series.heatRules.push({
@@ -170,6 +181,18 @@ export class AmchartsComponent implements OnInit, AfterViewInit, OnDestroy {
       marker.height = 15;
       marker.width = 15;
       chart.responsive.enabled = true;
+
+      pieSeries.colors.list = [
+        am4core.color('#0096d6'),
+        am4core.color('#5603ad'),
+        am4core.color('#a77dcc'),
+        am4core.color('#f799ff'),
+        am4core.color('#cc0766'),
+        am4core.color('#f89934'),
+        am4core.color('#fbc001'),
+        am4core.color('#288000'),
+        am4core.color('#2f9998')
+      ]
     });
   }
 
@@ -237,6 +260,19 @@ export class AmchartsComponent implements OnInit, AfterViewInit, OnDestroy {
       marker.height = 15;
       marker.width = 15;
       chart.responsive.enabled = true;
+
+
+      pieSeries.colors.list = [
+        am4core.color('#0096d6'),
+        am4core.color('#5603ad'),
+        am4core.color('#a77dcc'),
+        am4core.color('#f799ff'),
+        am4core.color('#cc0766'),
+        am4core.color('#f89934'),
+        am4core.color('#fbc001'),
+        am4core.color('#288000'),
+        am4core.color('#2f9998')
+      ]
     });
   }
 

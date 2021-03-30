@@ -49,7 +49,7 @@ $gray-200: #e9ecef !default;
 $gray-300: #dee2e6 !default;
 $gray-400: #ced4da !default;
 $gray-500: #adb5bd !default;
-$gray-600: #8898aa !default;   // Line footer color
+$gray-600: #767676 !default;   // Line footer color
 $gray-700: #525f7f !default;   // Line p color
 $gray-800: #32325d !default;   // Line heading color
 $gray-900: #212529 !default;
@@ -68,15 +68,15 @@ $grays: map-merge((
   "900": $gray-900
 ), $grays);
 
-$blue:    #5e72e4 !default;
+$blue:    #0096d6 !default;
 $indigo:  #5603ad !default;
-$purple:  #8965e0 !default;
-$pink:    #f3a4b5 !default;
-$red:     #f5365c !default;
-$orange:  #fb6340 !default;
-$yellow:  #ffd600 !default;
-$green:   #2dce89 !default;
-$teal:    #11cdef !default;
+$purple:  #a77dcc !default;
+$pink:    #f799ff !default;
+$red:     #cc0766 !default;
+$orange:  #f89934 !default;
+$yellow:  #fbc001 !default;
+$green:   #288000 !default;
+$teal:    #2f9998 !default;
 $cyan:    #2bffc6 !default;
 
 $colors: () !default;
@@ -99,7 +99,7 @@ $colors: map-merge((
 ), $colors);
 
 $default:       #172b4d !default;
-$primary:       #2e5599 !default;
+$primary:       #0096d6 !default;
 $secondary:     #f7fafc !default;
 $success:       $green !default;
 $info:          $teal !default;

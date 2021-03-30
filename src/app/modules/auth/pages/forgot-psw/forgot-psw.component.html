@@ -8,10 +8,10 @@
             <img src="assets/img/brand/hp-logo.png">
           </div>
 
-          <p class="text-center text-muted bold my-4"><b>Restablecer contraseña</b></p>
+          <p class="text-center bold my-4"><b>Restablecer contraseña</b></p>
 
           <ng-container *ngIf="reqStatus !== 2">
-            <div class="text-center text-muted mb-4">
+            <div class="text-center mb-4">
               <small>
                 Ingresa tu cuenta de correo electrónico y te enviaremos un enlace de restablecemiento de contraseña.
               </small>
@@ -46,7 +46,7 @@
           </ng-container>
 
           <!-- successful request -->
-          <div *ngIf="reqStatus === 2" class="text-center text-muted">
+          <div *ngIf="reqStatus === 2" class="text-center">
             <small>
               Revisa tu correo electrónico para encontrar el enlace de restablecimiento de contraseña.
             </small>
