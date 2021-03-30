@@ -8,12 +8,12 @@
             <img src="assets/img/brand/hp-logo.png">
           </div>
 
-          <p class="text-center text-muted bold my-4"><b>Reset your password</b></p>
+          <p class="text-center text-muted bold my-4"><b>Restablecer contraseña</b></p>
 
           <ng-container *ngIf="reqStatus !== 2">
             <div class="text-center text-muted mb-4">
               <small>
-                Enter your user account's verified email address and we will send you a password reset link.
+                Ingresa tu cuenta de correo electrónico y te enviaremos un enlace de restablecemiento de contraseña.
               </small>
             </div>
 
@@ -25,10 +25,10 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                   </div>
-                  <input [formControl]="email" class="form-control" placeholder="Email" type="email">
+                  <input [formControl]="email" class="form-control" placeholder="Correo electrónico" type="email">
                 </div>
                 <small class="text-danger" *ngIf="!email.valid && email.touched || !email.valid && email.touched">
-                  Please provide a valid email.
+                  Ingresa un correo electrónico válido.
                 </small>
               </div>
 
@@ -39,7 +39,7 @@
               </div>
               <div class="text-center">
                 <button type="submit" class="btn btn-primary my-4" [disabled]="!form.valid || reqStatus === 1">
-                  Send password reset email
+                  Enviar correo
                 </button>
               </div>
             </form>
@@ -48,12 +48,12 @@
           <!-- successful request -->
           <div *ngIf="reqStatus === 2" class="text-center text-muted">
             <small>
-              Check your email for a link to reset your password.
+              Revisa tu correo eléctrónico para encontrar el enlace de restablecimiento de contraseña.
             </small>
 
             <br>
             <button type="button" class="btn btn-light my-4" routerLink="/login">
-              Return to Sign in
+              Regresar a Inicio de sesión
             </button>
           </div>
         </div>
