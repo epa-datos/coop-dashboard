@@ -8,22 +8,22 @@
             <img src="assets/img/brand/hp-logo.png">
           </div>
 
-          <p class="text-center text-muted bold my-4"><b>Welcome to HP COOP Dashboard</b></p>
+          <p class="text-center text-muted bold my-4"><b>Bienvenido al Programa HP COOP</b></p>
 
           <div class="text-center text-muted my-4">
             <small>
-              You will have access to this dashboard through the account email <b>{{ usermail }}</b>, you just have to
-              create a password
+              Recibiste acceso a esta plataforma a través de la cuenta de correo eléctronico <b>{{ usermail }}</b>,
+              ahora sólo tienes que crear una contraseña
             </small>
           </div>
           <!-- Use password -->
-          <app-set-psw submitBtnLegend="Use password" (passwordChange)="singup($event)"
+          <app-set-psw submitBtnLegend="Usar contraseña" (passwordChange)="singup($event)"
             [submitting]="reqStatus === 1 || reqStatus === 2 ? true : false" [submitErrorLegend]="errorMsg">
           </app-set-psw>
 
           <div class="text-center">
             <small class="text-success" *ngIf="reqStatus === 2">
-              Your <b>credentials</b> have been created successfully. Redirecting to <b>Login page.</b>
+              Tus <b>credenciales</b> se han creado correctamente. Redirigiendo a la página de <b>Inicio de sesión.</b>
             </small>
           </div>
 
