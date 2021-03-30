@@ -7,6 +7,7 @@ import { UserProfileComponent } from '../../pages/user-profile/user-profile.comp
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { ChartJsComponent } from 'src/app/pages/chart-js/chart-js.component';
 import { AmchartsComponent } from 'src/app/pages/amcharts/amcharts.component';
+import { UsersMngmtComponent } from 'src/app/modules/users-mngmt/users-mngmt.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'investment', component: DashboardComponent },
@@ -18,5 +19,13 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'maps', component: MapsComponent },
     { path: 'argentina', component: ChartJsComponent },
     { path: 'colombia', component: AmchartsComponent },
-    { path: 'mexico', component: ChartJsComponent }
+    { path: 'mexico', component: ChartJsComponent },
+    {
+        path: 'users',
+        component: UsersMngmtComponent,
+        loadChildren: () =>
+            import("src/app/modules/users-mngmt/users-mngmt.module").then(
+                m => m.UsersMngmtModule
+            )
+    }
 ];
