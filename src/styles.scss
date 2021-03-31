@@ -1,4 +1,3 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
@@ -9,73 +8,39 @@
 // Be sure that you only ever include this mixin once!
 @include mat-core();
 
-$dz-primary: (
-    50 : #e8ebee,
-    100 : #c6cdd4,
-    200 : #a0acb7,
-    300 : #7a8a9a,
-    400 : #5e7184,
-    500 : #41586e,
-    600 : #3b5066,
-    700 : #32475b,
-    800 : #2a3d51,
-    900 : #1c2d3f,
-    A100 : #82baff,
-    A200 : #4f9eff,
-    A400 : #1c83ff,
-    A700 : #0275ff,
-    contrast: (
-        50 : #000000,
-        100 : #000000,
-        200 : #000000,
-        300 : #000000,
-        400 : #ffffff,
-        500 : #ffffff,
-        600 : #ffffff,
-        700 : #ffffff,
-        800 : #ffffff,
-        900 : #ffffff,
-        A100 : #000000,
-        A200 : #000000,
-        A400 : #ffffff,
-        A700 : #ffffff,
-    )
-);
-
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$argon-dashboard-angular-primary: mat-palette($dz-primary);
-$argon-dashboard-angular-accent: mat-palette($mat-pink, A200, A100, A400);
+$coop-dashboard-primary: mat-palette($mat-blue);
+$coop-dashboard-accent: mat-palette($mat-blue, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$argon-dashboard-angular-warn: mat-palette($mat-red);
+$coop-dashboard-warn: mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$argon-dashboard-angular-theme: mat-light-theme((
+$coop-dashboard-theme: mat-light-theme((
   color: (
-    primary: $argon-dashboard-angular-primary,
-    accent: $argon-dashboard-angular-accent,
-    warn: $argon-dashboard-angular-warn,
+    primary: $coop-dashboard-primary,
+    accent: $coop-dashboard-accent,
+    warn: $coop-dashboard-warn,
   )
 ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($argon-dashboard-angular-theme);
+@include angular-material-theme($coop-dashboard-theme);
 
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-
-
-// Custom Angular Material
+// CUSTOM ANGULAR MATERIAL
 
 // table
+.mat-table {
+  font-family: inherit;
+}
+
 th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   padding: 0 8px !important;
 }
