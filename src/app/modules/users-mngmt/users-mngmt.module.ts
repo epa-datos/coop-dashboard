@@ -5,6 +5,8 @@ import { UsersMngmtComponent } from './users-mngmt.component';
 import { UsersComponent } from './pages/users/users.component';
 import { RouterModule } from '@angular/router';
 import { UsersMngmtRoutes } from './users-mngmt.routing';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 
@@ -17,6 +19,8 @@ import { UsersMngmtRoutes } from './users-mngmt.routing';
   imports: [
     CommonModule,
     RouterModule.forChild(UsersMngmtRoutes),
+    MatTableModule,
+    MatPaginatorModule
   ]
 })
 export class UsersMngmtModule { }
