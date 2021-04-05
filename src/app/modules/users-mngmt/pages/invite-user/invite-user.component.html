@@ -43,44 +43,115 @@
                             </div>
                         </div>
 
-                        <div class="row mt-4">
+                        <div class="row mt-4"
+                            *ngIf="selectedRole && selectedRole?.name !== 'admin' && selectedRole?.name !== 'hp'">
                             <div class="col-12 col-sm-6">
-                                <!-- COUNTRIES -->
-                                <ng-container *ngIf="selectedRole?.name === 'country'">
-                                    <p class="text-uppercase text-sm text-muted mb-2">Paises</p>
+                                <div class="mb-4">
+                                    <!-- COUNTRIES -->
+                                    <ng-container *ngIf="selectedRole?.name === 'country'">
+                                        <p class="text-uppercase text-sm mb-2">Paises</p>
+                                        <div class="row section-header">
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <small>Selecciona al menos un país</small>
+                                            </div>
 
-                                    <div class="custom-control custom-control-alternative custom-checkbox my-1"
-                                        *ngFor="let country of countries; let i = index" formArrayName="countries">
-                                        <input type="checkbox" class="custom-control-input" [formControlName]="i"
-                                            [id]="'country-custom-checkbox-'+i">
-                                        <label class="custom-control-label" [for]="'country-custom-checkbox-'+i">
-                                            <span class="text-muted">{{ country.name }}</span>
-                                        </label>
-                                    </div>
-                                </ng-container>
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    (click)="convertAllOptionsTo('countries')">
+                                                    <div *ngIf="!allOptionsSelected('countries')">
+                                                        <i class="fas fa-check"></i>
+                                                        <span>
+                                                            Seleccionar todo
+                                                        </span>
+                                                    </div>
+                                                    <div *ngIf="allOptionsSelected('countries')">
+                                                        <i class="fas fa-minus"></i>
+                                                        <span>
+                                                            Deseleccionar todo
+                                                        </span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
 
-                                <!-- RETAILERS -->
-                                <ng-container *ngIf="selectedRole?.name === 'retailer'">
-                                    <p class="text-uppercase text-sm text-muted mb-2">Retailers</p>
+                                        <div class="custom-control custom-control-alternative custom-checkbox my-1"
+                                            *ngFor="let country of countries; let i = index" formArrayName="countries">
+                                            <input type="checkbox" class="custom-control-input" [formControlName]="i"
+                                                [id]="'country-custom-checkbox-'+i">
+                                            <label class="custom-control-label" [for]="'country-custom-checkbox-'+i">
+                                                <span class="text-muted">{{ country.name }}</span>
+                                            </label>
+                                        </div>
+                                    </ng-container>
 
-                                    <div class="custom-control custom-control-alternative custom-checkbox my-1"
-                                        *ngFor="let retailer of retailers; let i = index" formArrayName="retailers">
-                                        <input type="checkbox" class="custom-control-input" [formControlName]="i"
-                                            [id]="'retailer-custom-checkbox-'+i">
-                                        <label class="custom-control-label" [for]="'retailer-custom-checkbox-'+i">
-                                            <span class="text-muted">{{ retailer.name }}</span>
-                                        </label>
-                                    </div>
-                                </ng-container>
+                                    <!-- RETAILERS -->
+                                    <ng-container *ngIf="selectedRole?.name === 'retailer'">
+                                        <p class="text-uppercase text-sm mb-2">Retailers</p>
+                                        <div class="row section-header">
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <small>Selecciona al menos un retailer</small>
+                                            </div>
+
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    (click)="convertAllOptionsTo('retailers')">
+                                                    <div *ngIf="!allOptionsSelected('retailers')">
+                                                        <i class="fas fa-check"></i>
+                                                        <span>
+                                                            Seleccionar todo
+                                                        </span>
+                                                    </div>
+                                                    <div *ngIf="allOptionsSelected('retailers')">
+                                                        <i class="fas fa-minus"></i>
+                                                        <span>
+                                                            Deseleccionar todo
+                                                        </span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="custom-control custom-control-alternative custom-checkbox my-1"
+                                            *ngFor="let retailer of retailers; let i = index" formArrayName="retailers">
+                                            <input type="checkbox" class="custom-control-input" [formControlName]="i"
+                                                [id]="'retailer-custom-checkbox-'+i">
+                                            <label class="custom-control-label" [for]="'retailer-custom-checkbox-'+i">
+                                                <span class="text-muted">{{ retailer.name }}</span>
+                                            </label>
+                                        </div>
+                                    </ng-container>
+                                </div>
                             </div>
-
 
                             <div class="col-12 col-sm-6"
                                 *ngIf="selectedRole?.name === 'country' || selectedRole?.name === 'retailer'">
 
                                 <!-- SECTORS -->
                                 <div class="mb-4">
-                                    <p class="text-uppercase text-sm text-muted mb-2">Sectors</p>
+                                    <p class="text-uppercase text-sm mb-2">Sectores</p>
+                                    <div class="row section-header">
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <small>Selecciona al menos un sector</small>
+                                        </div>
+
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <button type="button" class="btn btn-outline-primary btn-sm"
+                                                (click)="convertAllOptionsTo('sectors')">
+                                                <div *ngIf="!allOptionsSelected('sectors')">
+                                                    <i class="fas fa-check"></i>
+                                                    <span>
+                                                        Seleccionar todo
+                                                    </span>
+                                                </div>
+                                                <div *ngIf="allOptionsSelected('sectors')">
+                                                    <i class="fas fa-minus"></i>
+                                                    <span>
+                                                        Deseleccionar todo
+                                                    </span>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
 
                                     <div class="custom-control custom-control-alternative custom-checkbox my-1"
                                         *ngFor="let sector of sectors; let i = index" formArrayName="sectors">
@@ -94,7 +165,30 @@
 
                                 <!-- CATEGORIES -->
                                 <div>
-                                    <p class="text-uppercase text-sm text-muted mb-2">Categorías</p>
+                                    <p class="text-uppercase text-sm mb-2">Categorías</p>
+                                    <div class="row section-header">
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <small>Selecciona al menos una categoría</small>
+                                        </div>
+
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <button type="button" class="btn btn-outline-primary btn-sm"
+                                                (click)="convertAllOptionsTo('categories')">
+                                                <div *ngIf="!allOptionsSelected('categories')">
+                                                    <i class="fas fa-check"></i>
+                                                    <span>
+                                                        Seleccionar todo
+                                                    </span>
+                                                </div>
+                                                <div *ngIf="allOptionsSelected('categories')">
+                                                    <i class="fas fa-minus"></i>
+                                                    <span>
+                                                        Deseleccionar todo
+                                                    </span>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
 
                                     <div class="custom-control custom-control-alternative custom-checkbox my-1"
                                         *ngFor="let category of categories; let i = index" formArrayName="categories">
@@ -109,11 +203,11 @@
                         </div>
                         <br>
                         <div class="text-right">
-                            <button type="submit" class="btn btn-primary my-4" [disabled]="!form.valid">
+                            <button type="submit" class="btn btn-primary mt-4" [disabled]="!form.valid">
                                 Enviar invitación
                             </button>
-                            <br>
-                            <span>Status: {{ form.valid }}</span>
+                            <!-- <br> -->
+                            <!-- <span>Status: {{ form.valid }}</span> -->
                         </div>
                     </form>
                 </div>

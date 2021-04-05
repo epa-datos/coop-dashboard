@@ -1,3 +1,4 @@
+import { array } from '@amcharts/amcharts4/core';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmailValidator } from 'src/app/tools/validators/email.validator';
@@ -93,7 +94,6 @@ export class InviteUserComponent implements OnInit {
       name: 'WWS Print'
     }
   ];
-
   categories = [
     {
       id: 1,
@@ -108,6 +108,25 @@ export class InviteUserComponent implements OnInit {
       name: 'Suministros'
     }
   ]
+  formSuboptions = [
+    {
+      name: 'countries',
+      allOptSelected: false
+    },
+    {
+      name: 'retailers',
+      allOptSelected: false
+    },
+    {
+      name: 'sectors',
+      allOptSelected: false
+    },
+    {
+      name: 'categories',
+      allOptSelected: false
+    }
+  ];
+
   selectedRole: any;
 
   constructor(private fb: FormBuilder) { }
@@ -127,20 +146,16 @@ export class InviteUserComponent implements OnInit {
         [Validators.required]
       ],
       countries: this.fb.array(
-        this.countries.map(() => this.fb.control('')),
-        MultipleCheckboxValidator.validate
+        this.countries.map(() => this.fb.control(''))
       ),
       retailers: this.fb.array(
-        this.retailers.map(() => this.fb.control('')),
-        MultipleCheckboxValidator.validate
+        this.retailers.map(() => this.fb.control(''))
       ),
       sectors: this.fb.array(
-        this.sectors.map(() => this.fb.control('')),
-        MultipleCheckboxValidator.validate
+        this.sectors.map(() => this.fb.control(''))
       ),
       categories: this.fb.array(
-        this.categories.map(() => this.fb.control('')),
-        MultipleCheckboxValidator.validate
+        this.categories.map(() => this.fb.control(''))
       ),
     });
 
@@ -148,19 +163,61 @@ export class InviteUserComponent implements OnInit {
   }
 
   roleChange() {
-    if (this.selectedRole) {
-      console.log('exists selectedRole', this.selectedRole)
-      this.resetCheckboxes();
+    this.resetFormControls();
+    this.addFormValidators();
+  }
+
+  resetFormControls() {
+    this.formSuboptions.forEach(opt => {
+      // reset form controls values
+      this.form.controls[opt.name].reset();
+
+      // reset form controls validators
+      this.form.controls[opt.name].setValidators([]);
+      this.form.controls[opt.name].updateValueAndValidity();
+    });
+  }
+
+  addFormValidators() {
+    switch (this.selectedRole.name) {
+      case 'country':
+        this.form.controls.countries.setValidators([
+          MultipleCheckboxValidator.validate
+        ]);
+        this.form.controls.countries.updateValueAndValidity();
+        break;
+      case 'retailer':
+        this.form.controls.retailers.setValidators([
+          MultipleCheckboxValidator.validate
+        ]);
+        this.form.controls.retailers.updateValueAndValidity();
+        break;
+    }
+
+    if (this.selectedRole.name === 'country' || this.selectedRole.name === 'retailer') {
+      this.form.controls.sectors.setValidators([
+        MultipleCheckboxValidator.validate
+      ]);
+      this.form.controls.categories.setValidators([
+        MultipleCheckboxValidator.validate
+      ]);
+
+      this.form.controls.sectors.updateValueAndValidity();
+      this.form.controls.categories.updateValueAndValidity();
     }
   }
 
-  resetCheckboxes() {
-    this.form.reset({
-      'countries': '',
-      'retailers': '',
-      'sectors': '',
-      'categories': ''
-    });
+  convertAllOptionsTo(formSuboption: string) {
+    const formOption = this.formSuboptions.find(option => option.name === formSuboption);
+
+    const selectAllOptions = !formOption.allOptSelected;
+    if (selectAllOptions) {
+      this.form.controls[formSuboption].setValue(this[formSuboption].map(() => this.fb.control(true)));
+      formOption.allOptSelected = true;
+    } else {
+      this.form.controls[formSuboption].reset();
+      formOption.allOptSelected = false;
+    }
   }
 
   convertToValue(key: string) {
@@ -173,5 +230,9 @@ export class InviteUserComponent implements OnInit {
       countries: this.convertToValue('countries')
     });
     console.log(valueToStore);
+  }
+
+  allOptionsSelected(formSuboption) {
+    return this.formSuboptions.find(opt => opt.name === formSuboption).allOptSelected;
   }
 }

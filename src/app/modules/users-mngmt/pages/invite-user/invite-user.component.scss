@@ -1,3 +1,13 @@
 .form-container {
     max-width: 800px;
 }
+
+.section-header {
+    div:last-child {
+        text-align: right;
+
+        @media screen and (min-width: 400px) and (max-width: 990px) {
+            text-align: left;
+        }
+    }
+}
