@@ -89,3 +89,8 @@
 .btn-neutral {
    color: theme-color("primary");
 }
+
+
+.btn.disabled, .btn:disabled {
+   opacity: 0.3;
+}
