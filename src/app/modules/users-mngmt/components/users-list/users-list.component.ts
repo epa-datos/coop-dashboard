@@ -1,6 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { User } from 'src/app/models/user';
+import { ModalComponent } from 'src/app/modules/shared/components/modal/modal.component';
+import { UsersMngmtService } from '../../services/users-mngmt.service';
 
 @Component({
   selector: 'app-users-list',
@@ -9,15 +13,26 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class UsersListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['email', 'created_at', 'action'];
-  dataSource = new MatTableDataSource<User>(ELEMENT_DATA);
+
+  private users: User[] = [];
+  dataSource = new MatTableDataSource<User>(this.users);
+
+  deleteRequestStatus = 0;
+  errorMsg: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor() { }
 
-  ngOnInit(): void {
-  }
+  constructor(
+    private usersMngmtService: UsersMngmtService,
+    private dialog: MatDialog
+  ) { }
 
   ngAfterViewInit() {
+    this.loadPaginator();
+  }
+
+  loadPaginator() {
+    // paginator setup
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Registros por página';
     this.paginator._intl.nextPageLabel = 'Siguiente';
@@ -38,24 +53,70 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  selection(element) {
-    console.log('selection', element)
-  }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-}
 
-const ELEMENT_DATA: User[] = [
-  { email: 'dtorresj@hp.com', created_at: new Date() },
-  { email: 'jramirezr@hp.com', created_at: new Date() },
-  { email: 'srezah@hp.com', created_at: new Date() },
-  { email: 'fsanchezc@hp.com', created_at: new Date() },
-];
+  ngOnInit(): void {
+    this.getUsers();
+  }
 
-export interface User {
-  email: string;
-  created_at: Date
+  getUsers() {
+    this.usersMngmtService.getUsers()
+      .subscribe(
+        (res: User[]) => {
+          this.users = res;
+          this.dataSource = new MatTableDataSource<User>(this.users);
+          this.dataSource.paginator = this.paginator;
+        },
+        error => {
+          console.error(error)
+        }
+      )
+  }
+
+  removeUser(user: User) {
+    const dialogRef = this.dialog.open(ModalComponent, {
+      data: {
+        question: '¿Eliminar usuario?',
+        content: [
+          `El usuario ${user.email} ya no podrá accesar a la plataforma. ¿Estás seguro de eliminarlo de manera permanente?`
+        ]
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(modalResp => {
+      // if modal response exists (not undefined) convert modal response to boolean type
+      if (!!modalResp) {
+        const resp = (modalResp === 'true');
+        if (resp) {
+          this.deleteUser(user)
+        }
+      }
+    });
+  }
+
+  deleteUser(user) {
+    this.deleteRequestStatus = 1;
+    this.usersMngmtService.deleteUser(user.id)
+      .subscribe(
+        res => {
+          this.getUsers();
+          this.errorMsg && delete this.errorMsg;
+          this.deleteRequestStatus = 2;
+          this.restoreDeleteRequestStatus();
+        },
+        error => {
+          this.errorMsg = error?.error?.message ? error.error.message : error?.message;
+          this.deleteRequestStatus = 3;
+        }
+      )
+  }
+
+  restoreDeleteRequestStatus() {
+    setTimeout(() => {
+      this.deleteRequestStatus = 0;
+    }, 5000)
+  }
 }
