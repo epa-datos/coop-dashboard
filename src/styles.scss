@@ -87,3 +87,16 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   color: #767676;
   font-size: 0.875rem !important;
 }
+
+
+// MODAL WINDOW STYLES
+.cdk-overlay-pane {
+
+  @media screen and (max-width: 480px) {
+    width: 90vw !important;
+  }
+
+  @media screen and (min-width: 552px) {
+    width: 520px !important;
+  }
+}
