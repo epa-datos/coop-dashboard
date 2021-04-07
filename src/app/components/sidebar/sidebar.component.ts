@@ -7,13 +7,14 @@ declare interface RouteInfo {
   title: string;
   icon: string;
   class: string;
+  isForAdmin: boolean;
 }
 export const ROUTES: RouteInfo[] = [
-  { path: '/dashboard/investment', title: 'Inversión', icon: 'text-primary', class: '' },
-  { path: '/dashboard/argentina', title: 'Argentina', icon: 'text-primary', class: '' },
-  { path: '/dashboard/colombia', title: 'Colombia', icon: 'text-primary', class: '' },
-  { path: '/dashboard/mexico', title: 'México', icon: 'text-primary', class: '' },
-  { path: '/dashboard/users', title: 'Administrar usuarios', icon: 'text-primary', class: '' },
+  { path: '/dashboard/investment', title: 'Inversión', icon: 'text-primary', class: '', isForAdmin: false },
+  { path: '/dashboard/argentina', title: 'Argentina', icon: 'text-primary', class: '', isForAdmin: false },
+  { path: '/dashboard/colombia', title: 'Colombia', icon: 'text-primary', class: '', isForAdmin: false },
+  { path: '/dashboard/mexico', title: 'México', icon: 'text-primary', class: '', isForAdmin: false },
+  { path: '/dashboard/users', title: 'Administrar usuarios', icon: 'text-primary', class: '', isForAdmin: true },
   // { path: '/chart-js', title: 'chart.js', icon: 'ni-chart-bar-32 text-primary', class: '' },
   // { path: '/amcharts', title: 'amcharts', icon: 'ni-chart-pie-35 text-primary', class: '' },
   // { path: '/icons', title: 'Icons', icon: 'ni-planet text-blue', class: '' },
@@ -33,6 +34,7 @@ export class SidebarComponent implements OnInit {
 
   public menuItems: any[];
   public isCollapsed = true;
+  public userIsAdmin: boolean;
 
   constructor(
     private router: Router,
@@ -40,6 +42,8 @@ export class SidebarComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.userIsAdmin = this.userService.isAdmin();
+
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;

@@ -69,12 +69,14 @@
       </form>
       <!-- Navigation -->
       <ul class="navbar-nav">
-        <li *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
-          <a routerLinkActive="active" [routerLink]="[menuItem.path]" class="nav-link">
-            <i class="ni {{menuItem.icon}}"></i>
-            {{menuItem.title}}
-          </a>
-        </li>
+        <ng-container *ngFor="let menuItem of menuItems">
+          <li class="{{menuItem.class}} nav-item" *ngIf="!menuItem.isForAdmin || (menuItem.isForAdmin && userIsAdmin)">
+            <a routerLinkActive="active" [routerLink]="[menuItem.path]" class="nav-link">
+              <i class="ni {{menuItem.icon}}"></i>
+              {{menuItem.title}}
+            </a>
+          </li>
+        </ng-container>
       </ul>
 
       <!-- <hr class="my-3">
