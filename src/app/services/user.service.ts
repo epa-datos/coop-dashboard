@@ -32,7 +32,7 @@ export class UserService {
   }
 
   get loggedIn() {
-    return !!window.localStorage.getItem("auth_token")
+    return !!window.localStorage.getItem('auth_token')
   }
 
   constructor(
@@ -41,13 +41,16 @@ export class UserService {
     private config: Configuration,
     private cookieService: CookieService
   ) {
-    this._loggedIn = !!window.localStorage.getItem("auth_token");
-    this.user.email = !!window.localStorage.getItem("usermail")
-      ? window.localStorage.getItem("usermail")
-      : "";
-    this.user.username = !!window.localStorage.getItem("username")
-      ? window.localStorage.getItem("username")
-      : "";
+    this._loggedIn = !!window.localStorage.getItem('auth_token');
+    this.user.email = !!window.localStorage.getItem('usermail')
+      ? window.localStorage.getItem('usermail')
+      : '';
+    this.user.username = !!window.localStorage.getItem('username')
+      ? window.localStorage.getItem('username')
+      : '';
+    this.user.role_name = !!window.localStorage.getItem('role_name')
+      ? window.localStorage.getItem('role_name')
+      : '';
 
     this.baseUrl = this.config.endpoint;
   }
@@ -83,10 +86,14 @@ export class UserService {
       .post(`${this.baseUrl}/auth`, { email, password })
       .pipe(
         tap((resp: any) => {
-          if (resp && resp.token) {
-            this.user.email = email;
-            window.localStorage.setItem("usermail", email);
-            window.localStorage.setItem("auth_token", resp.token);
+          if (resp.user && resp.token && resp.role) {
+            // this.user.email = email;
+            window.localStorage.setItem('usermail', resp.user.email);
+            window.localStorage.setItem('auth_token', resp.token);
+            window.localStorage.setItem('role_name', resp.role.name);
+
+            this.user = resp.user;
+            this.user.role_name = resp.role.name;
 
             this._loggedIn = true;
           }
@@ -117,6 +124,14 @@ export class UserService {
 
   isLoggedIn(): boolean {
     return this.loggedIn;
+  }
+
+  isAdmin(): boolean {
+    let role_name = this.user.role_name
+      ? this.user.role_name
+      : window.localStorage.getItem('role_name');
+
+    return role_name === 'admin' ? true : false;
   }
 
   logout() {
