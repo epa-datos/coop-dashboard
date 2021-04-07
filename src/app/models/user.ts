@@ -6,4 +6,5 @@ export class User {
     created_at: string;
     updated_at: string;
     deleted_at?: string;
+    role_name?: string;
 }
