@@ -5,14 +5,14 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <!-- <h6 class="text-uppercase text-muted ls-1 mb-1">Datos del usuario</h6> -->
-                        <span class="text-uppercase text-muted ls-1 mb-1"><b>Datos del usuario</b></span>
+                        <span class="text-uppercase text-muted ls-1 mb-1"><b>Invitar usuario</b></span>
                     </div>
                 </div>
             </div>
 
             <div class="card-body">
                 <!-- form -->
-                <div class="form-container" *ngIf="form">
+                <div class="form-container" *ngIf="form && inviteReqStatus !== 2">
                     <form role="form" [formGroup]="form" (ngSubmit)="onSubmit()">
 
                         <!-- loader (emal and role) -->
@@ -283,12 +283,13 @@
 
                         <!-- send invitation button -->
                         <div class="text-right" *ngIf="getRoleStatus !== 1">
-                            <button type="submit" class="btn btn-primary mt-4" [disabled]="!form.valid">
+                            <button type="submit" class="btn btn-primary mt-4"
+                                [disabled]="!form.valid || inviteReqStatus === 1">
                                 Enviar invitación
                             </button>
                         </div>
 
-                        <!-- error message -->
+                        <!-- GET error message -->
                         <div class="row my-4" *ngIf="getRoleStatus === 3 || getReqStatus === 3">
                             <div class="col-12 text-center text-danger">
                                 <small>
@@ -298,6 +299,26 @@
                             </div>
                         </div>
                     </form>
+                </div>
+
+                <!-- invite message -->
+                <div class="row my-4" *ngIf="inviteReqStatus > 1">
+                    <div class="col-12 text-center">
+                        <div class="text-muted" *ngIf="inviteReqStatus === 2">
+                            <small>
+                                Invitación enviada
+                            </small>
+                            <br>
+                            <button type="button" class="btn btn-light my-4" routerLink="/dashboard/users">
+                                Regresar a Administrar usuarios
+                            </button>
+                        </div>
+
+                        <small class="text-danger" *ngIf="inviteReqStatus === 3">
+                            Ocurrió un error al enviar la invitación al usuario: <br>
+                            {{ this.inviteErrorMsg }}
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>

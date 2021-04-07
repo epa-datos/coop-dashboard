@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Invite, Permission } from 'src/app/models/permission';
 import { EmailValidator } from 'src/app/tools/validators/email.validator';
 import { MultipleCheckboxValidator } from 'src/app/tools/validators/multiple-checkbox.validator';
 import { UsersMngmtService } from '../../services/users-mngmt.service';
@@ -41,6 +42,8 @@ export class InviteUserComponent implements OnInit {
   selectedRole: any;
   getRoleStatus: number = 0;
   getReqStatus: number = 0;
+  inviteReqStatus: number = 0;
+  inviteErrorMsg: string;
 
   constructor(
     private fb: FormBuilder,
@@ -261,21 +264,63 @@ export class InviteUserComponent implements OnInit {
     }
   }
 
-  convertToValue(key: string) {
-    return this.form.value[key].map((x, i) => x && this[key][i]).filter(x => !!x);
+  allOptionsSelected(formSuboption) {
+    return this.formSuboptions.find(opt => opt.name === formSuboption).allOptSelected;
+  }
+
+  convertToValue(key: string, entityType: string): Permission[] {
+    const permissions: Permission[] = [];
+    this.form.value[key].forEach((x, i) => {
+      if (x && this[key][i]) {
+        const permission = {
+          role_id: this.selectedRole.id,
+          entity_type: entityType,
+          entity_id: this[key][i].id
+        }
+        permissions.push(permission);
+      }
+    });
+
+    return permissions;
   }
 
   onSubmit() {
-    const valueToStore = Object.assign({}, this.form.value, {
-      countries: this.convertToValue('countries'),
-      retailers: this.convertToValue('retailers'),
-      sectors: this.convertToValue('sectors'),
-      categories: this.convertToValue('categories'),
-    });
-    console.log(valueToStore);
+    let permissions: Permission[] = [];
+    const role = this.form.value.role.name;
+    switch (role) {
+      case 'country':
+        permissions = [...this.convertToValue('countries', 'country')];
+        break;
+      case 'retailer':
+        permissions = [...this.convertToValue('retailers', 'retailer')];
+        break;
+    }
+
+    permissions = [...permissions, ...this.convertToValue('sectors', 'sector')];
+    permissions = [...permissions, ...this.convertToValue('categories', 'category')];
+    console.log('permissions', permissions);
+
+    const invite: Invite = {
+      user_email: this.form.value.email,
+      permissions
+    }
+    console.log('invite', invite)
+    this.sendInviteToUser(invite);
   }
 
-  allOptionsSelected(formSuboption) {
-    return this.formSuboptions.find(opt => opt.name === formSuboption).allOptSelected;
+  sendInviteToUser(invite) {
+    this.inviteReqStatus = 1;
+    this.usersMngmtService.sendInvitation(invite)
+      .subscribe(
+        () => {
+          this.inviteReqStatus = 2;
+          delete this.inviteErrorMsg && this.inviteErrorMsg;
+        },
+        error => {
+          this.inviteErrorMsg = error?.error?.message ? error.error.message : error?.message;
+          console.error(`[invite-user.component]: ${this.inviteErrorMsg}`);
+          this.inviteReqStatus = 3;
+        }
+      )
   }
 }
