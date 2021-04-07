@@ -26,4 +26,24 @@ export class UsersMngmtService {
     }
     return this.http.delete(`${this.baseUrl}/users/${userID}`);
   }
+
+  getRoles() {
+    return this.http.get(`${this.baseUrl}/roles`);
+  }
+
+  getCountries() {
+    return this.http.get(`${this.baseUrl}/countries`);
+  }
+
+  getRetailers() {
+    return this.http.get(`${this.baseUrl}/retailers`);
+  }
+
+  getSectors() {
+    return this.http.get(`${this.baseUrl}/sectors`);
+  }
+
+  getCategories() {
+    return this.http.get(`${this.baseUrl}/categories`);
+  }
 }

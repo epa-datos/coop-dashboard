@@ -17,3 +17,19 @@
 .aditional-info {
     padding: 20px;
 }
+
+.loader-subgroup {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    grid-gap: 16px;
+}
+
+
+.button-loader {
+    display: flex;
+    justify-content: flex-end;
+
+    .bar-loader {
+        width: 130px;
+    }
+}

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EmailValidator } from 'src/app/tools/validators/email.validator';
 import { MultipleCheckboxValidator } from 'src/app/tools/validators/multiple-checkbox.validator';
+import { UsersMngmtService } from '../../services/users-mngmt.service';
 
 
 @Component({
@@ -13,100 +14,11 @@ export class InviteUserComponent implements OnInit {
 
   form: FormGroup;
   email: AbstractControl;
-  roles: any = [
-    {
-      id: 1,
-      name: 'admin'
-    },
-    {
-      id: 2,
-      name: 'country'
-    },
-    {
-      id: 3,
-      name: 'retailer'
-    },
-    {
-      id: 4,
-      name: 'hp'
-    }
-  ];
-  countries = [
-    {
-      id: 1,
-      name: 'México'
-    },
-    {
-      id: 2,
-      name: 'Argentina'
-    },
-    {
-      id: 3,
-      name: 'Chile'
-    },
-    {
-      id: 4,
-      name: 'Colombia'
-    }
-  ];
-  retailers = [
-    {
-      id: 1,
-      name: 'Liverpool'
-    },
-    {
-      id: 2,
-      name: 'Carrefourl'
-    },
-    {
-      id: 3,
-      name: 'Frávega'
-    },
-    {
-      id: 4,
-      name: 'Garbarino'
-    },
-    {
-      id: 5,
-      name: 'Office Depot'
-    },
-    {
-      id: 6,
-      name: 'Office Max'
-    },
-  ];
-  sectors = [
-    {
-      id: 1,
-      name: 'Marketing'
-    },
-    {
-      id: 2,
-      name: 'Retail'
-    },
-    {
-      id: 3,
-      name: 'WWS PS'
-    },
-    {
-      id: 4,
-      name: 'WWS Print'
-    }
-  ];
-  categories = [
-    {
-      id: 1,
-      name: 'Cómputo'
-    },
-    {
-      id: 2,
-      name: 'Impresoras'
-    },
-    {
-      id: 3,
-      name: 'Suministros'
-    }
-  ]
+  roles: any[] = [];
+  countries: any[] = [];
+  retailers: any[] = [];
+  sectors: any[] = [];
+  categories: any[] = [];
   formSuboptions = [
     {
       name: 'countries',
@@ -127,10 +39,16 @@ export class InviteUserComponent implements OnInit {
   ];
 
   selectedRole: any;
+  getRoleStatus: number = 0;
+  getReqStatus: number = 0;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private usersMngmtService: UsersMngmtService
+  ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.getRoles();
     this.loadForm();
   }
 
@@ -144,26 +62,150 @@ export class InviteUserComponent implements OnInit {
         '',
         [Validators.required]
       ],
-      countries: this.fb.array(
-        this.countries.map(() => this.fb.control(''))
-      ),
-      retailers: this.fb.array(
-        this.retailers.map(() => this.fb.control(''))
-      ),
-      sectors: this.fb.array(
-        this.sectors.map(() => this.fb.control(''))
-      ),
-      categories: this.fb.array(
-        this.categories.map(() => this.fb.control(''))
-      ),
+      countries: this.fb.array([]),
+      retailers: this.fb.array([]),
+      sectors: this.fb.array([]),
+      categories: this.fb.array([])
     });
 
     this.email = this.form.controls['email'];
   }
 
+  getRoles() {
+    this.getRoleStatus = 1;
+    this.usersMngmtService.getRoles()
+      .subscribe((resp: any[]) => {
+        this.roles = resp;
+        this.getRoleStatus = 2;
+      }, error => {
+        console.error(`[invite-user.component]: ${error}`);
+        this.getRoleStatus = 3;
+      })
+  }
+
+  getCountries() {
+    return this.usersMngmtService.getCountries()
+      .toPromise()
+      .then((resp: any[]) => {
+        this.countries = resp;
+      })
+      .catch((error) => {
+        console.error(`[invite-user.component]: ${error}`);
+        throw (new Error());
+      });
+  }
+
+  getRetailers() {
+    return this.usersMngmtService.getRetailers()
+      .toPromise()
+      .then((resp: any[]) => {
+        this.retailers = resp;
+      })
+      .catch((error) => {
+        console.error(`[invite-user.component]: ${error}`);
+        throw (new Error());
+      });
+  }
+
+  getSectors() {
+    return this.usersMngmtService.getSectors()
+      .toPromise()
+      .then((resp: any[]) => {
+        this.sectors = resp;
+      })
+      .catch((error) => {
+        console.error(`[invite-user.component]: ${error}`);
+        throw (new Error());
+      });
+  }
+
+  getCategories() {
+    return this.usersMngmtService.getCategories()
+      .toPromise()
+      .then((resp: any[]) => {
+        this.categories = resp;
+      })
+      .catch((error) => {
+        console.error(`[invite-user.component]: ${error}`);
+        throw (new Error());
+      });
+  }
+
   roleChange() {
+    // Add all options for countries, retailer, sectors and categories in form 
+    // only if these variables have not been assigned a value previously
+    this.fillFormOptions();
+
+    // clean all selected options and reset validators
     this.resetFormControls();
+
+    // add validators based on selected role
     this.addFormValidators();
+  }
+
+  fillFormOptions() {
+    this.getReqStatus = 1;
+    switch (this.selectedRole.name) {
+      case 'country':
+        if (this.countries.length < 1) {
+          this.fillFormArrayControl('countries');
+        }
+        break;
+
+      case 'retailer':
+        if (this.retailers.length < 1) {
+          this.fillFormArrayControl('retailers');
+        }
+        break;
+
+      default:
+        this.getReqStatus = 2;
+        break;
+    }
+
+    if (
+      (this.selectedRole.name === 'country' || this.selectedRole.name === 'retailer') &&
+      (this.sectors.length < 1 || this.categories.length < 1)
+    ) {
+      this.fillFormArrayControl('sectors');
+      this.fillFormArrayControl('categories');
+    } else {
+      this.updateReqStatus();
+    }
+  }
+
+  // Generic function to load FormAarray with request response array
+  async fillFormArrayControl(formControlName) {
+    const genericGetFun = `get${formControlName.charAt(0).toUpperCase() + formControlName.slice(1)}`;
+
+    try {
+      await this[genericGetFun]();
+      const formControlRef = this.form.get(formControlName);
+      this[formControlName].forEach(item => {
+        const control = new FormControl('');
+        (formControlRef as FormArray).push(control);
+      });
+      this.updateReqStatus();
+
+    } catch (error) {
+      this.getReqStatus = 3;
+    }
+  }
+
+  updateReqStatus() {
+    // in order to stop showing loader in checkboxes area
+    if (this.selectedRole.name === 'country' &&
+      this.form.controls['countries'].value.length > 0 &&
+      this.form.controls['sectors'].value.length > 0 &&
+      this.form.controls['categories'].value.length > 0) {
+      this.getReqStatus = 2;
+
+    } else if (this.selectedRole.name === 'retailer' &&
+      this.form.controls['retailers'].value.length > 0 &&
+      this.form.controls['sectors'].value.length > 0 &&
+      this.form.controls['categories'].value.length > 0) {
+      this.getReqStatus = 2;
+    }
   }
 
   resetFormControls() {
