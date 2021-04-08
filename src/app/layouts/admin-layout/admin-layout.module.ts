@@ -11,6 +11,7 @@ import { IconsComponent } from '../../pages/icons/icons.component';
 import { MapsComponent } from '../../pages/maps/maps.component';
 import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
 import { TablesComponent } from '../../pages/tables/tables.component';
+import { UsersMngmtGuard } from 'src/app/modules/users-mngmt/users-mngmt.guard';
 
 // import { ToastrModule } from 'ngx-toastr';
 
@@ -28,6 +29,9 @@ import { TablesComponent } from '../../pages/tables/tables.component';
     TablesComponent,
     IconsComponent,
     MapsComponent
+  ],
+  providers: [
+    UsersMngmtGuard
   ]
 })
 

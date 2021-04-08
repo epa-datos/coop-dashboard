@@ -8,6 +8,7 @@ import { TablesComponent } from '../../pages/tables/tables.component';
 import { ChartJsComponent } from 'src/app/pages/chart-js/chart-js.component';
 import { AmchartsComponent } from 'src/app/pages/amcharts/amcharts.component';
 import { UsersMngmtComponent } from 'src/app/modules/users-mngmt/users-mngmt.component';
+import { UsersMngmtGuard } from 'src/app/modules/users-mngmt/users-mngmt.guard';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'investment', component: DashboardComponent },
@@ -24,8 +25,9 @@ export const AdminLayoutRoutes: Routes = [
         path: 'users',
         component: UsersMngmtComponent,
         loadChildren: () =>
-            import("src/app/modules/users-mngmt/users-mngmt.module").then(
+            import('src/app/modules/users-mngmt/users-mngmt.module').then(
                 m => m.UsersMngmtModule
-            )
+            ),
+        canActivate: [UsersMngmtGuard]
     }
 ];
