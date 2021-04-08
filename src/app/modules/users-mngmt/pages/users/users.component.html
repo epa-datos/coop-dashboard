@@ -1,14 +1,45 @@
-<div class="card">
-    <div class="card-body">
-        <div class="main-container mt-4">
-            <div class="row">
-                <div class="col-12 mb-4 text-right">
-                    <button type="button" class="btn btn-primary" routerLink="/dashboard/users/invite-user">
-                        <i class="fas fa-user-plus text-white mr-1"></i>
-                        Invitar a un nuevo usuario
-                    </button>
+<div class="main-container mt-4">
+    <!-- invitations -->
+    <div *ngIf="getReqSatus > 1" class="mb-4">
+        <div class="row">
+            <div class="col-12" *ngIf="invitations?.length > 0 || getReqSatus === 3">
+                <p class="text-uppercase text-muted mb-4"><b>Invitaciones enviadas</b></p>
+            </div>
+
+            <div class="col-12 mb-4" *ngIf="invitations?.length > 0">
+                <app-invitation *ngFor="let invitation of invitations" [invitation]="invitation"
+                    (invitationDeleted)="getInvitations()"></app-invitation>
+            </div>
+        </div>
+
+        <!-- error message -->
+        <div class="row" *ngIf="getReqSatus === 3">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-danger text-center mb-0">
+                            Se generó un error al consultar las invitaciones enviadas
+                        </p>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <p class="text-uppercase text-muted my-4"><b>Administar usuarios</b></p>
+    <!-- invite new user button -->
+    <div class="row">
+        <div class="col-12 mb-4 text-right">
+            <button type="button" class="btn btn-primary" routerLink="/dashboard/users/invite-user">
+                <i class="fas fa-user-plus text-white mr-1"></i>
+                Invitar a un nuevo usuario
+            </button>
+        </div>
+    </div>
+
+    <!-- users list -->
+    <div class="card">
+        <div class="card-body">
             <div class="row">
                 <div class="col-12">
                     <app-users-list></app-users-list>
