@@ -1,0 +1,42 @@
+.invitation-container {
+    align-items: center;
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: 1fr auto;
+    
+    .invitation-buttons {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    button.btn {
+        align-self: flex-end;
+        height: fit-content;
+        width: fit-content;
+
+        &:not(:last-child) {
+            margin-right: 1rem;
+        }
+    }
+
+    @media screen and (max-width: 560px) {
+        grid-template-columns: 1fr;
+        button.btn {
+            justify-self: flex-end;
+            margin-bottom: 1rem;
+        }
+    }
+
+    @media screen and (max-width: 300px) {
+        button.btn {
+            &:not(:last-child) {
+                margin-right: 0rem;
+            }
+            &:last-child {
+                margin-left: 1rem;
+            }
+        }
+    }
+}

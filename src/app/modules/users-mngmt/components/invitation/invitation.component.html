@@ -1,0 +1,38 @@
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="invitation-container">
+                    <p class="invitation-text">
+                        Esperando respuesta del usuario con la cuenta de <strong>{{ invitation.email }}</strong>
+                    </p>
+                    <div class="invitation-buttons text-right">
+                        <button type="button" class="btn btn-light" [disabled]="reqStatus === 1"
+                            (click)="resendInvitation()">
+                            Reenviar
+                        </button>
+                        <button type="button" class="btn btn-danger" [disabled]="reqStatus === 1"
+                            (click)="cancelInvitation()">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- messages -->
+        <div class="row mt-4" *ngIf="reqStatus > 1">
+            <div class="col-12 text-center">
+                <!-- resend success -->
+                <p class="text-muted mb-0" *ngIf="reqStatus === 2">
+                    Invitación reenviada
+                </p>
+
+                <!-- resend or cancel error -->
+                <p class="text-red mb-0" *ngIf="reqStatus === 3">
+                    {{ errorMsg }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

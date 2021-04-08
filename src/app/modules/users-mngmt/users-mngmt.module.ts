@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UsersMngmtService } from './services/users-mngmt.service';
+import { InvitationComponent } from './components/invitation/invitation.component';
 
 
 
@@ -21,6 +22,7 @@ import { UsersMngmtService } from './services/users-mngmt.service';
     UsersListComponent,
     UsersComponent,
     InviteUserComponent,
+    InvitationComponent,
   ],
   imports: [
     CommonModule,

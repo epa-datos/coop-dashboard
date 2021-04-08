@@ -57,10 +57,28 @@ export class UsersMngmtService {
   /**** INVITATIONS
   * Endpoints related to user invitation
   * ****/
+  getInvitations() {
+    return this.http.get(`${this.baseUrl}/users/invitations`);
+  }
+
   sendInvitation(invite: Invite) {
     if (!invite) {
       return throwError('[users-mngmt.service]: not invite provided');
     }
     return this.http.post(`${this.baseUrl}/users/invitations`, invite);
+  }
+
+  resendInvitation(invitationID: number) {
+    if (!invitationID) {
+      return throwError('[users-mngmt.service]: not invitationID provided');
+    }
+    return this.http.post(`${this.baseUrl}/invitations/${invitationID}/resend`, {});
+  }
+
+  deleteInvitation(invitationID: number) {
+    if (!invitationID) {
+      return throwError('[users-mngmt.service]: not invitationID provided');
+    }
+    return this.http.delete(`${this.baseUrl}/invitations/${invitationID}`);
   }
 }
