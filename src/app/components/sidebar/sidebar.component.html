@@ -68,7 +68,7 @@
         </div>
       </form>
       <!-- Navigation -->
-      <ul class="navbar-nav">
+      <ul class="navbar-nav" *ngIf="menuReqStatus >= 2">
         <ng-container *ngFor="let menuItem of menuItems">
           <li class="{{menuItem.class}} nav-item" *ngIf="!menuItem.isForAdmin || (menuItem.isForAdmin && userIsAdmin)">
             <a routerLinkActive="active" [routerLink]="[menuItem.path]" class="nav-link">
@@ -78,6 +78,12 @@
           </li>
         </ng-container>
       </ul>
+
+      <div class="text-danger mt-5 pl-3 pr-3" *ngIf="menuReqStatus === 3">
+        <small>
+          Ocurrió un error al consultar los países o retailers a los que tienes acceso. Intenta más tarde.
+        </small>
+      </div>
 
       <!-- <hr class="my-3">
       <h6 class="navbar-heading text-muted">Settings</h6>
