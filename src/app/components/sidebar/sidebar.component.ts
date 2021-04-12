@@ -4,23 +4,25 @@ import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mn
 import { UserService } from 'src/app/services/user.service';
 
 declare interface RouteInfo {
-  path: string;
+  path?: string;
+  param?: string | number;
   title: string;
-  icon: string;
-  class: string;
+  icon?: string;
+  class?: string;
   isForAdmin: boolean;
+  submenu?: RouteInfo[];
+  submenuOpen?: boolean;
+  level: number;
 }
-export const ROUTES: RouteInfo[] = [
-  { path: '/dashboard/investment', title: 'Inversión', icon: 'text-primary', class: '', isForAdmin: false },
-  // { path: '/chart-js', title: 'chart.js', icon: 'ni-chart-bar-32 text-primary', class: '' },
-  // { path: '/amcharts', title: 'amcharts', icon: 'ni-chart-pie-35 text-primary', class: '' },
-  // { path: '/icons', title: 'Icons', icon: 'ni-planet text-blue', class: '' },
-  // { path: '/maps', title: 'Maps', icon: 'ni-pin-3 text-orange', class: '' },
-  // { path: '/user-profile', title: 'User profile', icon: 'ni-single-02 text-yellow', class: '' },
-  // { path: '/tables', title: 'Tables', icon: 'ni-bullet-list-67 text-red', class: '' },
-  // { path: '/login', title: 'Login', icon: 'ni-key-25 text-info', class: '' },
-  // { path: '/register', title: 'Register', icon: 'ni-circle-08 text-pink', class: '' }
-];
+
+export const ROUTES = [
+  {
+    path: '/dashboard/investment',
+    title: 'Inversión',
+    isForAdmin: false,
+    level: 1
+  }
+]
 
 @Component({
   selector: 'app-sidebar',
@@ -34,6 +36,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   public userIsAdmin: boolean;
   public menuReqStatus: number = 0;
   public errorMsg: string;
+
+  selectedItem: RouteInfo;
+  selectedSubItem: RouteInfo;
 
   constructor(
     private router: Router,
@@ -55,9 +60,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     const menuItem = {
       path: '/dashboard/users',
       title: 'Administrar usuarios',
-      icon: 'text-primary',
-      class: '',
-      isForAdmin: true
+      isForAdmin: true,
+      level: 1
     }
     this.menuItems.push(menuItem);
   }
@@ -72,11 +76,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       .then((resp: any[]) => {
         for (let country of resp) {
           const menuItem = {
-            path: `/dashboard/${country.name.toLowerCase()}`,
             title: country.name,
-            icon: 'text-primary',
-            class: '',
-            isForAdmin: false
+            param: country.name.toLowerCase(),
+            path: `/dashboard/country`,
+            isForAdmin: false,
+            submenu: [],
+            submenuOpen: false,
+            level: 2
           }
 
           this.menuItems.push(menuItem);
@@ -89,6 +95,60 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         console.error(this.errorMsg);
         this.menuReqStatus = 3;
         this.router.navigate(['dashboard/investment']);
+      });
+  }
+
+  async selectItem(item, menuLevel, parent?) {
+    if (item.submenu) {
+      // if country already has a a submenu.lenght>1 avoid this requests
+      item.submenu = await this.getAvailableRetailers()
+
+      if (menuLevel === 1) {
+        item.submenuOpen = !item.submenuOpen;
+      }
+    }
+
+    if (menuLevel === 1) {
+      this.selectedItem !== item && delete this.selectedSubItem;
+      this.selectedItem = item;
+
+    } else if (menuLevel === 2) {
+      this.selectedItem = parent;
+      this.selectedSubItem = item;
+    }
+
+    if (item.path) {
+      if (item.param) {
+        this.router.navigate([item.path, item.param]);
+
+      } else {
+        this.router.navigate([item.path]);
+      }
+    }
+  }
+
+  getAvailableRetailers() {
+    // add country as a param in the requests
+    return this.usersMngmtService.getRetailers()
+      .toPromise()
+      .then((retailers: any[]) => {
+        // console.log('retailers', retailers);
+        let menuItem: RouteInfo[];
+        menuItem = retailers.map(item => {
+          return {
+            path: '/dashboard/retailer',
+            param: item.name.toLowerCase(),
+            title: item.name,
+            isForAdmin: false,
+            level: 3
+          }
+        })
+
+        return menuItem;
+      })
+      .catch(error => {
+        console.error(`[sidebar.component]: ${error}`);
+        throw (new Error(error));
       });
   }
 
