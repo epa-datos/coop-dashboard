@@ -11,7 +11,6 @@ import { UsersMngmtComponent } from 'src/app/modules/users-mngmt/users-mngmt.com
 import { UsersMngmtGuard } from 'src/app/modules/users-mngmt/users-mngmt.guard';
 
 export const AdminLayoutRoutes: Routes = [
-    { path: 'investment', component: DashboardComponent },
     { path: 'chart-js', component: ChartJsComponent },
     { path: 'amcharts', component: AmchartsComponent },
     { path: 'user-profile', component: UserProfileComponent },
@@ -24,7 +23,15 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'mexico', component: ChartJsComponent },
     { path: 'panama', component: ChartJsComponent },
     {
-        path: 'users',
+        path: 'dashboard',
+        component: UsersMngmtComponent,
+        loadChildren: () =>
+            import('src/app/modules/dashboard/dashboard.module').then(
+                m => m.DashboardModule
+            )
+    },
+    {
+        path: 'dashboard/users',
         component: UsersMngmtComponent,
         loadChildren: () =>
             import('src/app/modules/users-mngmt/users-mngmt.module').then(
