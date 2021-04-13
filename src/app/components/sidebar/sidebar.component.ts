@@ -37,6 +37,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   public menuReqStatus: number = 0;
   public errorMsg: string;
 
+  userRole: string;
   selectedItem: RouteInfo;
   selectedSubItem: RouteInfo;
 
@@ -50,13 +51,19 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     this.userIsAdmin = this.userService.isAdmin();
+    this.userRole = this.userService.user.role_name;
 
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;
     });
 
-    await this.getAvailableRoutes();
+    if (this.userRole === 'admin' || this.userRole === 'hp' || this.userRole === 'country') {
+      await this.getAvailableCountries();
+    } else if (this.userRole === 'retailer') {
+      const newMenuItems = await this.getAvailableRetailers();
+      this.menuItems = [... this.menuItems, ...newMenuItems];
+    }
 
     // Admin routes
     const menuItem = {
@@ -92,7 +99,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         }
 
       } else if (retailer) {
-        // retailer role
+        const item = this.menuItems.find(item => item.levelName === 'retailer' && item.title.toLowerCase() === retailer);
+        this.selectedItem = item;
       }
     }
     else {
@@ -101,7 +109,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getAvailableRoutes() {
+  getAvailableCountries() {
     this.menuReqStatus = 1;
 
     return this.usersMngmtService.getCountries()
@@ -129,6 +137,33 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         console.error(this.errorMsg);
         this.menuReqStatus = 3;
         this.router.navigate(['dashboard/investment']);
+      });
+  }
+
+  getAvailableRetailers() {
+    this.menuReqStatus = 1;
+    // add country as a param in the requests sería opcional
+    return this.usersMngmtService.getRetailers()
+      .toPromise()
+      .then((retailers: any[]) => {
+        let menuItems: RouteInfo[];
+        menuItems = retailers.map(item => {
+          return {
+            path: '/dashboard/retailer',
+            param: item.name.toLowerCase(),
+            title: item.name,
+            isForAdmin: false,
+            levelName: 'retailer',
+          }
+        })
+
+        this.menuReqStatus = 2;
+        return menuItems;
+      })
+      .catch(error => {
+        console.error(`[sidebar.component]: ${error}`);
+        this.menuReqStatus = 3;
+        throw (new Error(error));
       });
   }
 
@@ -173,38 +208,19 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         break;
 
       case 'retailer':
-        this.appStateService.selectCountry(this.selectedItem.title);
-        this.appStateService.selectRetailer(this.selectedSubItem.title);
+        if (this.userRole === 'retailer') {
+          this.appStateService.selectCountry();
+          this.appStateService.selectRetailer(this.selectedItem.title);
+        } else {
+          this.appStateService.selectCountry(this.selectedItem.title);
+          this.appStateService.selectRetailer(this.selectedSubItem.title);
+        }
         break;
 
       default:
         this.appStateService.selectCountry();
         this.appStateService.selectRetailer();
     }
-  }
-
-  getAvailableRetailers() {
-    // add country as a param in the requests
-    return this.usersMngmtService.getRetailers()
-      .toPromise()
-      .then((retailers: any[]) => {
-        let menuItem: RouteInfo[];
-        menuItem = retailers.map(item => {
-          return {
-            path: '/dashboard/retailer',
-            param: item.name.toLowerCase(),
-            title: item.name,
-            isForAdmin: false,
-            levelName: 'retailer',
-          }
-        })
-
-        return menuItem;
-      })
-      .catch(error => {
-        console.error(`[sidebar.component]: ${error}`);
-        throw (new Error(error));
-      });
   }
 
   logout() {

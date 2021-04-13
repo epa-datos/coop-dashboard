@@ -45,6 +45,7 @@ export class NavbarComponent implements OnInit {
     // custom title
     this.appStateService.selectedCountry$.subscribe(resp => {
       this.customTitle = resp;
+      this.customizeTitle();
     }, error => {
       console.error(`[navbar.component]: ${error}`);
     });
@@ -52,6 +53,7 @@ export class NavbarComponent implements OnInit {
     // custom subtitle
     this.appStateService.selectedRetailer$.subscribe(resp => {
       this.customSubtitle = resp;
+      this.customizeTitle();
     }, error => {
       console.error(`[navbar.component]: ${error}`);
     });
@@ -62,6 +64,7 @@ export class NavbarComponent implements OnInit {
     if (params['country'] || params['retailer']) {
       this.customTitle = params['country'];
       this.customSubtitle = params['retailer'];
+      this.customizeTitle();
     }
   }
 
@@ -81,6 +84,13 @@ export class NavbarComponent implements OnInit {
       }
     }
     return 'Dashboard';
+  }
+
+  customizeTitle() {
+    if (!this.customTitle && this.customSubtitle) {
+      this.customTitle = this.customSubtitle;
+      delete this.customSubtitle;
+    }
   }
 
   logout() {
