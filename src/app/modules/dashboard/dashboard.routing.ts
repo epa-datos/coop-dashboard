@@ -6,6 +6,6 @@ import { RetailerComponent } from './pages/retailer/retailer.component';
 
 export const DashboardRoutes: Routes = [
     { path: 'investment', component: DashboardComponent },
-    { path: 'country/:country_id', component: CountryComponent },
-    { path: 'retailer/:retailer_id', component: RetailerComponent },
+    { path: 'country', component: CountryComponent },
+    { path: 'retailer', component: RetailerComponent },
 ];

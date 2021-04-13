@@ -13,6 +13,7 @@ declare interface RouteInfo {
   submenu?: RouteInfo[];
   submenuOpen?: boolean;
   level: number;
+  levelName?: string;
 }
 
 export const ROUTES = [
@@ -82,7 +83,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
             isForAdmin: false,
             submenu: [],
             submenuOpen: false,
-            level: 2
+            level: 2,
+            levelName: 'country',
           }
 
           this.menuItems.push(menuItem);
@@ -108,19 +110,27 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       }
     }
 
+    let queryParams;
+
     if (menuLevel === 1) {
       this.selectedItem !== item && delete this.selectedSubItem;
       this.selectedItem = item;
 
+      queryParams = { [this.selectedItem.levelName]: this.selectedItem.param };
+
     } else if (menuLevel === 2) {
       this.selectedItem = parent;
       this.selectedSubItem = item;
+
+      queryParams = {
+        [this.selectedItem.levelName]: this.selectedItem.param,
+        [this.selectedSubItem.levelName]: this.selectedSubItem.param
+      };
     }
 
     if (item.path) {
       if (item.param) {
-        this.router.navigate([item.path, item.param]);
-
+        this.router.navigate([item.path], { queryParams: queryParams });
       } else {
         this.router.navigate([item.path]);
       }
@@ -140,7 +150,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
             param: item.name.toLowerCase(),
             title: item.name,
             isForAdmin: false,
-            level: 3
+            level: 3,
+            levelName: 'retailer',
           }
         })
 
