@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user';
 import { AppStateService } from 'src/app/services/app-state.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -22,13 +23,16 @@ export class NavbarComponent implements OnInit {
   constructor(
     location: Location,
     private userService: UserService,
-    private appStateService: AppStateService
+    private appStateService: AppStateService,
+    private route: ActivatedRoute,
   ) {
     this.location = location;
   }
 
   ngOnInit() {
     this.user = this.userService.user;
+
+    this.getTitlesByParams();
 
     // sidebar titles
     this.appStateService.sidebarData$.subscribe(resp => {
@@ -51,6 +55,14 @@ export class NavbarComponent implements OnInit {
     }, error => {
       console.error(`[navbar.component]: ${error}`);
     });
+  }
+
+  getTitlesByParams() {
+    const params = this.route.snapshot.queryParams;
+    if (params['country'] || params['retailer']) {
+      this.customTitle = params['country'];
+      this.customSubtitle = params['retailer'];
+    }
   }
 
   getTitleByRoute() {
