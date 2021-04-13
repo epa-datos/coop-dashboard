@@ -21,6 +21,7 @@ import { SessionInterceptor } from './services/interceptor.service';
 import { LoginGuard } from './login.guard';
 import { ConfigurationProvider } from './app.constants';
 import { SharedModule } from './modules/shared/shared.module';
+import { AppStateService } from './services/app-state.service';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { SharedModule } from './modules/shared/shared.module';
     UserService,
     CookieService,
     LoginGuard,
+    AppStateService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: SessionInterceptor,

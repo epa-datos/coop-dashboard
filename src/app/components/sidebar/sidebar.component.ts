@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
+import { AppStateService } from 'src/app/services/app-state.service';
 import { UserService } from 'src/app/services/user.service';
 
 declare interface RouteInfo {
@@ -42,7 +43,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private userService: UserService,
-    private usersMngmtService: UsersMngmtService
+    private usersMngmtService: UsersMngmtService,
+    private appStateService: AppStateService
   ) { }
 
   async ngAfterViewInit() {
@@ -62,6 +64,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       isForAdmin: true
     }
     this.menuItems.push(menuItem);
+    this.appStateService.updateSidebarData(this.menuItems);
   }
 
   ngOnInit() { }
@@ -74,9 +77,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       .then((resp: any[]) => {
         for (let country of resp) {
           const menuItem = {
+            path: `/dashboard/country`,
             title: country.name,
             param: country.name.toLowerCase(),
-            path: `/dashboard/country`,
             isForAdmin: false,
             submenu: [],
             submenuOpen: false,
@@ -85,6 +88,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
           this.menuItems.push(menuItem);
         }
+        this.appStateService.updateSidebarData(this.menuItems);
         this.errorMsg && delete this.errorMsg;
         this.menuReqStatus = 2;
       })
@@ -97,7 +101,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   }
 
   async selectItem(item, parent?) {
-    if (item.submenu) {
+    if (item.submenu && item.levelName === 'country') {
       // if country already has a a submenu.lenght>1 avoid this requests
       item.submenu = await this.getAvailableRetailers()
       item.submenuOpen = !item.submenuOpen;
@@ -128,7 +132,24 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         this.router.navigate([item.path]);
       }
     }
-  }
+
+    // probablelemente aqui sse tenga que mandar un id tambien
+    switch (item.levelName) {
+      case 'country':
+        this.appStateService.selectCountry(this.selectedItem.title);
+        this.appStateService.selectRetailer();
+        break;
+
+      case 'retailer':
+        this.appStateService.selectCountry(this.selectedItem.title);
+        this.appStateService.selectRetailer(this.selectedSubItem.title);
+        break;
+
+      default:
+        this.appStateService.selectCountry();
+        this.appStateService.selectRetailer();
+    }
+  } s
 
   getAvailableRetailers() {
     // add country as a param in the requests

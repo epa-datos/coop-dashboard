@@ -1,9 +1,8 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { ROUTES } from '../sidebar/sidebar.component';
-import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user';
+import { AppStateService } from 'src/app/services/app-state.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,24 +11,49 @@ import { User } from 'src/app/models/user';
 })
 export class NavbarComponent implements OnInit {
   public focus;
-  public listTitles: any[];
+  public listTitles: any[] = [];
   public location: Location;
   public user: User;
+  public customTitle: string;
+  public customSubtitle: string;
+  public routes: any[] = [];
+
 
   constructor(
     location: Location,
-    private element: ElementRef,
-    private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private appStateService: AppStateService
   ) {
     this.location = location;
   }
 
   ngOnInit() {
-    this.listTitles = ROUTES.filter(listTitle => listTitle);
     this.user = this.userService.user;
+
+    // sidebar titles
+    this.appStateService.sidebarData$.subscribe(resp => {
+      this.routes = resp;
+      this.listTitles = this.routes.filter(listTitle => listTitle);
+    }, error => {
+      console.error(`[navbar.component]: ${error}`);
+    })
+
+    // custom title
+    this.appStateService.selectedCountry$.subscribe(resp => {
+      this.customTitle = resp;
+    }, error => {
+      console.error(`[navbar.component]: ${error}`);
+    });
+
+    // custom subtitle
+    this.appStateService.selectedRetailer$.subscribe(resp => {
+      this.customSubtitle = resp;
+    }, error => {
+      console.error(`[navbar.component]: ${error}`);
+    });
   }
-  getTitle() {
+
+  getTitleByRoute() {
     var titlee = this.location.prepareExternalUrl(this.location.path());
     if (titlee.charAt(0) === '#') {
       titlee = titlee.slice(1);
