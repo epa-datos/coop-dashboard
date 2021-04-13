@@ -92,7 +92,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         }
 
       } else if (retailer) {
-        // existe retailer pero no country   -> retailer role
+        // retailer role
       }
     }
     else {
@@ -165,7 +165,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       }
     }
 
-    // probablelemente aqui sse tenga que mandar un id tambien
+    // consider the possibility to add id property
     switch (item.levelName) {
       case 'country':
         this.appStateService.selectCountry(this.selectedItem.title);
@@ -181,14 +181,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         this.appStateService.selectCountry();
         this.appStateService.selectRetailer();
     }
-  } s
+  }
 
   getAvailableRetailers() {
     // add country as a param in the requests
     return this.usersMngmtService.getRetailers()
       .toPromise()
       .then((retailers: any[]) => {
-        // console.log('retailers', retailers);
         let menuItem: RouteInfo[];
         menuItem = retailers.map(item => {
           return {
