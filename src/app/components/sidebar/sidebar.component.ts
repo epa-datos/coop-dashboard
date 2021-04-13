@@ -31,15 +31,16 @@ export const ROUTES = [
 })
 export class SidebarComponent implements OnInit, AfterViewInit {
 
-  public menuItems: any[];
-  public isCollapsed = true;
+  public userRole: string;
   public userIsAdmin: boolean;
-  public menuReqStatus: number = 0;
-  public errorMsg: string;
 
-  userRole: string;
-  selectedItem: RouteInfo;
-  selectedSubItem: RouteInfo;
+  public menuItems: any[];
+  public selectedItem: RouteInfo;
+  public selectedSubItem: RouteInfo;
+  public menuReqStatus: number = 0;
+  public submenuReqStatus: number = 0;
+  public isCollapsed = true;
+
 
   constructor(
     private router: Router,
@@ -58,12 +59,20 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       this.isCollapsed = true;
     });
 
-    if (this.userRole === 'admin' || this.userRole === 'hp' || this.userRole === 'country') {
-      await this.getAvailableCountries();
-    } else if (this.userRole === 'retailer') {
-      const newMenuItems = await this.getAvailableRetailers();
-      this.menuItems = [... this.menuItems, ...newMenuItems];
+    try {
+      this.menuReqStatus = 1;
+      if (this.userRole === 'admin' || this.userRole === 'hp' || this.userRole === 'country') {
+        await this.getAvailableCountries();
+      } else if (this.userRole === 'retailer') {
+        const newMenuItems = await this.getAvailableRetailers();
+        this.menuItems = [... this.menuItems, ...newMenuItems];
+      }
+      this.menuReqStatus = 2;
+
+    } catch (error) {
+      this.menuReqStatus = 3;
     }
+
 
     // Admin routes
     const menuItem = {
@@ -110,8 +119,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   }
 
   getAvailableCountries() {
-    this.menuReqStatus = 1;
-
     return this.usersMngmtService.getCountries()
       .toPromise()
       .then((resp: any[]) => {
@@ -129,20 +136,18 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           this.menuItems.push(menuItem);
         }
         this.appStateService.updateSidebarData(this.menuItems);
-        this.errorMsg && delete this.errorMsg;
-        this.menuReqStatus = 2;
       })
       .catch(error => {
-        this.errorMsg = error?.error?.message ? error.error.message : error?.message
-        console.error(this.errorMsg);
-        this.menuReqStatus = 3;
+        const errMsg = error?.error?.message ? error.error.message : error?.message;
         this.router.navigate(['dashboard/investment']);
+        console.error(`[sidebar.component]: ${errMsg}`);
+        throw (new Error(errMsg));
       });
   }
 
   getAvailableRetailers() {
-    this.menuReqStatus = 1;
-    // add country as a param in the requests sería opcional
+    this.submenuReqStatus = 1;
+    // add country as an optional param in the requests
     return this.usersMngmtService.getRetailers()
       .toPromise()
       .then((retailers: any[]) => {
@@ -157,20 +162,22 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           }
         })
 
-        this.menuReqStatus = 2;
+        this.submenuReqStatus = 2;
         return menuItems;
       })
       .catch(error => {
-        console.error(`[sidebar.component]: ${error}`);
-        this.menuReqStatus = 3;
-        throw (new Error(error));
+        const errMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[sidebar.component]: ${errMsg}`);
+        this.submenuReqStatus = 3;
+        throw (new Error(errMsg));
       });
   }
 
   async selectItem(item, parent?) {
     if (item.submenu && item.levelName === 'country') {
-      // if country already has a a submenu.lenght>1 avoid this requests
-      item.submenu = await this.getAvailableRetailers();
+      if (item.submenu.length < 1) {
+        item.submenu = await this.getAvailableRetailers();
+      }
       item.submenuOpen = !item.submenuOpen;
     }
 
