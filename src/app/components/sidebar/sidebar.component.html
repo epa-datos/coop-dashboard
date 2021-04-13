@@ -74,7 +74,8 @@
             <a routerLinkActive="active" class="nav-link" [ngClass]="{'active' : menuItem === selectedItem }"
               (click)="selectItem(menuItem)">
               <!-- caret for submenus -->
-              <i *ngIf="menuItem.submenu" class="fas fa-caret-right menu-caret"></i>
+              <i [hidden]="!menuItem.submenu || menuItem.submenuOpen" class="menu-caret fas fa-caret-right"></i>
+              <i [hidden]="!menuItem.submenuOpen" class="menu-caret fas fa-caret-down"></i>
 
               <!-- custom icon -->
               <i *ngIf="menuItem.icon" class="{{ menuItem.icon }}"></i>
