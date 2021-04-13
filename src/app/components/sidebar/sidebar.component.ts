@@ -147,7 +147,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   getAvailableRetailers() {
     this.submenuReqStatus = 1;
-    // add country as a param in the requests sería opcional
+    // add country as an optional param in the requests
     return this.usersMngmtService.getRetailers()
       .toPromise()
       .then((retailers: any[]) => {
@@ -175,8 +175,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   async selectItem(item, parent?) {
     if (item.submenu && item.levelName === 'country') {
-      // if country already has a a submenu.lenght>1 avoid this requests
-      item.submenu = await this.getAvailableRetailers();
+      if (item.submenu.length < 1) {
+        item.submenu = await this.getAvailableRetailers();
+      }
       item.submenuOpen = !item.submenuOpen;
     }
 
