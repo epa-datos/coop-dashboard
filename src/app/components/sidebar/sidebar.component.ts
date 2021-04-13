@@ -1,26 +1,28 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
+import { AppStateService } from 'src/app/services/app-state.service';
 import { UserService } from 'src/app/services/user.service';
 
 declare interface RouteInfo {
-  path: string;
+  path?: string;
+  param?: string | number;
   title: string;
-  icon: string;
-  class: string;
+  icon?: string;
+  class?: string;
   isForAdmin: boolean;
+  submenu?: RouteInfo[];
+  submenuOpen?: boolean;
+  levelName?: string;
 }
-export const ROUTES: RouteInfo[] = [
-  { path: '/dashboard/investment', title: 'Inversión', icon: 'text-primary', class: '', isForAdmin: false },
-  // { path: '/chart-js', title: 'chart.js', icon: 'ni-chart-bar-32 text-primary', class: '' },
-  // { path: '/amcharts', title: 'amcharts', icon: 'ni-chart-pie-35 text-primary', class: '' },
-  // { path: '/icons', title: 'Icons', icon: 'ni-planet text-blue', class: '' },
-  // { path: '/maps', title: 'Maps', icon: 'ni-pin-3 text-orange', class: '' },
-  // { path: '/user-profile', title: 'User profile', icon: 'ni-single-02 text-yellow', class: '' },
-  // { path: '/tables', title: 'Tables', icon: 'ni-bullet-list-67 text-red', class: '' },
-  // { path: '/login', title: 'Login', icon: 'ni-key-25 text-info', class: '' },
-  // { path: '/register', title: 'Register', icon: 'ni-circle-08 text-pink', class: '' }
-];
+
+export const ROUTES = [
+  {
+    path: '/dashboard/investment',
+    title: 'Inversión',
+    isForAdmin: false
+  }
+]
 
 @Component({
   selector: 'app-sidebar',
@@ -35,10 +37,15 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   public menuReqStatus: number = 0;
   public errorMsg: string;
 
+  selectedItem: RouteInfo;
+  selectedSubItem: RouteInfo;
+
   constructor(
     private router: Router,
     private userService: UserService,
-    private usersMngmtService: UsersMngmtService
+    private usersMngmtService: UsersMngmtService,
+    private appStateService: AppStateService,
+    private route: ActivatedRoute,
   ) { }
 
   async ngAfterViewInit() {
@@ -55,14 +62,44 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     const menuItem = {
       path: '/dashboard/users',
       title: 'Administrar usuarios',
-      icon: 'text-primary',
-      class: '',
       isForAdmin: true
     }
     this.menuItems.push(menuItem);
+    this.appStateService.updateSidebarData(this.menuItems);
+
+    this.getPrevSelection();
   }
 
   ngOnInit() { }
+
+  async getPrevSelection() {
+    const params = this.route.snapshot.queryParams;
+
+    if (params['country'] || params['retailer']) {
+      const country = params['country'];
+      const retailer = params['retailer'];
+
+      if (country) {
+        const item = this.menuItems.find(item => item.levelName === 'country' && item.title.toLowerCase() === country);
+        this.selectedItem = item;
+
+        if (retailer) {
+          this.selectedItem.submenu = await this.getAvailableRetailers();
+          this.selectedItem.submenuOpen = !this.selectedItem.submenuOpen;
+
+          const subItem = this.selectedItem.submenu.find(item => item.levelName === 'retailer' && item.title.toLocaleLowerCase() === retailer);
+          this.selectedSubItem = subItem;
+        }
+
+      } else if (retailer) {
+        // retailer role
+      }
+    }
+    else {
+      const item = this.menuItems.find(item => item.path == this.router.url);
+      this.selectedItem = item;
+    }
+  }
 
   getAvailableRoutes() {
     this.menuReqStatus = 1;
@@ -72,15 +109,18 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       .then((resp: any[]) => {
         for (let country of resp) {
           const menuItem = {
-            path: `/dashboard/${country.name.toLowerCase()}`,
+            path: `/dashboard/country`,
             title: country.name,
-            icon: 'text-primary',
-            class: '',
-            isForAdmin: false
+            param: country.name.toLowerCase(),
+            isForAdmin: false,
+            submenu: [],
+            submenuOpen: false,
+            levelName: 'country',
           }
 
           this.menuItems.push(menuItem);
         }
+        this.appStateService.updateSidebarData(this.menuItems);
         this.errorMsg && delete this.errorMsg;
         this.menuReqStatus = 2;
       })
@@ -89,6 +129,81 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         console.error(this.errorMsg);
         this.menuReqStatus = 3;
         this.router.navigate(['dashboard/investment']);
+      });
+  }
+
+  async selectItem(item, parent?) {
+    if (item.submenu && item.levelName === 'country') {
+      // if country already has a a submenu.lenght>1 avoid this requests
+      item.submenu = await this.getAvailableRetailers();
+      item.submenuOpen = !item.submenuOpen;
+    }
+
+    let queryParams;
+
+    if (!parent) {
+      this.selectedItem !== item && delete this.selectedSubItem;
+      this.selectedItem = item;
+
+      queryParams = { [this.selectedItem.levelName]: this.selectedItem.param };
+
+    } else {
+      this.selectedItem = parent;
+      this.selectedSubItem = item;
+
+      queryParams = {
+        [this.selectedItem.levelName]: this.selectedItem.param,
+        [this.selectedSubItem.levelName]: this.selectedSubItem.param
+      };
+    }
+
+    if (item.path) {
+      if (item.param) {
+        this.router.navigate([item.path], { queryParams: queryParams });
+      } else {
+        this.router.navigate([item.path]);
+      }
+    }
+
+    // consider the possibility to add id property
+    switch (item.levelName) {
+      case 'country':
+        this.appStateService.selectCountry(this.selectedItem.title);
+        this.appStateService.selectRetailer();
+        break;
+
+      case 'retailer':
+        this.appStateService.selectCountry(this.selectedItem.title);
+        this.appStateService.selectRetailer(this.selectedSubItem.title);
+        break;
+
+      default:
+        this.appStateService.selectCountry();
+        this.appStateService.selectRetailer();
+    }
+  }
+
+  getAvailableRetailers() {
+    // add country as a param in the requests
+    return this.usersMngmtService.getRetailers()
+      .toPromise()
+      .then((retailers: any[]) => {
+        let menuItem: RouteInfo[];
+        menuItem = retailers.map(item => {
+          return {
+            path: '/dashboard/retailer',
+            param: item.name.toLowerCase(),
+            title: item.name,
+            isForAdmin: false,
+            levelName: 'retailer',
+          }
+        })
+
+        return menuItem;
+      })
+      .catch(error => {
+        console.error(`[sidebar.component]: ${error}`);
+        throw (new Error(error));
       });
   }
 

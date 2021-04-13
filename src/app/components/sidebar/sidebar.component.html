@@ -71,10 +71,26 @@
       <ul class="navbar-nav" *ngIf="menuReqStatus >= 2">
         <ng-container *ngFor="let menuItem of menuItems">
           <li class="{{menuItem.class}} nav-item" *ngIf="!menuItem.isForAdmin || (menuItem.isForAdmin && userIsAdmin)">
-            <a routerLinkActive="active" [routerLink]="[menuItem.path]" class="nav-link">
-              <i class="ni {{menuItem.icon}}"></i>
-              {{menuItem.title}}
+            <a routerLinkActive="active" class="nav-link" [ngClass]="{'active' : menuItem === selectedItem }"
+              (click)="selectItem(menuItem)">
+              <!-- caret for submenus -->
+              <i [hidden]="!menuItem.submenu || menuItem.submenuOpen" class="menu-caret fas fa-caret-right"></i>
+              <i [hidden]="!menuItem.submenuOpen" class="menu-caret fas fa-caret-down"></i>
+
+              <!-- custom icon -->
+              <i *ngIf="menuItem.icon" class="{{ menuItem.icon }}"></i>
+
+              {{ menuItem.title | titlecase }}
             </a>
+
+            <ul class="navbar-sub-nav" *ngIf="menuItem.submenu && menuItem.submenuOpen">
+              <li class="{{menuItemL2.class}} nav-item" *ngFor="let menuItemL2 of menuItem.submenu">
+                <a routerLinkActive="active" class="nav-link" [ngClass]="{'active' : menuItemL2 === selectedSubItem }"
+                  (click)="selectItem(menuItemL2, menuItem);">
+                  {{ menuItemL2.title | titlecase }}
+                </a>
+              </li>
+            </ul>
           </li>
         </ng-container>
       </ul>

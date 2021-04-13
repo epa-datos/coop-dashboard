@@ -1,3 +1,25 @@
 .text-danger {
     line-height: 1rem; 
 }
+
+li {
+    cursor: pointer;
+}
+
+.navbar-sub-nav {
+    list-style: none;
+}
+
+.menu-caret {
+    min-width: 1.5rem !important;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+@media (min-width: 768px) {
+    .navbar-vertical.navbar-expand-md .navbar-nav .nav-link {
+        padding: 0.65rem 2rem !important;
+    }
+}

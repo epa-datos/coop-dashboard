@@ -12,6 +12,7 @@ import { MapsComponent } from '../../pages/maps/maps.component';
 import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { UsersMngmtGuard } from 'src/app/modules/users-mngmt/users-mngmt.guard';
+import { DashboardModule } from 'src/app/modules/dashboard/dashboard.module';
 
 // import { ToastrModule } from 'ngx-toastr';
 
@@ -21,7 +22,8 @@ import { UsersMngmtGuard } from 'src/app/modules/users-mngmt/users-mngmt.guard';
     RouterModule.forChild(AdminLayoutRoutes),
     NgbModule,
     ClipboardModule,
-    UsersMngmtModule
+    UsersMngmtModule,
+    DashboardModule
   ],
   declarations: [
     DashboardComponent,

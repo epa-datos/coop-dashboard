@@ -10,7 +10,7 @@ import { LoginGuard } from './login.guard';
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
-    path: 'dashboard',
+    path: '',
     component: AdminLayoutComponent,
     children: [
       {
