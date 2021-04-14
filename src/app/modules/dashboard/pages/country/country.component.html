@@ -4,4 +4,13 @@
             <p class="text-uppercase text-muted mb-4"><b>{{ countryName }} - Visión general</b></p>
         </div>
     </div>
+
+    <!-- CARD STATS -->
+    <div class="row">
+        <div class="col-12">
+            <div class="stats-container">
+                <app-card-stat *ngFor="let stat of stats" [stat]="stat"></app-card-stat>
+            </div>
+        </div>
+    </div>
 </div>
