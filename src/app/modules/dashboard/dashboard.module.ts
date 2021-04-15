@@ -14,6 +14,8 @@ import { CardStatComponent } from './components/card-stat/card-stat.component';
 import { GraphPieComponent } from './components/graphics/graph-pie/graph-pie.component';
 import { GraphLineComparisonComponent } from './components/graphics/graph-line-comparison/graph-line-comparison.component';
 import { GraphLineSeriesComponent } from './components/graphics/graph-line-series/graph-line-series.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 
@@ -34,7 +36,9 @@ import { GraphLineSeriesComponent } from './components/graphics/graph-line-serie
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatRippleModule
+    MatRippleModule,
+    MatTableModule,
+    MatPaginatorModule,
   ],
   providers: [{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'never' } }]
 })
