@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GraphLineMultipleComponent } from './graph-line-multiple.component';
+import { GraphLineSeriesComponent } from './graph-line-series.component';
 
-describe('GraphLineMultipleComponent', () => {
-  let component: GraphLineMultipleComponent;
-  let fixture: ComponentFixture<GraphLineMultipleComponent>;
+describe('GraphLineSeriesComponent', () => {
+  let component: GraphLineSeriesComponent;
+  let fixture: ComponentFixture<GraphLineSeriesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GraphLineMultipleComponent ]
+      declarations: [ GraphLineSeriesComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GraphLineMultipleComponent);
+    fixture = TestBed.createComponent(GraphLineSeriesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -3,11 +3,11 @@ import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 
 @Component({
-  selector: 'app-graph-line-multiple',
-  templateUrl: './graph-line-multiple.component.html',
-  styleUrls: ['./graph-line-multiple.component.scss']
+  selector: 'app-graph-line-comparison',
+  templateUrl: './graph-line-comparison.component.html',
+  styleUrls: ['./graph-line-comparison.component.scss']
 })
-export class GraphLineMultipleComponent implements OnInit, AfterViewInit {
+export class GraphLineComparisonComponent implements OnInit, AfterViewInit {
 
   @Input() data;
   graphID;

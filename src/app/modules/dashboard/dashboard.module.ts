@@ -12,7 +12,10 @@ import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { CardStatComponent } from './components/card-stat/card-stat.component';
 import { GraphPieComponent } from './components/graphics/graph-pie/graph-pie.component';
-import { GraphLineMultipleComponent } from './components/graphics/graph-line-multiple/graph-line-multiple.component';
+import { GraphLineComparisonComponent } from './components/graphics/graph-line-comparison/graph-line-comparison.component';
+import { GraphLineSeriesComponent } from './components/graphics/graph-line-series/graph-line-series.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
@@ -25,7 +28,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     GeneralFiltersComponent,
     CardStatComponent,
     GraphPieComponent,
-    GraphLineMultipleComponent
+    GraphLineComparisonComponent,
+    GraphLineSeriesComponent
   ],
   imports: [
     CommonModule,
@@ -34,6 +38,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatDatepickerModule,
     MatNativeDateModule,
     MatRippleModule,
+    MatTableModule,
+    MatPaginatorModule,
     ReactiveFormsModule
   ],
   providers: [{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'never' } }]
