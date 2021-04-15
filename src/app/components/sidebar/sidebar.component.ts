@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { UserService } from 'src/app/services/user.service';
 
 declare interface RouteInfo {
+  id?: number,
   path?: string;
   param?: string | number;
   title: string;
@@ -29,7 +30,7 @@ export const ROUTES = [
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit, AfterViewInit {
+export class SidebarComponent implements OnInit {
 
   public userRole: string;
   public userIsAdmin: boolean;
@@ -50,7 +51,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
   ) { }
 
-  async ngAfterViewInit() {
+  async ngOnInit() {
     this.userIsAdmin = this.userService.isAdmin();
     this.userRole = this.userService.user.role_name;
 
@@ -86,8 +87,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     this.getPrevSelection();
   }
 
-  ngOnInit() { }
-
   async getPrevSelection() {
     const params = this.route.snapshot.queryParams;
 
@@ -100,7 +99,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         this.selectedItem = item;
 
         if (retailer) {
-          this.selectedItem.submenu = await this.getAvailableRetailers();
+          this.selectedItem.submenu = await this.getAvailableRetailers(this.selectedItem.id);
           this.selectedItem.submenuOpen = !this.selectedItem.submenuOpen;
 
           const subItem = this.selectedItem.submenu.find(item => item.levelName === 'retailer' && item.title.toLocaleLowerCase() === retailer);
@@ -124,6 +123,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       .then((resp: any[]) => {
         for (let country of resp) {
           const menuItem = {
+            id: country.id,
             path: `/dashboard/country`,
             title: country.name,
             param: country.name.toLowerCase(),
@@ -145,15 +145,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       });
   }
 
-  getAvailableRetailers() {
+  getAvailableRetailers(countryID?: number) {
     this.submenuReqStatus = 1;
-    // add country as an optional param in the requests
-    return this.usersMngmtService.getRetailers()
+
+    return this.usersMngmtService.getRetailers(countryID)
       .toPromise()
       .then((retailers: any[]) => {
         let menuItems: RouteInfo[];
         menuItems = retailers.map(item => {
           return {
+            id: item.id,
             path: '/dashboard/retailer',
             param: item.name.toLowerCase(),
             title: item.name,
@@ -176,7 +177,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   async selectItem(item, parent?) {
     if (item.submenu && item.levelName === 'country') {
       if (item.submenu.length < 1) {
-        item.submenu = await this.getAvailableRetailers();
+        item.submenu = await this.getAvailableRetailers(item.id);
       }
       item.submenuOpen = !item.submenuOpen;
     }
@@ -184,8 +185,14 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     let queryParams;
 
     if (!parent) {
+      // delete subitem if another item is selected
       this.selectedItem !== item && delete this.selectedSubItem;
+
+      // save selected item
       this.selectedItem = item;
+
+      // delete subitem if item is closed with a click
+      (!this.selectedItem.submenuOpen && this.selectedSubItem) && delete this.selectedSubItem;
 
       queryParams = { [this.selectedItem.levelName]: this.selectedItem.param };
 
@@ -207,20 +214,19 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       }
     }
 
-    // consider the possibility to add id property
     switch (item.levelName) {
       case 'country':
-        this.appStateService.selectCountry(this.selectedItem.title);
+        this.appStateService.selectCountry({ id: this.selectedItem.id, name: this.selectedItem.title });
         this.appStateService.selectRetailer();
         break;
 
       case 'retailer':
         if (this.userRole === 'retailer') {
           this.appStateService.selectCountry();
-          this.appStateService.selectRetailer(this.selectedItem.title);
+          this.appStateService.selectRetailer({ id: this.selectedItem.id, name: this.selectedItem.title });
         } else {
-          this.appStateService.selectCountry(this.selectedItem.title);
-          this.appStateService.selectRetailer(this.selectedSubItem.title);
+          this.appStateService.selectCountry({ id: this.selectedItem.id, name: this.selectedItem.title });
+          this.appStateService.selectRetailer({ id: this.selectedSubItem.id, name: this.selectedSubItem.title });
         }
         break;
 
