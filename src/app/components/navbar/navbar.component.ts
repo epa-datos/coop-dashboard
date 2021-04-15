@@ -44,7 +44,7 @@ export class NavbarComponent implements OnInit {
 
     // custom title
     this.appStateService.selectedCountry$.subscribe(resp => {
-      this.customTitle = resp;
+      this.customTitle = resp?.name;
       this.customizeTitle();
     }, error => {
       console.error(`[navbar.component]: ${error}`);
@@ -52,7 +52,7 @@ export class NavbarComponent implements OnInit {
 
     // custom subtitle
     this.appStateService.selectedRetailer$.subscribe(resp => {
-      this.customSubtitle = resp;
+      this.customSubtitle = resp?.name;
       this.customizeTitle();
     }, error => {
       console.error(`[navbar.component]: ${error}`);

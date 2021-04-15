@@ -1,0 +1,21 @@
+<div class="card card-stats mb-4 mb-xl-0">
+    <div class="card-body">
+        <div class="metric-container">
+            <div class="metric-data">
+                <h5 class="card-title text-uppercase text-muted mb-0">{{ stat.metricTitle }}</h5>
+                <span class="h3 font-weight-bold mb-0">{{ stat.metricValue }}</span>
+            </div>
+            <div class="metric-icon">
+                <div class="icon icon-shape text-white rounded-circle shadow" [style.background-color]="stat.iconBg">
+                    <i [ngClass]="stat.icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="submetric-container text-muted" *ngIf="stat.subMetricTitle">
+            <div class="submetric-data">
+                <span class="text-nowrap h5 mr-2 text-muted text-uppercase">{{ stat.subMetricTitle }}</span>
+                <span>{{ stat.subMetricValue }}</span>
+            </div>
+        </div>
+    </div>
+</div>

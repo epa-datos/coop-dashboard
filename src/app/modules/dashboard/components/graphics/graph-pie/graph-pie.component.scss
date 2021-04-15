@@ -1,0 +1,7 @@
+.chart {
+    width: 100%;
+    height: 200px;
+    @media screen and (max-width: 480px) {
+        height: 350px;
+    }
+}

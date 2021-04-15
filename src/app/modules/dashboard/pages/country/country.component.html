@@ -1,7 +1,88 @@
 <div class="main-container mt-4">
+    <!-- <div class="row">
+        <div class="col-12">
+            <p class="h2 text-uppercase text-muted mb-4"><b>Visión general</b></p>
+        </div>
+    </div> -->
+
+    <div class="header bg-light mb-4">
+        <p class="h2 text-uppercase text-muted py-2 ml-3 mr-3"><b>Visión general</b></p>
+    </div>
+
+    <!-- CARD STATS -->
     <div class="row">
         <div class="col-12">
-            <p class="text-uppercase text-muted mb-4"><b>{{ countryName }} - Visión general</b></p>
+            <div class="stats-container">
+                <app-card-stat *ngFor="let stat of stats" [stat]="stat"></app-card-stat>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <!-- devices -->
+        <div class="col-12 col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>Inversión por mes</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-pie [data]="devices" name="devices-per-sector" value="value" category="name">
+                    </app-graph-pie>
+                </div>
+            </div>
+        </div>
+
+        <!-- gender -->
+        <div class="col-12 col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>Género</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-pie [data]="gender" name="gender" value="value" category="name">
+                    </app-graph-pie>
+                </div>
+            </div>
+        </div>
+
+        <!-- users by sector -->
+        <div class="col-12 col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>Usuarios por sector</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-pie [data]="usersBySector" name="users-sector" value="value" category="name">
+                    </app-graph-pie>
+                </div>
+            </div>
+        </div>
+
+        <!-- sales by sector -->
+        <div class="col-12 col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>Ventas por sector</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-pie [data]="salesBySector" name="sales-sector" value="value" category="name">
+                    </app-graph-pie>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>Inversión vs Revenue</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-line-multiple [data]="investmentVsRevenue" name="investment-vs-revenue">
+                    </app-graph-line-multiple>
+                </div>
+            </div>
         </div>
     </div>
 </div>

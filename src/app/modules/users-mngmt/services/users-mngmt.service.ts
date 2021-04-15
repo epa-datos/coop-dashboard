@@ -42,8 +42,11 @@ export class UsersMngmtService {
     return this.http.get(`${this.baseUrl}/countries`);
   }
 
-  getRetailers() {
-    return this.http.get(`${this.baseUrl}/retailers`);
+  getRetailers(countryID?) {
+    const endpoint = countryID
+      ? `?country=${countryID}`
+      : '';
+    return this.http.get(`${this.baseUrl}/retailers${endpoint}`);
   }
 
   getSectors() {

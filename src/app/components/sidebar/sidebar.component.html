@@ -68,7 +68,7 @@
         </div>
       </form>
       <!-- Navigation -->
-      <ul class="navbar-nav" *ngIf="menuReqStatus >= 2">
+      <ul class="navbar-nav" *ngIf="menuItems.length > 1">
         <ng-container *ngFor="let menuItem of menuItems">
           <li class="{{menuItem.class}} nav-item" *ngIf="!menuItem.isForAdmin || (menuItem.isForAdmin && userIsAdmin)">
             <a routerLinkActive="active" class="nav-link" [ngClass]="{'active' : menuItem === selectedItem }"
@@ -83,7 +83,7 @@
               {{ menuItem.title | titlecase }}
             </a>
 
-            <ul class="navbar-sub-nav" *ngIf="menuItem.submenu && menuItem.submenuOpen && submenuReqStatus === 2">
+            <ul class="navbar-sub-nav" *ngIf="menuItem.submenu && menuItem.submenuOpen">
               <li class="{{menuItemL2.class}} nav-item" *ngFor="let menuItemL2 of menuItem.submenu">
                 <a routerLinkActive="active" class="nav-link" [ngClass]="{'active' : menuItemL2 === selectedSubItem }"
                   (click)="selectItem(menuItemL2, menuItem);">

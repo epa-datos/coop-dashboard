@@ -1,0 +1,32 @@
+.card-stats {
+    height: 120px;
+    overflow: hidden;
+    width: 100%;
+
+    .card-body {
+        padding: 0;
+    }
+    
+    .metric-container {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 16px;
+        padding: 1rem 1.5rem;
+
+        .icon {
+            height: 2rem;
+            width: 2rem;
+        }
+    }
+    
+    .submetric-container {
+        background-color: #f0f0f0;
+        bottom: 0;
+        position: absolute;
+        width: 100%;
+    
+        .submetric-data {
+            padding: 0.3rem 1.5rem; 
+        }
+    }
+}
