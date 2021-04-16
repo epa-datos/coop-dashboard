@@ -2,12 +2,12 @@
     <ul class="nav nav-tabs mb-4">
         <li class="nav-item">
             <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 1}" (click)="activeTabView = 1">
-                <span class="h3 text-muted py-2 ml-3 mr-3">Campaña hacia el retail</span>
+                <span class="h2 py-2 ml-3 mr-3">Campaña hacia el retail</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 2}" (click)="activeTabView = 2">
-                <span class="h3 text-muted py-2 ml-3 mr-3">Campaña en el retail</span>
+                <span class="h2 py-2 ml-3 mr-3">Campaña en el retail</span>
             </a>
         </li>
     </ul>
@@ -26,11 +26,11 @@
         <div class="row mb-5" *ngFor="let item of [1,2,3]">
             <div class="col-12">
                 <div class="header bg-light mb-2">
-                    <p class="h4 text-uppercase text-muted py-1 ml-3 mr-3">
+                    <p class="h4 py-1 ml-3 mr-3">
                         <ng-container [ngSwitch]="item">
-                            <b *ngSwitchCase="1">Google Search - Display & Video</b>
-                            <b *ngSwitchCase="2">Display & Video (Marketing)</b>
-                            <b *ngSwitchCase="3">Social Media</b>
+                            <span *ngSwitchCase="1">Google Search - Display & Video</span>
+                            <span *ngSwitchCase="2">Display & Video (Marketing)</span>
+                            <span *ngSwitchCase="3">Social Media</span>
                         </ng-container>
 
                     </p>
@@ -104,7 +104,7 @@
         <app-retail-filters></app-retail-filters>
 
         <!-- CARD STATS -->
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-12">
                 <div class="stats-container">
                     <app-card-stat *ngFor="let stat of stats" [stat]="stat"></app-card-stat>
@@ -116,7 +116,7 @@
         <!-- ROAS CARDS -->
         <div class="row mt-5 mb-2">
             <div class="col-12">
-                <p class="h4 text-uppercase text-muted"><b>ROAS por sector </b></p>
+                <span class="h3">ROAS por sector</span>
             </div>
         </div>
 
@@ -178,42 +178,44 @@
 
 
         <!-- ACCORDION -->
-        <mat-accordion multi>
-            <mat-expansion-panel (opened)="panelChange('panel1',true)" (closed)="panelChange('panel1',false)">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        <b class="text-muted text-uppercase">Audiencias</b>
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <app-audiences-wrapper></app-audiences-wrapper>
-            </mat-expansion-panel>
+        <div class="mt-4">
+            <mat-accordion multi>
+                <mat-expansion-panel (opened)="panelChange('panel1',true)" (closed)="panelChange('panel1',false)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <span class="h3 mb-0">Audiencias</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-audiences-wrapper></app-audiences-wrapper>
+                </mat-expansion-panel>
 
-            <mat-expansion-panel (opened)="panelChange('panel2',true)" (closed)="panelChange('panel2',false)">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        <b class="text-muted text-uppercase">Adquisición</b>
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <p>Contenido de adiquisición</p>
-            </mat-expansion-panel>
+                <mat-expansion-panel (opened)="panelChange('panel2',true)" (closed)="panelChange('panel2',false)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <span class="h3 mb-0">Adquisición</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <p>Contenido de adiquisición</p>
+                </mat-expansion-panel>
 
-            <mat-expansion-panel (opened)="panelChange('panel3',true)" (closed)="panelChange('panel3',false)">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        <b class="text-muted text-uppercase">Comportamiento</b>
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <p>Contenido de comportamiento</p>
-            </mat-expansion-panel>
+                <mat-expansion-panel (opened)="panelChange('panel3',true)" (closed)="panelChange('panel3',false)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <span class="h3 mb-0">Comportamiento</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <p>Contenido de comportamiento</p>
+                </mat-expansion-panel>
 
-            <mat-expansion-panel (opened)="panelChange('panel4',true)" (closed)="panelChange('panel4',false)">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        <b class="text-muted text-uppercase">Conversión</b>
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <p>Contenido de conversión</p>
-            </mat-expansion-panel>
-        </mat-accordion>
+                <mat-expansion-panel (opened)="panelChange('panel4',true)" (closed)="panelChange('panel4',false)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <span class="h3 mb-0">Conversión</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <p>Contenido de conversión</p>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
     </ng-container>
 </div>

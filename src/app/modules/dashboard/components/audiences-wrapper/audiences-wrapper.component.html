@@ -1,8 +1,8 @@
-<div class="row my-5">
+<div class="row mt-4 mb-5">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <span class="text-uppercase text-sm text-muted"><b>Análisis por tráfico</b></span>
+                <span class="h4">Análisis por tráfico</span>
             </div>
             <div class="card-body">
                 <app-graph-line [data]="trafficByMonths" name="traffic-months" date="date" value="visits">
@@ -17,22 +17,22 @@
     <div class="row">
         <div class="col-12">
             <div class="mb-3 mt-0">
-                <span class="text-uppercase text-sm text-muted "><b>Análisis Conversiones, AUP & BR</b></span>
+                <span class="h3">Análisis Conversiones, AUP & BR</span>
             </div>
         </div>
         <div class="col-12">
             <div class="pills-container">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="{'active': selectedTab1 === 1}"
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
                             (click)="selectedTab1 = 1">Género</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="{'active': selectedTab1 === 2}"
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
                             (click)="selectedTab1 = 2">Edad</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="{'active': selectedTab1 === 3}"
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
                             (click)="selectedTab1 = 3">Dispositivo</a>
                     </li>
                 </ul>
@@ -44,7 +44,7 @@
         <div class="col-12 col-lg-4 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>Conversión</b></span>
+                    <span class="h4">Conversión</span>
                 </div>
                 <div class="card-body">
                     <app-graph-bar [data]="genderConversion" name="gender-conversion" category='gender' value='value'>
@@ -55,7 +55,7 @@
         <div class="col-12 col-lg-4 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>AUP</b></span>
+                    <span class="h4">AUP</span>
                 </div>
                 <div class="card-body">
                     <app-graph-bar [data]="genderAUP" name="gender-aup" category='gender' value='value'>
@@ -66,7 +66,7 @@
         <div class="col-12 col-lg-4 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>BR</b></span>
+                    <span class="h4">BR</span>
                 </div>
                 <div class="card-body">
                     <app-graph-bar [data]="genderBR" name="gender-br" category='gender' value='value'>
@@ -80,7 +80,7 @@
         <div class="col-12 col-lg-4 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>Conversión</b></span>
+                    <span class="h4">Conversión</span>
                 </div>
                 <div class="card-body">
                     <app-graph-bar [data]="ageConversion" name="age-conversion" category='age' value='value'>
@@ -91,7 +91,7 @@
         <div class="col-12 col-lg-4 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>AUP</b></span>
+                    <span class="h4">AUP</span>
                 </div>
                 <div class="card-body">
                     <app-graph-bar [data]="ageAUP" name="age-aup" category='age' value='value'>
@@ -102,7 +102,7 @@
         <div class="col-12 col-lg-4 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>BR</b></span>
+                    <span class="h4">BR</span>
                 </div>
                 <div class="card-body">
                     <app-graph-bar [data]="ageBR" name="age-br" category='age' value='value'>
@@ -116,7 +116,7 @@
         <div class="col-12 col-lg-4 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>Conversión</b></span>
+                    <span class="h4">Conversión</span>
                 </div>
                 <div class="card-body">
                     <app-graph-pie [data]="deviceConversion" name="device-conversion" category='device' value='value'>
@@ -127,7 +127,7 @@
         <div class="col-12 col-lg-4 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>AUP</b></span>
+                    <span class="h4">AUP</span>
                 </div>
                 <div class="card-body">
                     <app-graph-pie [data]="deviceAUP" name="device-aup" category='device' value='value'>
@@ -138,7 +138,7 @@
         <div class="col-12 col-lg-4 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>BR</b></span>
+                    <span class="h4">BR</span>
                 </div>
                 <div class="card-body">
                     <app-graph-pie [data]="deviceBR" name="device-br" category='device' value='value'>
@@ -155,18 +155,18 @@
     <div class="row">
         <div class="col-12">
             <div class="mb-3 mt-0">
-                <span class="text-uppercase text-sm text-muted "><b>Tráfico y conversiones por hora y por día</b></span>
+                <span class="h3">Tráfico y conversiones por hora y por día</span>
             </div>
         </div>
         <div class="col-12">
             <div class="pills-container">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="{'active': selectedTab2 === 1}"
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
                             (click)="selectedTab2 = 1">Tráfico</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="{'active': selectedTab2 === 2}"
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
                             (click)="selectedTab2 = 2">Conversiones</a>
                     </li>
                 </ul>
@@ -178,7 +178,7 @@
         <div class="col-12 col-lg-6 mt-4">
             <div class="card" style="height: 100%;">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>Día de la semana / Sesiones</b></span>
+                    <span class="h4">Día de la semana / Sesiones</span>
                 </div>
                 <div class="card-body">
                     <app-graph-heat-map [data]="heatmapData" name="weekday-sesions">
@@ -189,20 +189,22 @@
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>Tráfico por día de la semana</b></span>
+                    <span class="h4">Tráfico por día de la semana</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-bar-horizontal [data]="trafficByDay" name="traffic-day" category='weekday' value='value'>
+                    <app-graph-bar-horizontal [data]="trafficByDay" name="traffic-day" category='weekday' value='value'
+                        height="250px">
                     </app-graph-bar-horizontal>
                 </div>
             </div>
 
             <div class="card mt-4">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>Tráfico por hora del día</b></span>
+                    <span class="h4">Tráfico por hora del día</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-lollipop [data]="trafficByHour" name="traffic-hour" category="hour" value="visits">
+                    <app-graph-lollipop [data]="trafficByHour" name="traffic-hour" category="hour" value="visits"
+                        height="250px">
                     </app-graph-lollipop>
                 </div>
             </div>
@@ -213,7 +215,7 @@
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>Conversiones y tráfico por día</b></span>
+                    <span class="h4">Conversiones y tráfico por día</span>
                 </div>
                 <div class="card-body">
                     <app-graph-line-comparison [data]="conversionsTrafficPerDay" name="conv-tra-day">
@@ -224,7 +226,7 @@
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="text-uppercase text-sm text-muted"><b>Conversiones y tráfico por hora</b></span>
+                    <span class="h4">Conversiones y tráfico por hora</span>
                 </div>
                 <div class="card-body">
                     <app-graph-line-comparison [data]="conversionsTrafficPerHour" name="conv-tra-hour">

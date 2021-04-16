@@ -13,6 +13,8 @@ export class GraphLollipopComponent implements OnInit, AfterViewInit {
   @Input() data;
   @Input() value: string;
   @Input() category: string;
+  @Input() height: string = '350px'; // height property value valid in css
+
   graphID;
   loadStatus: number = 0;
 

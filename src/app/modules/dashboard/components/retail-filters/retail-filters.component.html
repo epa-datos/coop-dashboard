@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12 col-sm-6 col-lg-3 mb-4">
-        <small class="text-muted mb-1"><b>Fuente</b></small>
+        <small class="h4 mb-1">Fuente</small>
         <mat-select [formControl]="sources" multiple placeholder="Selecciona una fuente">
             <mat-select-trigger>
                 {{sources.value ? sources.value[0]?.name : ''}}
@@ -13,7 +13,7 @@
         </mat-select>
     </div>
     <div class="col-12 col-sm-6 col-lg-3 mb-4">
-        <small class="text-muted mb-1"><b>Medio</b></small>
+        <small class="h4 mb-1">Medio</small>
         <mat-select [formControl]="ways" multiple placeholder="Selecciona un medio">
             <mat-select-trigger>
                 {{ways.value ? ways.value[0]?.name : ''}}
@@ -26,7 +26,7 @@
         </mat-select>
     </div>
     <div class="col-12 col-sm-6 col-lg-3 mb-4">
-        <small class="text-muted mb-1"><b>Audiencia</b></small>
+        <small class="h4 mb-1">Audiencia</small>
         <mat-select [formControl]="audiences" multiple placeholder="Selecciona una audiencia">
             <mat-select-trigger>
                 {{audiences.value ? audiences.value[0]?.name : ''}}

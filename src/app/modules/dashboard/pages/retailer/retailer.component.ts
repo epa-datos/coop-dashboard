@@ -18,7 +18,7 @@ export class RetailerComponent implements OnInit {
 
   countryName;
   retailerName;
-  activeTabView: number = 2;
+  activeTabView: number = 1;
 
   campMetrics = [
     {
