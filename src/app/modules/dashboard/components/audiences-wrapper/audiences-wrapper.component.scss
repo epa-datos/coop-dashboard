@@ -1,0 +1,11 @@
+.pills-container {
+    width: 60%;
+
+    @media screen and (max-width:820px){
+        width: 100%;
+    }
+
+    .nav-item {
+        cursor: pointer;
+    }
+}

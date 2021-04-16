@@ -1,10 +1,150 @@
-<div class="col-12 mt-4">
-    <div class="card">
-        <div class="card-header">
-            <span class="text-uppercase text-sm text-muted"><b>Análisis por tráfico</b></span>
-        </div>
-        <div class="card-body">
-            <app-graph-line [data]="trafficByMonths" name="traffic-months"></app-graph-line>
+<div class="row my-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <span class="text-uppercase text-sm text-muted"><b>Análisis por tráfico</b></span>
+            </div>
+            <div class="card-body">
+                <app-graph-line [data]="trafficByMonths" name="traffic-months"></app-graph-line>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- ANALISIS, CINVERSIONES Y AUP -->
+<ng-container>
+    <div clas="row">
+        <div class="mb-3 mt-0">
+            <span class="text-uppercase text-sm text-muted "><b>Análisis Conversiones. AUP & BR</b></span>
+        </div>
+
+        <div class="pills-container">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link" [ngClass]="{'active': selectedTab1 === 1}" (click)="selectedTab1 = 1">Género</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [ngClass]="{'active': selectedTab1 === 2}" (click)="selectedTab1 = 2">Edad</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [ngClass]="{'active': selectedTab1 === 3}"
+                        (click)="selectedTab1 = 3">Dispositivo</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row" [hidden]="selectedTab1 !== 1">
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>Conversión</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-bar [data]="genderConversion" name="gender-conversion" category='gender' value='value'>
+                    </app-graph-bar>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>AUP</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-bar [data]="genderAUP" name="gender-aup" category='gender' value='value'>
+                    </app-graph-bar>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>BR</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-bar [data]="genderBR" name="gender-br" category='gender' value='value'>
+                    </app-graph-bar>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" [hidden]="selectedTab1 !== 2">
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>Conversión</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-bar [data]="ageConversion" name="age-conversion" category='age' value='value'>
+                    </app-graph-bar>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>AUP</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-bar [data]="ageAUP" name="age-aup" category='age' value='value'>
+                    </app-graph-bar>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>BR</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-bar [data]="ageBR" name="age-br" category='age' value='value'>
+                    </app-graph-bar>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" [hidden]="selectedTab1 !== 3">
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>Conversión</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-pie [data]="deviceConversion" name="device-conversion" category='device' value='value'>
+                    </app-graph-pie>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>AUP</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-pie [data]="deviceAUP" name="device-aup" category='device' value='value'>
+                    </app-graph-pie>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>BR</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-pie [data]="deviceBR" name="device-br" category='device' value='value'>
+                    </app-graph-pie>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+
+<!-- TRAFICO Y CONVERSIONES POR DIA Y HORA -->
+<ng-container>
+
+</ng-container>
