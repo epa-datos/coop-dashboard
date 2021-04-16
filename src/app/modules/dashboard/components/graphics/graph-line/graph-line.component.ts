@@ -11,6 +11,8 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 export class GraphLineComponent implements OnInit, AfterViewInit {
 
   @Input() data;
+  @Input() value;
+  @Input() date;
   graphID;
   loadStatus: number = 0;
 
@@ -51,8 +53,8 @@ export class GraphLineComponent implements OnInit, AfterViewInit {
 
     // Create series
     let series = chart.series.push(new am4charts.LineSeries());
-    series.dataFields.valueY = 'visits';
-    series.dataFields.dateX = 'date';
+    series.dataFields.valueY = this.value;
+    series.dataFields.dateX = this.date;
     series.strokeWidth = 2;
     series.minBulletDistance = 10;
     series.tooltipText = '{valueY}';
