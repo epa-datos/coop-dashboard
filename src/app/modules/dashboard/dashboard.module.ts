@@ -25,6 +25,8 @@ import { GraphBarComponent } from './components/graphics/graph-bar/graph-bar.com
 import { GraphHeatMapComponent } from './components/graphics/graph-heat-map/graph-heat-map.component';
 import { GraphBarHorizontalComponent } from './components/graphics/graph-bar-horizontal/graph-bar-horizontal.component';
 import { GraphLollipopComponent } from './components/graphics/graph-lollipop/graph-lollipop.component';
+import { BehaviourWrapperComponent } from './components/behaviour-wrapper/behaviour-wrapper.component';
+import { AcquisitionWrapperComponent } from './components/acquisition-wrapper/acquisition-wrapper.component';
 
 
 
@@ -44,7 +46,9 @@ import { GraphLollipopComponent } from './components/graphics/graph-lollipop/gra
     GraphBarComponent,
     GraphHeatMapComponent,
     GraphBarHorizontalComponent,
-    GraphLollipopComponent
+    GraphLollipopComponent,
+    BehaviourWrapperComponent,
+    AcquisitionWrapperComponent
   ],
   imports: [
     CommonModule,
