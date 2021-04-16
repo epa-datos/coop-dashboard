@@ -21,6 +21,7 @@ import { RetailFiltersComponent } from './components/retail-filters/retail-filte
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AudiencesWrapperComponent } from './components/audiences-wrapper/audiences-wrapper.component';
 import { GraphLineComponent } from './components/graphics/graph-line/graph-line.component';
+import { GraphBarComponent } from './components/graphics/graph-bar/graph-bar.component';
 
 
 
@@ -36,7 +37,8 @@ import { GraphLineComponent } from './components/graphics/graph-line/graph-line.
     GraphLineSeriesComponent,
     RetailFiltersComponent,
     AudiencesWrapperComponent,
-    GraphLineComponent
+    GraphLineComponent,
+    GraphBarComponent
   ],
   imports: [
     CommonModule,
