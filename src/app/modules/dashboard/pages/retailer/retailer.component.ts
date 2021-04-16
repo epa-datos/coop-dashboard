@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -14,7 +14,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
     { provide: MatFormFieldControl, useExisting: RetailerComponent }
   ]
 })
-export class RetailerComponent implements OnInit {
+export class RetailerComponent implements OnInit, AfterViewInit {
 
   countryName;
   retailerName;
@@ -57,9 +57,9 @@ export class RetailerComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'investment', 'impressions', 'clicks', 'ctr', 'cpm', 'cpc'];
   private campaigns = [
-    { name: 'Campaign 1', investment: 5000, impressions: 130000, clicks: 7000, ctr: 0.55, cpm: 750, cpc: 50 },
-    { name: 'Campaign 2', investment: 7000, impressions: 150000, clicks: 8000, ctr: 20.55, cpm: 450, cpc: 30 },
-    { name: 'Campaign 3', investment: 2000, impressions: 80000, clicks: 4000, ctr: 10.30, cpm: 120, cpc: 80 }
+    { name: 'Campaign 1', investment: 5000, impressions: 130000, clicks: 7000, ctr: 0.55, ctr_benchmark: 0.12, cpm: 750, cpc: 50 },
+    { name: 'Campaign 2', investment: 7000, impressions: 150000, clicks: 8000, ctr: 25.55, ctr_benchmark: 22.12, cpm: 450, cpc: 30 },
+    { name: 'Campaign 3', investment: 2000, impressions: 80000, clicks: 4000, ctr: 10.30, ctr_benchmark: 11.20, cpm: 120, cpc: 80 }
   ];
   dataSource = new MatTableDataSource<any>(this.campaigns);
   getReqStatus: number = 0;
@@ -126,8 +126,35 @@ export class RetailerComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.loadPaginator();
+  }
+
+
   panelChange(panel, value) {
     this.extPanelIsOpen[panel] = value
+  }
+
+  loadPaginator() {
+    // paginator setup
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Registros por página';
+    this.paginator._intl.nextPageLabel = 'Siguiente';
+    this.paginator._intl.previousPageLabel = 'Anterior';
+    this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+      if (length == 0 || pageSize == 0) { return `0 de ${length}`; }
+
+      length = Math.max(length, 0);
+
+      const startIndex = page * pageSize;
+
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
+      const endIndex = startIndex < length ?
+        Math.min(startIndex + pageSize, length) :
+        startIndex + pageSize;
+
+      return `${startIndex + 1} - ${endIndex} de ${length}`;
+    }
   }
 
 }

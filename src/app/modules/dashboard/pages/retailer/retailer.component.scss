@@ -46,3 +46,9 @@ table {
 .nav-link {
     cursor: pointer;
 }
+
+.value-container {
+    display: grid;
+    grid-template-columns: 40px auto;
+    gap: 8px;
+}
