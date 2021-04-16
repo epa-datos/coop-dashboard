@@ -12,25 +12,30 @@
 </div>
 
 <!-- ANALISIS, CINVERSIONES Y AUP -->
-<ng-container>
-    <div clas="row">
-        <div class="mb-3 mt-0">
-            <span class="text-uppercase text-sm text-muted "><b>Análisis Conversiones. AUP & BR</b></span>
+<div class="mb-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-3 mt-0">
+                <span class="text-uppercase text-sm text-muted "><b>Análisis Conversiones. AUP & BR</b></span>
+            </div>
         </div>
-
-        <div class="pills-container">
-            <ul class="nav nav-pills nav-fill">
-                <li class="nav-item">
-                    <a class="nav-link" [ngClass]="{'active': selectedTab1 === 1}" (click)="selectedTab1 = 1">Género</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" [ngClass]="{'active': selectedTab1 === 2}" (click)="selectedTab1 = 2">Edad</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" [ngClass]="{'active': selectedTab1 === 3}"
-                        (click)="selectedTab1 = 3">Dispositivo</a>
-                </li>
-            </ul>
+        <div class="col-12">
+            <div class="pills-container">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{'active': selectedTab1 === 1}"
+                            (click)="selectedTab1 = 1">Género</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{'active': selectedTab1 === 2}"
+                            (click)="selectedTab1 = 2">Edad</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{'active': selectedTab1 === 3}"
+                            (click)="selectedTab1 = 3">Dispositivo</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -141,10 +146,91 @@
             </div>
         </div>
     </div>
-</ng-container>
+</div>
 
 
 <!-- TRAFICO Y CONVERSIONES POR DIA Y HORA -->
 <ng-container>
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-3 mt-0">
+                <span class="text-uppercase text-sm text-muted "><b>Tráfico y conversiones por hora y por día</b></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="pills-container">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{'active': selectedTab2 === 1}"
+                            (click)="selectedTab2 = 1">Tráfico</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{'active': selectedTab2 === 2}"
+                            (click)="selectedTab2 = 2">Conversiones</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
+    <div class="row" [hidden]="selectedTab2 !== 1">
+        <div class="col-12 col-lg-6 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>Día de la semana / Sesiones</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-heat-map [data]="heatmapData" name="weekday-sesions">
+                    </app-graph-heat-map>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>AUP</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-bar [data]="genderAUP" name="gender-aup" category='gender' value='value'>
+                    </app-graph-bar>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" [hidden]="selectedTab2 !== 2">
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>Conversión</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-bar [data]="ageConversion" name="age-conversion" category='age' value='value'>
+                    </app-graph-bar>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>AUP</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-bar [data]="ageAUP" name="age-aup" category='age' value='value'>
+                    </app-graph-bar>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="text-uppercase text-sm text-muted"><b>BR</b></span>
+                </div>
+                <div class="card-body">
+                    <app-graph-bar [data]="ageBR" name="age-br" category='age' value='value'>
+                    </app-graph-bar>
+                </div>
+            </div>
+        </div>
+    </div>
 </ng-container>

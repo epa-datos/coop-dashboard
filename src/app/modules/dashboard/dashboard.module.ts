@@ -22,6 +22,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { AudiencesWrapperComponent } from './components/audiences-wrapper/audiences-wrapper.component';
 import { GraphLineComponent } from './components/graphics/graph-line/graph-line.component';
 import { GraphBarComponent } from './components/graphics/graph-bar/graph-bar.component';
+import { GraphHeatMapComponent } from './components/graphics/graph-heat-map/graph-heat-map.component';
+import { GraphBarHorizontalComponent } from './components/graphics/graph-bar-horizontal/graph-bar-horizontal.component';
 
 
 
@@ -38,7 +40,9 @@ import { GraphBarComponent } from './components/graphics/graph-bar/graph-bar.com
     RetailFiltersComponent,
     AudiencesWrapperComponent,
     GraphLineComponent,
-    GraphBarComponent
+    GraphBarComponent,
+    GraphHeatMapComponent,
+    GraphBarHorizontalComponent
   ],
   imports: [
     CommonModule,
