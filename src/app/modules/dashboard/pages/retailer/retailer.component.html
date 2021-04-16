@@ -65,7 +65,17 @@
                         <!-- CTR -->
                         <ng-container matColumnDef="ctr">
                             <th mat-header-cell *matHeaderCellDef> CTR</th>
-                            <td mat-cell *matCellDef="let element"> {{element.ctr}} </td>
+
+                            <td mat-cell *matCellDef="let element">
+                                <div class="value-container">
+                                    <span>{{element.ctr}}</span>
+                                    <i class="fas fa-arrow-up text-success"
+                                        *ngIf="element.ctr >= element.ctr_benchmark"></i>
+                                    <i class="fas fa-arrow-down text-danger"
+                                        *ngIf="element.ctr < element.ctr_benchmark"></i>
+                                </div>
+                            </td>
+
                         </ng-container>
 
                         <!-- CPM -->
@@ -104,7 +114,7 @@
         <app-retail-filters></app-retail-filters>
 
         <!-- CARD STATS -->
-        <div class="row mt-4">
+        <div class="row mt-5">
             <div class="col-12">
                 <div class="stats-container">
                     <app-card-stat *ngFor="let stat of stats" [stat]="stat"></app-card-stat>
@@ -178,7 +188,7 @@
 
 
         <!-- ACCORDION -->
-        <div class="mt-4">
+        <div class="mt-5">
             <mat-accordion multi>
                 <mat-expansion-panel (opened)="panelChange('panel1',true)" (closed)="panelChange('panel1',false)">
                     <mat-expansion-panel-header>
@@ -186,7 +196,7 @@
                             <span class="h3 mb-0">Audiencias</span>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-audiences-wrapper></app-audiences-wrapper>
+                    <app-audiences-wrapper *ngIf="extPanelIsOpen.panel1"></app-audiences-wrapper>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel (opened)="panelChange('panel2',true)" (closed)="panelChange('panel2',false)">
@@ -195,7 +205,7 @@
                             <span class="h3 mb-0">Adquisición</span>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <p>Contenido de adiquisición</p>
+                    <app-acquisition-wrapper *ngIf="extPanelIsOpen.panel2"></app-acquisition-wrapper>
                 </mat-expansion-panel>
 
                 <mat-expansion-panel (opened)="panelChange('panel3',true)" (closed)="panelChange('panel3',false)">

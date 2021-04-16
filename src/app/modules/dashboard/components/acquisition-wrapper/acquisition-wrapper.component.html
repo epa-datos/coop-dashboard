@@ -1,0 +1,120 @@
+<div class="row mt-4">
+    <div class="col-12 col-lg-6 mt-4 mb-5">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Usuarios por sector</span>
+            </div>
+            <div class="card-body">
+                <app-graph-line-series [series]="usersBySectors" name="users-sector">
+                </app-graph-line-series>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6 mt-4 mb-5">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Usuarios por fuente</span>
+            </div>
+            <div class="card-body">
+                <app-graph-line-series [series]="usersBySources" name="users-source">
+                </app-graph-line-series>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="adaptable-container">
+            <table mat-table [dataSource]="dataSource">
+
+                <!-- name source -->
+                <ng-container matColumnDef="source">
+                    <th mat-header-cell *matHeaderCellDef> Fuente </th>
+                    <td mat-cell *matCellDef="let element"> {{element.source}} </td>
+                </ng-container>
+
+                <!-- investment way -->
+                <ng-container matColumnDef="way">
+                    <th mat-header-cell *matHeaderCellDef> Medio </th>
+                    <td mat-cell *matCellDef="let element"> {{element.way}} </td>
+                </ng-container>
+
+                <!-- campaign -->
+                <ng-container matColumnDef="campaign">
+                    <th mat-header-cell *matHeaderCellDef> Campaña</th>
+                    <td mat-cell *matCellDef="let element"> {{element.campaign}} </td>
+                </ng-container>
+
+                <!-- users -->
+                <ng-container matColumnDef="users">
+                    <th mat-header-cell *matHeaderCellDef> Usuarios</th>
+                    <td mat-cell *matCellDef="let element"> {{element.users}} </td>
+                </ng-container>
+
+                <!-- newUsers -->
+                <ng-container matColumnDef="newUsers">
+                    <th mat-header-cell *matHeaderCellDef> Nuevos usuarios</th>
+                    <td mat-cell *matCellDef="let element"> {{element.newUsers}} </td>
+                </ng-container>
+
+                <!-- sessions -->
+                <ng-container matColumnDef="sessions">
+                    <th mat-header-cell *matHeaderCellDef> Sesiones</th>
+                    <td mat-cell *matCellDef="let element"> {{element.sessions}} </td>
+                </ng-container>
+
+                <!-- pagesBySession -->
+                <ng-container matColumnDef="pagesBySession">
+                    <th mat-header-cell *matHeaderCellDef> Páginas por sesión</th>
+                    <td mat-cell *matCellDef="let element"> {{element.pagesBySession}} </td>
+                </ng-container>
+
+                <!-- bounceRate -->
+                <ng-container matColumnDef="bounceRate">
+                    <th mat-header-cell *matHeaderCellDef> Porcentaje de rebote</th>
+                    <td mat-cell *matCellDef="let element"> {{element.bounceRate}} </td>
+                </ng-container>
+
+                <!-- sessionDuration -->
+                <ng-container matColumnDef="sessionDuration">
+                    <th mat-header-cell *matHeaderCellDef> Duración media de la sesión</th>
+                    <td mat-cell *matCellDef="let element"> {{element.sessionDuration}} </td>
+                </ng-container>
+
+                <!-- amount -->
+                <ng-container matColumnDef="amount">
+                    <th mat-header-cell *matHeaderCellDef> Cantidad</th>
+                    <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
+                </ng-container>
+
+                <!-- income -->
+                <ng-container matColumnDef="income">
+                    <th mat-header-cell *matHeaderCellDef> Ingresos del producto</th>
+                    <td mat-cell *matCellDef="let element"> {{element.income}} </td>
+                </ng-container>
+
+                <!-- yoy -->
+                <ng-container matColumnDef="yoy">
+                    <th mat-header-cell *matHeaderCellDef> %YoY</th>
+                    <td mat-cell *matCellDef="let element"> {{element.yoy}} </td>
+                </ng-container>
+
+                <!-- disclaimer column -->
+                <ng-container matColumnDef="disclaimer">
+                    <td mat-footer-cell *matFooterCellDef colspan="3">
+                        <div class="text-danger text-center" *ngIf="getReqStatus === 3">
+                            Ocurrió un error al consultar los usuarios
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
+                    [hidden]="getReqStatus !== 3"></tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>
