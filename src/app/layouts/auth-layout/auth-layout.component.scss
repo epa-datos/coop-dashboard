@@ -1,6 +1,6 @@
 .main-content {
     background-attachment: fixed;
-    background-image: url('/assets/img/theme/auth-layout.jpg');
+    background-image: url('/assets/img/brand/hp-wallpaper.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -14,4 +14,44 @@
 
 .brand p {
     font-size: 24px;
+}
+
+
+
+// provisional example
+.one-more-container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+  
+  
+.single-featured-background {
+    position:relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.onlyBg {
+    background-image: url('/assets/img/brand/hp-wallpaper.jpg');
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    min-height: 100vh;
+}
+
+.one-more-container .onlyBg {
+    transform: scale(1.3);
+}
+  
+.super-title-container{
+    position:relative;
 }
