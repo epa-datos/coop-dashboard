@@ -4,11 +4,11 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 
 @Component({
-  selector: 'app-graph-bar',
-  templateUrl: './graph-bar.component.html',
-  styleUrls: ['./graph-bar.component.scss']
+  selector: 'app-chart-bar',
+  templateUrl: './chart-bar.component.html',
+  styleUrls: ['./chart-bar.component.scss']
 })
-export class GraphBarComponent implements OnInit, AfterViewInit {
+export class ChartBarComponent implements OnInit, AfterViewInit {
 
   @Input() data;
   @Input() value: string;

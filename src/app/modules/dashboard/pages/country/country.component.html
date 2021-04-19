@@ -26,8 +26,8 @@
                     <span class="h4">Inversión por mes</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-pie [data]="devices" name="devices-per-sector" value="value" category="name">
-                    </app-graph-pie>
+                    <app-chart-pie [data]="devices" name="devices-per-sector" value="value" category="name">
+                    </app-chart-pie>
                 </div>
             </div>
         </div>
@@ -39,8 +39,8 @@
                     <span class="h4">Género</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-pie [data]="gender" name="gender" value="value" category="name">
-                    </app-graph-pie>
+                    <app-chart-pie [data]="gender" name="gender" value="value" category="name">
+                    </app-chart-pie>
                 </div>
             </div>
         </div>
@@ -52,8 +52,8 @@
                     <span class="h4">Usuarios por sector</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-pie [data]="usersBySector" name="users-sector" value="value" category="name">
-                    </app-graph-pie>
+                    <app-chart-pie [data]="usersBySector" name="users-sector" value="value" category="name">
+                    </app-chart-pie>
                 </div>
             </div>
         </div>
@@ -65,8 +65,8 @@
                     <span class="h4">Ventas por sector</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-pie [data]="salesBySector" name="sales-sector" value="value" category="name">
-                    </app-graph-pie>
+                    <app-chart-pie [data]="salesBySector" name="sales-sector" value="value" category="name">
+                    </app-chart-pie>
                 </div>
             </div>
         </div>
@@ -79,8 +79,8 @@
                     <span class="h4">Inversión vs Revenue</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-line-comparison [data]="investmentVsRevenue" name="investment-vs-revenue">
-                    </app-graph-line-comparison>
+                    <app-chart-line-comparison [data]="investmentVsRevenue" name="investment-vs-revenue">
+                    </app-chart-line-comparison>
                 </div>
             </div>
         </div>

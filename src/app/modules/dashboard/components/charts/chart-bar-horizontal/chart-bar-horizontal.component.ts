@@ -4,11 +4,11 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 
 @Component({
-  selector: 'app-graph-bar-horizontal',
-  templateUrl: './graph-bar-horizontal.component.html',
-  styleUrls: ['./graph-bar-horizontal.component.scss']
+  selector: 'app-chart-bar-horizontal',
+  templateUrl: './chart-bar-horizontal.component.html',
+  styleUrls: ['./chart-bar-horizontal.component.scss']
 })
-export class GraphBarHorizontalComponent implements OnInit, AfterViewInit {
+export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
 
   @Input() data;
   @Input() value: string;

@@ -3,11 +3,11 @@ import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 
 @Component({
-  selector: 'app-graph-line-comparison',
-  templateUrl: './graph-line-comparison.component.html',
-  styleUrls: ['./graph-line-comparison.component.scss']
+  selector: 'app-chart-line-comparison',
+  templateUrl: './chart-line-comparison.component.html',
+  styleUrls: ['./chart-line-comparison.component.scss']
 })
-export class GraphLineComparisonComponent implements OnInit, AfterViewInit {
+export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
 
   @Input() data;
   graphID;

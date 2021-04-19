@@ -4,11 +4,11 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 
 @Component({
-  selector: 'app-graph-line',
-  templateUrl: './graph-line.component.html',
-  styleUrls: ['./graph-line.component.scss']
+  selector: 'app-chart-line',
+  templateUrl: './chart-line.component.html',
+  styleUrls: ['./chart-line.component.scss']
 })
-export class GraphLineComponent implements OnInit, AfterViewInit {
+export class ChartLineComponent implements OnInit, AfterViewInit {
 
   @Input() data;
   @Input() value;

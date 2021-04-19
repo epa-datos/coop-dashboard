@@ -5,11 +5,11 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-  selector: 'app-graph-pie',
-  templateUrl: './graph-pie.component.html',
-  styleUrls: ['./graph-pie.component.scss']
+  selector: 'app-chart-pie',
+  templateUrl: './chart-pie.component.html',
+  styleUrls: ['./chart-pie.component.scss']
 })
-export class GraphPieComponent implements OnInit, AfterViewInit {
+export class ChartPieComponent implements OnInit, AfterViewInit {
   private chart: am4charts.XYChart;
 
   @Input() data;

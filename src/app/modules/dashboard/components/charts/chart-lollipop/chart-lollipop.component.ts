@@ -4,11 +4,11 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 
 @Component({
-  selector: 'app-graph-lollipop',
-  templateUrl: './graph-lollipop.component.html',
-  styleUrls: ['./graph-lollipop.component.scss']
+  selector: 'app-chart-lollipop',
+  templateUrl: './chart-lollipop.component.html',
+  styleUrls: ['./chart-lollipop.component.scss']
 })
-export class GraphLollipopComponent implements OnInit, AfterViewInit {
+export class ChartLollipopComponent implements OnInit, AfterViewInit {
 
   @Input() data;
   @Input() value: string;

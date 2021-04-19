@@ -4,11 +4,11 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 
 @Component({
-  selector: 'app-graph-heat-map',
-  templateUrl: './graph-heat-map.component.html',
-  styleUrls: ['./graph-heat-map.component.scss']
+  selector: 'app-chart-heat-map',
+  templateUrl: './chart-heat-map.component.html',
+  styleUrls: ['./chart-heat-map.component.scss']
 })
-export class GraphHeatMapComponent implements OnInit, AfterViewInit {
+export class ChartHeatMapComponent implements OnInit, AfterViewInit {
 
   @Input() data;
   graphID;
