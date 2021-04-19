@@ -5,8 +5,8 @@
                 <span class="h4">Análisis por tráfico</span>
             </div>
             <div class="card-body">
-                <app-graph-line [data]="trafficByMonths" name="traffic-months" date="date" value="visits">
-                </app-graph-line>
+                <app-chart-line [data]="trafficByMonths" name="traffic-months" date="date" value="visits">
+                </app-chart-line>
             </div>
         </div>
     </div>
@@ -47,8 +47,8 @@
                     <span class="h4">Conversión</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-bar [data]="genderConversion" name="gender-conversion" category='gender' value='value'>
-                    </app-graph-bar>
+                    <app-chart-bar [data]="genderConversion" name="gender-conversion" category='gender' value='value'>
+                    </app-chart-bar>
                 </div>
             </div>
         </div>
@@ -58,8 +58,8 @@
                     <span class="h4">AUP</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-bar [data]="genderAUP" name="gender-aup" category='gender' value='value'>
-                    </app-graph-bar>
+                    <app-chart-bar [data]="genderAUP" name="gender-aup" category='gender' value='value'>
+                    </app-chart-bar>
                 </div>
             </div>
         </div>
@@ -69,8 +69,8 @@
                     <span class="h4">BR</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-bar [data]="genderBR" name="gender-br" category='gender' value='value'>
-                    </app-graph-bar>
+                    <app-chart-bar [data]="genderBR" name="gender-br" category='gender' value='value'>
+                    </app-chart-bar>
                 </div>
             </div>
         </div>
@@ -83,8 +83,8 @@
                     <span class="h4">Conversión</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-bar [data]="ageConversion" name="age-conversion" category='age' value='value'>
-                    </app-graph-bar>
+                    <app-chart-bar [data]="ageConversion" name="age-conversion" category='age' value='value'>
+                    </app-chart-bar>
                 </div>
             </div>
         </div>
@@ -94,8 +94,8 @@
                     <span class="h4">AUP</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-bar [data]="ageAUP" name="age-aup" category='age' value='value'>
-                    </app-graph-bar>
+                    <app-chart-bar [data]="ageAUP" name="age-aup" category='age' value='value'>
+                    </app-chart-bar>
                 </div>
             </div>
         </div>
@@ -105,8 +105,8 @@
                     <span class="h4">BR</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-bar [data]="ageBR" name="age-br" category='age' value='value'>
-                    </app-graph-bar>
+                    <app-chart-bar [data]="ageBR" name="age-br" category='age' value='value'>
+                    </app-chart-bar>
                 </div>
             </div>
         </div>
@@ -119,8 +119,8 @@
                     <span class="h4">Conversión</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-pie [data]="deviceConversion" name="device-conversion" category='device' value='value'>
-                    </app-graph-pie>
+                    <app-chart-pie [data]="deviceConversion" name="device-conversion" category='device' value='value'>
+                    </app-chart-pie>
                 </div>
             </div>
         </div>
@@ -130,8 +130,8 @@
                     <span class="h4">AUP</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-pie [data]="deviceAUP" name="device-aup" category='device' value='value'>
-                    </app-graph-pie>
+                    <app-chart-pie [data]="deviceAUP" name="device-aup" category='device' value='value'>
+                    </app-chart-pie>
                 </div>
             </div>
         </div>
@@ -141,8 +141,8 @@
                     <span class="h4">BR</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-pie [data]="deviceBR" name="device-br" category='device' value='value'>
-                    </app-graph-pie>
+                    <app-chart-pie [data]="deviceBR" name="device-br" category='device' value='value'>
+                    </app-chart-pie>
                 </div>
             </div>
         </div>
@@ -181,8 +181,8 @@
                     <span class="h4">Día de la semana / Sesiones</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-heat-map [data]="heatmapData" name="weekday-sesions">
-                    </app-graph-heat-map>
+                    <app-chart-heat-map [data]="heatmapData" name="weekday-sesions">
+                    </app-chart-heat-map>
                 </div>
             </div>
         </div>
@@ -192,9 +192,9 @@
                     <span class="h4">Tráfico por día de la semana</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-bar-horizontal [data]="trafficByDay" name="traffic-day" category='weekday' value='value'
+                    <app-chart-bar-horizontal [data]="trafficByDay" name="traffic-day" category='weekday' value='value'
                         height="250px">
-                    </app-graph-bar-horizontal>
+                    </app-chart-bar-horizontal>
                 </div>
             </div>
 
@@ -203,9 +203,9 @@
                     <span class="h4">Tráfico por hora del día</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-lollipop [data]="trafficByHour" name="traffic-hour" category="hour" value="visits"
+                    <app-chart-lollipop [data]="trafficByHour" name="traffic-hour" category="hour" value="visits"
                         height="250px">
-                    </app-graph-lollipop>
+                    </app-chart-lollipop>
                 </div>
             </div>
         </div>
@@ -218,8 +218,8 @@
                     <span class="h4">Conversiones y tráfico por día</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-line-comparison [data]="conversionsTrafficPerDay" name="conv-tra-day">
-                    </app-graph-line-comparison>
+                    <app-chart-line-comparison [data]="conversionsTrafficPerDay" name="conv-tra-day">
+                    </app-chart-line-comparison>
                 </div>
             </div>
         </div>
@@ -229,8 +229,8 @@
                     <span class="h4">Conversiones y tráfico por hora</span>
                 </div>
                 <div class="card-body">
-                    <app-graph-line-comparison [data]="conversionsTrafficPerHour" name="conv-tra-hour">
-                    </app-graph-line-comparison>
+                    <app-chart-line-comparison [data]="conversionsTrafficPerHour" name="conv-tra-hour">
+                    </app-chart-line-comparison>
                 </div>
             </div>
         </div>
