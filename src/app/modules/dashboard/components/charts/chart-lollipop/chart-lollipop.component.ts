@@ -33,10 +33,10 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.loadGraph();
+    this.loadChart();
   }
 
-  loadGraph() {
+  loadChart() {
     am4core.useTheme(am4themes_animated);
 
     let chart = am4core.create(this.graphID, am4charts.XYChart);

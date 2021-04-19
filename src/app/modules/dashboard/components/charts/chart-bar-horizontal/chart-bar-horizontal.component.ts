@@ -15,7 +15,7 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
   @Input() category: string;
   @Input() height: string = '350px'; // height property value valid in css
 
-  graphID;
+  chartID;
   loadStatus: number = 0;
 
   private _name: string;
@@ -24,7 +24,7 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
   }
   @Input() set name(value) {
     this._name = value;
-    this.graphID = `chart-bar-horizontal-${this.name}`
+    this.chartID = `chart-bar-horizontal-${this.name}`
   }
   constructor() { }
 
@@ -32,12 +32,12 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.loadGraph();
+    this.loadChart();
   }
 
-  loadGraph() {
+  loadChart() {
     am4core.useTheme(am4themes_animated);
-    let chart = am4core.create(this.graphID, am4charts.XYChart);
+    let chart = am4core.create(this.chartID, am4charts.XYChart);
     chart.data = this.data;
 
     let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());

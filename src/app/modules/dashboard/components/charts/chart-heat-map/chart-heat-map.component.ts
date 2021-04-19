@@ -11,7 +11,7 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 export class ChartHeatMapComponent implements OnInit, AfterViewInit {
 
   @Input() data;
-  graphID;
+  chartID;
   loadStatus: number = 0;
 
   private _name: string;
@@ -20,7 +20,7 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
   }
   @Input() set name(value) {
     this._name = value;
-    this.graphID = `chart-heat-map${this.name}`
+    this.chartID = `chart-heat-map${this.name}`
   }
 
 
@@ -30,13 +30,13 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.loadGraph();
+    this.loadChart();
   }
 
-  loadGraph() {
+  loadChart() {
     am4core.useTheme(am4themes_animated);
 
-    let chart = am4core.create(this.graphID, am4charts.XYChart);
+    let chart = am4core.create(this.chartID, am4charts.XYChart);
     chart.maskBullets = false;
 
     let xAxis = chart.xAxes.push(new am4charts.CategoryAxis());

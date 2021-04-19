@@ -11,7 +11,7 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
 
   @Input() series;
-  graphID;
+  chartID;
   loadStatus: number = 0;
 
   private _name: string;
@@ -20,7 +20,7 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
   }
   @Input() set name(value) {
     this._name = value;
-    this.graphID = `chart-m-line${this.name}`
+    this.chartID = `chart-m-line${this.name}`
   }
 
   chart;
@@ -31,13 +31,13 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.loadGraph();
+    this.loadChart();
   }
 
-  loadGraph() {
+  loadChart() {
     this.loadStatus = 1;
     am4core.useTheme(am4themes_animated);
-    let chart = am4core.create(this.graphID, am4charts.XYChart);
+    let chart = am4core.create(this.chartID, am4charts.XYChart);
 
     // Create axes
     let dateAxis = chart.xAxes.push(new am4charts.DateAxis());

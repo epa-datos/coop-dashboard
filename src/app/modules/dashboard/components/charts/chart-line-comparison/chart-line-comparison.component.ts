@@ -10,7 +10,7 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
 
   @Input() data;
-  graphID;
+  chartID;
   loadStatus: number = 0;
 
   private _name: string;
@@ -19,7 +19,7 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
   }
   @Input() set name(value) {
     this._name = value;
-    this.graphID = `chart-m-line${this.name}`
+    this.chartID = `chart-m-line${this.name}`
   }
 
   constructor() { }
@@ -28,13 +28,13 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.loadGraph();
+    this.loadChart();
   }
 
-  loadGraph() {
+  loadChart() {
     this.loadStatus = 1;
     // Create chart instance
-    var chart = am4core.create(this.graphID, am4charts.XYChart);
+    var chart = am4core.create(this.chartID, am4charts.XYChart);
     chart.data = this.data;
 
     // Create axes

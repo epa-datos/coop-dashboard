@@ -13,7 +13,7 @@ export class ChartLineComponent implements OnInit, AfterViewInit {
   @Input() data;
   @Input() value;
   @Input() date;
-  graphID;
+  chartID;
   loadStatus: number = 0;
 
   private _name: string;
@@ -22,7 +22,7 @@ export class ChartLineComponent implements OnInit, AfterViewInit {
   }
   @Input() set name(value) {
     this._name = value;
-    this.graphID = `chart-line${this.name}`
+    this.chartID = `chart-line${this.name}`
   }
 
   constructor() { }
@@ -31,13 +31,13 @@ export class ChartLineComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.loadGraph();
+    this.loadChart();
   }
 
-  loadGraph() {
+  loadChart() {
     am4core.useTheme(am4themes_animated);
     // Create chart instance
-    let chart = am4core.create(this.graphID, am4charts.XYChart);
+    let chart = am4core.create(this.chartID, am4charts.XYChart);
 
     // Add data
     chart.data = this.data;

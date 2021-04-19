@@ -16,7 +16,7 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
   @Input() value: string;
   @Input() category: string;
 
-  graphID;
+  chartID;
   loadStatus: number = 0;
 
   private _name: string;
@@ -25,7 +25,7 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
   }
   @Input() set name(value) {
     this._name = value;
-    this.graphID = `chart-pie-${this.name}`
+    this.chartID = `chart-pie-${this.name}`
   }
 
   constructor(
@@ -44,15 +44,15 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
   ngOnInit(): void { }
 
   ngAfterViewInit() {
-    this.loadGraph();
+    this.loadChart();
   }
 
-  loadGraph() {
+  loadChart() {
     this.browserOnly(() => {
       this.loadStatus = 1;
       // Chart code goes in here
       am4core.useTheme(am4themes_animated);
-      let chart = am4core.create(this.graphID, am4charts.PieChart);
+      let chart = am4core.create(this.chartID, am4charts.PieChart);
       chart.data = this.data;
 
       // Add and configure Series
