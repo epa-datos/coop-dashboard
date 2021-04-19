@@ -7,7 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AudiencesWrapperComponent implements OnInit {
 
-  trafficByMonths = []
+  trafficByDays = [
+    { date: new Date(2021, 3, 15), visits: 3500 },
+    { date: new Date(2021, 3, 16), visits: 2400 },
+    { date: new Date(2021, 3, 17), visits: 1800 },
+    { date: new Date(2021, 3, 18), visits: 1900 },
+    { date: new Date(2021, 3, 19), visits: 2300 },
+    { date: new Date(2021, 3, 20), visits: 3600 },
+    { date: new Date(2021, 3, 21), visits: 3700 },
+  ]
 
   genderConversion = [
     { gender: 'Hombre', value: 19000 },
@@ -937,13 +945,13 @@ export class AudiencesWrapperComponent implements OnInit {
   ]
 
   conversionsTrafficPerDay = [
-    { date: new Date(2021, 3, 12), value1: 150, value2: 280, previousDate: new Date(2021, 3, 12) },
-    { date: new Date(2021, 3, 13), value1: 280, value2: 550, previousDate: new Date(2021, 3, 13) },
-    { date: new Date(2021, 3, 14), value1: 130, value2: 430, previousDate: new Date(2021, 3, 14) },
-    { date: new Date(2021, 3, 15), value1: 140, value2: 470, previousDate: new Date(2021, 3, 15) },
-    { date: new Date(2021, 3, 16), value1: 160, value2: 500, previousDate: new Date(2021, 2, 16) },
-    { date: new Date(2021, 3, 17), value1: 80, value2: 750, previousDate: new Date(2021, 2, 17) },
-    { date: new Date(2021, 3, 18), value1: 88, value2: 650, previousDate: new Date(2021, 2, 18) }
+    { date: new Date(2021, 3, 15), value1: 150, value2: 280, previousDate: new Date(2021, 3, 12) },
+    { date: new Date(2021, 3, 16), value1: 280, value2: 550, previousDate: new Date(2021, 3, 13) },
+    { date: new Date(2021, 3, 17), value1: 130, value2: 430, previousDate: new Date(2021, 3, 14) },
+    { date: new Date(2021, 3, 18), value1: 140, value2: 470, previousDate: new Date(2021, 3, 15) },
+    { date: new Date(2021, 3, 19), value1: 160, value2: 500, previousDate: new Date(2021, 2, 16) },
+    { date: new Date(2021, 3, 20), value1: 80, value2: 750, previousDate: new Date(2021, 2, 17) },
+    { date: new Date(2021, 3, 21), value1: 88, value2: 650, previousDate: new Date(2021, 2, 18) }
   ]
 
   conversionsTrafficPerHour = [
@@ -960,24 +968,5 @@ export class AudiencesWrapperComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.getTrafficByMonths();
   }
-
-  getTrafficByMonths() {
-    let firstDate = new Date();
-    firstDate.setDate(firstDate.getDate() - 90);
-    let visits = 1200;
-    for (var i = 0; i < 90; i++) {
-      let newDate = new Date(firstDate);
-      newDate.setDate(newDate.getDate() + i);
-
-      visits += Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 10);
-
-      this.trafficByMonths.push({
-        date: newDate,
-        visits: visits
-      });
-    }
-  }
-
 }

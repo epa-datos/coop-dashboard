@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
-import { MatAccordion } from '@angular/material/expansion';
 import { MatFormFieldControl } from '@angular/material/form-field';
 
 
@@ -24,33 +23,49 @@ export class RetailerComponent implements OnInit, AfterViewInit {
     {
       name: 'Clicks',
       serie: [
-        { date: new Date(2021, 1, 1), value: 25000 },
-        { date: new Date(2021, 2, 1), value: 47000 },
-        { date: new Date(2021, 3, 1), value: 50000 }
+        { date: new Date(2021, 3, 15), value: 25000 },
+        { date: new Date(2021, 3, 16), value: 47000 },
+        { date: new Date(2021, 3, 17), value: 50000 },
+        { date: new Date(2021, 3, 18), value: 45000 },
+        { date: new Date(2021, 3, 19), value: 41000 },
+        { date: new Date(2021, 3, 20), value: 43500 },
+        { date: new Date(2021, 3, 21), value: 44000 },
       ]
     },
     {
       name: 'Impresiones',
       serie: [
-        { date: new Date(2021, 1, 1), value: 20000 },
-        { date: new Date(2021, 2, 1), value: 35000 },
-        { date: new Date(2021, 3, 1), value: 40000 }
+        { date: new Date(2021, 3, 15), value: 20000 },
+        { date: new Date(2021, 3, 16), value: 35000 },
+        { date: new Date(2021, 3, 17), value: 40000 },
+        { date: new Date(2021, 3, 18), value: 36000 },
+        { date: new Date(2021, 3, 19), value: 38500 },
+        { date: new Date(2021, 3, 20), value: 37000 },
+        { date: new Date(2021, 3, 21), value: 38700 }
       ]
     },
     {
       name: 'CPC',
       serie: [
-        { date: new Date(2021, 1, 1), value: 45000 },
-        { date: new Date(2021, 2, 1), value: 37000 },
-        { date: new Date(2021, 3, 1), value: 40000 }
+        { date: new Date(2021, 3, 15), value: 45000 },
+        { date: new Date(2021, 3, 16), value: 37000 },
+        { date: new Date(2021, 3, 17), value: 40000 },
+        { date: new Date(2021, 3, 18), value: 39000 },
+        { date: new Date(2021, 3, 19), value: 37000 },
+        { date: new Date(2021, 3, 20), value: 38500 },
+        { date: new Date(2021, 3, 21), value: 38000 }
       ]
     },
     {
       name: 'Inversión',
       serie: [
-        { date: new Date(2021, 1, 1), value: 30000 },
-        { date: new Date(2021, 2, 1), value: 27510 },
-        { date: new Date(2021, 3, 1), value: 50000 }
+        { date: new Date(2021, 3, 15), value: 30000 },
+        { date: new Date(2021, 3, 16), value: 27510 },
+        { date: new Date(2021, 3, 17), value: 50000 },
+        { date: new Date(2021, 3, 18), value: 52000 },
+        { date: new Date(2021, 3, 19), value: 54000 },
+        { date: new Date(2021, 3, 20), value: 50000 },
+        { date: new Date(2021, 3, 21), value: 48000 },
       ]
     }
   ]

@@ -13,25 +13,37 @@ export class AcquisitionWrapperComponent implements OnInit, AfterViewInit {
     {
       name: 'Search',
       serie: [
-        { date: new Date(2021, 1, 1), value: 2500 },
-        { date: new Date(2021, 2, 1), value: 4700 },
-        { date: new Date(2021, 3, 1), value: 5000 }
+        { date: new Date(2021, 3, 15), value: 2500 },
+        { date: new Date(2021, 3, 16), value: 4700 },
+        { date: new Date(2021, 3, 17), value: 4600 },
+        { date: new Date(2021, 3, 18), value: 4700 },
+        { date: new Date(2021, 3, 19), value: 4500 },
+        { date: new Date(2021, 3, 20), value: 4300 },
+        { date: new Date(2021, 3, 21), value: 4400 }
       ]
     },
     {
       name: 'Marketing',
       serie: [
-        { date: new Date(2021, 1, 1), value: 2000 },
-        { date: new Date(2021, 2, 1), value: 3500 },
-        { date: new Date(2021, 3, 1), value: 4000 }
+        { date: new Date(2021, 3, 15), value: 2000 },
+        { date: new Date(2021, 3, 16), value: 3500 },
+        { date: new Date(2021, 3, 17), value: 3200 },
+        { date: new Date(2021, 3, 18), value: 3600 },
+        { date: new Date(2021, 3, 19), value: 3000 },
+        { date: new Date(2021, 3, 20), value: 3400 },
+        { date: new Date(2021, 3, 21), value: 3000 }
       ]
     },
     {
       name: 'Ventas',
       serie: [
-        { date: new Date(2021, 1, 1), value: 4500 },
-        { date: new Date(2021, 2, 1), value: 3700 },
-        { date: new Date(2021, 3, 1), value: 4000 }
+        { date: new Date(2021, 3, 15), value: 4500 },
+        { date: new Date(2021, 3, 16), value: 3700 },
+        { date: new Date(2021, 3, 17), value: 3800 },
+        { date: new Date(2021, 3, 18), value: 3200 },
+        { date: new Date(2021, 3, 19), value: 3500 },
+        { date: new Date(2021, 3, 20), value: 4500 },
+        { date: new Date(2021, 3, 21), value: 4700 }
       ]
     }
   ]
@@ -40,41 +52,61 @@ export class AcquisitionWrapperComponent implements OnInit, AfterViewInit {
     {
       name: 'Fuente 1',
       serie: [
-        { date: new Date(2021, 1, 1), value: 2800 },
-        { date: new Date(2021, 2, 1), value: 1500 },
-        { date: new Date(2021, 3, 1), value: 3400 }
+        { date: new Date(2021, 3, 15), value: 2800 },
+        { date: new Date(2021, 3, 16), value: 1500 },
+        { date: new Date(2021, 3, 17), value: 3400 },
+        { date: new Date(2021, 3, 18), value: 3200 },
+        { date: new Date(2021, 3, 19), value: 3150 },
+        { date: new Date(2021, 3, 20), value: 2900 },
+        { date: new Date(2021, 3, 21), value: 3400 }
       ]
     },
     {
       name: 'Fuente 2',
       serie: [
-        { date: new Date(2021, 1, 1), value: 1400 },
-        { date: new Date(2021, 2, 1), value: 1300 },
-        { date: new Date(2021, 3, 1), value: 2700 }
+        { date: new Date(2021, 3, 15), value: 1400 },
+        { date: new Date(2021, 3, 16), value: 1300 },
+        { date: new Date(2021, 3, 17), value: 1250 },
+        { date: new Date(2021, 3, 18), value: 1100 },
+        { date: new Date(2021, 3, 19), value: 1300 },
+        { date: new Date(2021, 3, 20), value: 1450 },
+        { date: new Date(2021, 3, 21), value: 1580 }
       ]
     },
     {
       name: 'Fuente 3',
       serie: [
-        { date: new Date(2021, 1, 1), value: 4800 },
-        { date: new Date(2021, 2, 1), value: 2500 },
-        { date: new Date(2021, 3, 1), value: 3600 }
+        { date: new Date(2021, 3, 15), value: 4800 },
+        { date: new Date(2021, 3, 16), value: 2500 },
+        { date: new Date(2021, 3, 17), value: 3600 },
+        { date: new Date(2021, 3, 18), value: 3700 },
+        { date: new Date(2021, 3, 19), value: 3600 },
+        { date: new Date(2021, 3, 20), value: 3650 },
+        { date: new Date(2021, 3, 21), value: 3800 }
       ]
     },
     {
       name: 'Fuente 4',
       serie: [
-        { date: new Date(2021, 1, 1), value: 1300 },
-        { date: new Date(2021, 2, 1), value: 1850 },
-        { date: new Date(2021, 3, 1), value: 2100 }
+        { date: new Date(2021, 3, 15), value: 1300 },
+        { date: new Date(2021, 3, 16), value: 1850 },
+        { date: new Date(2021, 3, 17), value: 2100 },
+        { date: new Date(2021, 3, 18), value: 2150 },
+        { date: new Date(2021, 3, 19), value: 2200 },
+        { date: new Date(2021, 3, 20), value: 2300 },
+        { date: new Date(2021, 3, 21), value: 2400 }
       ]
     },
     {
       name: 'Fuente 5',
       serie: [
-        { date: new Date(2021, 1, 1), value: 2300 },
-        { date: new Date(2021, 2, 1), value: 1500 },
-        { date: new Date(2021, 3, 1), value: 1600 }
+        { date: new Date(2021, 3, 15), value: 230 },
+        { date: new Date(2021, 3, 16), value: 150 },
+        { date: new Date(2021, 3, 17), value: 160 },
+        { date: new Date(2021, 3, 18), value: 150 },
+        { date: new Date(2021, 3, 19), value: 200 },
+        { date: new Date(2021, 3, 20), value: 250 },
+        { date: new Date(2021, 3, 21), value: 480 }
       ]
     }
   ]
