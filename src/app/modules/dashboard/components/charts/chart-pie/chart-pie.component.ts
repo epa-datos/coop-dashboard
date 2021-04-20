@@ -13,8 +13,8 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
   private chart: am4charts.XYChart;
 
   @Input() data;
-  @Input() value: string;
-  @Input() category: string;
+  @Input() value: string = 'value';
+  @Input() category: string = 'category';
 
   chartID;
   loadStatus: number = 0;

@@ -11,8 +11,8 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 export class ChartBarComponent implements OnInit, AfterViewInit {
 
   @Input() data;
-  @Input() value: string;
-  @Input() category: string;
+  @Input() value: string = 'value';
+  @Input() category: string = 'category';
   chartID;
   loadStatus: number = 0;
 
