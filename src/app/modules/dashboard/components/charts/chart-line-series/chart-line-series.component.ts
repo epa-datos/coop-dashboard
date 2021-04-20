@@ -98,6 +98,10 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
       series.data = data;
       return series;
     }
+
+    // Add cursor
+    chart.cursor = new am4charts.XYCursor();
+    chart.cursor.xAxis = dateAxis;
   }
 
 
