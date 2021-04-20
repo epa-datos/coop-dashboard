@@ -21,7 +21,7 @@ export class RetailerComponent implements OnInit, AfterViewInit {
 
   campMetrics = [
     {
-      name: 'Clicks',
+      name: 'Inversión',
       serie: [
         { date: new Date(2021, 3, 15), value: 25000 },
         { date: new Date(2021, 3, 16), value: 47000 },
@@ -30,7 +30,8 @@ export class RetailerComponent implements OnInit, AfterViewInit {
         { date: new Date(2021, 3, 19), value: 41000 },
         { date: new Date(2021, 3, 20), value: 43500 },
         { date: new Date(2021, 3, 21), value: 44000 },
-      ]
+      ],
+      disable: true,
     },
     {
       name: 'Impresiones',
@@ -45,7 +46,7 @@ export class RetailerComponent implements OnInit, AfterViewInit {
       ]
     },
     {
-      name: 'CPC',
+      name: 'Clicks',
       serie: [
         { date: new Date(2021, 3, 15), value: 45000 },
         { date: new Date(2021, 3, 16), value: 37000 },
@@ -57,7 +58,7 @@ export class RetailerComponent implements OnInit, AfterViewInit {
       ]
     },
     {
-      name: 'Inversión',
+      name: 'Conversiones',
       serie: [
         { date: new Date(2021, 3, 15), value: 30000 },
         { date: new Date(2021, 3, 16), value: 27510 },

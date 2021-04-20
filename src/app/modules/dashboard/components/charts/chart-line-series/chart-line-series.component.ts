@@ -20,7 +20,7 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
   }
   @Input() set name(value) {
     this._name = value;
-    this.chartID = `chart-m-line${this.name}`
+    this.chartID = `chart-line-series-${this.name}`
   }
 
   chart;
