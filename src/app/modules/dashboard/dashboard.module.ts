@@ -35,6 +35,8 @@ import { ChartLineComparisonComponent } from './components/charts/chart-line-com
 import { ChartLineSeriesComponent } from './components/charts/chart-line-series/chart-line-series.component';
 import { ChartLollipopComponent } from './components/charts/chart-lollipop/chart-lollipop.component';
 import { ChartPieComponent } from './components/charts/chart-pie/chart-pie.component';
+import { ConversionWrapperComponent } from './components/conversion-wrapper/conversion-wrapper.component';
+import { ChartColumnLineMixComponent } from './components/charts/chart-column-line-mix/chart-column-line-mix.component';
 
 
 @NgModule({
@@ -55,7 +57,9 @@ import { ChartPieComponent } from './components/charts/chart-pie/chart-pie.compo
     ChartLineComparisonComponent,
     ChartLineSeriesComponent,
     ChartLollipopComponent,
-    ChartPieComponent
+    ChartPieComponent,
+    ConversionWrapperComponent,
+    ChartColumnLineMixComponent
   ],
   imports: [
     CommonModule,

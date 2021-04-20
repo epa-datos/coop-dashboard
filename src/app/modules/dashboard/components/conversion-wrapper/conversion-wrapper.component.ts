@@ -1,0 +1,95 @@
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import * as moment from 'moment';
+
+@Component({
+  selector: 'app-conversion-wrapper',
+  templateUrl: './conversion-wrapper.component.html',
+  styleUrls: ['./conversion-wrapper.component.scss']
+})
+export class ConversionWrapperComponent implements OnInit, AfterViewInit {
+
+  stats: any[] = [
+    {
+      metricTitle: 'Cantidad',
+      metricValue: '000',
+      icon: 'fas fa-chart-line',
+      iconBg: '#172b4d'
+    },
+    {
+      metricTitle: 'Revenue',
+      metricValue: '0000',
+      icon: 'fas fa-hand-holding-usd',
+      iconBg: '#2f9998'
+
+    },
+    {
+      metricTitle: 'AUP',
+      metricValue: '0%',
+      icon: 'fas fa-file-invoice-dollar',
+      iconBg: '#a77dcc'
+    }
+  ];
+
+  displayedColumns: string[] = ['category', 'product', 'amount', 'yoy_amount', 'product_revenue', 'yoy_product_revenue', 'aup', 'yoy_aup'];
+  private categories = [
+    { category: 'Category 1', product: 'Product 1', amount: 12, yoy_amount: 12, product_revenue: 50000, yoy_product_revenue: 15, aup: 820, yoy_aup: 8 },
+    { category: 'Category 2', product: 'Product 2', amount: 8, yoy_amount: 4, product_revenue: 20000, yoy_product_revenue: 7, aup: 650, yoy_aup: 4 },
+    { category: 'Category 3', product: 'Product 3', amount: 4, yoy_amount: -4, product_revenue: 10000, yoy_product_revenue: -2, aup: 350, yoy_aup: -1 }
+  ]
+  dataSource = new MatTableDataSource<any>(this.categories);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  usersVsTransacctions = [
+    { date: moment(new Date(2021, 3, 15)).format('MMM DD'), users: 1200, transaccions: 200 },
+    { date: moment(new Date(2021, 3, 16)).format('MMM DD'), users: 1600, transaccions: 230 },
+    { date: moment(new Date(2021, 3, 17)).format('MMM DD'), users: 1400, transaccions: 180 },
+    { date: moment(new Date(2021, 3, 18)).format('MMM DD'), users: 1250, transaccions: 80 },
+    { date: moment(new Date(2021, 3, 19)).format('MMM DD'), users: 800, transaccions: 60 },
+    { date: moment(new Date(2021, 3, 20)).format('MMM DD'), users: 1000, transaccions: 110 },
+    { date: moment(new Date(2021, 3, 21)).format('MMM DD'), users: 1100, transaccions: 120 }
+  ]
+
+  amountVsAUP = [
+    { date: moment(new Date(2021, 3, 15)).format('MMM DD'), amount: 1200, aup: 400 },
+    { date: moment(new Date(2021, 3, 16)).format('MMM DD'), amount: 1600, aup: 810 },
+    { date: moment(new Date(2021, 3, 17)).format('MMM DD'), amount: 1400, aup: 320 },
+    { date: moment(new Date(2021, 3, 18)).format('MMM DD'), amount: 1250, aup: 120 },
+    { date: moment(new Date(2021, 3, 19)).format('MMM DD'), amount: 800, aup: 345 },
+    { date: moment(new Date(2021, 3, 20)).format('MMM DD'), amount: 1000, aup: 850 },
+    { date: moment(new Date(2021, 3, 21)).format('MMM DD'), amount: 1100, aup: 900 }
+  ]
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+  ngAfterViewInit() {
+    this.loadPaginator();
+  }
+
+  loadPaginator() {
+    // paginator setup
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Registros por página';
+    this.paginator._intl.nextPageLabel = 'Siguiente';
+    this.paginator._intl.previousPageLabel = 'Anterior';
+    this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+      if (length == 0 || pageSize == 0) { return `0 de ${length}`; }
+
+      length = Math.max(length, 0);
+
+      const startIndex = page * pageSize;
+
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
+      const endIndex = startIndex < length ?
+        Math.min(startIndex + pageSize, length) :
+        startIndex + pageSize;
+
+      return `${startIndex + 1} - ${endIndex} de ${length}`;
+    }
+  }
+}

@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class CardStatComponent implements OnInit {
 
   @Input() stat;
+  @Input() height: string = '120px' // valid css height property value
 
   constructor() { }
 
