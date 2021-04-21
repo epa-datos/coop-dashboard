@@ -9,3 +9,12 @@ table {
 .adaptable-container {
     overflow: auto;
 }
+
+
+.pills-container {
+    width: 60%;
+
+    @media screen and (max-width: 820px) {
+        width: 100%;
+    }
+}

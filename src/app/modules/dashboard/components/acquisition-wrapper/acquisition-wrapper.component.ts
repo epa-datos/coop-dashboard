@@ -9,6 +9,47 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class AcquisitionWrapperComponent implements OnInit, AfterViewInit {
 
+  selectedTab1: number = 1;
+
+  usersByCategory = [
+    {
+      name: 'Search',
+      serie: [
+        { date: new Date(2021, 3, 15), value: 2500 },
+        { date: new Date(2021, 3, 16), value: 4700 },
+        { date: new Date(2021, 3, 17), value: 4600 },
+        { date: new Date(2021, 3, 18), value: 4700 },
+        { date: new Date(2021, 3, 19), value: 4500 },
+        { date: new Date(2021, 3, 20), value: 4300 },
+        { date: new Date(2021, 3, 21), value: 4400 }
+      ]
+    },
+    {
+      name: 'Marketing',
+      serie: [
+        { date: new Date(2021, 3, 15), value: 2000 },
+        { date: new Date(2021, 3, 16), value: 3500 },
+        { date: new Date(2021, 3, 17), value: 3200 },
+        { date: new Date(2021, 3, 18), value: 3600 },
+        { date: new Date(2021, 3, 19), value: 3000 },
+        { date: new Date(2021, 3, 20), value: 3400 },
+        { date: new Date(2021, 3, 21), value: 3000 }
+      ]
+    },
+    {
+      name: 'Ventas',
+      serie: [
+        { date: new Date(2021, 3, 15), value: 4500 },
+        { date: new Date(2021, 3, 16), value: 3700 },
+        { date: new Date(2021, 3, 17), value: 3800 },
+        { date: new Date(2021, 3, 18), value: 3200 },
+        { date: new Date(2021, 3, 19), value: 3500 },
+        { date: new Date(2021, 3, 20), value: 4500 },
+        { date: new Date(2021, 3, 21), value: 4700 }
+      ]
+    }
+  ]
+
   usersBySectors = [
     {
       name: 'Search',
@@ -139,5 +180,15 @@ export class AcquisitionWrapperComponent implements OnInit, AfterViewInit {
 
       return `${startIndex + 1} - ${endIndex} de ${length}`;
     }
+  }
+
+  changeData(category, selectedTab) {
+    if (category === 'source') {
+      this.usersByCategory = this.usersBySources;
+    } else if (category === 'sector') {
+      this.usersByCategory = this.usersBySectors;
+    }
+
+    this.selectedTab1 = selectedTab;
   }
 }

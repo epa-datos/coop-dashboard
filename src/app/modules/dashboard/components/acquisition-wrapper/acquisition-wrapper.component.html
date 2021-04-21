@@ -1,22 +1,25 @@
 <div class="row mt-4">
-    <div class="col-12 col-lg-6 mt-4 mb-5">
+    <div class="col-12">
+        <div class="pills-container">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
+                        (click)="changeData('sector', 1)">Usuarios por sector</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
+                        (click)="changeData('source', 2)">Usuarios por fuente</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-12 mt-4 mb-5">
         <div class="card">
             <div class="card-header">
                 <span class="h4">Usuarios por sector</span>
             </div>
             <div class="card-body">
-                <app-chart-line-series [series]="usersBySectors" name="users-sector">
-                </app-chart-line-series>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-6 mt-4 mb-5">
-        <div class="card">
-            <div class="card-header">
-                <span class="h4">Usuarios por fuente</span>
-            </div>
-            <div class="card-body">
-                <app-chart-line-series [series]="usersBySources" name="users-source">
+                <app-chart-line-series [series]="usersByCategory" name="users-sector">
                 </app-chart-line-series>
             </div>
         </div>
