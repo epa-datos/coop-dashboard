@@ -102,9 +102,8 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
     // Add cursor
     chart.cursor = new am4charts.XYCursor();
     chart.cursor.xAxis = dateAxis;
+    chart.responsive.enabled = true;
   }
-
-
 }
 
 function processOver(chart, hoveredSeries) {

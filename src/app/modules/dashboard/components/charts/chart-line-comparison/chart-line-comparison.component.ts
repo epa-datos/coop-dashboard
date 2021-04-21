@@ -67,6 +67,7 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
     // Add cursor
     chart.cursor = new am4charts.XYCursor();
     chart.cursor.xAxis = dateAxis;
+    chart.responsive.enabled = true;
 
     this.loadStatus = 2;
   }

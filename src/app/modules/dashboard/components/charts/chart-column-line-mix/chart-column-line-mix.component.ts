@@ -93,7 +93,7 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
     circle.radius = 4;
     circle.fill = am4core.color('#fff');
     circle.strokeWidth = 3;
+
+    chart.responsive.enabled = true;
   }
-
-
 }

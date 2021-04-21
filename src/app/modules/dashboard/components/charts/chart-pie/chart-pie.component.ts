@@ -78,6 +78,7 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
 
       pieSeries.labels.template.disabled = true;
       pieSeries.ticks.template.disabled = true;
+      pieSeries.slices.template.fillOpacity = 0.8;
 
       // Create a base filter effect (as if it's not there) for the hover to return to
       let shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
@@ -125,14 +126,13 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
         }
       });
 
-      pieSeries.colors.list = [
-        am4core.color('#0096d6'),
-        am4core.color('#CA70A0'),
-        am4core.color('#9DADBC'),
-        am4core.color('#923C6C'),
-        am4core.color('#394856'),
-
-      ]
+      // pieSeries.colors.list = [
+      //   am4core.color('#0096d6'),
+      //   am4core.color('#CA70A0'),
+      //   am4core.color('#9DADBC'),
+      //   am4core.color('#923C6C'),
+      //   am4core.color('#394856'),
+      // ]
 
       this.loadStatus = 2;
     })

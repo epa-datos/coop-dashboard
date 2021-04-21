@@ -109,5 +109,6 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
     }
 
     chart.data = this.data;
+    chart.responsive.enabled = true;
   }
 }
