@@ -105,7 +105,7 @@ export class SidebarComponent implements OnInit {
 
           const subItem = this.selectedItem.submenu.find(item => item.levelName === 'retailer' && item.title.toLocaleLowerCase() === retailer);
           this.selectedSubItem = subItem;
-          this.appStateService.selectRetailer({ id: this.selectedItem.id, name: this.selectedItem.title });
+          this.appStateService.selectRetailer({ id: this.selectedSubItem.id, name: this.selectedSubItem.title });
         }
 
       } else if (retailer) {
