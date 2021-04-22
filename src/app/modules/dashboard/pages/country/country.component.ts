@@ -52,6 +52,422 @@ export class CountryComponent implements OnInit {
     }
   ];
 
+  categoriesXSectorSearch: any[] = [
+    {
+      category: 'PS',
+      retailer: 'Abcdin',
+      value: 2990
+    },
+    {
+      category: 'Print',
+      retailer: 'Abcdin',
+      value: 2300
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Abcdin',
+      value: 2400
+    },
+    {
+      category: 'PS',
+      retailer: 'Alkosto',
+      value: 1600
+    },
+    {
+      category: 'Print',
+      retailer: 'Alkosto',
+      value: 1350
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Alkosto',
+      value: 2100
+    },
+    {
+      category: 'PS',
+      retailer: 'Compumundo',
+      value: 3400
+    },
+    {
+      category: 'Print',
+      retailer: 'Compumundo',
+      value: 1600
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Compumundo',
+      value: 2800
+    },
+    {
+      category: 'PS',
+      retailer: 'Fravega',
+      value: 1950
+    },
+    {
+      category: 'Print',
+      retailer: 'Fravega',
+      value: 2000
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Fravega',
+      value: 900
+    },
+    {
+      category: 'PS',
+      retailer: 'Garbarino',
+      value: 1400
+    },
+    {
+      category: 'Print',
+      retailer: 'Garbarino',
+      value: 1700
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Garbarino',
+      value: 1200
+    },
+    {
+      category: 'PS',
+      retailer: 'Liverpool',
+      value: 1150
+    },
+    {
+      category: 'Print',
+      retailer: 'Liverpool',
+      value: 1650
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Liverpool',
+      value: 2400
+    },
+    {
+      category: 'PS',
+      retailer: 'Officemax',
+      value: 2100
+    },
+    {
+      category: 'Print',
+      retailer: 'Officemax',
+      value: 3600
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Officemax',
+      value: 1200
+    },
+    {
+      category: 'PS',
+      retailer: 'Panamericana',
+      value: 4200
+    },
+    {
+      category: 'Print',
+      retailer: 'Panamericana',
+      value: 3600
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Panamericana',
+      value: 2800
+    },
+    {
+      category: 'PS',
+      retailer: 'Pcfactory',
+      value: 2400
+    },
+    {
+      category: 'Print',
+      retailer: 'Pcfactory',
+      value: 1400
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Pcfactory',
+      value: 1850
+    }
+  ]
+
+  categoriesXSectorMkt: any[] = [
+    {
+      category: 'PS',
+      retailer: 'Abcdin',
+      value: 980
+    },
+    {
+      category: 'Print',
+      retailer: 'Abcdin',
+      value: 430
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Abcdin',
+      value: 220
+    },
+    {
+      category: 'PS',
+      retailer: 'Alkosto',
+      value: 350
+    },
+    {
+      category: 'Print',
+      retailer: 'Alkosto',
+      value: 260
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Alkosto',
+      value: 430
+    },
+    {
+      category: 'PS',
+      retailer: 'Compumundo',
+      value: 640
+    },
+    {
+      category: 'Print',
+      retailer: 'Compumundo',
+      value: 420
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Compumundo',
+      value: 160
+    },
+    {
+      category: 'PS',
+      retailer: 'Fravega',
+      value: 120
+    },
+    {
+      category: 'Print',
+      retailer: 'Fravega',
+      value: 240
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Fravega',
+      value: 450
+    },
+    {
+      category: 'PS',
+      retailer: 'Garbarino',
+      value: 460
+    },
+    {
+      category: 'Print',
+      retailer: 'Garbarino',
+      value: 240
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Garbarino',
+      value: 320
+    },
+    {
+      category: 'PS',
+      retailer: 'Liverpool',
+      value: 250
+    },
+    {
+      category: 'Print',
+      retailer: 'Liverpool',
+      value: 375
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Liverpool',
+      value: 421
+    },
+    {
+      category: 'PS',
+      retailer: 'Officemax',
+      value: 250
+    },
+    {
+      category: 'Print',
+      retailer: 'Officemax',
+      value: 231
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Officemax',
+      value: 450
+    },
+    {
+      category: 'PS',
+      retailer: 'Panamericana',
+      value: 225
+    },
+    {
+      category: 'Print',
+      retailer: 'Panamericana',
+      value: 245
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Panamericana',
+      value: 270
+    },
+    {
+      category: 'PS',
+      retailer: 'Pcfactory',
+      value: 125
+    },
+    {
+      category: 'Print',
+      retailer: 'Pcfactory',
+      value: 160
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Pcfactory',
+      value: 250
+    }
+  ]
+
+  categoriesXSectorSales: any[] = [
+    {
+      category: 'PS',
+      retailer: 'Abcdin',
+      value: 1400
+    },
+    {
+      category: 'Print',
+      retailer: 'Abcdin',
+      value: 1200
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Abcdin',
+      value: 1600
+    },
+    {
+      category: 'PS',
+      retailer: 'Alkosto',
+      value: 800
+    },
+    {
+      category: 'Print',
+      retailer: 'Alkosto',
+      value: 600
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Alkosto',
+      value: 1300
+    },
+    {
+      category: 'PS',
+      retailer: 'Compumundo',
+      value: 700
+    },
+    {
+      category: 'Print',
+      retailer: 'Compumundo',
+      value: 500
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Compumundo',
+      value: 1400
+    },
+    {
+      category: 'PS',
+      retailer: 'Fravega',
+      value: 1250
+    },
+    {
+      category: 'Print',
+      retailer: 'Fravega',
+      value: 1000
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Fravega',
+      value: 1440
+    },
+    {
+      category: 'PS',
+      retailer: 'Garbarino',
+      value: 980
+    },
+    {
+      category: 'Print',
+      retailer: 'Garbarino',
+      value: 970
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Garbarino',
+      value: 400
+    },
+    {
+      category: 'PS',
+      retailer: 'Liverpool',
+      value: 430
+    },
+    {
+      category: 'Print',
+      retailer: 'Liverpool',
+      value: 475
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Liverpool',
+      value: 480
+    },
+    {
+      category: 'PS',
+      retailer: 'Officemax',
+      value: 1200
+    },
+    {
+      category: 'Print',
+      retailer: 'Officemax',
+      value: 1000
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Officemax',
+      value: 600
+    },
+    {
+      category: 'PS',
+      retailer: 'Panamericana',
+      value: 800
+    },
+    {
+      category: 'Print',
+      retailer: 'Panamericana',
+      value: 950
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Panamericana',
+      value: 1000
+    },
+    {
+      category: 'PS',
+      retailer: 'Pcfactory',
+      value: 800
+    },
+    {
+      category: 'Print',
+      retailer: 'Pcfactory',
+      value: 700
+    },
+    {
+      category: 'Supplies',
+      retailer: 'Pcfactory',
+      value: 600
+    }
+  ]
+
+  categoriesXSector = this.categoriesXSectorSearch;
+
   devices: any[] = [
     { id: 1, name: 'Escritorio', value: 3000 },
     { id: 2, name: 'Mobile', value: 10500 },
@@ -153,6 +569,7 @@ export class CountryComponent implements OnInit {
   ]
 
   selectedTab1: number = 1;
+  selectedTab2: number = 1;
 
   valueName = 'Usuarios';
 
@@ -165,6 +582,21 @@ export class CountryComponent implements OnInit {
   }
 
   changeSectorData(category, selectedTab) {
+    if (category === 'search') {
+      this.categoriesXSector = this.categoriesXSectorSearch;
+      // this.valueName = 'Usuarios';
+    } else if (category === 'marketing') {
+      this.categoriesXSector = this.categoriesXSectorMkt;
+      // this.valueName = 'Ventas';
+    } else if (category === 'sales') {
+      this.categoriesXSector = this.categoriesXSectorSales;
+      // this.valueName = 'Ventas';
+    }
+
+    this.selectedTab1 = selectedTab;
+  }
+
+  changeSectorData2(category, selectedTab) {
     if (category === 'users') {
       this.saleAndUsersBySector = this.usersBySector;
       this.valueName = 'Usuarios';
@@ -173,6 +605,6 @@ export class CountryComponent implements OnInit {
       this.valueName = 'Ventas';
     }
 
-    this.selectedTab1 = selectedTab;
+    this.selectedTab2 = selectedTab;
   }
 }
