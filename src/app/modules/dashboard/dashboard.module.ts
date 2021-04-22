@@ -38,6 +38,7 @@ import { ChartPieComponent } from './components/charts/chart-pie/chart-pie.compo
 import { ConversionWrapperComponent } from './components/conversion-wrapper/conversion-wrapper.component';
 import { ChartColumnLineMixComponent } from './components/charts/chart-column-line-mix/chart-column-line-mix.component';
 import { ChartPictorialComponent } from './components/charts/chart-pictorial/chart-pictorial.component';
+import { OverviewWrapperComponent } from './components/overview-wrapper/overview-wrapper.component';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { ChartPictorialComponent } from './components/charts/chart-pictorial/cha
     ChartPieComponent,
     ConversionWrapperComponent,
     ChartColumnLineMixComponent,
-    ChartPictorialComponent
+    ChartPictorialComponent,
+    OverviewWrapperComponent
   ],
   imports: [
     CommonModule,
