@@ -39,6 +39,7 @@ import { ConversionWrapperComponent } from './components/conversion-wrapper/conv
 import { ChartColumnLineMixComponent } from './components/charts/chart-column-line-mix/chart-column-line-mix.component';
 import { ChartPictorialComponent } from './components/charts/chart-pictorial/chart-pictorial.component';
 import { OverviewWrapperComponent } from './components/overview-wrapper/overview-wrapper.component';
+import { CampaignsTablesComponent } from './components/campaigns-tables/campaigns-tables.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { OverviewWrapperComponent } from './components/overview-wrapper/overview
     ConversionWrapperComponent,
     ChartColumnLineMixComponent,
     ChartPictorialComponent,
-    OverviewWrapperComponent
+    OverviewWrapperComponent,
+    CampaignsTablesComponent
   ],
   imports: [
     CommonModule,

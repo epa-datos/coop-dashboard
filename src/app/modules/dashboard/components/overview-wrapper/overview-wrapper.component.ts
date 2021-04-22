@@ -469,15 +469,28 @@ export class OverviewWrapperComponent implements OnInit {
 
   categoriesXSector = this.categoriesXSectorSearch;
 
-  devices: any[] = [
-    { id: 1, name: 'Escritorio', value: 3000 },
+  devicesByTraffic: any[] = [
+    { id: 1, name: 'Escritorio', value: 2500 },
     { id: 2, name: 'Mobile', value: 10500 },
   ]
 
-  gender: any[] = [
+  devicesBySales: any[] = [
+    { id: 1, name: 'Escritorio', value: 300 },
+    { id: 2, name: 'Mobile', value: 450 },
+  ]
+
+  genderByTraffic: any[] = [
+    { id: 1, name: 'Hombre', value: 5500 },
+    { id: 2, name: 'Mujer', value: 7500 },
+  ]
+
+  genderBySales: any[] = [
     { id: 1, name: 'Hombre', value: 1200 },
     { id: 2, name: 'Mujer', value: 12800 },
   ]
+
+  devices: any[] = this.devicesByTraffic;
+  gender: any[] = this.genderByTraffic;
 
   usersBySector: any[] = [
     {
@@ -571,6 +584,7 @@ export class OverviewWrapperComponent implements OnInit {
 
   selectedTab1: number = 1;
   selectedTab2: number = 1;
+  selectedTab3: number = 1;
 
   valueName = 'Usuarios';
 
@@ -601,6 +615,20 @@ export class OverviewWrapperComponent implements OnInit {
     } else if (category === 'sales') {
       this.saleAndUsersBySector = this.salesBySector;
       this.valueName = 'Ventas';
+    }
+
+    this.selectedTab3 = selectedTab;
+  }
+
+  changeDeviceGenderData(category, selectedTab) {
+    if (category === 'traffic') {
+      this.devices = this.devicesByTraffic;
+      this.gender = this.genderByTraffic;
+      // this.valueName = 'Usuarios';
+    } else if (category === 'sales') {
+      this.devices = this.devicesBySales;
+      this.gender = this.genderBySales;
+      // this.valueName = 'Ventas';
     }
 
     this.selectedTab2 = selectedTab;

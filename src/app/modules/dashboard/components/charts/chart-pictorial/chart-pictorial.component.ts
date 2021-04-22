@@ -10,11 +10,12 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 })
 export class ChartPictorialComponent implements OnInit, AfterViewInit {
 
-  @Input() data;
   @Input() value: string = 'value';
   @Input() category: string = 'category';
   @Input() iconPath: string; // an svg icon path. If isnt't provide is necessary to use "iconType" input
   @Input() iconType: string = 'human';
+
+  chart;
   chartID;
   loadStatus: number = 0;
 
@@ -26,6 +27,16 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
     this._name = value;
     this.chartID = `chart-pictorial-${this.name}`
   }
+
+  private _data;
+  get data() {
+    return this._data;
+  }
+  @Input() set data(value) {
+    this._data = value;
+    this.chart && this.loadChartData(this.chart)
+  }
+
   constructor() { }
 
   ngOnInit(): void {
@@ -42,12 +53,11 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
 
     let chart = am4core.create(this.chartID, am4charts.SlicedChart);
 
-    chart.data = this.data;
-
     let series = chart.series.push(new am4charts.PictorialStackedSeries());
     series.dataFields.value = this.value;
     series.dataFields.category = this.category;
     series.alignLabels = false;
+    series.fillOpacity = 0.8;
 
     series.maskSprite.path = iconPath;
     series.ticks.template.locationX = 1;
@@ -69,7 +79,7 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
     //   am4core.color('#CA70A0'),
     // ];
 
-    series.fillOpacity = 0.8;
+    this.loadChartData(chart);
   }
 
   getIconPath(): string {
@@ -84,5 +94,10 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
     }
 
     return iconPath;
+  }
+
+  loadChartData(chart) {
+    chart.data = this.data;
+    this.chart = chart;
   }
 }

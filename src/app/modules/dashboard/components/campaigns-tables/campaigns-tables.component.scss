@@ -1,0 +1,21 @@
+table {
+    width: 100%;
+}
+
+.adaptable-container {
+    overflow: auto;
+}
+
+
+.lg-container {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: inherit;
+}
+
+.value-container {
+    display: grid;
+    grid-template-columns: 40px auto;
+    gap: 8px;
+}

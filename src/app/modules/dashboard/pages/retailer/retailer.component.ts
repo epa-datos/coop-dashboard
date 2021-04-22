@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { AppStateService } from 'src/app/services/app-state.service';
 
 
 @Component({
@@ -14,9 +15,10 @@ import { MatFormFieldControl } from '@angular/material/form-field';
   ]
 })
 export class RetailerComponent implements OnInit, AfterViewInit {
-
   countryName;
   retailerName;
+  retailerID: number;
+
   activeTabView: number = 1;
 
   campMetrics = [
@@ -71,14 +73,6 @@ export class RetailerComponent implements OnInit, AfterViewInit {
     }
   ]
 
-  displayedColumns: string[] = ['name', 'investment', 'impressions', 'clicks', 'ctr', 'cpm', 'cpc', 'roas'];
-  displayedColumns2: string[] = ['name', 'investment', 'impressions', 'clicks', 'ctr', 'cpm', 'cpc'];
-  private campaigns = [
-    { name: 'Campaign 1', investment: 5000, impressions: 130000, clicks: 7000, ctr: 0.55, ctr_benchmark: 0.12, cpm: 750, cpc: 50, roas: 40 },
-    { name: 'Campaign 2', investment: 7000, impressions: 150000, clicks: 8000, ctr: 25.55, ctr_benchmark: 22.12, cpm: 450, cpc: 30, roas: 50 },
-    { name: 'Campaign 3', investment: 2000, impressions: 80000, clicks: 4000, ctr: 10.30, ctr_benchmark: 11.20, cpm: 120, cpc: 80, roas: 250 }
-  ];
-  dataSource = new MatTableDataSource<any>(this.campaigns);
   getReqStatus: number = 0;
 
   stats: any[] = [
@@ -132,46 +126,34 @@ export class RetailerComponent implements OnInit, AfterViewInit {
     panel4: false
   }
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  constructor(private route: ActivatedRoute) { }
+  constructor(
+    private route: ActivatedRoute,
+    private appStateServ: AppStateService
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params: Params) => {
       this.countryName = params['country'];
       this.retailerName = params['retailer']
     });
+
+    this.appStateServ.selectedRetailer$
+      .subscribe(
+        retailer => {
+          this.retailerID = retailer?.id;
+        },
+        error => {
+          console.error(`[retailer.component]: ${error}`);
+        }
+      )
   }
 
   ngAfterViewInit() {
-    this.loadPaginator();
+    // this.loadPaginator();
   }
 
 
   panelChange(panel, value) {
     this.extPanelIsOpen[panel] = value
   }
-
-  loadPaginator() {
-    // paginator setup
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Registros por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
-    this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
-      if (length == 0 || pageSize == 0) { return `0 de ${length}`; }
-
-      length = Math.max(length, 0);
-
-      const startIndex = page * pageSize;
-
-      // If the start index exceeds the list length, do not try and fix the end index to the end.
-      const endIndex = startIndex < length ?
-        Math.min(startIndex + pageSize, length) :
-        startIndex + pageSize;
-
-      return `${startIndex + 1} - ${endIndex} de ${length}`;
-    }
-  }
-
 }
