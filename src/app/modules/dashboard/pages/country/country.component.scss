@@ -23,3 +23,15 @@
 .header {
    border-radius: 0.375rem;;
 }
+
+.pills-container {
+    width: 60%;
+
+    .nav-item .nav-link {
+        cursor: pointer;
+    }
+
+    @media screen and (max-width: 820px) {
+        width: 100%;
+    }
+}

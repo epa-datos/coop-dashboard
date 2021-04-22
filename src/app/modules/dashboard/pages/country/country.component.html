@@ -1,14 +1,4 @@
-<div class="main-container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <p class="h2 mb-4 text-xl">Visión general</p>
-        </div>
-    </div>
-
-    <!-- <div class="header bg-light mb-4">
-        <p class="h2 text-uppercase text-muted py-2 ml-3 mr-3"><b>Visión general</b></p>
-    </div> -->
-
+<div class="main-container mt-5">
     <!-- CARD STATS -->
     <div class="row">
         <div class="col-12">
@@ -20,33 +10,33 @@
 
     <div class="row mt-5">
         <!-- devices -->
-        <div class="col-12 col-lg-6 mb-4">
+        <div class="col-12 col-lg-6 mb-5">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">Inversión por mes</span>
+                    <span class="h4">Dispositivos</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-bar [data]="devices" name="devices-per-sector" value="value" category="name">
-                    </app-chart-bar>
+                    <app-chart-pictorial [data]="devices" name="devices-by-sector" category="name" iconType="monitor">
+                    </app-chart-pictorial>
                 </div>
             </div>
         </div>
 
         <!-- gender -->
-        <div class="col-12 col-lg-6 mb-4">
+        <div class="col-12 col-lg-6 mb-5">
             <div class="card">
                 <div class="card-header">
                     <span class="h4">Género</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-pictorial [data]="gender" name="gender" value="value" category="name">
+                    <app-chart-pictorial [data]="gender" name="gender-by-sector" category="name">
                     </app-chart-pictorial>
                 </div>
             </div>
         </div>
 
         <!-- users by sector -->
-        <div class="col-12 col-lg-6 mb-4">
+        <!-- <div class="col-12 col-lg-6 mb-4">
             <div class="card">
                 <div class="card-header">
                     <span class="h4">Usuarios por sector</span>
@@ -56,10 +46,10 @@
                     </app-chart-bar>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- sales by sector -->
-        <div class="col-12 col-lg-6 mb-4">
+        <!-- <div class="col-12 col-lg-6 mb-4">
             <div class="card">
                 <div class="card-header">
                     <span class="h4">Ventas por sector</span>
@@ -69,10 +59,40 @@
                     </app-chart-bar>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <div class="row">
+        <div class="col-12">
+            <div class="pills-container">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
+                            (click)="changeSectorData('users', 1)">Usuarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
+                            (click)="changeSectorData('sales', 2)">Ventas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h4" [hidden]="selectedTab1 === 2">Usuarios por sector</span>
+                    <span class="h4" [hidden]="selectedTab1 === 1">Ventas por sector</span>
+                </div>
+                <div class="card-body">
+                    <app-chart-line-series [valueName]="valueName" [valueFormat]="selectedTab1 === 2 && 'USD'"
+                        [series]="saleAndUsersBySector" name="sales-users-by-sector">
+                    </app-chart-line-series>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">

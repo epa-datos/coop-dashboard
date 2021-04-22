@@ -11,40 +11,40 @@ export class CountryComponent implements OnInit {
   stats: any[] = [
     {
       metricTitle: 'Inversión',
-      metricValue: 'USD 35,000',
+      metricvalue: 'USD 35,000',
       icon: 'fas fa-wallet',
       iconBg: '#172b4d'
     },
     {
       metricTitle: 'Clicks',
-      metricValue: '280,0000',
+      metricvalue: '280,0000',
       subMetricTitle: 'CTR',
-      subMetricValue: '000',
+      subMetricvalue: '000',
       icon: 'fas fa-hand-pointer',
       iconBg: '#2f9998'
 
     },
     {
       metricTitle: 'Bounce Rate',
-      metricValue: '12%',
+      metricvalue: '12%',
       subMetricTitle: 'Usuarios',
-      subMetricValue: '27000',
+      subMetricvalue: '27000',
       icon: 'fas fa-stopwatch',
       iconBg: '#a77dcc'
     },
     {
       metricTitle: 'Transacciones',
-      metricValue: '3,500',
+      metricvalue: '3,500',
       subMetricTitle: 'CR',
-      subMetricValue: '000',
+      subMetricvalue: '000',
       icon: 'fas fa-shopping-basket',
       iconBg: '#f89934'
     },
     {
       metricTitle: 'Revenue',
-      metricValue: '3,500',
+      metricvalue: '3,500',
       subMetricTitle: 'ROAS',
-      subMetricValue: '000',
+      subMetricvalue: '000',
       icon: 'fas fa-hand-holding-usd',
 
       iconBg: '#fbc001'
@@ -65,32 +65,82 @@ export class CountryComponent implements OnInit {
   usersBySector: any[] = [
     {
       name: 'Search',
-      value: 3500
+      serie: [
+        { date: new Date(2021, 3, 15), value: 80 },
+        { date: new Date(2021, 3, 16), value: 100 },
+        { date: new Date(2021, 3, 17), value: 120 },
+        { date: new Date(2021, 3, 18), value: 250 },
+        { date: new Date(2021, 3, 19), value: 140 },
+        { date: new Date(2021, 3, 20), value: 135 },
+        { date: new Date(2021, 3, 21), value: 155 }
+      ]
     },
     {
       name: 'Marketing',
-      value: 1500
+      serie: [
+        { date: new Date(2021, 3, 15), value: 95 },
+        { date: new Date(2021, 3, 16), value: 56 },
+        { date: new Date(2021, 3, 17), value: 82 },
+        { date: new Date(2021, 3, 18), value: 75 },
+        { date: new Date(2021, 3, 19), value: 130 },
+        { date: new Date(2021, 3, 20), value: 240 },
+        { date: new Date(2021, 3, 21), value: 260 }
+      ]
     },
     {
       name: 'Ventas',
-      value: 9000
+      serie: [
+        { date: new Date(2021, 3, 15), value: 94 },
+        { date: new Date(2021, 3, 16), value: 112 },
+        { date: new Date(2021, 3, 17), value: 150 },
+        { date: new Date(2021, 3, 18), value: 100 },
+        { date: new Date(2021, 3, 19), value: 130 },
+        { date: new Date(2021, 3, 20), value: 150 },
+        { date: new Date(2021, 3, 21), value: 170 }
+      ]
     }
   ]
 
   salesBySector: any[] = [
     {
       name: 'Search',
-      value: 250000
+      serie: [
+        { date: new Date(2021, 3, 15), value: 2500 },
+        { date: new Date(2021, 3, 16), value: 4700 },
+        { date: new Date(2021, 3, 17), value: 4600 },
+        { date: new Date(2021, 3, 18), value: 4700 },
+        { date: new Date(2021, 3, 19), value: 4500 },
+        { date: new Date(2021, 3, 20), value: 4300 },
+        { date: new Date(2021, 3, 21), value: 4400 }
+      ]
     },
     {
       name: 'Marketing',
-      value: 37500
+      serie: [
+        { date: new Date(2021, 3, 15), value: 2000 },
+        { date: new Date(2021, 3, 16), value: 3500 },
+        { date: new Date(2021, 3, 17), value: 3200 },
+        { date: new Date(2021, 3, 18), value: 3600 },
+        { date: new Date(2021, 3, 19), value: 3000 },
+        { date: new Date(2021, 3, 20), value: 3400 },
+        { date: new Date(2021, 3, 21), value: 3000 }
+      ]
     },
     {
       name: 'Ventas',
-      value: 85700
+      serie: [
+        { date: new Date(2021, 3, 15), value: 4500 },
+        { date: new Date(2021, 3, 16), value: 3700 },
+        { date: new Date(2021, 3, 17), value: 3800 },
+        { date: new Date(2021, 3, 18), value: 3200 },
+        { date: new Date(2021, 3, 19), value: 3500 },
+        { date: new Date(2021, 3, 20), value: 4500 },
+        { date: new Date(2021, 3, 21), value: 4700 }
+      ]
     }
-  ];
+  ]
+
+  saleAndUsersBySector: any[] = this.usersBySector;
 
   investmentVsRevenue = [
     { date: new Date(2021, 3, 15), value1: 12000, value2: 4370, previousDate: new Date(2021, 3, 15) },
@@ -102,6 +152,9 @@ export class CountryComponent implements OnInit {
     { date: new Date(2021, 3, 21), value1: 80000, value2: 14000, previousDate: new Date(2021, 3, 21) }
   ]
 
+  selectedTab1: number = 1;
+
+  valueName = 'Usuarios';
 
   constructor(private route: ActivatedRoute) { }
 
@@ -109,5 +162,17 @@ export class CountryComponent implements OnInit {
     this.route.queryParams.subscribe((params: Params) => {
       this.countryName = params['country'];
     });
+  }
+
+  changeSectorData(category, selectedTab) {
+    if (category === 'users') {
+      this.saleAndUsersBySector = this.usersBySector;
+      this.valueName = 'Usuarios';
+    } else if (category === 'sales') {
+      this.saleAndUsersBySector = this.salesBySector;
+      this.valueName = 'Ventas';
+    }
+
+    this.selectedTab1 = selectedTab;
   }
 }
