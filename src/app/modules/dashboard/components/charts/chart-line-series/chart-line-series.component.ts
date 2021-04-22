@@ -10,7 +10,10 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 })
 export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
 
-  // @Input() series;
+  @Input() value = 'value'; // property name in the object to show in valueAxis
+  @Input() valueName; // property to show in tooltips
+  @Input() valueFormat; // USD MXN Copy shown in tooltip
+
   chartID;
   loadStatus: number = 0;
 
@@ -58,7 +61,7 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
     this.loadChartData(chart);
 
     chart.legend = new am4charts.Legend();
-    chart.legend.position = 'top';
+    chart.legend.position = 'bottom';
     chart.legend.scrollable = true;
 
     chart.legend.itemContainers.template.events.on('over', function (event) {
@@ -77,18 +80,33 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
   }
 
   loadChartData(chart) {
-
     chart.series.clear();
+
+    const colors = [
+      '#67B6DC',
+      '#A367DC',
+      '#DC67CE',
+      '#DC6967',
+      '#DCAE67',
+      '#86CC78'
+    ]
+
     for (var i = 0; i < this.series.length; i++) {
-      createSeries('value' + i, this.series[i].name, this.series[i].serie);
+      const color = colors[i] ? colors[i] : colors[0]
+      createSeries(this.value + i, this.series[i].name, this.series[i].serie, this.value, this.valueName, this.valueFormat, color);
     }
 
-    function createSeries(s, name, serie) {
+    function createSeries(s, name, serie, serieValueProp, serieValueName, serieValueFormat, color) {
       let series = chart.series.push(new am4charts.LineSeries());
-      series.dataFields.valueY = 'value' + s;
+      series.dataFields.valueY = serieValueProp + s;
       series.dataFields.dateX = 'date';
       series.name = name;
       series.tensionX = 0.85;
+      series.strokeWidth = 2;
+      series.tooltipText = `${serieValueName ? serieValueName + ': ' : ''}[bold]${typeof serieValueFormat === 'string' ? serieValueFormat : ''} {valueY}[/]`;
+      series.stroke = am4core.color(color);
+      series.tooltip.getFillFromObject = false;
+      series.tooltip.background.fill = am4core.color(color);
 
       let segment = series.segments.template;
       segment.interactionsEnabled = true;
@@ -110,9 +128,9 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
       let data = [];
       let value;
       for (var i = 0; i < serie.length; i++) {
-        value = serie[i].value;
+        value = serie[i][serieValueProp];
         let dataItem = { date: serie[i].date };
-        dataItem['value' + s] = value;
+        dataItem[serieValueProp + s] = value;
         data.push(dataItem);
       }
 
