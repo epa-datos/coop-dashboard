@@ -14,6 +14,9 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
   @Input() categoryY = 'hour'; // property name in object inside array input data
   @Input() value;
   @Input() height = '350px' // valid css height to chart container
+  @Input() showTooltipValue: boolean = true; // show the value in tooltip
+  @Input() showGridBorders: boolean = false;
+  @Input() showHeatLegend: boolean = true; // lower legend with average values triggering by column hover
 
   private _name: string;
   get name() {
@@ -21,7 +24,7 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
   }
   @Input() set name(value) {
     this._name = value;
-    this.chartID = `chart-heat-map${this.name}`
+    this.chartID = `chart-heat-map-${this.name}`
   }
 
   private _data;
@@ -77,12 +80,24 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
     series.defaultState.transitionDuration = 3000;
 
     let bgColor = new am4core.InterfaceColorSet().getFor('background');
+    let bgColor2 = am4core.color('#adb5bd');
 
     let columnTemplate = series.columns.template;
     columnTemplate.strokeWidth = 1;
     columnTemplate.strokeOpacity = 0.2;
-    columnTemplate.stroke = bgColor;
-    columnTemplate.tooltipText = `{${this.categoryX}}, {${this.categoryY}}: {value.workingValue.formatNumber('#.')}`;
+
+    if (this.showGridBorders) {
+      columnTemplate.stroke = bgColor2;
+    } else {
+      columnTemplate.stroke = bgColor
+    }
+
+    let tooltipLegend = this.showTooltipValue
+      ? `{${this.categoryX}}, {${this.categoryY}}: {value.workingValue.formatNumber('#.')}`
+      : `{${this.categoryX}} - {${this.categoryY}}`;
+
+    columnTemplate.tooltipText = tooltipLegend;
+
     columnTemplate.width = am4core.percent(100);
     columnTemplate.height = am4core.percent(100);
 
@@ -92,6 +107,12 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
       min: am4core.color(bgColor),
       max: chart.colors.getIndex(0)
     });
+
+    this.loadChartData(chart);
+
+    if (!this.showHeatLegend) {
+      return;
+    }
 
     // heat legend
     let heatLegend = chart.bottomAxesContainer.createChild(am4charts.HeatLegend);
@@ -121,8 +142,6 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
         heatLegend.valueAxis.hideTooltip();
       }
     }
-
-    this.loadChartData(chart);
   }
 
   loadChartData(chart) {
