@@ -53,421 +53,469 @@ export class OverviewWrapperComponent implements OnInit {
     }
   ];
 
-  categoriesXSectorSearch: any[] = [
+  categoriesXRetailSearch: any[] = [
     {
       category: 'PS',
       retailer: 'Abcdin',
-      value: 2990
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Abcdin',
-      value: 2300
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Abcdin',
-      value: 2400
+      value: 0
     },
     {
       category: 'PS',
       retailer: 'Alkosto',
-      value: 1600
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Alkosto',
-      value: 1350
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Alkosto',
-      value: 2100
+      value: 0
     },
     {
       category: 'PS',
       retailer: 'Compumundo',
-      value: 3400
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Compumundo',
-      value: 1600
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Compumundo',
-      value: 2800
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Fravega',
-      value: 1950
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Fravega',
-      value: 2000
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Fravega',
-      value: 900
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Garbarino',
-      value: 1400
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Garbarino',
-      value: 1700
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Garbarino',
-      value: 1200
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Liverpool',
-      value: 1150
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Liverpool',
-      value: 1650
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Liverpool',
-      value: 2400
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Officemax',
-      value: 2100
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Officemax',
-      value: 3600
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Officemax',
-      value: 1200
+      value: 0
     },
     {
       category: 'PS',
       retailer: 'Panamericana',
-      value: 4200
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Panamericana',
-      value: 3600
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Panamericana',
-      value: 2800
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Pcfactory',
-      value: 2400
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Pcfactory',
-      value: 1400
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Pcfactory',
-      value: 1850
+      value: 0
     }
   ]
 
-  categoriesXSectorMkt: any[] = [
+  categoriesXRetailMkt: any[] = [
     {
       category: 'PS',
       retailer: 'Abcdin',
-      value: 980
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Abcdin',
-      value: 430
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Abcdin',
-      value: 220
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Alkosto',
-      value: 350
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Alkosto',
-      value: 260
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Alkosto',
-      value: 430
+      value: 0
     },
     {
       category: 'PS',
       retailer: 'Compumundo',
-      value: 640
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Compumundo',
-      value: 420
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Compumundo',
-      value: 160
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Fravega',
-      value: 120
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Fravega',
-      value: 240
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Fravega',
-      value: 450
+      value: 0
     },
     {
       category: 'PS',
       retailer: 'Garbarino',
-      value: 460
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Garbarino',
-      value: 240
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Garbarino',
-      value: 320
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Liverpool',
-      value: 250
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Liverpool',
-      value: 375
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Liverpool',
-      value: 421
+      value: 0
     },
     {
       category: 'PS',
       retailer: 'Officemax',
-      value: 250
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Officemax',
-      value: 231
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Officemax',
-      value: 450
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Panamericana',
-      value: 225
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Panamericana',
-      value: 245
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Panamericana',
-      value: 270
+      value: 0
     },
     {
       category: 'PS',
       retailer: 'Pcfactory',
-      value: 125
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Pcfactory',
-      value: 160
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Pcfactory',
-      value: 250
+      value: 0
     }
   ]
 
-  categoriesXSectorSales: any[] = [
+  categoriesXRetailSales: any[] = [
     {
       category: 'PS',
       retailer: 'Abcdin',
-      value: 1400
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Abcdin',
-      value: 1200
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Abcdin',
-      value: 1600
+      value: 0
     },
     {
       category: 'PS',
       retailer: 'Alkosto',
-      value: 800
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Alkosto',
-      value: 600
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Alkosto',
-      value: 1300
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Compumundo',
-      value: 700
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Compumundo',
-      value: 500
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Compumundo',
-      value: 1400
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Fravega',
-      value: 1250
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Fravega',
-      value: 1000
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Fravega',
-      value: 1440
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Garbarino',
-      value: 980
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Garbarino',
-      value: 970
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Garbarino',
-      value: 400
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Liverpool',
-      value: 430
+      value: 0
     },
     {
       category: 'Print',
       retailer: 'Liverpool',
-      value: 475
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Liverpool',
-      value: 480
+      value: 0
     },
     {
       category: 'PS',
       retailer: 'Officemax',
-      value: 1200
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Officemax',
-      value: 1000
+      value: 1
     },
     {
       category: 'Supplies',
       retailer: 'Officemax',
-      value: 600
+      value: 0
     },
     {
       category: 'PS',
       retailer: 'Panamericana',
-      value: 800
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Panamericana',
-      value: 950
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Panamericana',
-      value: 1000
+      value: 1
     },
     {
       category: 'PS',
       retailer: 'Pcfactory',
-      value: 800
+      value: 1
     },
     {
       category: 'Print',
       retailer: 'Pcfactory',
-      value: 700
+      value: 0
     },
     {
       category: 'Supplies',
       retailer: 'Pcfactory',
-      value: 600
+      value: 1
     }
   ]
 
-  categoriesXSector = this.categoriesXSectorSearch;
+  categoriesXRetail = this.categoriesXRetailSearch;
+
+  categoriesXSector: any[] = [
+    {
+      category: 'PS',
+      sector: 'Search',
+      value: 1
+    },
+    {
+      category: 'Print',
+      sector: 'Search',
+      value: 0
+    },
+    {
+      category: 'Supplies',
+      sector: 'Search',
+      value: 1
+    },
+    {
+      category: 'PS',
+      sector: 'Marketing',
+      value: 0
+    },
+    {
+      category: 'Print',
+      sector: 'Marketing',
+      value: 1
+    },
+    {
+      category: 'Supplies',
+      sector: 'Marketing',
+      value: 0
+    },
+    {
+      category: 'PS',
+      sector: 'Ventas',
+      value: 1
+    },
+    {
+      category: 'Print',
+      sector: 'Ventas',
+      value: 0
+    },
+    {
+      category: 'Supplies',
+      sector: 'Ventas',
+      value: 0
+    }
+  ]
 
   devicesByTraffic: any[] = [
     { id: 1, name: 'Escritorio', value: 2500 },
@@ -595,13 +643,13 @@ export class OverviewWrapperComponent implements OnInit {
 
   changeSectorData(category, selectedTab) {
     if (category === 'search') {
-      this.categoriesXSector = this.categoriesXSectorSearch;
+      this.categoriesXRetail = this.categoriesXRetailSearch;
       // this.valueName = 'Usuarios';
     } else if (category === 'marketing') {
-      this.categoriesXSector = this.categoriesXSectorMkt;
+      this.categoriesXRetail = this.categoriesXRetailMkt;
       // this.valueName = 'Ventas';
     } else if (category === 'sales') {
-      this.categoriesXSector = this.categoriesXSectorSales;
+      this.categoriesXRetail = this.categoriesXRetailSales;
       // this.valueName = 'Ventas';
     }
 

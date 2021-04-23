@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="row mt-5">
+    <div class="row mt-5" *ngIf="selectedType === 'country'">
         <div class="col-12">
             <div class="pills-container">
                 <ul class="nav nav-pills nav-fill">
@@ -37,8 +37,25 @@
                     </ng-container>
                 </div>
                 <div class="card-body">
-                    <app-chart-heat-map [data]="categoriesXSector" [name]="selectedType + 'categories-by-retailer'"
-                        categoryX="retailer" categoryY="category" height="250px">
+                    <app-chart-heat-map [data]="categoriesXRetail" [name]="selectedType + 'categories-by-retailer'"
+                        categoryX="retailer" categoryY="category" height="250px" [showTooltipValue]="false"
+                        [showGridBorders]="true" [showHeatLegend]="false">
+                    </app-chart-heat-map>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5" *ngIf="selectedType === 'retailer'">
+        <div class="col-12 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h4">Categorías por sector</span>
+                </div>
+                <div class="card-body">
+                    <app-chart-heat-map [data]="categoriesXSector" [name]="selectedType + 'categories-by-sector'"
+                        categoryX="sector" categoryY="category" height="250px" [showTooltipValue]="false"
+                        [showGridBorders]="true" [showHeatLegend]="false">
                     </app-chart-heat-map>
                 </div>
             </div>
