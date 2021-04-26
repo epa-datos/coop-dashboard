@@ -1,23 +1,9 @@
-<div class="row mt-4 mb-5">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <span class="h4">Análisis por tráfico</span>
-            </div>
-            <div class="card-body">
-                <app-chart-line [data]="trafficByDays" name="traffic-days" date="date" value="visits">
-                </app-chart-line>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ANALISIS, CINVERSIONES Y AUP -->
-<div class="mb-5">
-    <div class="row">
+<!-- TRÁFICO, CONVERSIONES, AUP & BR -->
+<ng-container>
+    <div class="row mt-4">
         <div class="col-12">
-            <div class="mb-3 mt-0">
-                <span class="h3">Análisis Conversiones, AUP & BR</span>
+            <div class="mb-3">
+                <span class="h3">Análisis por Tráfico, Conversiones, AUP y BR</span>
             </div>
         </div>
         <div class="col-12">
@@ -25,136 +11,99 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                            (click)="selectedTab1 = 1">Género</a>
+                            (click)="changeData('traffic', 1)">Tráfico</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                            (click)="selectedTab1 = 2">Edad</a>
+                            (click)="changeData('conversions', 2)">Conversiones</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
-                            (click)="selectedTab1 = 3">Dispositivo</a>
+                            (click)="changeData('AUP', 3)">AUP</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 4}"
+                            (click)="changeData('BR', 4)">BR</a>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <div class="row" *ngIf="selectedTab1 === 1">
-        <div class="col-12 col-lg-4 mt-4">
+    <div class="row">
+        <div class="col-12 col-md-6 mt-4">
             <div class="card">
-                <div class="card-header">
-                    <span class="h4">Conversión</span>
+                <div class="card-header" [ngSwitch]="selectedTab1">
+                    <span *ngSwitchCase="1" class="h4">Tráfico por dispositivos</span>
+                    <span *ngSwitchCase="2" class="h4">Conversiones por dispositivos</span>
+                    <span *ngSwitchCase="3" class="h4">AUP por dispositivos</span>
+                    <span *ngSwitchCase="4" class="h4">BR por dispositivos</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-bar [data]="genderConversion" name="gender-conversion" category='gender' value='value'>
-                    </app-chart-bar>
+                    <app-chart-pictorial [data]="devices" [name]="selectedType + 'devices'" category="name"
+                        iconType="monitor" height="280px">
+                    </app-chart-pictorial>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-lg-4 mt-4">
+
+        <!-- gender -->
+        <div class="col-12 col-md-6 mt-4">
             <div class="card">
-                <div class="card-header">
-                    <span class="h4">AUP</span>
+                <div class="card-header" [ngSwitch]="selectedTab1">
+                    <span *ngSwitchCase="1" class="h4">Tráfico por Género</span>
+                    <span *ngSwitchCase="2" class="h4">Conversiones por Género</span>
+                    <span *ngSwitchCase="3" class="h4">AUP por Género</span>
+                    <span *ngSwitchCase="4" class="h4">BR por Género</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-bar [data]="genderAUP" name="gender-aup" category='gender' value='value'>
-                    </app-chart-bar>
+                    <app-chart-pictorial [data]="gender" [name]="selectedType + 'gender'" category="name"
+                        height="280px">
+                    </app-chart-pictorial>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-lg-4 mt-4">
+
+        <!-- age -->
+        <div class="col-12 col-md-6 mt-4">
             <div class="card">
-                <div class="card-header">
-                    <span class="h4">BR</span>
+                <div class="card-header" [ngSwitch]="selectedTab1">
+                    <span *ngSwitchCase="1" class="h4">Tráfico por Edad</span>
+                    <span *ngSwitchCase="2" class="h4">Conversiones por Edad</span>
+                    <span *ngSwitchCase="3" class="h4">AUP por Edad</span>
+                    <span *ngSwitchCase="4" class="h4">BR por Edad</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-bar [data]="genderBR" name="gender-br" category='gender' value='value'>
-                    </app-chart-bar>
+                    <app-chart-lollipop [data]="age" [name]="selectedType + 'age'" category="age" value="visits"
+                        valueFormat="%" height="280px">
+                    </app-chart-lollipop>
+                </div>
+            </div>
+        </div>
+
+        <!-- age and gender -->
+        <div class="col-12 col-md-6 mt-4">
+            <div class="card">
+                <div class="card-header" [ngSwitch]="selectedTab1">
+                    <span *ngSwitchCase="1" class="h4">Tráfico por Género y Edad</span>
+                    <span *ngSwitchCase="2" class="h4">Conversiones por Género y Edad</span>
+                    <span *ngSwitchCase="3" class="h4">AUP por Género y Edad</span>
+                    <span *ngSwitchCase="4" class="h4">BR por Género y Edad</span>
+                </div>
+                <div class="card-body">
+                    <app-chart-pyramid [data]="ageByGender" [name]="selectedType + 'age-and-gender'" height="280px">
+                    </app-chart-pyramid>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="row" *ngIf="selectedTab1 === 2">
-        <div class="col-12 col-lg-4 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Conversión</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-bar [data]="ageConversion" name="age-conversion" category='age' value='value'>
-                    </app-chart-bar>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-lg-4 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">AUP</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-bar [data]="ageAUP" name="age-aup" category='age' value='value'>
-                    </app-chart-bar>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-lg-4 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">BR</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-bar [data]="ageBR" name="age-br" category='age' value='value'>
-                    </app-chart-bar>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row" *ngIf="selectedTab1 === 3">
-        <div class="col-12 col-lg-4 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Conversión</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-pie [data]="deviceConversion" name="device-conversion" category='device' value='value'>
-                    </app-chart-pie>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-lg-4 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">AUP</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-pie [data]="deviceAUP" name="device-aup" category='device' value='value'>
-                    </app-chart-pie>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-lg-4 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">BR</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-pie [data]="deviceBR" name="device-br" category='device' value='value'>
-                    </app-chart-pie>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+</ng-container>
 
 <!-- TRAFICO Y CONVERSIONES POR DIA Y HORA -->
 <ng-container>
-    <div class="row">
+    <div class="row mt-5">
         <div class="col-12">
-            <div class="mb-3 mt-0">
+            <div class="mb-3">
                 <span class="h3">Tráfico y conversiones por hora y por día</span>
             </div>
         </div>
@@ -174,11 +123,12 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="selectedTab2 === 1">
+    <div class="row" *ngIf="selectedTab2 === 1 || selectedTab2 === 2">
         <div class="col-12 col-lg-6 mt-4">
             <div class="card" style="height: 100%;">
                 <div class="card-header">
-                    <span class="h4">Día de la semana / Sesiones</span>
+                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}}
+                        por día de la semana</span>
                 </div>
                 <div class="card-body">
                     <app-chart-heat-map [data]="heatmapData" name="weekday-sesions" height="100%">
@@ -189,7 +139,8 @@
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">Tráfico por día de la semana</span>
+                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}}
+                        por día de la semana</span>
                 </div>
                 <div class="card-body">
                     <app-chart-bar-horizontal [data]="trafficByDay" name="traffic-day" category='weekday' value='value'
@@ -200,7 +151,8 @@
 
             <div class="card mt-4">
                 <div class="card-header">
-                    <span class="h4">Tráfico por hora del día</span>
+                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}}
+                        por hora del día</span>
                 </div>
                 <div class="card-body">
                     <app-chart-lollipop [data]="trafficByHour" name="traffic-hour" category="hour" value="visits"
@@ -211,11 +163,15 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="selectedTab2 === 2">
+    <!-- CONVERSIONES VS TRÁFICO -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <span class="h3">Conversiones vs Tráfico</span>
+        </div>
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">Conversiones y tráfico por día</span>
+                    <span class="h4">Conversiones y tráfico por día de la semana</span>
                 </div>
                 <div class="card-body">
                     <app-chart-line-comparison [data]="conversionsTrafficPerDay" name="conv-tra-day"
@@ -227,12 +183,45 @@
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">Conversiones y tráfico por hora</span>
+                    <span class="h4">Conversiones y tráfico por hora del día</span>
                 </div>
                 <div class="card-body">
                     <app-chart-line-comparison [data]="conversionsTrafficPerHour" name="conv-tra-hour"
                         valueName1="Conversiones" valueName2="Tráfico">
                     </app-chart-line-comparison>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- AUDIENCIAS -->
+<ng-container>
+    <div class="row mt-5">
+        <div class="col-12">
+            <span class="h3">Audiencias - Afinidad y Mercado</span>
+        </div>
+        <div class="col-12 col-lg-6 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h4">Categoría de afinidad (cobertura)</span>
+                </div>
+                <div class="card-body">
+                    <p class="text-center text-muted">
+                        Work in progress...
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h4">Segmento de mercado</span>
+                </div>
+                <div class="card-body">
+                    <p class="text-center text-muted">
+                        Work in progress...
+                    </p>
                 </div>
             </div>
         </div>
