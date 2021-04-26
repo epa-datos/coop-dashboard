@@ -14,6 +14,7 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
   @Input() category: string = 'category';
   @Input() iconPath: string; // an svg icon path. If isnt't provide is necessary to use "iconType" input
   @Input() iconType: string = 'human';
+  @Input() height: string = '350px'; // height property value valid in css
 
   chart;
   chartID;
