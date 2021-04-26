@@ -537,8 +537,236 @@ export class OverviewWrapperComponent implements OnInit {
     { id: 2, name: 'Mujer', value: 12800 },
   ]
 
+  ageByTraffic: any[] = [
+    {
+      'age': '15-19',
+      'visits': 3.8
+    }, {
+      'age': '20-24',
+      'visits': 5.1
+    }, {
+      'age': '25-29',
+      'visits': 5.1
+    }, {
+      'age': '30-34',
+      'visits': 4.8
+    }, {
+      'age': '35-39',
+      'visits': 4.1
+    }, {
+      'age': '40-44',
+      'visits': 3.6
+    }, {
+      'age': '45-49',
+      'visits': 3.0
+    }, {
+      'age': '50-54',
+      'visits': 2.5
+    }, {
+      'age': '55-59',
+      'visits': 1.9
+    }, {
+      'age': '60-64',
+      'visits': 1.3
+    }, {
+      'age': '65-69',
+      'visits': 1.0
+    }, {
+      'age': '70-74',
+      'visits': 0.8
+    }, {
+      'age': '75-79',
+      'visits': 0.6
+    }, {
+      'age': '80-54',
+      'visits': 0.3
+    }, {
+      'age': '85+',
+      'visits': 0.3
+    }
+  ]
+
+  ageBySales: any[] = [
+    {
+      'age': '15-19',
+      'visits': 1.8
+    }, {
+      'age': '20-24',
+      'visits': 7.5
+    }, {
+      'age': '25-29',
+      'visits': 8.1
+    }, {
+      'age': '30-34',
+      'visits': 6.8
+    }, {
+      'age': '35-39',
+      'visits': 5.1
+    }, {
+      'age': '40-44',
+      'visits': 4.6
+    }, {
+      'age': '45-49',
+      'visits': 3.0
+    }, {
+      'age': '50-54',
+      'visits': 2.8
+    }, {
+      'age': '55-59',
+      'visits': 2.0
+    }, {
+      'age': '60-64',
+      'visits': 1.6
+    }, {
+      'age': '65-69',
+      'visits': 1.2
+    }, {
+      'age': '70-74',
+      'visits': 0.5
+    }, {
+      'age': '75-79',
+      'visits': 0.4
+    }, {
+      'age': '80-54',
+      'visits': 0.3
+    }, {
+      'age': '85+',
+      'visits': 0.1
+    }
+  ]
+
+  ageByGenderTraffic: any[] = [
+    {
+      'age': '85+',
+      'male': -0.1,
+      'female': 0.3
+    }, {
+      'age': '80-54',
+      'male': -0.2,
+      'female': 0.3
+    }, {
+      'age': '75-79',
+      'male': -0.3,
+      'female': 0.6
+    }, {
+      'age': '70-74',
+      'male': -0.5,
+      'female': 0.8
+    }, {
+      'age': '65-69',
+      'male': -0.8,
+      'female': 1.0
+    }, {
+      'age': '60-64',
+      'male': -1.1,
+      'female': 1.3
+    }, {
+      'age': '55-59',
+      'male': -1.7,
+      'female': 1.9
+    }, {
+      'age': '50-54',
+      'male': -2.2,
+      'female': 2.5
+    }, {
+      'age': '45-49',
+      'male': -2.8,
+      'female': 3.0
+    }, {
+      'age': '40-44',
+      'male': -3.4,
+      'female': 3.6
+    }, {
+      'age': '35-39',
+      'male': -4.2,
+      'female': 4.1
+    }, {
+      'age': '30-34',
+      'male': -5.2,
+      'female': 4.8
+    }, {
+      'age': '25-29',
+      'male': -5.6,
+      'female': 5.1
+    }, {
+      'age': '20-24',
+      'male': -5.1,
+      'female': 5.1
+    }, {
+      'age': '15-19',
+      'male': -3.8,
+      'female': 3.8
+    }
+  ]
+
+  ageByGenderSales: any[] = [
+    {
+      'age': '85+',
+      'male': -0.1,
+      'female': 0.0
+    }, {
+      'age': '80-54',
+      'male': -0.2,
+      'female': 0.1
+    }, {
+      'age': '75-79',
+      'male': -0.2,
+      'female': 0.4
+    }, {
+      'age': '70-74',
+      'male': -0.4,
+      'female': 0.6
+    }, {
+      'age': '65-69',
+      'male': -0.7,
+      'female': 1.3
+    }, {
+      'age': '60-64',
+      'male': -1.8,
+      'female': 2.3
+    }, {
+      'age': '55-59',
+      'male': -2.7,
+      'female': 2.1
+    }, {
+      'age': '50-54',
+      'male': -3.0,
+      'female': 2.9
+    }, {
+      'age': '45-49',
+      'male': -3.4,
+      'female': 3.0
+    }, {
+      'age': '40-44',
+      'male': -4.8,
+      'female': 3.6
+    }, {
+      'age': '35-39',
+      'male': -5.2,
+      'female': 4.1
+    }, {
+      'age': '30-34',
+      'male': -6.1,
+      'female': 4.8
+    }, {
+      'age': '25-29',
+      'male': -8.3,
+      'female': 7.5
+    }, {
+      'age': '20-24',
+      'male': -8.8,
+      'female': 9.0
+    }, {
+      'age': '15-19',
+      'male': -3.8,
+      'female': 3.4
+    }
+  ]
+
   devices: any[] = this.devicesByTraffic;
   gender: any[] = this.genderByTraffic;
+  age: any[] = this.ageByTraffic;
+  ageByGender: any[] = this.ageByGenderTraffic;
 
   usersBySector: any[] = [
     {
@@ -672,10 +900,14 @@ export class OverviewWrapperComponent implements OnInit {
     if (category === 'traffic') {
       this.devices = this.devicesByTraffic;
       this.gender = this.genderByTraffic;
+      this.age = this.ageByTraffic;
+      this.ageByGender = this.ageByGenderTraffic;
       // this.valueName = 'Usuarios';
     } else if (category === 'sales') {
       this.devices = this.devicesBySales;
       this.gender = this.genderBySales;
+      this.age = this.ageBySales;
+      this.ageByGender = this.ageByGenderSales;
       // this.valueName = 'Ventas';
     }
 

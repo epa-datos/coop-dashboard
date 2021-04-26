@@ -78,57 +78,59 @@
             </div>
         </div>
         <!-- devices -->
-        <div class="col-12 col-lg-6 mt-4">
+        <div class="col-12 col-md-6 mt-4">
             <div class="card">
                 <div class="card-header">
                     <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por dispositivos</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-pictorial [data]="devices" [name]="selectedType + 'devices-by-sector'" category="name"
-                        iconType="monitor">
+                    <app-chart-pictorial [data]="devices" [name]="selectedType + 'devices'" category="name"
+                        iconType="monitor" height="280px">
                     </app-chart-pictorial>
                 </div>
             </div>
         </div>
 
         <!-- gender -->
-        <div class="col-12 col-lg-6 mt-4">
+        <div class="col-12 col-md-6 mt-4">
             <div class="card">
                 <div class="card-header">
                     <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por Género</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-pictorial [data]="gender" [name]="selectedType + 'gender-by-sector'" category="name">
+                    <app-chart-pictorial [data]="gender" [name]="selectedType + 'gender'" category="name"
+                        height="280px">
                     </app-chart-pictorial>
                 </div>
             </div>
         </div>
 
-        <!-- users by sector -->
-        <!-- <div class="col-12 col-lg-6 mb-4">
+        <!-- age -->
+        <div class="col-12 col-md-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">Usuarios por Sector</span>
+                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por Edad</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-bar [data]="usersBySector" name="users-sector" value="value" category="name">
-                    </app-chart-bar>
+                    <app-chart-lollipop [data]="age" [name]="selectedType + 'age'" category="age" value="visits"
+                        valueFormat="%" height="280px">
+                    </app-chart-lollipop>
                 </div>
             </div>
-        </div> -->
+        </div>
 
-        <!-- sales by sector -->
-        <!-- <div class="col-12 col-lg-6 mb-4">
+        <!-- age and gender -->
+        <div class="col-12 col-md-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">Ventas por Sector</span>
+                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por Género y Edad</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-bar [data]="salesBySector" name="sales-sector" value="value" category="name">
-                    </app-chart-bar>
+                    <app-chart-pyramid [data]="ageByGender" [name]="selectedType + 'age-and-gender'" height="280px">
+                    </app-chart-pyramid>
                 </div>
             </div>
-        </div> -->
+        </div>
     </div>
 
     <div class="row mt-5">
