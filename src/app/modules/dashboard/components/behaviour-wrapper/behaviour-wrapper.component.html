@@ -1,5 +1,4 @@
 <div class="row mt-4">
-
     <!-- chart - line series -->
     <div class="col-12 mt-4 mb-5">
         <div class="card">
@@ -23,7 +22,7 @@
                 <span class="h4">Sesiones nuevas vs Visitantes recurrentes</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="sessionsVsRetVisitor" name="sessions-ret-visitor">
+                <app-chart-pie [data]="sessionsVsRetVisitor" name="sessions-ret-visitor" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -36,7 +35,7 @@
                 <span class="h4">Ventas nuevas vs Visitantes recurrentes</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="salesVsRetVisitor" name="sales-ret-visitor">
+                <app-chart-pie [data]="salesVsRetVisitor" name="sales-ret-visitor" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -49,7 +48,7 @@
                 <span class="h4">Ventas por Fuente de conversión</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="salesByConversionSource" name="sales-by-conv-sorce">
+                <app-chart-pie [data]="salesByConversionSource" name="sales-by-conv-sorce" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -62,76 +61,68 @@
                 <span class="h4">Ventas por Sector</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="salesBySector" name="sales-by-sorce">
+                <app-chart-pie [data]="salesBySector" name="sales-by-sorce" legendPosition="bottom">
+                </app-chart-pie>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PROSPECTING / REMARKETING -->
+<div class="row">
+    <div class="col-12">
+        <span class="h3">Prospecting / Remarketing</span>
+    </div>
+
+    <!-- sessions by audience type -->
+    <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Sesiones por tipo de audiencia</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pie [data]="sessionsByAudience" name="sessions-by-audience" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
     </div>
 
-</div>
-
-<div class="row">
-    <div class="col-12">
-        <div class="mb-3 mt-0"><span class="h3">Prospecting / Remarketing</span></div>
+    <!-- new users by audience type -->
+    <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Usuarios nuevos por tipo de audiencia</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pie [data]="sessionsByAudience" name="users-by-audience" legendPosition="bottom">
+                </app-chart-pie>
+            </div>
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="grid-container">
-            <!-- sessions by audience type -->
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Sesiones por tipo de audiencia</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-pie [data]="sessionsByAudience" name="sessions-by-audience">
-                    </app-chart-pie>
-                </div>
+    <!-- quantity by audience type -->
+    <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Cantidad por tipo de audiencia</span>
             </div>
-
-            <!-- new users by audience type -->
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Usuarios nuevos por tipo de audiencia</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-pie [data]="sessionsByAudience" name="users-by-audience">
-                    </app-chart-pie>
-                </div>
+            <div class="card-body">
+                <app-chart-bar [data]="quantityByAudience" name="quantity-by-audience" legendPosition="bottom">
+                </app-chart-bar>
             </div>
+        </div>
+    </div>
 
-            <!-- quantity by audience type -->
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Cantidad por tipo de audiencia</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-bar [data]="quantityByAudience" name="quantity-by-audience">
-                    </app-chart-bar>
-                </div>
+    <!-- revenue and aup by audience type -->
+    <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Revenue y AUP por tipo de audiencia</span>
             </div>
-
-            <!-- revenue by audience type -->
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Revenue por tipo de audiencia</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-bar [data]="revenueByAudience" name="revenue-by-audience">
-                    </app-chart-bar>
-                </div>
-            </div>
-
-            <!-- AUP by audience type -->
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">AUP por tipo de audiencia</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-bar [data]="AUPByAudience" name="aup-by-audience">
-                    </app-chart-bar>
-                </div>
+            <div class="card-body">
+                <app-chart-column-line-mix [data]="revenueVsAupAudience" name="revenue-aup-audience"
+                    columnValue="revenue" columnName="Revenue" lineValue="aup" lineName="AUP" valueFormat="USD">
+                </app-chart-column-line-mix>
             </div>
         </div>
     </div>

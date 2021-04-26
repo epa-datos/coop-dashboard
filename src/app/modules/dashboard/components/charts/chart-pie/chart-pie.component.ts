@@ -15,6 +15,7 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
   @Input() data;
   @Input() value: string = 'value';
   @Input() category: string = 'category';
+  @Input() legendPosition: am4charts.LegendPosition = 'left';
 
   chartID;
   loadStatus: number = 0;
@@ -94,9 +95,12 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
 
       // Add a legend
       chart.legend = new am4charts.Legend();
-      chart.legend.position = 'left';
+      chart.legend.position = this.legendPosition;
       chart.legend.fontSize = 12;
       chart.legend.useDefaultMarker = true;
+      chart.legend.maxHeight = 150;
+      chart.legend.scrollable = true;
+
       let marker = chart.legend.markers.template.children.getIndex(0);
       marker.strokeWidth = 2;
       marker.strokeOpacity = 1;
