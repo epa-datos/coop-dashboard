@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-behaviour-wrapper',
@@ -79,14 +80,9 @@ export class BehaviourWrapperComponent implements OnInit {
     { category: 'Remarketing', value: 18 },
   ]
 
-  revenueByAudience = [
-    { category: 'Prospecting', value: 306000 },
-    { category: 'Remarketing', value: 11600 },
-  ]
-
-  AUPByAudience = [
-    { category: 'Prospecting', value: 850 },
-    { category: 'Remarketing', value: 631 },
+  revenueVsAupAudience = [
+    { category: 'Prospecting', revenue: 1200, aup: 400 },
+    { category: 'Remarketing', revenue: 1600, aup: 810 }
   ]
 
 
