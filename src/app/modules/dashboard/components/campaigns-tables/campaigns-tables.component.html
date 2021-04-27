@@ -11,7 +11,12 @@
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef> Campaña </th>
                     <td mat-cell *matCellDef="let element" [style.width.%]="45">
-                        <div class="lg-container">{{element.name}}</div>
+                        <div class="lg-container">
+                            <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.name"
+                                matTooltipPosition="right" matTooltipClass="custom-tooltip">
+                                {{element.name}}
+                            </span>
+                        </div>
                     </td>
                 </ng-container>
 
@@ -102,7 +107,12 @@
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef> Campaña </th>
                     <td mat-cell *matCellDef="let element" [style.width.%]="45">
-                        <div class="lg-container">{{element.name}}</div>
+                        <div class="lg-container">
+                            <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.name"
+                                matTooltipPosition="right" matTooltipClass="custom-tooltip">
+                                {{element.name}}
+                            </span>
+                        </div>
                     </td>
                 </ng-container>
 
@@ -194,7 +204,12 @@
 
                     <th mat-header-cell *matHeaderCellDef> Campaña </th>
                     <td mat-cell *matCellDef="let element" [style.width.%]="45">
-                        <div class="lg-container">{{element.name}}</div>
+                        <div class="lg-container">
+                            <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.name"
+                                matTooltipPosition="right" matTooltipClass="custom-tooltip">
+                                {{element.name}}
+                            </span>
+                        </div>
                     </td>
                 </ng-container>
 
