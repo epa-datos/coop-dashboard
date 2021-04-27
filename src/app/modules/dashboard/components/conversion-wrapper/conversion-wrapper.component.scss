@@ -1,19 +1,25 @@
-table {
-    width: 100%;
-
-    th:nth-of-type(n + 3),
-    td:nth-of-type(n + 3) {
-        text-align: center;
+.conversion-wrapper {
+    table {
+        width: 100%;
+    
+        th:nth-of-type(n + 3),
+        td:nth-of-type(n + 3) {
+            text-align: center;
+        }
     }
-}
-
-.adaptable-container {
-    overflow: auto;
-}
-
-.lg-container {
-    max-width: 27rem;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    
+    .adaptable-container {
+        overflow: auto;
+    }
+    
+    .lg-container {
+        max-width: 27rem;
+        span {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: inherit;
+            display: inline-block;
+        }
+    }
 }

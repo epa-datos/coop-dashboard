@@ -1,289 +1,298 @@
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="header bg-light mb-2">
-            <p class="h4 py-1 ml-3 mr-3">
-                <span>Google Search y MDF</span>
-            </p>
-        </div>
-        <div class="adaptable-container">
-            <table mat-table [dataSource]="dataSource1">
-                <!-- name column -->
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef> Campaña </th>
-                    <td mat-cell *matCellDef="let element" [style.width.%]="45">
-                        <div class="lg-container">
-                            <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.name"
-                                matTooltipPosition="right" matTooltipClass="custom-tooltip">
-                                {{element.name}}
-                            </span>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <!-- investment column -->
-                <ng-container matColumnDef="investment">
-                    <th mat-header-cell *matHeaderCellDef> Inversión </th>
-                    <td mat-cell *matCellDef="let element"> {{element.investment}} </td>
-                </ng-container>
-
-                <!-- impressions -->
-                <ng-container matColumnDef="impressions">
-                    <th mat-header-cell *matHeaderCellDef> Impresiones</th>
-                    <td mat-cell *matCellDef="let element"> {{element.impressions}} </td>
-                </ng-container>
-
-                <!-- clicks -->
-                <ng-container matColumnDef="clicks">
-                    <th mat-header-cell *matHeaderCellDef> Clicks</th>
-                    <td mat-cell *matCellDef="let element"> {{element.clicks}} </td>
-                </ng-container>
-
-                <!-- CTR -->
-                <ng-container matColumnDef="ctr">
-                    <th mat-header-cell *matHeaderCellDef> CTR</th>
-
-                    <td mat-cell *matCellDef="let element">
-                        <div class="value-container">
-                            <span>{{element.ctr}}</span>
-                            <i class="fas fa-arrow-up text-success" *ngIf="element.ctr >= element.ctr_benchmark"></i>
-                            <i class="fas fa-arrow-down text-danger" *ngIf="element.ctr < element.ctr_benchmark"></i>
-                        </div>
-                    </td>
-
-                </ng-container>
-
-                <!-- CPM -->
-                <ng-container matColumnDef="cpm">
-                    <th mat-header-cell *matHeaderCellDef> CPM</th>
-                    <td mat-cell *matCellDef="let element"> {{element.cpm}} </td>
-                </ng-container>
-
-                <!-- CPC -->
-                <ng-container matColumnDef="cpc">
-                    <th mat-header-cell *matHeaderCellDef> CPC</th>
-                    <td mat-cell *matCellDef="let element"> {{element.cpc}} </td>
-                </ng-container>
-
-                <!-- ROAS -->
-                <ng-container>
-                    <ng-container matColumnDef="roas">
-                        <th mat-header-cell *matHeaderCellDef> ROAS</th>
-                        <td mat-cell *matCellDef="let element"> {{element.roas ? element.roas + '%' : '-' }}
+<div class="campaigns-tables">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="header bg-light mb-2">
+                <p class="h4 py-1 ml-3 mr-3">
+                    <span>Google Search y MDF</span>
+                </p>
+            </div>
+            <div class="adaptable-container">
+                <table mat-table [dataSource]="dataSource1">
+                    <!-- name column -->
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> Campaña </th>
+                        <td mat-cell *matCellDef="let element" [style.width.%]="45">
+                            <div class="lg-container">
+                                <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.name"
+                                    matTooltipPosition="right" matTooltipClass="custom-tooltip">
+                                    {{element.name}}
+                                </span>
+                            </div>
                         </td>
                     </ng-container>
-                </ng-container>
 
-                <!-- disclaimer column -->
-                <ng-container matColumnDef="disclaimer">
-                    <td mat-footer-cell *matFooterCellDef colspan="3">
-                        <div class="text-danger text-center" *ngIf="getReqStatus === 3">
-                            Ocurrió un error al consultar los usuarios
-                        </div>
-                    </td>
-                </ng-container>
+                    <!-- investment column -->
+                    <ng-container matColumnDef="investment">
+                        <th mat-header-cell *matHeaderCellDef> Inversión </th>
+                        <td mat-cell *matCellDef="let element"> {{element.investment}} </td>
+                    </ng-container>
 
-                <ng-container>
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </ng-container>
+                    <!-- impressions -->
+                    <ng-container matColumnDef="impressions">
+                        <th mat-header-cell *matHeaderCellDef> Impresiones</th>
+                        <td mat-cell *matCellDef="let element"> {{element.impressions}} </td>
+                    </ng-container>
 
-                <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
-                    [hidden]="getReqStatus !== 3"></tr>
-            </table>
-        </div>
-        <mat-paginator class="paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-    </div>
-</div>
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="header bg-light mb-2">
-            <p class="h4 py-1 ml-3 mr-3">
-                <span>Programmatic</span>
-            </p>
-        </div>
-        <div class="adaptable-container">
-            <table mat-table [dataSource]="dataSource2">
-                <!-- name column -->
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef> Campaña </th>
-                    <td mat-cell *matCellDef="let element" [style.width.%]="45">
-                        <div class="lg-container">
-                            <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.name"
-                                matTooltipPosition="right" matTooltipClass="custom-tooltip">
-                                {{element.name}}
-                            </span>
-                        </div>
-                    </td>
-                </ng-container>
+                    <!-- clicks -->
+                    <ng-container matColumnDef="clicks">
+                        <th mat-header-cell *matHeaderCellDef> Clicks</th>
+                        <td mat-cell *matCellDef="let element"> {{element.clicks}} </td>
+                    </ng-container>
 
-                <!-- investment column -->
-                <ng-container matColumnDef="investment">
-                    <th mat-header-cell *matHeaderCellDef> Inversión </th>
-                    <td mat-cell *matCellDef="let element"> {{element.investment}} </td>
-                </ng-container>
+                    <!-- CTR -->
+                    <ng-container matColumnDef="ctr">
+                        <th mat-header-cell *matHeaderCellDef> CTR</th>
 
-                <!-- impressions -->
-                <ng-container matColumnDef="impressions">
-                    <th mat-header-cell *matHeaderCellDef> Impresiones</th>
-                    <td mat-cell *matCellDef="let element"> {{element.impressions}} </td>
-                </ng-container>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="value-container">
+                                <span>{{element.ctr}}</span>
+                                <i class="fas fa-arrow-up text-success"
+                                    *ngIf="element.ctr >= element.ctr_benchmark"></i>
+                                <i class="fas fa-arrow-down text-danger"
+                                    *ngIf="element.ctr < element.ctr_benchmark"></i>
+                            </div>
+                        </td>
 
-                <!-- clicks -->
-                <ng-container matColumnDef="clicks">
-                    <th mat-header-cell *matHeaderCellDef> Clicks</th>
-                    <td mat-cell *matCellDef="let element"> {{element.clicks}} </td>
-                </ng-container>
+                    </ng-container>
 
-                <!-- CTR -->
-                <ng-container matColumnDef="ctr">
-                    <th mat-header-cell *matHeaderCellDef> CTR</th>
+                    <!-- CPM -->
+                    <ng-container matColumnDef="cpm">
+                        <th mat-header-cell *matHeaderCellDef> CPM</th>
+                        <td mat-cell *matCellDef="let element"> {{element.cpm}} </td>
+                    </ng-container>
 
-                    <td mat-cell *matCellDef="let element">
-                        <div class="value-container">
-                            <span>{{element.ctr}}</span>
-                            <i class="fas fa-arrow-up text-success" *ngIf="element.ctr >= element.ctr_benchmark"></i>
-                            <i class="fas fa-arrow-down text-danger" *ngIf="element.ctr < element.ctr_benchmark"></i>
-                        </div>
-                    </td>
+                    <!-- CPC -->
+                    <ng-container matColumnDef="cpc">
+                        <th mat-header-cell *matHeaderCellDef> CPC</th>
+                        <td mat-cell *matCellDef="let element"> {{element.cpc}} </td>
+                    </ng-container>
 
-                </ng-container>
+                    <!-- ROAS -->
+                    <ng-container>
+                        <ng-container matColumnDef="roas">
+                            <th mat-header-cell *matHeaderCellDef> ROAS</th>
+                            <td mat-cell *matCellDef="let element"> {{element.roas ? element.roas + '%' : '-' }}
+                            </td>
+                        </ng-container>
+                    </ng-container>
 
-                <!-- CPM -->
-                <ng-container matColumnDef="cpm">
-                    <th mat-header-cell *matHeaderCellDef> CPM</th>
-                    <td mat-cell *matCellDef="let element"> {{element.cpm}} </td>
-                </ng-container>
-
-                <!-- CPC -->
-                <ng-container matColumnDef="cpc">
-                    <th mat-header-cell *matHeaderCellDef> CPC</th>
-                    <td mat-cell *matCellDef="let element"> {{element.cpc}} </td>
-                </ng-container>
-
-                <!-- ROAS -->
-                <ng-container>
-                    <ng-container matColumnDef="roas">
-                        <th mat-header-cell *matHeaderCellDef> ROAS</th>
-                        <td mat-cell *matCellDef="let element"> {{element.roas ? element.roas + '%' : '-' }}
+                    <!-- disclaimer column -->
+                    <ng-container matColumnDef="disclaimer">
+                        <td mat-footer-cell *matFooterCellDef colspan="3">
+                            <div class="text-danger text-center" *ngIf="getReqStatus === 3">
+                                Ocurrió un error al consultar los usuarios
+                            </div>
                         </td>
                     </ng-container>
-                </ng-container>
 
-                <!-- disclaimer column -->
-                <ng-container matColumnDef="disclaimer">
-                    <td mat-footer-cell *matFooterCellDef colspan="3">
-                        <div class="text-danger text-center" *ngIf="getReqStatus === 3">
-                            Ocurrió un error al consultar los usuarios
-                        </div>
-                    </td>
-                </ng-container>
+                    <ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </ng-container>
 
-                <ng-container>
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </ng-container>
-
-                <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
-                    [hidden]="getReqStatus !== 3"></tr>
-            </table>
+                    <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
+                        [hidden]="getReqStatus !== 3"></tr>
+                </table>
+            </div>
+            <mat-paginator class="paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
         </div>
-        <mat-paginator class="paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>
-</div>
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="header bg-light mb-2">
-            <p class="h4 py-1 ml-3 mr-3">
-                <span>Social Media</span>
-            </p>
-        </div>
-        <div class="adaptable-container">
-            <table mat-table [dataSource]="dataSource3">
-                <!-- name column -->
-                <ng-container matColumnDef="name">
-
-                    <th mat-header-cell *matHeaderCellDef> Campaña </th>
-                    <td mat-cell *matCellDef="let element" [style.width.%]="45">
-                        <div class="lg-container">
-                            <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.name"
-                                matTooltipPosition="right" matTooltipClass="custom-tooltip">
-                                {{element.name}}
-                            </span>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <!-- investment column -->
-                <ng-container matColumnDef="investment">
-                    <th mat-header-cell *matHeaderCellDef> Inversión </th>
-                    <td mat-cell *matCellDef="let element"> {{element.investment}} </td>
-                </ng-container>
-
-                <!-- impressions -->
-                <ng-container matColumnDef="impressions">
-                    <th mat-header-cell *matHeaderCellDef> Impresiones</th>
-                    <td mat-cell *matCellDef="let element"> {{element.impressions}} </td>
-                </ng-container>
-
-                <!-- clicks -->
-                <ng-container matColumnDef="clicks">
-                    <th mat-header-cell *matHeaderCellDef> Clicks</th>
-                    <td mat-cell *matCellDef="let element"> {{element.clicks}} </td>
-                </ng-container>
-
-                <!-- CTR -->
-                <ng-container matColumnDef="ctr">
-                    <th mat-header-cell *matHeaderCellDef> CTR</th>
-
-                    <td mat-cell *matCellDef="let element">
-                        <div class="value-container">
-                            <span>{{element.ctr}}</span>
-                            <i class="fas fa-arrow-up text-success" *ngIf="element.ctr >= element.ctr_benchmark"></i>
-                            <i class="fas fa-arrow-down text-danger" *ngIf="element.ctr < element.ctr_benchmark"></i>
-                        </div>
-                    </td>
-
-                </ng-container>
-
-                <!-- CPM -->
-                <ng-container matColumnDef="cpm">
-                    <th mat-header-cell *matHeaderCellDef> CPM</th>
-                    <td mat-cell *matCellDef="let element"> {{element.cpm}} </td>
-                </ng-container>
-
-                <!-- CPC -->
-                <ng-container matColumnDef="cpc">
-                    <th mat-header-cell *matHeaderCellDef> CPC</th>
-                    <td mat-cell *matCellDef="let element"> {{element.cpc}} </td>
-                </ng-container>
-
-                <!-- ROAS -->
-                <ng-container>
-                    <ng-container matColumnDef="roas">
-                        <th mat-header-cell *matHeaderCellDef> ROAS</th>
-                        <td mat-cell *matCellDef="let element"> {{element.roas ? element.roas + '%' : '-' }}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="header bg-light mb-2">
+                <p class="h4 py-1 ml-3 mr-3">
+                    <span>Programmatic</span>
+                </p>
+            </div>
+            <div class="adaptable-container">
+                <table mat-table [dataSource]="dataSource2">
+                    <!-- name column -->
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> Campaña </th>
+                        <td mat-cell *matCellDef="let element" [style.width.%]="45">
+                            <div class="lg-container">
+                                <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.name"
+                                    matTooltipPosition="right" matTooltipClass="custom-tooltip">
+                                    {{element.name}}
+                                </span>
+                            </div>
                         </td>
                     </ng-container>
-                </ng-container>
 
-                <!-- disclaimer column -->
-                <ng-container matColumnDef="disclaimer">
-                    <td mat-footer-cell *matFooterCellDef colspan="3">
-                        <div class="text-danger text-center" *ngIf="getReqStatus === 3">
-                            Ocurrió un error al consultar los usuarios
-                        </div>
-                    </td>
-                </ng-container>
+                    <!-- investment column -->
+                    <ng-container matColumnDef="investment">
+                        <th mat-header-cell *matHeaderCellDef> Inversión </th>
+                        <td mat-cell *matCellDef="let element"> {{element.investment}} </td>
+                    </ng-container>
 
-                <ng-container>
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </ng-container>
+                    <!-- impressions -->
+                    <ng-container matColumnDef="impressions">
+                        <th mat-header-cell *matHeaderCellDef> Impresiones</th>
+                        <td mat-cell *matCellDef="let element"> {{element.impressions}} </td>
+                    </ng-container>
 
-                <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
-                    [hidden]="getReqStatus !== 3"></tr>
-            </table>
+                    <!-- clicks -->
+                    <ng-container matColumnDef="clicks">
+                        <th mat-header-cell *matHeaderCellDef> Clicks</th>
+                        <td mat-cell *matCellDef="let element"> {{element.clicks}} </td>
+                    </ng-container>
+
+                    <!-- CTR -->
+                    <ng-container matColumnDef="ctr">
+                        <th mat-header-cell *matHeaderCellDef> CTR</th>
+
+                        <td mat-cell *matCellDef="let element">
+                            <div class="value-container">
+                                <span>{{element.ctr}}</span>
+                                <i class="fas fa-arrow-up text-success"
+                                    *ngIf="element.ctr >= element.ctr_benchmark"></i>
+                                <i class="fas fa-arrow-down text-danger"
+                                    *ngIf="element.ctr < element.ctr_benchmark"></i>
+                            </div>
+                        </td>
+
+                    </ng-container>
+
+                    <!-- CPM -->
+                    <ng-container matColumnDef="cpm">
+                        <th mat-header-cell *matHeaderCellDef> CPM</th>
+                        <td mat-cell *matCellDef="let element"> {{element.cpm}} </td>
+                    </ng-container>
+
+                    <!-- CPC -->
+                    <ng-container matColumnDef="cpc">
+                        <th mat-header-cell *matHeaderCellDef> CPC</th>
+                        <td mat-cell *matCellDef="let element"> {{element.cpc}} </td>
+                    </ng-container>
+
+                    <!-- ROAS -->
+                    <ng-container>
+                        <ng-container matColumnDef="roas">
+                            <th mat-header-cell *matHeaderCellDef> ROAS</th>
+                            <td mat-cell *matCellDef="let element"> {{element.roas ? element.roas + '%' : '-' }}
+                            </td>
+                        </ng-container>
+                    </ng-container>
+
+                    <!-- disclaimer column -->
+                    <ng-container matColumnDef="disclaimer">
+                        <td mat-footer-cell *matFooterCellDef colspan="3">
+                            <div class="text-danger text-center" *ngIf="getReqStatus === 3">
+                                Ocurrió un error al consultar los usuarios
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </ng-container>
+
+                    <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
+                        [hidden]="getReqStatus !== 3"></tr>
+                </table>
+            </div>
+            <mat-paginator class="paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
         </div>
-        <mat-paginator class="paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="header bg-light mb-2">
+                <p class="h4 py-1 ml-3 mr-3">
+                    <span>Social Media</span>
+                </p>
+            </div>
+            <div class="adaptable-container">
+                <table mat-table [dataSource]="dataSource3">
+                    <!-- name column -->
+                    <ng-container matColumnDef="name">
+
+                        <th mat-header-cell *matHeaderCellDef> Campaña </th>
+                        <td mat-cell *matCellDef="let element" [style.width.%]="45">
+                            <div class="lg-container">
+                                <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.name"
+                                    matTooltipPosition="right" matTooltipClass="custom-tooltip">
+                                    {{element.name}}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- investment column -->
+                    <ng-container matColumnDef="investment">
+                        <th mat-header-cell *matHeaderCellDef> Inversión </th>
+                        <td mat-cell *matCellDef="let element"> {{element.investment}} </td>
+                    </ng-container>
+
+                    <!-- impressions -->
+                    <ng-container matColumnDef="impressions">
+                        <th mat-header-cell *matHeaderCellDef> Impresiones</th>
+                        <td mat-cell *matCellDef="let element"> {{element.impressions}} </td>
+                    </ng-container>
+
+                    <!-- clicks -->
+                    <ng-container matColumnDef="clicks">
+                        <th mat-header-cell *matHeaderCellDef> Clicks</th>
+                        <td mat-cell *matCellDef="let element"> {{element.clicks}} </td>
+                    </ng-container>
+
+                    <!-- CTR -->
+                    <ng-container matColumnDef="ctr">
+                        <th mat-header-cell *matHeaderCellDef> CTR</th>
+
+                        <td mat-cell *matCellDef="let element">
+                            <div class="value-container">
+                                <span>{{element.ctr}}</span>
+                                <i class="fas fa-arrow-up text-success"
+                                    *ngIf="element.ctr >= element.ctr_benchmark"></i>
+                                <i class="fas fa-arrow-down text-danger"
+                                    *ngIf="element.ctr < element.ctr_benchmark"></i>
+                            </div>
+                        </td>
+
+                    </ng-container>
+
+                    <!-- CPM -->
+                    <ng-container matColumnDef="cpm">
+                        <th mat-header-cell *matHeaderCellDef> CPM</th>
+                        <td mat-cell *matCellDef="let element"> {{element.cpm}} </td>
+                    </ng-container>
+
+                    <!-- CPC -->
+                    <ng-container matColumnDef="cpc">
+                        <th mat-header-cell *matHeaderCellDef> CPC</th>
+                        <td mat-cell *matCellDef="let element"> {{element.cpc}} </td>
+                    </ng-container>
+
+                    <!-- ROAS -->
+                    <ng-container>
+                        <ng-container matColumnDef="roas">
+                            <th mat-header-cell *matHeaderCellDef> ROAS</th>
+                            <td mat-cell *matCellDef="let element"> {{element.roas ? element.roas + '%' : '-' }}
+                            </td>
+                        </ng-container>
+                    </ng-container>
+
+                    <!-- disclaimer column -->
+                    <ng-container matColumnDef="disclaimer">
+                        <td mat-footer-cell *matFooterCellDef colspan="3">
+                            <div class="text-danger text-center" *ngIf="getReqStatus === 3">
+                                Ocurrió un error al consultar los usuarios
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </ng-container>
+
+                    <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
+                        [hidden]="getReqStatus !== 3"></tr>
+                </table>
+            </div>
+            <mat-paginator class="paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+
 </div>
