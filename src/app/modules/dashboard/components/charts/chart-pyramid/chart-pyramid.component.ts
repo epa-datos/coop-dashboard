@@ -35,8 +35,22 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     this.chart && this.loadChartData(this.chart);
   }
 
+  private _valueFormat;
+  get valueFormat() {
+    return this._valueFormat;
+  }
+  @Input() set valueFormat(value) {
+    this._valueFormat = value;
+    if (this.labels && this.valueAxis) {
+      this.loadValueFormat(value);
+    }
+  }
+
   chartID;
   chart;
+  labels: any;
+  valueAxis: any;
+  columns: any;
 
   constructor() { }
 
@@ -67,13 +81,16 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     valueAxis.extraMin = 0.1;
     valueAxis.extraMax = 0.1;
     valueAxis.renderer.minGridDistance = 40;
-    valueAxis.renderer.ticks.template.length = 5;
-    valueAxis.renderer.ticks.template.disabled = false;
-    valueAxis.renderer.ticks.template.strokeOpacity = 0.4;
+    valueAxis.renderer.ticks.template.disabled = true;
     valueAxis.renderer.labels.template.fontSize = 12;
-    valueAxis.renderer.labels.template.adapter.add('text', function (text) {
-      return text == 'Male' || text == 'Female' ? text : text + '%';
-    })
+    this.valueFormat;
+
+    valueAxis.renderer.grid.template.strokeWidth = 0;
+    valueAxis.renderer.grid.template.disabled = true;
+    this.valueAxis = valueAxis;
+
+    chart.legend = new am4charts.Legend();
+    chart.legend.contentAlign = 'right';
 
     // Create series
     let male = chart.series.push(new am4charts.ColumnSeries());
@@ -81,10 +98,9 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     male.dataFields.categoryY = this.category;
     male.clustered = false;
     male.columns.template.column.fillOpacity = 0.8;
-    male.columns.template.tooltipText = '{categoryY} años';
+    male.name = this.valueName1;
 
     let maleLabel = male.bullets.push(new am4charts.LabelBullet());
-    maleLabel.label.text = '{valueX}%';
     maleLabel.label.hideOversized = false;
     maleLabel.label.truncate = false;
     maleLabel.label.horizontalCenter = 'right';
@@ -98,9 +114,11 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     female.clustered = false;
     female.columns.template.column.fillOpacity = 0.8;
     female.columns.template.tooltipText = '{categoryY} años';
+    female.name = this.valueName2;
+
+    this.columns = { male, female }
 
     let femaleLabel = female.bullets.push(new am4charts.LabelBullet());
-    femaleLabel.label.text = '{valueX}%';
     femaleLabel.label.hideOversized = false;
     femaleLabel.label.truncate = false;
     femaleLabel.label.horizontalCenter = 'left';
@@ -108,28 +126,41 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     femaleLabel.label.fontSize = 12;
 
     let maleRange = valueAxis.axisRanges.create();
-    maleRange.value = -10;
+    maleRange.value = -100;
     maleRange.endValue = 0;
-    maleRange.label.text = this.valueName1;
     maleRange.label.fill = chart.colors.list[0];
     maleRange.label.dy = 20;
     maleRange.label.fontWeight = '600';
     maleRange.grid.strokeOpacity = 1;
-    maleRange.grid.stroke = male.stroke;
 
     let femaleRange = valueAxis.axisRanges.create();
     femaleRange.value = 0;
-    femaleRange.endValue = 10;
-    femaleRange.label.text = this.valueName2;
+    femaleRange.endValue = 100;
+    femaleRange.label.align = 'right'
     femaleRange.label.fill = chart.colors.list[1];
     femaleRange.label.dy = 20;
     femaleRange.label.fontWeight = '600';
     femaleRange.grid.strokeOpacity = 1;
-    femaleRange.grid.stroke = female.stroke;
+
+
+    this.labels = { labelLeft: maleLabel, labelRight: femaleLabel };
+    this.loadValueFormat(this.valueFormat);
   }
 
   loadChartData(chart) {
     chart.data = this.data;
     this.chart = chart;
+  }
+
+  loadValueFormat(valueFormat) {
+    this.columns.male.columns.template.tooltipText = `{categoryY} años: [bold]{valueX} ${this.valueFormat ? this.valueFormat : ''}[/]`;
+    this.columns.female.columns.template.tooltipText = `{categoryY} años: [bold]{valueX} ${this.valueFormat ? this.valueFormat : ''}[/]`;
+    // this.labels.labelLeft.label.text = `{valueX} ${valueFormat ? valueFormat : ''}`;
+    // this.labels.labelRight.label.text = `{valueX} ${valueFormat ? valueFormat : ''}`;
+
+    this.labels.labelLeft.label.truncate = true;
+    this.valueAxis.renderer.labels.template.adapter.add('text', function (text) {
+      return `${text} ${valueFormat !== false && valueFormat?.length === 1 ? valueFormat : ''}`;
+    })
   }
 }

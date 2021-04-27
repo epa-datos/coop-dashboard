@@ -11,8 +11,10 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 export class ChartBarComponent implements OnInit, AfterViewInit {
 
   @Input() data;
-  @Input() value: string = 'value';
   @Input() category: string = 'category';
+  @Input() value: string = 'value';
+  @Input() valueFormat: string; // USD MXN Copy shown in tooltip
+
   chartID;
   loadStatus: number = 0;
 
@@ -22,7 +24,7 @@ export class ChartBarComponent implements OnInit, AfterViewInit {
   }
   @Input() set name(value) {
     this._name = value;
-    this.chartID = `chart-bar${this.name}`
+    this.chartID = `chart-bar-${this.name}`
   }
 
   constructor() { }
@@ -63,7 +65,7 @@ export class ChartBarComponent implements OnInit, AfterViewInit {
     // series.sequencedInterpolation = true;
     series.dataFields.valueY = this.value;
     series.dataFields.categoryX = this.category;
-    series.tooltipText = '[{categoryX}: bold]{valueY}[/]';
+    series.tooltipText = `[{categoryX}: bold]{valueY} ${this.valueFormat ? this.valueFormat : ''}[/]`;
     series.columns.template.strokeWidth = 0;
 
     series.tooltip.pointerOrientation = 'vertical';

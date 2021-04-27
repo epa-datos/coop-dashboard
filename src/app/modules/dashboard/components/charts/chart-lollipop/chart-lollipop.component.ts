@@ -10,10 +10,9 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 })
 export class ChartLollipopComponent implements OnInit, AfterViewInit {
 
-  @Input() value: string;
-  @Input() category: string;
+  @Input() value: string = 'value';
+  @Input() category: string = 'category';
   @Input() height: string = '350px'; // height property value valid in css
-  @Input() valueFormat; // USD, MXN, % Copy shown in tooltip
 
   graphID;
   loadStatus: number = 0;
@@ -36,7 +35,19 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
     this.chart && this.loadChartData(this.chart);
   }
 
+  private _valueFormat;
+  get valueFormat() {
+    return this._valueFormat;
+  }
+  @Input() set valueFormat(value) {
+    this._valueFormat = value;
+    if (this.series) {
+      this.loadValueFormat();
+    }
+  }
+
   chart;
+  series;
 
   constructor() { }
 
@@ -77,13 +88,15 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
     let series = chart.series.push(new am4charts.ColumnSeries());
     series.dataFields.categoryX = this.category;
     series.dataFields.valueY = this.value;
-    series.tooltipText = `{valueY.value} ${this.valueFormat ? this.valueFormat : ''}`;
     series.sequencedInterpolation = true;
     series.fillOpacity = 0;
     series.strokeOpacity = 1;
     series.strokeDasharray = '1,3';
     series.columns.template.width = 0.01;
     series.tooltip.pointerOrientation = 'horizontal';
+
+    this.series = series;
+    this.loadValueFormat();
 
     let bullet = series.bullets.create(am4charts.CircleBullet);
 
@@ -96,4 +109,7 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
     this.chart = chart;
   }
 
+  loadValueFormat() {
+    this.series.tooltipText = `{valueY.value} ${this.valueFormat ? this.valueFormat : ''}`;
+  }
 }
