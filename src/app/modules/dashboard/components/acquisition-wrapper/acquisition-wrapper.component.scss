@@ -4,12 +4,30 @@
 
 table {
     width: 100%;
+    th:nth-of-type(n + 4),
+    td:nth-of-type(n + 4) {
+        text-align: center;
+    }
 }
 
 .adaptable-container {
     overflow: auto;
 }
 
+.lg-container {
+    max-width: 14rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.value-container {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 40px 30px;
+    gap: 8px;
+    justify-content: center;
+}
 
 .pills-container {
     width: 60%;

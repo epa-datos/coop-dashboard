@@ -45,8 +45,10 @@
 
                 <!-- campaign -->
                 <ng-container matColumnDef="campaign">
-                    <th mat-header-cell *matHeaderCellDef> Campaña</th>
-                    <td mat-cell *matCellDef="let element"> {{element.campaign}} </td>
+                    <th mat-header-cell *matHeaderCellDef [style.width.rem]="14"> Campaña</th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="lg-container">{{element.campaign}}</div>
+                    </td>
                 </ng-container>
 
                 <!-- users -->
@@ -76,7 +78,17 @@
                 <!-- bounceRate -->
                 <ng-container matColumnDef="bounceRate">
                     <th mat-header-cell *matHeaderCellDef> Porcentaje de rebote</th>
-                    <td mat-cell *matCellDef="let element"> {{element.bounceRate}} </td>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="value-container">
+                            <span>{{element.bounceRate}}%</span>
+                            <i class="fas fa-arrow-up text-success"
+                                *ngIf="element.bounceRate > element.bounceRateComparison"></i>
+                            <i class="fas fa-equals text-warning"
+                                *ngIf="element.bounceRate === element.bounceRateComparison"></i>
+                            <i class="fas fa-arrow-down text-danger"
+                                *ngIf="element.bounceRate < element.bounceRateComparison"></i>
+                        </div>
+                    </td>
                 </ng-container>
 
                 <!-- sessionDuration -->
@@ -100,7 +112,7 @@
                 <!-- yoy -->
                 <ng-container matColumnDef="yoy">
                     <th mat-header-cell *matHeaderCellDef> %YoY</th>
-                    <td mat-cell *matCellDef="let element"> {{element.yoy}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.yoy}}% </td>
                 </ng-container>
 
                 <!-- disclaimer column -->
