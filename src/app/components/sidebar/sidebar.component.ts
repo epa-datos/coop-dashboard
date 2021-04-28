@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵConsole } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
 import { AppStateService } from 'src/app/services/app-state.service';
@@ -42,7 +42,6 @@ export class SidebarComponent implements OnInit {
   public menuReqStatus: number = 0;
   public submenuReqStatus: number = 0;
   public isCollapsed = true;
-  public queryParams: any;
 
 
   constructor(
@@ -180,7 +179,6 @@ export class SidebarComponent implements OnInit {
           ]
           return {
             id: item.id,
-            // path: '/dashboard/retailer',
             param: item.name.toLowerCase(),
             title: item.name,
             isForAdmin: false,
@@ -212,7 +210,7 @@ export class SidebarComponent implements OnInit {
       }
     }
 
-    // let queryParams;
+    let queryParams;
 
     if (grandparent || parent) {
       if (grandparent) {
@@ -225,20 +223,23 @@ export class SidebarComponent implements OnInit {
         this.selectedItemL1 = parent;
       }
 
-      this.queryParams = {
+      queryParams = {
         [this.selectedItemL1.paramName]: this.selectedItemL1.param,
         [this.selectedItemL2?.paramName]: this.selectedItemL2?.param
       };
     } else {
-      console.log('item', item)
-      // Para opciones simples que no tienen padre y solo redirigen a otro path o despliegan listas
+      // Para opciones que no tienen padre
+
+      // close submenus if item is closed with a click
+      if (item.submenu && !item?.submenuOpen) {
+        this.closeAllSubMenus(item.submenu);
+      }
 
       // delete all sub sellections 
       // a) if another item is selected
       // b) if item is closed with a click
 
       if (this.selectedItemL1 !== item || (!this.selectedItemL1.submenuOpen && this.selectedItemL2)) {
-        item.submenuOpen = false;
         delete this.selectedItemL2;
         delete this.selectedItemL3;
       }
@@ -246,12 +247,12 @@ export class SidebarComponent implements OnInit {
       // save selected item
       this.selectedItemL1 = item;
 
-      this.queryParams = { [this.selectedItemL1.paramName]: this.selectedItemL1.param };
+      queryParams = { [this.selectedItemL1.paramName]: this.selectedItemL1.param };
     }
 
     if (item.path) {
       if (item.param) {
-        this.router.navigate([item.path], { queryParams: this.queryParams });
+        this.router.navigate([item.path], { queryParams });
       } else {
         this.router.navigate([item.path]);
       }
@@ -277,6 +278,12 @@ export class SidebarComponent implements OnInit {
         this.appStateService.selectCountry();
         this.appStateService.selectRetailer();
     }
+  }
+
+  closeAllSubMenus(submenu: RouteInfo[]) {
+    submenu.forEach(element => {
+      element.submenuOpen = false;
+    });
   }
 
   logout() {
