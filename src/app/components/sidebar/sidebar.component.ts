@@ -90,23 +90,31 @@ export class SidebarComponent implements OnInit {
 
   async getPrevSelection() {
     const params = this.route.snapshot.queryParams;
+    console.log('route', this.router.url)
 
     if (params['country'] || params['retailer']) {
       const country = params['country'];
       const retailer = params['retailer'];
 
       if (country) {
-        const item = this.menuItems.find(item => item.paramName === 'country' && item.title.toLowerCase() === country);
-        this.selectedItemL1 = item;
+        const itemL1 = this.menuItems.find(item => item.paramName === 'country' && item.title.toLowerCase() === country);
+        this.selectedItemL1 = itemL1;
         this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
 
         if (retailer) {
           this.selectedItemL1.submenu = await this.getAvailableRetailers(this.selectedItemL1.id);
           this.selectedItemL1.submenuOpen = !this.selectedItemL1.submenuOpen;
 
-          const subItem = this.selectedItemL1.submenu.find(item => item.paramName === 'retailer' && item.title.toLocaleLowerCase() === retailer);
-          this.selectedItemL2 = subItem;
+          const itemL2 = this.selectedItemL1.submenu.find(item => item.paramName === 'retailer' && item.title.toLocaleLowerCase() === retailer);
+          this.selectedItemL2 = itemL2;
           this.appStateService.selectRetailer({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+
+          const currentPath = this.router.url.split('?')[0];
+          const itemL3 = this.selectedItemL2.submenu.find(item => item.paramName === 'retailer' && item.path === currentPath);
+          if (itemL3) {
+            this.selectedItemL2.submenuOpen = true;
+            this.selectedItemL3 = itemL3;
+          }
         }
 
       } else if (retailer) {
@@ -170,7 +178,7 @@ export class SidebarComponent implements OnInit {
             },
             {
               id: 2,
-              path: '/tables',
+              path: '/dashboard/tools',
               param: item.name.toLowerCase(),
               title: 'Otras herramientas',
               isForAdmin: false,
@@ -220,7 +228,8 @@ export class SidebarComponent implements OnInit {
         this.selectedItemL3 = item;
       } else if (parent) {
         // Ej. para un retailer (item) en un país (parent)
-        this.selectedItemL1 = parent;
+        // this.selectedItemL1 = parent;
+        // se se hace una seleccion aqui puede pasar un bug en el mmomento que se selecciona nombre del retailer de otro pais
       }
 
       queryParams = {

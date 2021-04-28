@@ -96,8 +96,6 @@
 
                 <ul class="navbar-sub-nav" *ngIf="menuItemL2.submenu && menuItemL2.submenuOpen">
                   <li class="{{menuItemL3.class}} nav-item" *ngFor="let menuItemL3 of menuItemL2.submenu">
-                    <!-- esta parte tiene que actualizar la seleccion pais y retailer porque puedes tener abiertas varias veces -->
-                    <!-- [routerLink]="menuItemL3.path && menuItemL3.path" [queryParams]="queryParams" -->
                     <a class="nav-link" [ngClass]="{'active' : menuItemL3 === selectedItemL3 }"
                       (click)="selectItem(menuItemL3, menuItemL2, menuItem, true)">
                       {{ menuItemL3.title }}
