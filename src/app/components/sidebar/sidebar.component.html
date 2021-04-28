@@ -71,7 +71,7 @@
       <ul class="navbar-nav" *ngIf="menuItems?.length > 1">
         <ng-container *ngFor="let menuItem of menuItems">
           <li class="{{menuItem.class}} nav-item" *ngIf="!menuItem.isForAdmin || (menuItem.isForAdmin && userIsAdmin)">
-            <a routerLinkActive="active" class="nav-link" [ngClass]="{'active' : menuItem === selectedItem }"
+            <a routerLinkActive="active" class="nav-link" [ngClass]="{'active' : menuItem === selectedItemL1 }"
               (click)="selectItem(menuItem)">
               <!-- caret for submenus -->
               <i [hidden]="!menuItem.submenu || menuItem.submenuOpen" class="menu-caret fas fa-caret-right"></i>
@@ -85,7 +85,7 @@
 
             <ul class="navbar-sub-nav" *ngIf="menuItem.submenu && menuItem.submenuOpen">
               <li class="{{menuItemL2.class}} nav-item" *ngFor="let menuItemL2 of menuItem.submenu">
-                <a routerLinkActive="active" class="nav-link" [ngClass]="{'active' : menuItemL2 === selectedSubItem }"
+                <a routerLinkActive="active" class="nav-link" [ngClass]="{'active' : menuItemL2 === selectedItemL2 }"
                   (click)="selectItem(menuItemL2, menuItem)">
 
                   <!-- caret for submenus -->
@@ -98,7 +98,8 @@
                   <li class="{{menuItemL3.class}} nav-item" *ngFor="let menuItemL3 of menuItemL2.submenu">
                     <!-- esta parte tiene que actualizar la seleccion pais y retailer porque puedes tener abiertas varias veces -->
                     <!-- [routerLink]="menuItemL3.path && menuItemL3.path" [queryParams]="queryParams" -->
-                    <a class="nav-link" (click)="selectItem(menuItemL3, menuItem, true)">
+                    <a class="nav-link" [ngClass]="{'active' : menuItemL3 === selectedItemL3 }"
+                      (click)="selectItem(menuItemL3, menuItemL2, menuItem, true)">
                       {{ menuItemL3.title }}
                     </a>
                   </li>
