@@ -1,21 +1,39 @@
-table {
-    width: 100%;
+.campaigns-tables {
+    table {
+        border-collapse: collapse;
+        table-layout: auto;
+        width: 100%;
+    
+        th:not(:first-of-type),
+        td:not(:first-of-type) {
+            text-align: center;
+        }
+    }
+    
+    .adaptable-container {
+        overflow: auto;
+    }
+    
+    .lg-container {
+        max-width: 700px;
+        span {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: inherit;
+            display: inline-block;
+        }
+    }
+    
+    .value-container {
+        align-items: center;
+        display: grid;
+        grid-template-columns: 40px 30px;
+        gap: 8px;
+        justify-content: center;
+    } 
 }
 
-.adaptable-container {
-    overflow: auto;
-}
-
-
-.lg-container {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: inherit;
-}
-
-.value-container {
-    display: grid;
-    grid-template-columns: 40px auto;
-    gap: 8px;
+.custom-tooltip {
+    max-width: unset !important;
 }

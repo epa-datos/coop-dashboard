@@ -11,6 +11,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // **** COMPONENTS ****
 import { DashboardComponent } from './dashboard.component';
@@ -80,6 +81,7 @@ import { ChartPyramidComponent } from './components/charts/chart-pyramid/chart-p
     MatExpansionModule,
     MatTableModule,
     MatPaginatorModule,
+    MatTooltipModule
   ],
   providers: [{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'never' } }]
 })

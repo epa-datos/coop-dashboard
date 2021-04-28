@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-campaigns-tables',
   templateUrl: './campaigns-tables.component.html',
-  styleUrls: ['./campaigns-tables.component.scss']
+  styleUrls: ['./campaigns-tables.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CampaignsTablesComponent implements OnInit, AfterViewInit {
 
