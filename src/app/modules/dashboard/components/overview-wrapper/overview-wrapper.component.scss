@@ -35,3 +35,35 @@
         width: 100%;
     }
 }
+
+.chart-legend {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 15px;
+
+    .legend-container {
+        align-items: center;
+        display: flex;
+       
+        .legend-square {
+            border-radius: 4px;
+            height: 25px;
+            margin-right: 4px;
+            width: 25px;
+
+            &.on {
+                background-color: #67B6DC;
+            }
+
+            &.off {
+                background-color: #F3F3F3;
+            }
+        }
+
+        .legend-label {
+            color: #000000;
+            font-size: 12px;
+        }
+    }
+}
