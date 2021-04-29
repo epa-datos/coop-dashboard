@@ -17,6 +17,7 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
   @Input() showTooltipValue: boolean = true; // show the value in tooltip
   @Input() showGridBorders: boolean = false;
   @Input() showHeatLegend: boolean = true; // lower legend with average values triggering by column hover
+  @Input() initialColor: string; // valid css color
 
   private _name: string;
   get name() {
@@ -104,7 +105,7 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
     series.heatRules.push({
       target: columnTemplate,
       property: 'fill',
-      min: am4core.color(bgColor),
+      min: this.initialColor ? am4core.color(this.initialColor) : am4core.color(bgColor),
       max: chart.colors.getIndex(0)
     });
 
