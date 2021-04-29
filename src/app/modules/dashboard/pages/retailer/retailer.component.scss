@@ -24,7 +24,8 @@
     }
 }
 
-.metric-container {
+.metric-container,
+.panel-title-container {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 16px;
@@ -33,6 +34,10 @@
         height: 2rem;
         width: 2rem;
     }
+}
+
+.panel-title-container {
+    align-items: center;
 }
 
 .nav-link {

@@ -90,7 +90,7 @@ export class RetailerComponent implements OnInit, AfterViewInit {
       subMetricTitle: 'CTR',
       subMetricValue: '000',
       icon: 'fas fa-hand-pointer',
-      iconBg: '#2f9998'
+      iconBg: '#0096d6'
 
     },
     {

@@ -202,6 +202,8 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 
 .mat-expansion-panel-header {
   background-color: #ffffff;
+  height: auto;
+  padding: 12px 24px !important;
 }
 
 .mat-expansion-panel-header.mat-expanded {
@@ -212,6 +214,10 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 
 .mat-expansion-panel-header.mat-expanded:focus, .mat-expansion-panel-header.mat-expanded:hover {
   background-color: #f0f0f0 !important;
+}
+
+.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {
+  background: #f0f0f0;
 }
 
 // **** OTHERS ****

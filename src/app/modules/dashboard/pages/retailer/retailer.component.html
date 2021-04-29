@@ -91,7 +91,7 @@
                                 <span class="h3 font-weight-bold mb-0">60%</span>
                             </div>
                             <div class="metric-icon">
-                                <div class="icon icon-shape text-white bg-info rounded-circle shadow">
+                                <div class="icon icon-shape text-white bg-primary rounded-circle shadow">
                                     <i class="fas fa-bullhorn"></i>
                                 </div>
                             </div>
@@ -126,7 +126,12 @@
                 <mat-expansion-panel (opened)="panelChange('panel1',true)" (closed)="panelChange('panel1',false)">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <span class="h3 mb-0">Audiencias</span>
+                            <div class="panel-title-container">
+                                <div class="icon icon-shape text-white rounded-circle shadow bg-default">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <span class="h3 mb-0">Audiencias</span>
+                            </div>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
                     <app-audiences-wrapper *ngIf="extPanelIsOpen.panel1"></app-audiences-wrapper>
@@ -135,7 +140,12 @@
                 <mat-expansion-panel (opened)="panelChange('panel2',true)" (closed)="panelChange('panel2',false)">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <span class="h3 mb-0">Adquisición</span>
+                            <div class="panel-title-container">
+                                <div class="icon icon-shape text-white rounded-circle shadow bg-primary">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <span class="h3 mb-0">Adquisición</span>
+                            </div>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
                     <app-acquisition-wrapper *ngIf="extPanelIsOpen.panel2"></app-acquisition-wrapper>
@@ -144,7 +154,12 @@
                 <mat-expansion-panel (opened)="panelChange('panel3',true)" (closed)="panelChange('panel3',false)">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <span class="h3 mb-0">Comportamiento</span>
+                            <div class="panel-title-container">
+                                <div class="icon icon-shape text-white rounded-circle shadow bg-purple">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <span class="h3 mb-0">Comportamiento</span>
+                            </div>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
                     <app-behaviour-wrapper *ngIf="extPanelIsOpen.panel3"></app-behaviour-wrapper>
@@ -153,7 +168,12 @@
                 <mat-expansion-panel (opened)="panelChange('panel4',true)" (closed)="panelChange('panel4',false)">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <span class="h3 mb-0">Conversión</span>
+                            <div class="panel-title-container">
+                                <div class="icon icon-shape text-white rounded-circle shadow bg-warning">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                </div>
+                                <span class="h3 mb-0">Conversión</span>
+                            </div>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
                     <app-conversion-wrapper *ngIf="extPanelIsOpen.panel4"></app-conversion-wrapper>
