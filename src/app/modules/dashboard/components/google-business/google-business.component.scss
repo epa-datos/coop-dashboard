@@ -1,0 +1,15 @@
+.button-container {
+    align-items: flex-end;
+    display: flex;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+table {
+    width: 100%;
+
+    th:nth-of-type(n + 4),
+    td:nth-of-type(n + 4) {
+        text-align: center;
+    }
+}

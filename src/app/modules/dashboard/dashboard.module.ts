@@ -18,6 +18,7 @@ import { DashboardComponent } from './dashboard.component';
 import { GeneralFiltersComponent } from './components/general-filters/general-filters.component';
 import { RetailFiltersComponent } from './components/retail-filters/retail-filters.component';
 import { CardStatComponent } from './components/card-stat/card-stat.component';
+import { GoogleBusinessComponent } from './components/google-business/google-business.component';
 import { DashboardRoutes } from './dashboard.routing';
 
 // pages
@@ -73,6 +74,7 @@ import { ChartPyramidComponent } from './components/charts/chart-pyramid/chart-p
     OverviewWrapperComponent,
     CampaignsTablesComponent,
     ChartPyramidComponent,
+    GoogleBusinessComponent,
   ],
   imports: [
     CommonModule,
