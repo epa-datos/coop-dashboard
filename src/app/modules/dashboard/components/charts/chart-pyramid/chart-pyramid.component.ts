@@ -90,7 +90,8 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     this.valueAxis = valueAxis;
 
     chart.legend = new am4charts.Legend();
-    chart.legend.contentAlign = 'right';
+    chart.legend.contentAlign = 'left';
+    chart.legend.fontSize = 12;
 
     // Create series
     let male = chart.series.push(new am4charts.ColumnSeries());
@@ -103,7 +104,6 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     let maleLabel = male.bullets.push(new am4charts.LabelBullet());
     maleLabel.label.hideOversized = false;
     maleLabel.label.truncate = false;
-    maleLabel.label.horizontalCenter = 'right';
     maleLabel.label.dx = -10;
     maleLabel.label.fontSize = 12;
 
@@ -121,7 +121,6 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     let femaleLabel = female.bullets.push(new am4charts.LabelBullet());
     femaleLabel.label.hideOversized = false;
     femaleLabel.label.truncate = false;
-    femaleLabel.label.horizontalCenter = 'left';
     femaleLabel.label.dx = 10;
     femaleLabel.label.fontSize = 12;
 
