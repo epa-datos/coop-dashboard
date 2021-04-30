@@ -34,9 +34,9 @@ export class ConversionWrapperComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['category', 'product', 'amount', 'yoy_amount', 'product_revenue', 'yoy_product_revenue', 'aup', 'yoy_aup'];
   private categories = [
-    { category: 'Category 1', product: 'Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1', amount: 12, yoy_amount: 12, product_revenue: 50000, yoy_product_revenue: 15, value2: 820, yoy_aup: 8 },
-    { category: 'Category 2', product: 'Product 2', amount: 8, yoy_amount: 4, product_revenue: 20000, yoy_product_revenue: 7, value2: 650, yoy_aup: 4 },
-    { category: 'Category 3', product: 'Product 3', amount: 4, yoy_amount: -4, product_revenue: 10000, yoy_product_revenue: -2, value2: 350, yoy_aup: -1 }
+    { category: 'Category 1', product: 'Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1', amount: 12, yoy_amount: 12, yoy_amount_before: 10, product_revenue: 50000, yoy_product_revenue: 15, yoy_product_revenue_before: 17, aup: 820, yoy_aup: 8, yoy_aup_before: 8 },
+    { category: 'Category 2', product: 'Product 2', amount: 8, yoy_amount: 4, yoy_amount_before: 6, product_revenue: 20000, yoy_product_revenue: 7, yoy_product_revenue_before: 17, aup: 650, yoy_aup: 4, yoy_aup_before: 6 },
+    { category: 'Category 3', product: 'Product 3', amount: 4, yoy_amount: -4, yoy_amount_before: -2, product_revenue: 10000, yoy_product_revenue: -2, yoy_product_revenue_before: -2, aup: 350, yoy_aup: -1, yoy_aup_before: -2 }
   ]
   dataSource = new MatTableDataSource<any>(this.categories);
 

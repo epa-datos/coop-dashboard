@@ -142,10 +142,10 @@ export class AcquisitionWrapperComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['source', 'way', 'campaign', 'users', 'newUsers', 'sessions', 'pagesBySession', 'bounceRate', 'sessionDuration', 'amount', 'income', 'yoy'];
   private acqBySources = [
-    { source: 'Google', way: 'Medio 1', campaign: 'Campaña1_Campaña 1_Campaña 1_Campaña 1_Campaña 1', users: 7000, newUsers: 450, sessions: 1500, pagesBySession: 7, bounceRate: 50, bounceRateComparison: 70, sessionDuration: '3 min', amount: 50, income: 35000, yoy: 20 },
-    { source: 'Display', way: 'Medio 2', campaign: 'Campaña 2', users: 2000, newUsers: 120, sessions: 1200, pagesBySession: 6, bounceRate: 70, bounceRateComparison: 70, sessionDuration: '4 min', amount: 20, income: 28000, yoy: 18 },
-    { source: 'Social', way: 'Medio 3', campaign: 'Campaña 3', users: 1800, newUsers: 380, sessions: 1600, pagesBySession: 4, bounceRate: 60, bounceRateComparison: 50, sessionDuration: '6 min', amount: 15, income: 15000, yoy: 21 },
-    { source: 'Otros', way: 'Medio 4', campaign: 'Campaña 4', users: 9750, newUsers: 270, sessions: 880, pagesBySession: 7, bounceRate: 55, bounceRateComparison: 40, sessionDuration: '2 min', amount: 50, income: 17000, yoy: 14 },
+    { source: 'Google', way: 'Medio 1', campaign: 'Campaña1_Campaña 1_Campaña 1_Campaña 1_Campaña 1', users: 7000, newUsers: 450, sessions: 1500, pagesBySession: 7, bounceRate: 50, bounceRateComparison: 70, sessionDuration: '3 min', amount: 50, income: 35000, yoy: 20, yoy_before: 20 },
+    { source: 'Display', way: 'Medio 2', campaign: 'Campaña 2', users: 2000, newUsers: 120, sessions: 1200, pagesBySession: 6, bounceRate: 70, bounceRateComparison: 70, sessionDuration: '4 min', amount: 20, income: 28000, yoy: 18, yoy_before: 25 },
+    { source: 'Social', way: 'Medio 3', campaign: 'Campaña 3', users: 1800, newUsers: 380, sessions: 1600, pagesBySession: 4, bounceRate: 60, bounceRateComparison: 50, sessionDuration: '6 min', amount: 15, income: 15000, yoy: 21, yoy_before: 18 },
+    { source: 'Otros', way: 'Medio 4', campaign: 'Campaña 4', users: 9750, newUsers: 270, sessions: 880, pagesBySession: 7, bounceRate: 55, bounceRateComparison: 40, sessionDuration: '2 min', amount: 50, income: 17000, yoy: 14, yoy_before: 16 },
 
   ];
   dataSource = new MatTableDataSource<any>(this.acqBySources);

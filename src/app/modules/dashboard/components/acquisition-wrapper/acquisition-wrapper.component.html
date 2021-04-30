@@ -118,7 +118,14 @@
                     <!-- yoy -->
                     <ng-container matColumnDef="yoy">
                         <th mat-header-cell *matHeaderCellDef> %YoY</th>
-                        <td mat-cell *matCellDef="let element"> {{element.yoy}}% </td>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="value-container">
+                                <span> {{element.yoy}}%</span>
+                                <i class="fas fa-arrow-up text-success" *ngIf="element.yoy > element.yoy_before"></i>
+                                <i class="fas fa-equals text-warning" *ngIf="element.yoy === element.yoy_before"></i>
+                                <i class="fas fa-arrow-down text-danger" *ngIf="element.yoy < element.yoy_before"></i>
+                            </div>
+                        </td>
                     </ng-container>
 
                     <!-- disclaimer column -->
