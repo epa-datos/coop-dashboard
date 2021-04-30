@@ -13,3 +13,36 @@
 .card-header {
     padding: 0.5rem 1.5rem;
 }
+
+.chart-legend {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+
+    .legend-container {
+        align-items: center;
+        display: flex;
+       
+        .legend-square {
+            border-radius: 4px;
+            height: 25px;
+            margin-right: 4px;
+            width: 25px;
+
+            &.on {
+                &.color-1 {
+                    background-color: #67B6DC;
+                }
+
+                &.color-2 { 
+                    background-color: #6794DC;
+                }
+            }
+        }
+
+        .legend-label {
+            color: #000000;
+            font-size: 12px;
+        }
+    }
+}

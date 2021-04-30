@@ -15,6 +15,7 @@ export class ChartBarComponent implements OnInit, AfterViewInit {
   @Input() value: string = 'value';
   @Input() valueFormat: string; // USD MXN Copy shown in tooltip
   @Input() height: string = '350px'; // height property value valid in css
+  @Input() legendsByCategory: boolean; // show a legend (category + value + value format) per category only recommended for a small number of categories
 
   chartID;
   loadStatus: number = 0;
@@ -87,7 +88,28 @@ export class ChartBarComponent implements OnInit, AfterViewInit {
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
-    // chart.responsive.enabled = true;
 
+    if (this.legendsByCategory) {
+      var legend = new am4charts.Legend();
+      legend.parent = chart.chartContainer;
+      legend.itemContainers.template.togglable = false;
+      legend.fontSize = 12;
+
+      let valueFormat = this.valueFormat;
+
+      series.events.on('ready', function (ev) {
+        var legenddata = [];
+        series.columns.each(function (column) {
+          legenddata.push({
+            name: `${column.dataItem['categoryX']} ${column.dataItem['valueY']} ${valueFormat ? valueFormat : ''}`,
+            fill: column.fill
+          });
+        });
+        legend.data = legenddata;
+      });
+
+    }
+
+    // chart.responsive.enabled = true;
   }
 }

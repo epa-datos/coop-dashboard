@@ -49,7 +49,7 @@ export class GoogleBusinessComponent implements OnInit, AfterViewInit {
   },];
 
   displayedColumns: string[] = ['province', 'city', 'store', 'visits', 'visitRate'];
-  displayedColumns2: string[] = ['province', 'city', 'store', 'visits', 'visitRate', 'storeVisitsRate'];
+  displayedColumns2: string[] = ['province', 'city', 'store', 'visits', 'storeVisitsRate'];
   private categories = [
     { province: 'Buenos Aires', city: 'Moreno', store: 'Francisco Narciso de Laprida 386', visits: 250, visitRate: 14.45, storeVisitsRate: 12.12 },
     { province: 'Ciudad autonoma de buenos Aires', city: 'Flores', store: 'Laprida 394', visits: 114, visitRate: 14.85, storeVisitsRate: 14.05 },

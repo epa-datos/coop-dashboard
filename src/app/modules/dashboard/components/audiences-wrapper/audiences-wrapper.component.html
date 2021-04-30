@@ -81,7 +81,7 @@
                     </div>
                     <div class="card-body">
                         <app-chart-bar [data]="devices" [name]="selectedType + 'devices'" valueFormat="USD"
-                            category="name" height="280px">
+                            category="name" height="280px" [legendsByCategory]="true">
                         </app-chart-bar>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
                     </div>
                     <div class="card-body">
                         <app-chart-bar [data]="gender" [name]="selectedType + 'gender'" valueFormat="USD"
-                            category="name" height="280px">
+                            category="name" height="280px" [legendsByCategory]="true">
                         </app-chart-bar>
                     </div>
                 </div>
@@ -118,15 +118,25 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12 col-xl-6">
-                                <p class="text-center">Desktop</p>
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend mt-0">
+                                    <div class="legend-container">
+                                        <div class="legend-square on color-1"></div>
+                                        <div class="legend-label">Desktop {{ desktopByBR[1].value }}%</div>
+                                    </div>
+                                </div>
                                 <app-chart-pictorial [data]="desktopByBR" [name]="selectedType + 'devices-desktop'"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
                                     height="280px">
                                 </app-chart-pictorial>
                             </div>
-                            <div class="col-12 col-xl-6">
-                                <p class="text-center">Mobile</p>
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend mt-0">
+                                    <div class="legend-container">
+                                        <div class="legend-square on color-2"></div>
+                                        <div class="legend-label">Mobile {{ mobileByBR[1].value }}%</div>
+                                    </div>
+                                </div>
                                 <app-chart-pictorial [data]="mobileByBR" [name]="selectedType + 'devices-mobile'"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
                                     height="280px">
@@ -148,15 +158,25 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12 col-xl-6">
-                                <p class="text-center">Hombres</p>
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend mt-0">
+                                    <div class="legend-container">
+                                        <div class="legend-square on color-1"></div>
+                                        <div class="legend-label">Hombres {{ menByBR[1].value }}%</div>
+                                    </div>
+                                </div>
                                 <app-chart-pictorial [data]="menByBR" [name]="selectedType + 'gender-man'"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" height="280px">
                                 </app-chart-pictorial>
                             </div>
 
-                            <div class="col-12 col-xl-6">
-                                <p class="text-center">Mujeres</p>
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend mt-0">
+                                    <div class="legend-container">
+                                        <div class="legend-square on color-2"></div>
+                                        <div class="legend-label">Mujeres {{ womenByBR[1].value }}%</div>
+                                    </div>
+                                </div>
                                 <app-chart-pictorial [data]="womenByBR" [name]="selectedType + 'gender-woman'"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" height="280px">
                                 </app-chart-pictorial>

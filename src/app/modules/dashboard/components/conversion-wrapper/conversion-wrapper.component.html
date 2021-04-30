@@ -37,7 +37,18 @@
                     <!-- yoy_amount -->
                     <ng-container matColumnDef="yoy_amount">
                         <th mat-header-cell *matHeaderCellDef> %YoY</th>
-                        <td mat-cell *matCellDef="let element"> {{element.yoy_amount}}% </td>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="value-container">
+                                <span>{{element.yoy_amount}}%</span>
+                                <i class="fas fa-arrow-up text-success"
+                                    *ngIf="element.yoy_amount > element.yoy_amount_before"></i>
+                                <i class="fas fa-equals text-warning"
+                                    *ngIf="element.yoy_amount === element.yoy_amount_before"></i>
+                                <i class="fas fa-arrow-down text-danger"
+                                    *ngIf="element.yoy_amount < element.yoy_amount_before"></i>
+                            </div>
+                        </td>
+
                     </ng-container>
 
                     <!-- product_revenue -->
@@ -49,7 +60,17 @@
                     <!-- yoy_product_revenue -->
                     <ng-container matColumnDef="yoy_product_revenue">
                         <th mat-header-cell *matHeaderCellDef> %YoY</th>
-                        <td mat-cell *matCellDef="let element"> {{element.yoy_product_revenue}}% </td>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="value-container">
+                                <span>{{element.yoy_product_revenue}}% </span>
+                                <i class="fas fa-arrow-up text-success"
+                                    *ngIf="element.yoy_product_revenue > element.yoy_product_revenue_before"></i>
+                                <i class="fas fa-equals text-warning"
+                                    *ngIf="element.yoy_product_revenue === element.yoy_product_revenue_before"></i>
+                                <i class="fas fa-arrow-down text-danger"
+                                    *ngIf="element.yoy_product_revenue < element.yoy_product_revenue_before"></i>
+                            </div>
+                        </td>
                     </ng-container>
 
                     <!-- aup -->
@@ -61,7 +82,17 @@
                     <!-- yoy_aup -->
                     <ng-container matColumnDef="yoy_aup">
                         <th mat-header-cell *matHeaderCellDef> %YoY</th>
-                        <td mat-cell *matCellDef="let element"> {{element.yoy_aup}}% </td>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="value-container">
+                                <span>{{element.yoy_aup}}%</span>
+                                <i class="fas fa-arrow-up text-success"
+                                    *ngIf="element.yoy_aup > element.yoy_aup_before"></i>
+                                <i class="fas fa-equals text-warning"
+                                    *ngIf="element.yoy_aup === element.yoy_aup_before"></i>
+                                <i class="fas fa-arrow-down text-danger"
+                                    *ngIf="element.yoy_aup < element.yoy_aup_before"></i>
+                            </div>
+                        </td>
                     </ng-container>
 
                     <!-- disclaimer column -->
