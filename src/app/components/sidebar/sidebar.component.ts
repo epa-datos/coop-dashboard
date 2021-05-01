@@ -43,6 +43,8 @@ export class SidebarComponent implements OnInit {
   public submenuReqStatus: number = 0;
   public isCollapsed = true;
 
+  public selectedCountryID;
+  public selectedRetailerID;
 
   constructor(
     private router: Router,
@@ -59,6 +61,13 @@ export class SidebarComponent implements OnInit {
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;
+    });
+
+    this.appStateService.selectedCountry$.subscribe(country => {
+      this.selectedCountryID = country?.id ? country.id : undefined;
+    });
+    this.appStateService.selectedRetailer$.subscribe(retailer => {
+      this.selectedRetailerID = retailer?.id ? retailer.id : undefined;
     });
 
     try {
@@ -100,7 +109,6 @@ export class SidebarComponent implements OnInit {
 
   async getPrevSelection() {
     const params = this.route.snapshot.queryParams;
-    console.log('route', this.router.url)
 
     if (params['country'] || params['retailer']) {
       const country = params['country'];
@@ -119,8 +127,7 @@ export class SidebarComponent implements OnInit {
           this.selectedItemL2 = itemL2;
           this.appStateService.selectRetailer({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
 
-          const currentPath = this.router.url.split('?')[0];
-          const itemL3 = this.selectedItemL2.submenu.find(item => item.paramName === 'retailer' && item.path === currentPath);
+          const itemL3 = this.getSelectionUsingRoute(this.selectedItemL2);
           if (itemL3) {
             this.selectedItemL2.submenuOpen = true;
             this.selectedItemL3 = itemL3;
@@ -130,7 +137,14 @@ export class SidebarComponent implements OnInit {
       } else if (retailer) {
         const item = this.menuItems.find(item => item.paramName === 'retailer' && item.title.toLowerCase() === retailer);
         this.selectedItemL1 = item;
+        this.appStateService.selectCountry();
         this.appStateService.selectRetailer({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+
+        const itemL2 = this.getSelectionUsingRoute(this.selectedItemL1);
+        if (itemL2) {
+          this.selectedItemL1.submenuOpen = true;
+          this.selectedItemL2 = itemL2;
+        }
       }
     }
     else {
@@ -139,6 +153,13 @@ export class SidebarComponent implements OnInit {
       this.appStateService.selectCountry();
       this.appStateService.selectRetailer();
     }
+  }
+
+
+  getSelectionUsingRoute(selectedItem): RouteInfo {
+    const currentPath = this.router.url.split('?')[0];
+    const selectedSubItem = selectedItem.submenu.find(item => item.paramName === 'retailer' && item.path === currentPath);
+    return selectedSubItem;
   }
 
   getAvailableCountries() {
@@ -237,7 +258,12 @@ export class SidebarComponent implements OnInit {
         this.selectedItemL2 = parent;
         this.selectedItemL3 = item;
       } else if (parent) {
-        // Ej. para un retailer (item) en un país (parent)
+        // Ej. para un item (item) dentro de retailer (parent)
+        // // o podria ser item.path
+        if (this.userRole == 'retailer') {
+          this.selectedItemL1 = parent;
+          this.selectedItemL2 = item;
+        }
         // this.selectedItemL1 = parent;
         // se se hace una seleccion aqui puede pasar un bug en el mmomento que se selecciona nombre del retailer de otro pais
       }
@@ -248,23 +274,30 @@ export class SidebarComponent implements OnInit {
       };
     } else {
       // Para opciones que no tienen padre
+      if (this.userRole !== 'retailer') {
 
-      // close submenus if item is closed with a click
-      if (item.submenu && !item?.submenuOpen) {
-        this.closeAllSubMenus(item.submenu);
+        // close submenus if item is closed with a click
+        if (item.submenu && !item?.submenuOpen) {
+          this.closeAllSubMenus(item.submenu);
+        }
+
+        // delete all sub sellections if another item is selected or item is closed with a click
+        if (!this.selectedItemL1.submenuOpen && this.selectedItemL2) {
+          this.selectedItemL2 && delete this.selectedItemL2;
+          this.selectedItemL3 && delete this.selectedItemL3;
+        }
       }
 
-      // delete all sub sellections 
-      // a) if another item is selected
-      // b) if item is closed with a click
-
-      if (this.selectedItemL1 !== item || (!this.selectedItemL1.submenuOpen && this.selectedItemL2)) {
-        delete this.selectedItemL2;
-        delete this.selectedItemL3;
+      // delete all sub sellections
+      if (this.selectedItemL1 !== item) {
+        this.selectedItemL2 && delete this.selectedItemL2;
+        this.selectedItemL3 && delete this.selectedItemL3;
       }
 
       // save selected item
-      this.selectedItemL1 = item;
+      if (this.userRole !== 'retailer' || (this.userRole === 'retailer' && !item.submenu)) {
+        this.selectedItemL1 = item;
+      }
 
       queryParams = { [this.selectedItemL1.paramName]: this.selectedItemL1.param };
     }
@@ -276,20 +309,29 @@ export class SidebarComponent implements OnInit {
         this.router.navigate([item.path]);
       }
     }
+    this.emitNewSelection(item);
+  }
 
+  emitNewSelection(item) {
     switch (item.paramName) {
       case 'country':
-        this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
-        this.appStateService.selectRetailer();
+        if (this.userRole !== 'retailer') {
+          // if (this.selectedCountryID !== this.selectedItemL1.id)
+          this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+          this.appStateService.selectRetailer();
+        }
         break;
 
       case 'retailer':
         if (this.userRole === 'retailer') {
           this.appStateService.selectCountry();
+          // if (this.selectedRetailerID !== this.selectedItemL1.id)
           this.appStateService.selectRetailer({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
         } else {
+          // if (this.selectedCountryID !== this.selectedItemL1.id || this.selectedRetailerID !== this.selectedItemL2?.id) {
           this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
           this.appStateService.selectRetailer({ id: this.selectedItemL2?.id, name: this.selectedItemL2?.title });
+          // }
         }
         break;
 
