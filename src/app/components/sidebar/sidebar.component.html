@@ -80,7 +80,7 @@
               <!-- custom icon -->
               <i *ngIf="menuItem.icon" class="{{ menuItem.icon }}"></i>
 
-              {{ menuItem.title}}
+              {{ menuItem.title | titlecase }}
             </a>
 
             <ul class="navbar-sub-nav" *ngIf="menuItem.submenu && menuItem.submenuOpen">
