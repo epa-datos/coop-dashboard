@@ -14,15 +14,15 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                            (click)="changeSectorData('search', 1)">Search</a>
+                            (click)="getCategoriesBySector('search', 1)">Search</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                            (click)="changeSectorData('marketing', 2)">Marketing</a>
+                            (click)="getCategoriesBySector('marketing', 2)">Marketing</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
-                            (click)="changeSectorData('sales', 3)">Ventas</a>
+                            (click)="getCategoriesBySector('sales', 3)">Ventas</a>
                     </li>
                 </ul>
             </div>
@@ -47,7 +47,7 @@
                             <div class="legend-label">Inactivas</div>
                         </div>
                     </div>
-                    <app-chart-heat-map [data]="categoriesXRetail" [name]="selectedType + 'categories-by-retailer'"
+                    <app-chart-heat-map [data]="categoriesBySector" [name]="selectedType + 'categories-by-sector'"
                         categoryX="retailer" categoryY="category" height="250px" [showTooltipValue]="false"
                         [showGridBorders]="true" [showHeatLegend]="false" initialColor="#fafafa">
                     </app-chart-heat-map>

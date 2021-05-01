@@ -882,8 +882,10 @@ export class OverviewWrapperComponent implements OnInit {
     }
   ];
 
-  kpisReqStatus: number = 0;
+  categoriesBySector: any[];
 
+  kpisReqStatus: number = 0;
+  categoriesReqStatus: number = 0;
 
 
   constructor(
@@ -913,6 +915,7 @@ export class OverviewWrapperComponent implements OnInit {
 
   getAllData() {
     this.getKpis();
+    this.getCategoriesBySector('search', 1);
   }
 
 
@@ -945,6 +948,23 @@ export class OverviewWrapperComponent implements OnInit {
         console.error(`[overview-wrapper.component]: ${errorMsg}`);
         this.kpisReqStatus = 3;
       });
+  }
+
+  getCategoriesBySector(sector: string, selectedTab: number) {
+    this.categoriesReqStatus = 1;
+    this.overviewService.getCategoriesBySector(this.countryID, sector).subscribe(
+      (resp: any[]) => {
+        console.log('resp', resp);
+        this.categoriesBySector = resp;
+        this.categoriesReqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[overview-wrapper.component]: ${errorMsg}`);
+        this.categoriesReqStatus = 3;
+      });
+
+    this.selectedTab1 = selectedTab;
   }
 
 
