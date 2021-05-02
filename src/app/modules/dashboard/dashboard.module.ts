@@ -47,6 +47,7 @@ import { ChartColumnLineMixComponent } from './components/charts/chart-column-li
 import { ChartPictorialComponent } from './components/charts/chart-pictorial/chart-pictorial.component';
 import { ChartPyramidComponent } from './components/charts/chart-pyramid/chart-pyramid.component';
 import { ChartMultipleAxesComponent } from './components/charts/chart-multiple-axes/chart-multiple-axes.component';
+import { ChartLoaderComponent } from './components/charts/chart-loader/chart-loader.component';
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import { ChartMultipleAxesComponent } from './components/charts/chart-multiple-a
     ChartPyramidComponent,
     GoogleBusinessComponent,
     ChartMultipleAxesComponent,
+    ChartLoaderComponent,
   ],
   imports: [
     CommonModule,
