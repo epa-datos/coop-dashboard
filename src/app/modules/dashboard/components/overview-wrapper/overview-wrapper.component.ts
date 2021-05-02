@@ -481,23 +481,23 @@ export class OverviewWrapperComponent implements OnInit {
   ]
 
   devicesByTraffic: any[] = [
-    { id: 1, name: 'Desktop', value: 2500 },
-    { id: 2, name: 'Mobile', value: 10500 },
+    { name: 'Desktop', value: 2500 },
+    { name: 'Mobile', value: 10500 },
   ]
 
   devicesBySales: any[] = [
-    { id: 1, name: 'Desktop', value: 300 },
-    { id: 2, name: 'Mobile', value: 450 },
+    { name: 'Desktop', value: 300 },
+    { name: 'Mobile', value: 450 },
   ]
 
   genderByTraffic: any[] = [
-    { id: 1, name: 'Hombre', value: 5500 },
-    { id: 2, name: 'Mujer', value: 7500 },
+    { name: 'Hombre', value: 5500 },
+    { name: 'Mujer', value: 7500 },
   ]
 
   genderBySales: any[] = [
-    { id: 1, name: 'Hombre', value: 1200 },
-    { id: 2, name: 'Mujer', value: 12800 },
+    { name: 'Hombre', value: 1200 },
+    { name: 'Mujer', value: 12800 },
   ]
 
   ageByTraffic: any[] = [
@@ -903,25 +903,37 @@ export class OverviewWrapperComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log('INIT!!!')
+
+    // tengo que partir de valores iniciales cuando se inicualiza el componente ya que en ese momento puede que no haya cambio
     this.userRole = this.userService.user.role_name;
 
+    const selectedCountry = this.appStateService.selectedCountry;
+    console.log('selectedCountry', selectedCountry);
+    this.countryID = selectedCountry?.id && selectedCountry?.id;
+    this.getAllData();
+
     this.appStateService.selectedCountry$.subscribe(country => {
-      if (this.userRole !== 'retailer' && country.id !== this.countryID) {
-        this.countryID = country.id !== this.countryID && country.id;
+      console.log('countryID', this.countryID);
+      if (this.userRole !== 'retailer' && country?.id !== this.countryID) {
+        this.countryID = country?.id !== this.countryID && country?.id;
         this.getAllData();
       }
-      console.log('countryID', this.countryID);
+
     });
 
     this.appStateService.selectedRetailer$.subscribe(retailer => {
-      if (retailer.id !== this.countryID) {
-        this.retailerID = retailer.id !== this.retailerID && retailer.id;
-      }
       console.log('retailer', this.retailerID);
+      if (retailer?.id !== this.retailerID) {
+        this.retailerID = retailer?.id !== this.retailerID && retailer?.id;
+        this.getAllData();
+      }
+
     });
   }
 
   getAllData() {
+    console.log('getAllData')
     this.getKpis();
     this.getCategoriesBySector('search', 1);
     this.getDataByTrafficAndSales('traffic', 1);
@@ -983,7 +995,7 @@ export class OverviewWrapperComponent implements OnInit {
       reqStatusObj.reqStatus = 1;
       this.overviewService.getTrafficAndSales(this.countryID, metricType, subMetricType).subscribe(
         (resp: any[]) => {
-          console.log('resp', resp);
+          // console.log('resp', resp);
           if (subMetricType === 'gender-and-age') {
             this.trafficAndSales['genderByAge'] = resp;
           } else {
@@ -991,6 +1003,7 @@ export class OverviewWrapperComponent implements OnInit {
           }
 
           reqStatusObj.reqStatus = 2;
+
         },
         error => {
           const errorMsg = error?.error?.message ? error.error.message : error?.message;
@@ -1000,8 +1013,8 @@ export class OverviewWrapperComponent implements OnInit {
 
       this.selectedTab2 = selectedTab;
     }
-    console.log('trafficSalesReqStatus', this.trafficSalesReqStatus);
-    console.log('trafficAndSales', this.trafficAndSales)
+    // console.log('trafficSalesReqStatus', this.trafficSalesReqStatus);
+    // console.log('trafficAndSales', this.trafficAndSales)
   }
 
   changeSectorData(category, selectedTab) {

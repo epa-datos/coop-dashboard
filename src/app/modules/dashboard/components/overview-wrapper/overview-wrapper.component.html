@@ -49,7 +49,8 @@
                     </div>
                     <app-chart-heat-map [data]="categoriesBySector" [name]="selectedType + 'categories-by-sector'"
                         categoryX="retailer" categoryY="category" height="250px" [showTooltipValue]="false"
-                        [showGridBorders]="true" [showHeatLegend]="false" initialColor="#fafafa">
+                        [showGridBorders]="true" [showHeatLegend]="false" [status]="categoriesReqStatus"
+                        initialColor="#fafafa">
                     </app-chart-heat-map>
                 </div>
             </div>
@@ -105,7 +106,7 @@
                 </div>
                 <div class="card-body">
                     <app-chart-pictorial [data]="trafficAndSales.device" [name]="selectedType + 'devices'"
-                        category="name" iconType="monitor" height="280px">
+                        category="name" iconType="monitor" [status]="trafficSalesReqStatus[0].reqStatus" height="280px">
                     </app-chart-pictorial>
                 </div>
             </div>
@@ -119,7 +120,7 @@
                 </div>
                 <div class="card-body">
                     <app-chart-pictorial [data]="trafficAndSales.gender" [name]="selectedType + 'gender'"
-                        category="name" height="280px">
+                        category="name" [status]="trafficSalesReqStatus[1].reqStatus" height="280px">
                     </app-chart-pictorial>
                 </div>
             </div>
@@ -133,7 +134,7 @@
                 </div>
                 <div class="card-body">
                     <app-chart-lollipop [data]="trafficAndSales.age" [name]="selectedType + 'age'" category="age"
-                        value="visits" valueFormat="%" height="280px">
+                        value="visits" valueFormat="%" height="280px" [status]="trafficSalesReqStatus[2].reqStatus">
                     </app-chart-lollipop>
                 </div>
             </div>
@@ -147,7 +148,7 @@
                 </div>
                 <div class="card-body">
                     <app-chart-pyramid [data]="trafficAndSales.genderByAge" [name]="selectedType + 'age-and-gender'"
-                        height="280px">
+                        [status]="trafficSalesReqStatus[3].reqStatus" height="280px">
                     </app-chart-pyramid>
                 </div>
             </div>
