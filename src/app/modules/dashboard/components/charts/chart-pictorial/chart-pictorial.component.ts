@@ -16,10 +16,11 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
   @Input() iconType: string = 'human';
   @Input() height: string = '350px'; // height property value valid in css
   @Input() uniqueDimensionConf: OneDimensionPictorial;
+  @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
+  @Input() errorLegend: string;
 
   chart;
   chartID;
-  loadStatus: number = 0;
 
   private _name: string;
   get name() {
@@ -70,13 +71,14 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
     series.labels.template.disabled = true;
     series.ticks.template.disabled = true;
 
+
     if (!this.uniqueDimensionConf) {
       // default settings
       chart.legend = new am4charts.Legend();
       chart.legend.position = 'left';
       chart.legend.valign = 'bottom';
       chart.legend.fontSize = 12;
-      chart.responsive.enabled = true;
+
     } else {
       // customize the unique serie
       series.colors.list = [
@@ -91,6 +93,7 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
       });
     }
 
+    chart.responsive.enabled = true;
     this.loadChartData(chart);
   }
 

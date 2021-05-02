@@ -13,9 +13,10 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
   @Input() value: string = 'value';
   @Input() category: string = 'category';
   @Input() height: string = '350px'; // height property value valid in css
+  @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
+  @Input() errorLegend: string;
 
   graphID;
-  loadStatus: number = 0;
 
   private _name: string;
   get name() {

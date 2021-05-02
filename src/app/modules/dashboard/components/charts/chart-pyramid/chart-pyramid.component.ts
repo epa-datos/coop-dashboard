@@ -16,6 +16,8 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
   @Input() valueName1: string = 'Hombres';
   @Input() valueName2: string = 'Mujeres';
   @Input() height: string = '350px'; // height property value valid in css
+  @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
+  @Input() errorLegend: string;
 
   private _name: string;
   get name() {

@@ -18,6 +18,8 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
   @Input() showGridBorders: boolean = false;
   @Input() showHeatLegend: boolean = true; // lower legend with average values triggering by column hover
   @Input() initialColor: string; // valid css color
+  @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
+  @Input() errorLegend: string;
 
   private _name: string;
   get name() {
@@ -39,7 +41,6 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
 
   chart;
   chartID;
-  loadStatus: number = 0;
 
   constructor() { }
 
