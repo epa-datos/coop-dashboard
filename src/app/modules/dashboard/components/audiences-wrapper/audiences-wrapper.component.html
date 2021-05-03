@@ -43,8 +43,8 @@
                         <span *ngSwitchCase="4" class="h4">BR por dispositivos</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-pictorial [data]="devices" [name]="selectedType + 'devices'" category="name"
-                            iconType="monitor" height="280px">
+                        <app-chart-pictorial [data]="devices" name="devices" category="name" iconType="monitor"
+                            height="280px">
                         </app-chart-pictorial>
                     </div>
                 </div>
@@ -60,8 +60,7 @@
                         <span *ngSwitchCase="4" class="h4">BR por Género</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-pictorial [data]="gender" [name]="selectedType + 'gender'" category="name"
-                            height="280px">
+                        <app-chart-pictorial [data]="gender" name="gender" category="name" height="280px">
                         </app-chart-pictorial>
                     </div>
                 </div>
@@ -80,8 +79,8 @@
                         <span *ngSwitchCase="4" class="h4">BR por dispositivos</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-bar [data]="devices" [name]="selectedType + 'devices'" valueFormat="USD"
-                            category="name" height="280px" [legendsByCategory]="true">
+                        <app-chart-bar [data]="devices" name="devices" valueFormat="USD" category="name" height="280px"
+                            [legendsByCategory]="true">
                         </app-chart-bar>
                     </div>
                 </div>
@@ -97,8 +96,8 @@
                         <span *ngSwitchCase="4" class="h4">BR por Género</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-bar [data]="gender" [name]="selectedType + 'gender'" valueFormat="USD"
-                            category="name" height="280px" [legendsByCategory]="true">
+                        <app-chart-bar [data]="gender" name="gender" valueFormat="USD" category="name" height="280px"
+                            [legendsByCategory]="true">
                         </app-chart-bar>
                     </div>
                 </div>
@@ -125,7 +124,7 @@
                                         <div class="legend-label">Desktop {{ desktopByBR[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="desktopByBR" [name]="selectedType + 'devices-desktop'"
+                                <app-chart-pictorial [data]="desktopByBR" name="devices-desktop"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
                                     height="280px">
                                 </app-chart-pictorial>
@@ -137,7 +136,7 @@
                                         <div class="legend-label">Mobile {{ mobileByBR[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="mobileByBR" [name]="selectedType + 'devices-mobile'"
+                                <app-chart-pictorial [data]="mobileByBR" name="devices-mobile"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
                                     height="280px">
                                 </app-chart-pictorial>
@@ -165,7 +164,7 @@
                                         <div class="legend-label">Hombres {{ menByBR[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="menByBR" [name]="selectedType + 'gender-man'"
+                                <app-chart-pictorial [data]="menByBR" name="gender-man"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" height="280px">
                                 </app-chart-pictorial>
                             </div>
@@ -177,7 +176,7 @@
                                         <div class="legend-label">Mujeres {{ womenByBR[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="womenByBR" [name]="selectedType + 'gender-woman'"
+                                <app-chart-pictorial [data]="womenByBR" name="gender-woman"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" height="280px">
                                 </app-chart-pictorial>
                             </div>
@@ -197,7 +196,7 @@
                     <span *ngSwitchCase="4" class="h4">BR por Edad</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-lollipop [data]="age" [name]="selectedType + 'age'" category="age"
+                    <app-chart-lollipop [data]="age" name="age" category="age"
                         [valueFormat]="selectedTab1 !== 3 ? '%' : 'USD'" height="280px">
                     </app-chart-lollipop>
                 </div>
@@ -215,13 +214,12 @@
                 </div>
                 <div class="card-body">
                     <ng-container *ngIf="selectedTab1 !== 3">
-                        <app-chart-pyramid [data]="ageByGender" [name]="selectedType + 'age-and-gender'" valueFormat="%"
-                            height="280px">
+                        <app-chart-pyramid [data]="ageByGender" name="age-and-gender" valueFormat="%" height="280px">
                         </app-chart-pyramid>
                     </ng-container>
                     <ng-container *ngIf="selectedTab1 === 3">
-                        <app-chart-pyramid [data]="ageByGender" [name]="selectedType + 'age-and-gender-2'"
-                            height="280px" valueFormat="USD">
+                        <app-chart-pyramid [data]="ageByGender" name="age-and-gender-2" height="280px"
+                            valueFormat="USD">
                         </app-chart-pyramid>
                     </ng-container>
                 </div>
