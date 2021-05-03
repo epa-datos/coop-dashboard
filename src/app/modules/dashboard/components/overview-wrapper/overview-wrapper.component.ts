@@ -903,18 +903,14 @@ export class OverviewWrapperComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('INIT!!!')
-
     // tengo que partir de valores iniciales cuando se inicualiza el componente ya que en ese momento puede que no haya cambio
     this.userRole = this.userService.user.role_name;
 
     const selectedCountry = this.appStateService.selectedCountry;
-    console.log('selectedCountry', selectedCountry);
     this.countryID = selectedCountry?.id && selectedCountry?.id;
-    this.getAllData();
+    this.countryID && this.getAllData();
 
     this.appStateService.selectedCountry$.subscribe(country => {
-      console.log('countryID', this.countryID);
       if (this.userRole !== 'retailer' && country?.id !== this.countryID) {
         this.countryID = country?.id !== this.countryID && country?.id;
         this.getAllData();
@@ -923,7 +919,6 @@ export class OverviewWrapperComponent implements OnInit {
     });
 
     this.appStateService.selectedRetailer$.subscribe(retailer => {
-      console.log('retailer', this.retailerID);
       if (retailer?.id !== this.retailerID) {
         this.retailerID = retailer?.id !== this.retailerID && retailer?.id;
         this.getAllData();
@@ -933,9 +928,8 @@ export class OverviewWrapperComponent implements OnInit {
   }
 
   getAllData() {
-    console.log('getAllData')
     this.getKpis();
-    this.getCategoriesBySector('search', 1);
+    this.getCategoriesBySector('Search', 1);
     this.getDataByTrafficAndSales('traffic', 1);
   }
 
@@ -944,11 +938,8 @@ export class OverviewWrapperComponent implements OnInit {
     this.kpisReqStatus = 1;
     this.overviewService.getKpis(this.countryID).subscribe(
       (resp: any[]) => {
-        // console.log('resp', resp);
         const kpis1 = resp.filter(kpi => this.kpisLegends1.includes(kpi.string));
         const kpis2 = resp.filter(kpi => this.kpisLegends2.includes(kpi.string));
-        // console.log('kpis1', kpis1);
-        // console.log('kpis2', kpis2);
 
         for (let i = 0; i < this.kpis.length; i++) {
           const baseObj = this.kpis[i];
@@ -959,8 +950,6 @@ export class OverviewWrapperComponent implements OnInit {
           }
 
         }
-
-        // console.log('final kpis', this.kpis);
         this.kpisReqStatus = 2;
       },
       error => {
@@ -974,7 +963,6 @@ export class OverviewWrapperComponent implements OnInit {
     this.categoriesReqStatus = 1;
     this.overviewService.getCategoriesBySector(this.countryID, sector).subscribe(
       (resp: any[]) => {
-        // console.log('resp', resp);
         this.categoriesBySector = resp.sort((a, b) => (a.retailer < b.retailer ? -1 : 1));;
         this.categoriesReqStatus = 2;
       },
@@ -995,7 +983,6 @@ export class OverviewWrapperComponent implements OnInit {
       reqStatusObj.reqStatus = 1;
       this.overviewService.getTrafficAndSales(this.countryID, metricType, subMetricType).subscribe(
         (resp: any[]) => {
-          // console.log('resp', resp);
           if (subMetricType === 'gender-and-age') {
             this.trafficAndSales['genderByAge'] = resp;
           } else {
@@ -1013,8 +1000,6 @@ export class OverviewWrapperComponent implements OnInit {
 
       this.selectedTab2 = selectedTab;
     }
-    // console.log('trafficSalesReqStatus', this.trafficSalesReqStatus);
-    // console.log('trafficAndSales', this.trafficAndSales)
   }
 
   changeSectorData(category, selectedTab) {
