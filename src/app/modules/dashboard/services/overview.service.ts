@@ -18,11 +18,12 @@ export class OverviewService {
   }
 
   // *** filters ***
-  getCampaigns(countryID) {
+  getCampaigns(countryID, sectorsStrList?: string, categoriesStrList?: string) {
     if (!countryID) {
       return throwError('[overview.service]: not countryID provided');
     }
-    return this.http.get(`${this.baseUrl}/countries/${countryID}/campaigns`);
+
+    return this.http.get(`${this.baseUrl}/countries/${countryID}/campaigns?sectors=${sectorsStrList}&categories=${categoriesStrList}&${this.period}`);
   }
 
   // *** kpis ***
