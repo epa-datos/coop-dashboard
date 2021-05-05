@@ -119,10 +119,7 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
   }
 
   loadChartData(chart) {
-    console.log('loadChartData')
     chart.data = this.data;
-
-    console.log('chart.data', chart.data)
     this.chart = chart;
   }
 
