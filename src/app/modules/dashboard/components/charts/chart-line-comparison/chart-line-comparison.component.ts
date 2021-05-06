@@ -9,6 +9,8 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 })
 export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
   @Input() category: string = 'date';
+  @Input() value1: string = 'value1';
+  @Input() value2: string = 'value2';
 
   chart;
   chartID;
@@ -94,7 +96,7 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
 
     // serie 1
     let series = chart.series.push(new am4charts.LineSeries());
-    series.dataFields.valueY = 'value1';
+    series.dataFields.valueY = this.value1;
     series.dataFields.dateX = this.category;
     series.strokeWidth = 2;
     series.minBulletDistance = 10;
@@ -103,7 +105,7 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
 
     // serie 2
     let series2 = chart.series.push(new am4charts.LineSeries());
-    series2.dataFields.valueY = 'value2';
+    series2.dataFields.valueY = this.value2;
     series2.dataFields.dateX = this.category;
     series2.strokeWidth = 2;
     series2.strokeDasharray = '3,4';
@@ -130,10 +132,10 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
   }
 
   loadNamesAndFormats() {
-    const serieName1 = this.valueName1 ? this.valueName1 : '{date.formatDate()}';
-    const serieName2 = this.valueName2 ? this.valueName2 : '{previousDate.formatDate()}';
+    const serieName1 = this.valueName1 ? this.valueName1 : this.value1;
+    const serieName2 = this.valueName2 ? this.valueName2 : this.value2;
 
-    this.series.series1.tooltipText = `${serieName1}: [bold]{value1} ${this.valueFormat1 ? this.valueFormat1 : ''} [/]\n ${serieName2}: [bold]{value2} ${this.valueFormat2 ? this.valueFormat2 : ''}[/]`;
+    this.series.series1.tooltipText = `${serieName1}: [bold]{${this.value1}} ${this.valueFormat1 ? this.valueFormat1 : ''} [/]\n ${serieName2}: [bold]{${this.value2}} ${this.valueFormat2 ? this.valueFormat2 : ''}[/]`;
     this.series.series1.name = serieName1;
 
     this.series.series2.name = serieName2;
