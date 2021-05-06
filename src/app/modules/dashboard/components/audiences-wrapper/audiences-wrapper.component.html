@@ -60,7 +60,8 @@
                         <span *ngSwitchCase="4" class="h4">BR por Género</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-pictorial [data]="gender" name="gender" category="name" height="280px">
+                        <app-chart-pictorial [data]="gender" name="gender" category="name" iconType="man"
+                            height="280px">
                         </app-chart-pictorial>
                     </div>
                 </div>
@@ -165,7 +166,8 @@
                                     </div>
                                 </div>
                                 <app-chart-pictorial [data]="menByBR" name="gender-man"
-                                    [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" height="280px">
+                                    [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man"
+                                    height="280px">
                                 </app-chart-pictorial>
                             </div>
 
@@ -177,7 +179,8 @@
                                     </div>
                                 </div>
                                 <app-chart-pictorial [data]="womenByBR" name="gender-woman"
-                                    [uniqueDimensionConf]="{color: '#6794DC'}" category="name" height="280px">
+                                    [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman"
+                                    height="280px">
                                 </app-chart-pictorial>
                             </div>
                         </div>
