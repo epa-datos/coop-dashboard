@@ -80,7 +80,7 @@
               <!-- custom icon -->
               <i *ngIf="menuItem.icon" class="{{ menuItem.icon }}"></i>
 
-              {{ menuItem.title | titlecase }}
+              {{ menuItem.title }}
             </a>
 
             <ul class="navbar-sub-nav" *ngIf="menuItem.submenu && menuItem.submenuOpen">
@@ -91,7 +91,7 @@
                   <!-- caret for submenus -->
                   <i [hidden]="!menuItemL2.submenu || menuItemL2.submenuOpen" class="menu-caret fas fa-caret-right"></i>
                   <i [hidden]="!menuItemL2.submenuOpen" class="menu-caret fas fa-caret-down"></i>
-                  {{ menuItemL2.title | titlecase }}
+                  {{ menuItemL2.title }}
                 </a>
 
                 <ul class="navbar-sub-nav" *ngIf="menuItemL2.submenu && menuItemL2.submenuOpen">

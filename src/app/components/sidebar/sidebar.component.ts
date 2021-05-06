@@ -15,6 +15,7 @@ declare interface RouteInfo {
   submenu?: RouteInfo[];
   submenuOpen?: boolean;
   paramName?: string;
+  isParentOf?: string;
 }
 
 export const ROUTES = [
@@ -167,15 +168,31 @@ export class SidebarComponent implements OnInit {
       .toPromise()
       .then((resp: any[]) => {
         for (let country of resp) {
+          const submenu = [
+            {
+              id: 1,
+              path: '/dashboard/country',
+              param: country.name.toLowerCase(),
+              title: 'Programa COOP',
+              isForAdmin: false,
+              paramName: 'country'
+            },
+            {
+              id: 2,
+              path: '/dashboard/tools',
+              param: country.name.toLowerCase(),
+              title: 'Otras herramientas',
+              isForAdmin: false,
+              paramName: 'country'
+            }
+          ]
           const menuItem = {
             id: country.id,
-            path: `/dashboard/country`,
             title: country.name,
-            param: country.name.toLowerCase(),
             isForAdmin: false,
-            submenu: [],
+            submenu: submenu,
             submenuOpen: false,
-            paramName: 'country',
+            isParentOf: 'countries',
           }
 
           this.menuItems.push(menuItem);
@@ -203,7 +220,7 @@ export class SidebarComponent implements OnInit {
               id: 1,
               path: '/dashboard/retailer',
               param: item.name.toLowerCase(),
-              title: 'Programa CO-OP',
+              title: 'Programa COOP',
               isForAdmin: false,
               paramName: 'retailer'
             },
@@ -218,12 +235,11 @@ export class SidebarComponent implements OnInit {
           ]
           return {
             id: item.id,
-            param: item.name.toLowerCase(),
             title: item.name,
             isForAdmin: false,
             submenu,
             submenuOpen: false,
-            paramName: 'retailer',
+            isParentOf: 'retailers',
           }
         })
 
@@ -240,8 +256,9 @@ export class SidebarComponent implements OnInit {
 
   async selectItem(item, parent?, grandparent?, keepMenuOpen?: boolean) {
     if (item.submenu) {
-      if (item.submenu.length < 1 && item.paramName === 'country') {
-        item.submenu = await this.getAvailableRetailers(item.id);
+      if (item.submenu.length < 3 && item.isParentOf === 'countries') {
+        const newItems = await this.getAvailableRetailers(item.id);
+        item.submenu = [...item.submenu, ...newItems];
       }
 
       if (!keepMenuOpen) {
@@ -259,13 +276,16 @@ export class SidebarComponent implements OnInit {
         this.selectedItemL3 = item;
       } else if (parent) {
         // Ej. para un item (item) dentro de retailer (parent)
-        // // o podria ser item.path
         if (this.userRole == 'retailer') {
           this.selectedItemL1 = parent;
           this.selectedItemL2 = item;
         }
-        // this.selectedItemL1 = parent;
-        // se se hace una seleccion aqui puede pasar un bug en el mmomento que se selecciona nombre del retailer de otro pais
+
+        if (this.userRole !== 'retailer' && !item.submenu) {
+          this.selectedItemL1 = parent;
+          this.selectedItemL2 = item;
+          this.selectedItemL3 && delete this.selectedItemL3;
+        }
       }
 
       queryParams = {
@@ -280,26 +300,22 @@ export class SidebarComponent implements OnInit {
         if (item.submenu && !item?.submenuOpen) {
           this.closeAllSubMenus(item.submenu);
         }
-
-        // delete all sub sellections if another item is selected or item is closed with a click
-        if (!this.selectedItemL1.submenuOpen && this.selectedItemL2) {
-          this.selectedItemL2 && delete this.selectedItemL2;
-          this.selectedItemL3 && delete this.selectedItemL3;
-        }
       }
 
       // delete all sub sellections
-      if (this.selectedItemL1 !== item) {
+      if (this.selectedItemL1 !== item && !item.submenu) {
         this.selectedItemL2 && delete this.selectedItemL2;
         this.selectedItemL3 && delete this.selectedItemL3;
       }
 
       // save selected item
       if (this.userRole !== 'retailer' || (this.userRole === 'retailer' && !item.submenu)) {
-        this.selectedItemL1 = item;
+        if (item.isParentOf !== 'countries') {
+          this.selectedItemL1 = item;
+        }
       }
 
-      queryParams = { [this.selectedItemL1.paramName]: this.selectedItemL1.param };
+      queryParams = { [this.selectedItemL1?.paramName]: this.selectedItemL1?.param };
     }
 
     if (item.path) {
@@ -309,7 +325,10 @@ export class SidebarComponent implements OnInit {
         this.router.navigate([item.path]);
       }
     }
-    this.emitNewSelection(item);
+
+    if (!item.isParentOf) {
+      this.emitNewSelection(item);
+    }
   }
 
   emitNewSelection(item) {
