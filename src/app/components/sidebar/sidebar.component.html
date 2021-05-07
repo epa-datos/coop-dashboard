@@ -79,7 +79,6 @@
 
               <!-- custom icon -->
               <i *ngIf="menuItem.icon" class="{{ menuItem.icon }}"></i>
-
               {{ menuItem.title }}
             </a>
 
@@ -97,9 +96,23 @@
                 <ul class="navbar-sub-nav" *ngIf="menuItemL2.submenu && menuItemL2.submenuOpen">
                   <li class="{{menuItemL3.class}} nav-item" *ngFor="let menuItemL3 of menuItemL2.submenu">
                     <a class="nav-link" [ngClass]="{'active' : menuItemL3 === selectedItemL3 }"
-                      (click)="selectItem(menuItemL3, menuItemL2, menuItem, true)">
+                      (click)="selectItem(menuItemL3, menuItemL2, menuItem)">
+
+                      <!-- caret for submenus -->
+                      <i [hidden]="!menuItemL3.submenu || menuItemL3.submenuOpen"
+                        class="menu-caret fas fa-caret-right"></i>
+                      <i [hidden]="!menuItemL3.submenuOpen" class="menu-caret fas fa-caret-down"></i>
                       {{ menuItemL3.title }}
                     </a>
+
+                    <ul class="navbar-sub-nav" *ngIf="menuItemL3.submenu && menuItemL3.submenuOpen">
+                      <li class="{{menuItemL4.class}} nav-item" *ngFor="let menuItemL4 of menuItemL3.submenu">
+                        <a class="nav-link" [ngClass]="{'active' : menuItemL4 === selectedItemL4 }"
+                          (click)="selectItem(menuItemL4, menuItemL3, menuItemL2, menuItem)">
+                          {{ menuItemL4.title }}
+                        </a>
+                      </li>
+                    </ul>
                   </li>
                 </ul>
               </li>

@@ -6,16 +6,16 @@ import { UserService } from 'src/app/services/user.service';
 
 declare interface RouteInfo {
   id?: number,
-  path?: string;
-  param?: string | number;
   title: string;
-  icon?: string;
-  class?: string;
-  isForAdmin: boolean;
+  path?: string;
+  paramName?: string;
+  param?: string | number;
   submenu?: RouteInfo[];
   submenuOpen?: boolean;
-  paramName?: string;
+  class?: string;
+  icon?: string;
   isParentOf?: string;
+  isForAdmin: boolean;
 }
 
 export const ROUTES = [
@@ -37,9 +37,12 @@ export class SidebarComponent implements OnInit {
   public userIsAdmin: boolean;
 
   public menuItems: any[];
+
   public selectedItemL1: RouteInfo;
   public selectedItemL2: RouteInfo;
   public selectedItemL3: RouteInfo;
+  public selectedItemL4: RouteInfo;
+
   public menuReqStatus: number = 0;
   public submenuReqStatus: number = 0;
   public isCollapsed = true;
@@ -97,8 +100,8 @@ export class SidebarComponent implements OnInit {
 
     // Admin routes
     const menuItem2 = {
-      path: '/dashboard/users',
       title: 'Administrar usuarios',
+      path: '/dashboard/users',
       isForAdmin: true
     }
     this.menuItems.push(menuItem2);
@@ -166,37 +169,100 @@ export class SidebarComponent implements OnInit {
   getAvailableCountries() {
     return this.usersMngmtService.getCountries()
       .toPromise()
-      .then((resp: any[]) => {
-        for (let country of resp) {
+      .then((countries: any[]) => {
+
+        let menuItems = [];
+        const countriesWithoutRegion = countries.filter(c => !c.region);
+        const countriesWithRegion = countries.filter(c => c.region);
+
+        const { regionsNames, regions } = this.groupCountriesByRegion(countriesWithRegion);
+
+        // menu items for countriesWithoutRegion
+        for (let country of countriesWithoutRegion) {
           const submenu = [
             {
               id: 1,
-              path: '/dashboard/country',
-              param: country.name.toLowerCase(),
               title: 'Programa COOP',
-              isForAdmin: false,
-              paramName: 'country'
+              path: '/dashboard/country',
+              paramName: 'country',
+              param: country.name.toLowerCase().replaceAll(' ', '-'),
+              isForAdmin: false
             },
             {
               id: 2,
-              path: '/dashboard/tools',
-              param: country.name.toLowerCase(),
               title: 'Otras herramientas',
-              isForAdmin: false,
-              paramName: 'country'
+              path: '/dashboard/tools',
+              paramName: 'country',
+              param: country.name.toLowerCase().replaceAll(' ', '-'),
+              isForAdmin: false
             }
           ]
           const menuItem = {
             id: country.id,
             title: country.name,
-            isForAdmin: false,
+            paramName: 'country',
+            param: country.name.toLowerCase().replaceAll(' ', '-'),
             submenu: submenu,
             submenuOpen: false,
             isParentOf: 'countries',
+            isForAdmin: false
           }
 
-          this.menuItems.push(menuItem);
+          menuItems.push(menuItem);
         }
+
+        // menu items for countriesWithRegion
+        for (let region of regionsNames) {
+          const submenuCountries = [];
+          for (let country of regions[region]) {
+            const submenu = [
+              {
+                id: 1,
+                title: 'Programa COOP',
+                path: '/dashboard/country',
+                paramName: 'country',
+                param: country.name.toLowerCase().replaceAll(' ', '-'),
+                isForAdmin: false,
+              },
+              {
+                id: 2,
+                title: 'Otras herramientas',
+                path: '/dashboard/tools',
+                paramName: 'country',
+                param: country.name.toLowerCase().replaceAll(' ', '-'),
+                isForAdmin: false,
+              }
+            ]
+
+            const menuItem = {
+              id: country.id,
+              title: country.name,
+              param: country.name.toLowerCase().replaceAll(' ', '-'),
+              paramName: 'country',
+              submenu: submenu,
+              submenuOpen: false,
+              isParentOf: 'countries',
+              isForAdmin: false,
+            }
+
+            submenuCountries.push(menuItem);
+          }
+
+          const menuItem = {
+            title: region,
+            submenu: submenuCountries,
+            submenuOpen: false,
+            isParentOf: 'countriesByRegion',
+          }
+          menuItems.push(menuItem);
+        }
+
+        // order regions by name as if they were a country 
+        if (regionsNames.length > 0) {
+          menuItems = menuItems.sort((a, b) => (a.title < b.title ? -1 : 1));
+        }
+
+        this.menuItems = [...this.menuItems, ...menuItems];
         this.appStateService.updateSidebarData(this.menuItems);
       })
       .catch(error => {
@@ -205,6 +271,26 @@ export class SidebarComponent implements OnInit {
         console.error(`[sidebar.component]: ${errMsg}`);
         throw (new Error(errMsg));
       });
+  }
+
+  groupCountriesByRegion(countries) {
+    const regionsNames = [];
+    const regions = countries.reduce((regions, item) => {
+
+      if (!regionsNames.includes(item.region)) {
+        regionsNames.push(item.region);
+      }
+
+      const region = (regions[item.region] || []);
+      region.push(item);
+      regions[item.region] = region;
+      return regions;
+    }, {});
+
+    return {
+      regionsNames,
+      regions
+    }
   }
 
   getAvailableRetailers(countryID?: number) {
@@ -218,28 +304,28 @@ export class SidebarComponent implements OnInit {
           const submenu = [
             {
               id: 1,
-              path: '/dashboard/retailer',
-              param: item.name.toLowerCase(),
               title: 'Programa COOP',
-              isForAdmin: false,
-              paramName: 'retailer'
+              path: '/dashboard/retailer',
+              paramName: 'retailer',
+              param: item.name.toLowerCase().replaceAll(' ', '-'),
+              isForAdmin: false
             },
             {
               id: 2,
-              path: '/dashboard/tools',
-              param: item.name.toLowerCase(),
               title: 'Otras herramientas',
-              isForAdmin: false,
-              paramName: 'retailer'
+              path: '/dashboard/tools',
+              paramName: 'retailer',
+              param: item.name.toLowerCase().replaceAll(' ', '-'),
+              isForAdmin: false
             }
           ]
           return {
             id: item.id,
             title: item.name,
-            isForAdmin: false,
             submenu,
             submenuOpen: false,
             isParentOf: 'retailers',
+            isForAdmin: false,
           }
         })
 
@@ -254,7 +340,7 @@ export class SidebarComponent implements OnInit {
       });
   }
 
-  async selectItem(item, parent?, grandparent?, keepMenuOpen?: boolean) {
+  async selectItem(item, parent?, grandparent?, ggrandparent?, keepMenuOpen?: boolean) {
     if (item.submenu) {
       if (item.submenu.length < 3 && item.isParentOf === 'countries') {
         const newItems = await this.getAvailableRetailers(item.id);
@@ -266,34 +352,35 @@ export class SidebarComponent implements OnInit {
       }
     }
 
-    let queryParams;
-
-    if (grandparent || parent) {
-      if (grandparent) {
-        // Ej. para "proyecto co-op" y "otras herramientas" (item) de un retail (parent) en un país (grandparent)
-        this.selectedItemL1 = grandparent;
-        this.selectedItemL2 = parent;
+    if (ggrandparent) {
+      // ex. a retailer option (item) inside a retailer (parent) inside a country (grandparent) inside a region (ggrandparent)
+      this.selectedItemL1 = ggrandparent;
+      this.selectedItemL2 = grandparent;
+      this.selectedItemL3 = parent;
+      this.selectedItemL4 = item;
+    } else if (grandparent) {
+      // ex. a retailer option (item) inside a retailer (parent) inside a country (grandparent)
+      this.selectedItemL1 = grandparent;
+      this.selectedItemL2 = parent;
+      if (!item.submenu) {
         this.selectedItemL3 = item;
-      } else if (parent) {
-        // Ej. para un item (item) dentro de retailer (parent)
-        if (this.userRole == 'retailer') {
-          this.selectedItemL1 = parent;
-          this.selectedItemL2 = item;
-        }
-
-        if (this.userRole !== 'retailer' && !item.submenu) {
-          this.selectedItemL1 = parent;
-          this.selectedItemL2 = item;
-          this.selectedItemL3 && delete this.selectedItemL3;
-        }
+        this.selectedItemL4 && delete this.selectedItemL4;
+      }
+    } else if (parent) {
+      // ex. a retailer option (item) inside retailer (parent) - view for users with 'retailer' role
+      if (this.userRole == 'retailer') {
+        this.selectedItemL1 = parent;
+        this.selectedItemL2 = item;
       }
 
-      queryParams = {
-        [this.selectedItemL1.paramName]: this.selectedItemL1.param,
-        [this.selectedItemL2?.paramName]: this.selectedItemL2?.param
-      };
+      // ex. a country option (item) inside country (parent) - view for users without 'retailer' role
+      if (this.userRole !== 'retailer' && !item.submenu) {
+        this.selectedItemL1 = parent;
+        this.selectedItemL2 = item;
+        this.selectedItemL3 && delete this.selectedItemL3;
+      }
     } else {
-      // Para opciones que no tienen padre
+      // options without parent
       if (this.userRole !== 'retailer') {
 
         // close submenus if item is closed with a click
@@ -306,28 +393,49 @@ export class SidebarComponent implements OnInit {
       if (this.selectedItemL1 !== item && !item.submenu) {
         this.selectedItemL2 && delete this.selectedItemL2;
         this.selectedItemL3 && delete this.selectedItemL3;
+        this.selectedItemL4 && delete this.selectedItemL4;
       }
 
       // save selected item
       if (this.userRole !== 'retailer' || (this.userRole === 'retailer' && !item.submenu)) {
-        if (item.isParentOf !== 'countries') {
+        if (item.isParentOf !== 'countries' && item.isParentOf !== 'countriesByRegion') {
           this.selectedItemL1 = item;
         }
       }
-
-      queryParams = { [this.selectedItemL1?.paramName]: this.selectedItemL1?.param };
     }
 
-    if (item.path) {
-      if (item.param) {
-        this.router.navigate([item.path], { queryParams });
-      } else {
-        this.router.navigate([item.path]);
-      }
-    }
+    item.path && this.redirectTosSelectedItem(item);
 
     if (!item.isParentOf) {
       this.emitNewSelection(item);
+    }
+  }
+
+  redirectTosSelectedItem(item) {
+    let queryParams;
+
+    if (item.paramName == 'retailer') {
+      if (this.selectedItemL1.param) {
+        // When a country is selectedItemL1
+        queryParams = {
+          [this.selectedItemL1.paramName]: this.selectedItemL1.param,
+          [item.paramName]: item.param
+        };
+      } else if (this.selectedItemL2.param) {
+        // When a country is selectedItemL2 (There is a region value in selectedItemL1)
+        queryParams = {
+          [this.selectedItemL2.paramName]: this.selectedItemL2.param,
+          [item.paramName]: item.param
+        };
+      }
+    } else {
+      queryParams = { [item.paramName]: item.param };
+    }
+
+    if (item.param) {
+      this.router.navigate([item.path], { queryParams });
+    } else {
+      this.router.navigate([item.path]);
     }
   }
 
