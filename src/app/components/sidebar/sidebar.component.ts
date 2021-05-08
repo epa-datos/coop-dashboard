@@ -366,6 +366,13 @@ export class SidebarComponent implements OnInit {
       }
     }
 
+    console.log('item', item)
+    console.log('parent', parent)
+    console.log('grandparent', grandparent)
+    console.log('ggrandparent', ggrandparent)
+    console.log('__________________________________')
+
+
     if (ggrandparent) {
       // ex. a retailer option (item) inside a retailer (parent) inside a country (grandparent) inside a region (ggrandparent)
       this.selectedItemL1 = ggrandparent;
@@ -374,8 +381,10 @@ export class SidebarComponent implements OnInit {
       this.selectedItemL4 = item;
     } else if (grandparent) {
       // ex. a retailer option (item) inside a retailer (parent) inside a country (grandparent)
-      this.selectedItemL1 = grandparent;
-      this.selectedItemL2 = parent;
+      if (!item.isParentOf) {
+        this.selectedItemL1 = grandparent;
+        this.selectedItemL2 = parent;
+      }
       if (!item.submenu) {
         this.selectedItemL3 = item;
         this.selectedItemL4 && delete this.selectedItemL4;
