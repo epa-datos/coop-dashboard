@@ -366,13 +366,6 @@ export class SidebarComponent implements OnInit {
       }
     }
 
-    console.log('item', item)
-    console.log('parent', parent)
-    console.log('grandparent', grandparent)
-    console.log('ggrandparent', ggrandparent)
-    console.log('__________________________________')
-
-
     if (ggrandparent) {
       // ex. a retailer option (item) inside a retailer (parent) inside a country (grandparent) inside a region (ggrandparent)
       this.selectedItemL1 = ggrandparent;
@@ -466,8 +459,14 @@ export class SidebarComponent implements OnInit {
     switch (item.paramName) {
       case 'country':
         if (this.userRole !== 'retailer') {
-          // if (this.selectedCountryID !== this.selectedItemL1.id)
-          this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+          if (this.selectedItemL1.param) {
+            // When a country is selectedItemL1
+            this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+          } else if (this.selectedItemL2.param) {
+            // When a country is selectedItemL2 (There is a region value in selectedItemL1)
+            this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+          }
+
           this.appStateService.selectRetailer();
         }
         break;
@@ -475,13 +474,17 @@ export class SidebarComponent implements OnInit {
       case 'retailer':
         if (this.userRole === 'retailer') {
           this.appStateService.selectCountry();
-          // if (this.selectedRetailerID !== this.selectedItemL1.id)
           this.appStateService.selectRetailer({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
         } else {
-          // if (this.selectedCountryID !== this.selectedItemL1.id || this.selectedRetailerID !== this.selectedItemL2?.id) {
-          this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
-          this.appStateService.selectRetailer({ id: this.selectedItemL2?.id, name: this.selectedItemL2?.title });
-          // }
+          if (this.selectedItemL1.param) {
+            // When a country is selectedItemL1
+            this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+            this.appStateService.selectRetailer({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+          } else if (this.selectedItemL2.param) {
+            // When a country is selectedItemL2 (There is a region value in selectedItemL1)
+            this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+            this.appStateService.selectRetailer({ id: this.selectedItemL3.id, name: this.selectedItemL3.title });
+          }
         }
         break;
 
