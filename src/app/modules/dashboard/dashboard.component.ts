@@ -23,10 +23,14 @@ export class DashboardComponent implements OnInit {
   }
 
   loadTitle(route: string) {
-    if (route.includes('retailer')) {
+    if (route.includes('/dashboard/retailer')) {
       this.title = 'Retailer'
-    } else if (route.includes('country')) {
+    } else if (route.includes('/dashboard/country')) {
       this.title = 'Visión general del país';
+    } else if (route.includes('/dashboard/tools')) {
+      this.title = 'Otras herramientas';
+    } else if (route.includes('/dashboard/omnichat')) {
+      this.title = 'Análisis de sentimientos OmniChat';
     } else {
       delete this.title;
     }
