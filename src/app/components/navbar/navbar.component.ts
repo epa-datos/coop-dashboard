@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   public focus;
   public listTitles: any[] = [];
   public location: Location;
@@ -19,6 +20,9 @@ export class NavbarComponent implements OnInit {
   public customSubtitle: string;
   public routes: any[] = [];
 
+  public sidebarSub: Subscription;
+  public countrySub: Subscription;
+  public retailerSub: Subscription;
 
   constructor(
     location: Location,
@@ -35,12 +39,14 @@ export class NavbarComponent implements OnInit {
     if (this.appStateService.selectedCountry) {
       this.customTitle = this.appStateService.selectedCountry.name;
     }
-    if (this.appStateService.selectedRetailer) {
-      this.customSubtitle = this.appStateService.selectedCountry.name;
+    if (this.appStateService.selectedRetailer && this.user.role_name !== 'retailer') {
+      this.customSubtitle = this.appStateService.selectedRetailer.name;
+    } else if (this.appStateService.selectedRetailer) {
+      this.customTitle = this.appStateService.selectedRetailer.name;
     }
 
     // sidebar titles
-    this.appStateService.sidebarData$.subscribe(resp => {
+    this.sidebarSub = this.appStateService.sidebarData$.subscribe(resp => {
       this.routes = resp;
       this.listTitles = this.routes.filter(listTitle => listTitle);
     }, error => {
@@ -48,7 +54,7 @@ export class NavbarComponent implements OnInit {
     })
 
     // custom title
-    this.appStateService.selectedCountry$.subscribe(resp => {
+    this.countrySub = this.appStateService.selectedCountry$.subscribe(resp => {
       this.customTitle = resp?.name ? resp?.name : undefined;
       // this.customizeTitle();
     }, error => {
@@ -56,7 +62,7 @@ export class NavbarComponent implements OnInit {
     });
 
     // custom subtitle
-    this.appStateService.selectedRetailer$.subscribe(resp => {
+    this.retailerSub = this.appStateService.selectedRetailer$.subscribe(resp => {
       if (this.userService.user.role_name === 'retailer') {
         this.customTitle = resp?.name ? resp?.name : undefined;
       } else {
@@ -105,5 +111,11 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.userService.logout();
+  }
+
+  ngOnDestroy() {
+    this.sidebarSub.unsubscribe();
+    this.countrySub.unsubscribe();
+    this.retailerSub.unsubscribe();
   }
 }
