@@ -23,10 +23,12 @@ export class DashboardComponent implements OnInit {
   }
 
   loadTitle(route: string) {
-    if (route.includes('/dashboard/retailer')) {
-      this.title = 'Retailer'
+    if (route.includes('/dashboard/coop')) {
+      this.title = 'Programa COOP';
     } else if (route.includes('/dashboard/country')) {
       this.title = 'Visión general del país';
+    } else if (route.includes('/dashboard/retailer')) {
+      this.title = 'Retailer'
     } else if (route.includes('/dashboard/tools')) {
       this.title = 'Otras herramientas';
     } else if (route.includes('/dashboard/omnichat')) {
