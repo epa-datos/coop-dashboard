@@ -9,7 +9,7 @@ declare interface RouteInfo {
   title: string;
   path?: string;
   paramName?: string;
-  param?: string | number;
+  param?: any;
   submenu?: RouteInfo[];
   submenuOpen?: boolean;
   class?: string;
@@ -143,44 +143,78 @@ export class SidebarComponent implements OnInit {
   async getPrevSelection() {
     const params = this.route.snapshot.queryParams;
 
-    if (params['country'] || params['retailer']) {
-      const country = params['country'];
-      const retailer = params['retailer'];
+    const region = params['region'];
+    const country = params['country'];
+    const retailer = params['retailer'];
 
-      if (country) {
-        const itemL1 = this.menuItems.find(item => item.paramName === 'country' && item.title.toLowerCase() === country);
-        this.selectedItemL1 = itemL1;
-        this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+    if (region) {
+      const itemL1 = this.menuItems.find(item => item.title.toLowerCase() === region);
+      this.selectedItemL1 = itemL1;
+      this.selectedItemL1.submenuOpen = true;
 
-        if (retailer) {
-          this.selectedItemL1.submenu = await this.getAvailableRetailers(this.selectedItemL1.id);
-          this.selectedItemL1.submenuOpen = !this.selectedItemL1.submenuOpen;
+      let itemL2 = this.selectedItemL1.submenu.find(item => item.param === country);
+      this.selectedItemL2 = itemL2;
+      this.selectedItemL2.submenuOpen = true;
 
-          const itemL2 = this.selectedItemL1.submenu.find(item => item.paramName === 'retailer' && item.title.toLocaleLowerCase() === retailer);
-          this.selectedItemL2 = itemL2;
-          this.appStateService.selectRetailer({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+      this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
 
-          const itemL3 = this.getSelectionUsingRoute(this.selectedItemL2);
-          if (itemL3) {
-            this.selectedItemL2.submenuOpen = true;
-            this.selectedItemL3 = itemL3;
-          }
-        }
+      const retailersList = await this.getAvailableRetailers(this.selectedItemL2.id);
+      this.selectedItemL2.submenu = [... this.selectedItemL2.submenu, ...retailersList];
 
-      } else if (retailer) {
-        const item = this.menuItems.find(item => item.paramName === 'retailer' && item.title.toLowerCase() === retailer);
-        this.selectedItemL1 = item;
-        this.appStateService.selectCountry();
-        this.appStateService.selectRetailer({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+      if (retailer) {
+        this.selectedItemL3 = this.selectedItemL2.submenu.find(item => item.title.toLocaleLowerCase() === retailer);
+        this.appStateService.selectRetailer({ id: this.selectedItemL3.id, name: this.selectedItemL3.title });
+        this.selectedItemL3.submenuOpen = true;
 
-        const itemL2 = this.getSelectionUsingRoute(this.selectedItemL1);
-        if (itemL2) {
-          this.selectedItemL1.submenuOpen = true;
-          this.selectedItemL2 = itemL2;
-        }
+        this.selectedItemL4 = this.getSelectionUsingRoute(this.selectedItemL3);
+
+
+      } else {
+        this.selectedItemL3 = this.getSelectionUsingRoute(this.selectedItemL2);
       }
+
+    } else if (country && country !== 'latam') {
+      this.selectedItemL1 = this.menuItems.find(item => item.param === country);
+
+      const defaultSubmenu = this.addDefaultSubmenuToCountry({ name: this.selectedItemL1.param.replaceAll('-', ' ') });
+      const retailersList = await this.getAvailableRetailers(this.selectedItemL1.id);
+
+      this.selectedItemL1.submenu = [...defaultSubmenu, ...retailersList];
+      this.selectedItemL1.submenuOpen = true;
+      this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+
+      if (retailer) {
+        const itemL2 = this.selectedItemL1.submenu.find(item => item.title.toLocaleLowerCase() === retailer);
+        this.selectedItemL2 = itemL2;
+        this.appStateService.selectRetailer({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+
+        const itemL3 = this.getSelectionUsingRoute(this.selectedItemL2);
+        if (itemL3) {
+          this.selectedItemL2.submenuOpen = true;
+          this.selectedItemL3 = itemL3;
+        }
+      } else {
+        const itemL2 = this.getSelectionUsingRoute(this.selectedItemL1);
+        this.selectedItemL2 = itemL2;
+      }
+
+    } else if (country && country === 'latam') {
+      this.selectedItemL1 = this.menuItems.find(item => item.title.toLowerCase() === country);
+      this.selectedItemL1.submenuOpen = true;
+      this.selectedItemL2 = this.getSelectionUsingRoute(this.selectedItemL1);
     }
-    else {
+    else if (retailer) {
+      const item = this.menuItems.find(item => item.title.toLowerCase() === retailer);
+      this.selectedItemL1 = item;
+      this.appStateService.selectCountry();
+      this.appStateService.selectRetailer({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+
+      const itemL2 = this.getSelectionUsingRoute(this.selectedItemL1);
+      if (itemL2) {
+        this.selectedItemL1.submenuOpen = true;
+        this.selectedItemL2 = itemL2;
+      }
+    } else {
       const item = this.menuItems.find(item => item.path == this.router.url);
       this.selectedItemL1 = item;
       this.appStateService.selectCountry();
@@ -188,10 +222,9 @@ export class SidebarComponent implements OnInit {
     }
   }
 
-
   getSelectionUsingRoute(selectedItem): RouteInfo {
     const currentPath = this.router.url.split('?')[0];
-    const selectedSubItem = selectedItem.submenu.find(item => item.paramName === 'retailer' && item.path === currentPath);
+    const selectedSubItem = selectedItem.submenu.find(item => item.path === currentPath);
     return selectedSubItem;
   }
 
@@ -208,20 +241,7 @@ export class SidebarComponent implements OnInit {
 
         // menu items for countriesWithoutRegion
         for (let country of countriesWithoutRegion) {
-          const submenu = [
-            {
-              title: 'Programa COOP',
-              path: '/dashboard/country',
-              paramName: 'country',
-              param: country.name.toLowerCase().replaceAll(' ', '-')
-            },
-            {
-              title: 'Otras herramientas',
-              path: '/dashboard/tools',
-              paramName: 'country',
-              param: country.name.toLowerCase().replaceAll(' ', '-')
-            }
-          ]
+          const submenu = this.addDefaultSubmenuToCountry(country);
           const menuItem = {
             id: country.id,
             title: country.name,
@@ -239,21 +259,7 @@ export class SidebarComponent implements OnInit {
         for (let region of regionsNames) {
           const submenuCountries = [];
           for (let country of regions[region]) {
-            const submenu = [
-              {
-                title: 'Programa COOP',
-                path: '/dashboard/country',
-                paramName: 'country',
-                param: country.name.toLowerCase().replaceAll(' ', '-')
-              },
-              {
-                title: 'Otras herramientas',
-                path: '/dashboard/tools',
-                paramName: 'country',
-                param: country.name.toLowerCase().replaceAll(' ', '-')
-              }
-            ]
-
+            const submenu = this.addDefaultSubmenuToCountry(country);
             const menuItem = {
               id: country.id,
               title: country.name,
@@ -269,6 +275,8 @@ export class SidebarComponent implements OnInit {
 
           const menuItem = {
             title: region,
+            param: region.toLowerCase().replaceAll(' ', '-'),
+            paramName: 'region',
             submenu: submenuCountries,
             submenuOpen: false,
             isParentOf: 'countriesByRegion',
@@ -290,6 +298,25 @@ export class SidebarComponent implements OnInit {
         console.error(`[sidebar.component]: ${errMsg}`);
         throw (new Error(errMsg));
       });
+  }
+
+  addDefaultSubmenuToCountry(country): RouteInfo[] {
+    const submenu = [
+      {
+        title: 'Programa COOP',
+        path: '/dashboard/country',
+        paramName: 'country',
+        param: country.name.toLowerCase().replaceAll(' ', '-')
+      },
+      {
+        title: 'Otras herramientas',
+        path: '/dashboard/tools',
+        paramName: 'country',
+        param: country.name.toLowerCase().replaceAll(' ', '-')
+      }
+    ]
+
+    return submenu;
   }
 
   groupCountriesByRegion(countries) {
@@ -420,32 +447,54 @@ export class SidebarComponent implements OnInit {
       }
     }
 
-    item.path && this.redirectTosSelectedItem(item);
+    item.path && this.redirectToSelectedItem(item);
 
     if (!item.isParentOf) {
       this.emitNewSelection(item);
     }
   }
 
-  redirectTosSelectedItem(item) {
+  redirectToSelectedItem(item) {
     let queryParams;
 
     if (item.paramName == 'retailer') {
       if (this.selectedItemL1.param) {
-        // When a country is selectedItemL1
+        // if a retailer (item) inside a country (selectedItemL2) inside a region (selectedItemL1) is selected
+        // add region, country and retailer queries param if region exists
+        if (this.selectedItemL1.paramName === 'region') {
+          queryParams = {
+            [this.selectedItemL1.paramName]: this.selectedItemL1.param,
+            [this.selectedItemL2.paramName]: this.selectedItemL2.param,
+            [item.paramName]: item.param
+          };
+        } else {
+          // if region not exists
+          // add country and retailer query param
+          queryParams = {
+            [this.selectedItemL1.paramName]: this.selectedItemL1.param,
+            [item.paramName]: item.param
+          };
+        }
+
+      } else if (this.selectedItemL2.param) {
+        // if a option inside a retailer (selectedItemL2) is selected (users with retailer role)
+        // add region as query param
+        queryParams = {
+          [this.selectedItemL2.paramName]: this.selectedItemL2.param
+        };
+      }
+    } else {
+      // if an country option (item) inside a region (selectedItemL1) is selected
+      // add region and country as query params
+      if (this.selectedItemL1.paramName === 'region') {
         queryParams = {
           [this.selectedItemL1.paramName]: this.selectedItemL1.param,
           [item.paramName]: item.param
         };
-      } else if (this.selectedItemL2.param) {
-        // When a country is selectedItemL2 (There is a region value in selectedItemL1)
-        queryParams = {
-          [this.selectedItemL2.paramName]: this.selectedItemL2.param,
-          [item.paramName]: item.param
-        };
+      } else {
+        // if other option is selected
+        queryParams = { [item.paramName]: item.param };
       }
-    } else {
-      queryParams = { [item.paramName]: item.param };
     }
 
     if (item.param) {
