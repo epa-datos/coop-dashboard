@@ -32,7 +32,12 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.user = this.userService.user;
 
-    this.getTitlesByParams();
+    if (this.appStateService.selectedCountry) {
+      this.customTitle = this.appStateService.selectedCountry.name;
+    }
+    if (this.appStateService.selectedRetailer) {
+      this.customSubtitle = this.appStateService.selectedCountry.name;
+    }
 
     // sidebar titles
     this.appStateService.sidebarData$.subscribe(resp => {
@@ -44,16 +49,20 @@ export class NavbarComponent implements OnInit {
 
     // custom title
     this.appStateService.selectedCountry$.subscribe(resp => {
-      this.customTitle = resp?.name;
-      this.customizeTitle();
+      this.customTitle = resp?.name ? resp?.name : undefined;
+      // this.customizeTitle();
     }, error => {
       console.error(`[navbar.component]: ${error}`);
     });
 
     // custom subtitle
     this.appStateService.selectedRetailer$.subscribe(resp => {
-      this.customSubtitle = resp?.name;
-      this.customizeTitle();
+      if (this.userService.user.role_name === 'retailer') {
+        this.customTitle = resp?.name ? resp?.name : undefined;
+      } else {
+        this.customSubtitle = resp?.name ? resp?.name : undefined;
+      }
+      // this.customizeTitle();
     }, error => {
       console.error(`[navbar.component]: ${error}`);
     });
@@ -87,6 +96,7 @@ export class NavbarComponent implements OnInit {
   }
 
   customizeTitle() {
+    // useful for retailer role
     if (!this.customTitle && this.customSubtitle) {
       this.customTitle = this.customSubtitle;
       delete this.customSubtitle;
