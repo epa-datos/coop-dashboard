@@ -28,6 +28,7 @@ import { DashboardRoutes } from './dashboard.routing';
 import { CountryComponent } from './pages/country/country.component';
 import { RetailerComponent } from './pages/retailer/retailer.component';
 import { OtherToolsComponent } from './pages/other-tools/other-tools.component';
+import { LatamCoopComponent } from './pages/latam-coop/latam-coop.component';
 
 // wrappers
 import { OverviewWrapperComponent } from './components/overview-wrapper/overview-wrapper.component';
@@ -83,6 +84,7 @@ import { ChartLoaderComponent } from './components/charts/chart-loader/chart-loa
     ChartLoaderComponent,
     CampaignComparatorComponent,
     SentimentAnalysisComponent,
+    LatamCoopComponent,
   ],
   imports: [
     CommonModule,
