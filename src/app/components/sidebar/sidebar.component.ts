@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { UserService } from 'src/app/services/user.service';
@@ -31,7 +32,7 @@ export const ROUTES = [
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
 
   public userRole: string;
   public userIsAdmin: boolean;
@@ -50,6 +51,9 @@ export class SidebarComponent implements OnInit {
   public selectedCountryID;
   public selectedRetailerID;
 
+  public countrySub: Subscription;
+  public retailerSub: Subscription;
+
   constructor(
     private router: Router,
     private userService: UserService,
@@ -67,10 +71,10 @@ export class SidebarComponent implements OnInit {
       this.isCollapsed = true;
     });
 
-    this.appStateService.selectedCountry$.subscribe(country => {
+    this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
       this.selectedCountryID = country?.id ? country.id : undefined;
     });
-    this.appStateService.selectedRetailer$.subscribe(retailer => {
+    this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       this.selectedRetailerID = retailer?.id ? retailer.id : undefined;
     });
 
@@ -205,7 +209,7 @@ export class SidebarComponent implements OnInit {
       this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
     }
     else if (retailer) {
-      const item = this.menuItems.find(item => item.title.toLowerCase() === retailer);
+      const item = this.menuItems.find(item => item.title.toLowerCase() === retailer.replaceAll('-', ' '));
       this.selectedItemL1 = item;
       this.appStateService.selectCountry();
       this.appStateService.selectRetailer({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
@@ -556,5 +560,12 @@ export class SidebarComponent implements OnInit {
 
   logout() {
     this.userService.logout();
+  }
+
+  ngOnDestroy() {
+    this.countrySub.unsubscribe();
+    this.retailerSub.unsubscribe();
+    this.appStateService.selectCountry();
+    this.appStateService.selectRetailer();
   }
 }
