@@ -114,4 +114,13 @@ export class OverviewService {
     let queryParams = this.concatedQueryParams();
     return this.http.get(`${this.baseUrl}/countries/${this.countryID}/${metricType}?${queryParams}`);
   }
+
+  getInvestmentVsRevenue() {
+    if (!this.countryID) {
+      return throwError('[overview.service]: not countryID provided');
+    }
+
+    let queryParams = this.concatedQueryParams();
+    return this.http.get(`${this.baseUrl}/countries/${this.countryID}/investment-vs-revenue?${queryParams}`);
+  }
 }
