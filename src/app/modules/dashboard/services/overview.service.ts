@@ -2,23 +2,38 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { Configuration } from 'src/app/app.constants';
+import { FiltersStateService } from './filters-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OverviewService {
   private baseUrl: string;
-  period = `start_date=2021-04-15&end_date=2021-04-30`
+  period = `start_date=2021-04-15&end_date=2021-04-30`;
 
   constructor(
     private http: HttpClient,
-    private config: Configuration
+    private config: Configuration,
+    private filtersStateService: FiltersStateService
   ) {
     this.baseUrl = this.config.endpoint;
   }
 
+
+  concatedQueryParams(): string {
+    let startDate = this.filtersStateService.periodQParams.startDate;
+    let endDate = this.filtersStateService.periodQParams.endDate;
+    let sectors = this.filtersStateService.sectorsQParams;
+    let categories = this.filtersStateService.categoriesQParams;
+    let campaigns = this.filtersStateService.campaignsQParams;
+
+
+    return `?start_date=${startDate}&end_date=${endDate}&sectors=${sectors}&categories=${categories}${campaigns ? `&campaigns=${campaigns}` : ''}`;
+  }
   // *** filters ***
+  // solo para este caso es una exepcion y si trabaja con sus query params
   getCampaigns(retailerID, sectorsStrList?: string, categoriesStrList?: string) {
+    let queryParams = this.concatedQueryParams();
     if (!retailerID) {
       return throwError('[overview.service]: not countryID provided');
     }
