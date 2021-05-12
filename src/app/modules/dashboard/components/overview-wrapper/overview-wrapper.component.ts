@@ -1,7 +1,8 @@
-import { any } from '@amcharts/amcharts4/.internal/core/utils/Array';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { UserService } from 'src/app/services/user.service';
+import { FiltersStateService } from '../../services/filters-state.service';
 import { OverviewService } from '../../services/overview.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { OverviewService } from '../../services/overview.service';
   templateUrl: './overview-wrapper.component.html',
   styleUrls: ['./overview-wrapper.component.scss']
 })
-export class OverviewWrapperComponent implements OnInit {
+export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
   @Input() selectedType: string; // country or retailer
   @Input() selectedID: number; // country or retailer id
@@ -831,7 +832,7 @@ export class OverviewWrapperComponent implements OnInit {
   retailerID: number;
   userRole: string;
 
-  kpisLegends1 = ['inversion', 'clicks', 'bounce_rate', 'transactions', 'revenue']
+  kpisLegends1 = ['investment', 'clicks', 'bounce_rate', 'transactions', 'revenue']
   kpisLegends2 = ['ctr', 'users', 'cr', 'roas']
 
   kpis: any[] = [
@@ -864,7 +865,7 @@ export class OverviewWrapperComponent implements OnInit {
     },
     {
       metricTitle: 'transacciones',
-      metricName: 'transaccions',
+      metricName: 'transactions',
       subMetricTitle: 'CR',
       subMetricName: 'cr',
       subMetricFormat: 'percentage',
@@ -895,35 +896,44 @@ export class OverviewWrapperComponent implements OnInit {
     { name: 'gender-and-age', reqStatus: 0 }
   ];
 
+  countrySub: Subscription;
+  retailerSub: Subscription;
+  filtersSub: Subscription;
 
   constructor(
     private appStateService: AppStateService,
+    private filtersStateService: FiltersStateService,
     private overviewService: OverviewService,
     private userService: UserService
   ) { }
 
   ngOnInit(): void {
-    // tengo que partir de valores iniciales cuando se inicualiza el componente ya que en ese momento puede que no haya cambio
     this.userRole = this.userService.user.role_name;
 
     const selectedCountry = this.appStateService.selectedCountry;
     this.countryID = selectedCountry?.id && selectedCountry?.id;
-    this.countryID && this.getAllData();
+
+    this.filtersSub = this.filtersStateService.filtersChange$.subscribe(() => {
+      this.getAllData();
+    });
 
     this.appStateService.selectedCountry$.subscribe(country => {
       if (this.userRole !== 'retailer' && country?.id !== this.countryID) {
         this.countryID = country?.id !== this.countryID && country?.id;
-        this.getAllData();
+
+        if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
+          this.getAllData();
+        }
       }
 
     });
-
-    this.appStateService.selectedRetailer$.subscribe(retailer => {
+    this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       if (retailer?.id !== this.retailerID) {
         this.retailerID = retailer?.id !== this.retailerID && retailer?.id;
-        this.getAllData();
+        if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
+          // this.getAllData();
+        }
       }
-
     });
   }
 
@@ -933,10 +943,9 @@ export class OverviewWrapperComponent implements OnInit {
     this.getDataByTrafficAndSales('traffic', 1);
   }
 
-
   getKpis() {
     this.kpisReqStatus = 1;
-    this.overviewService.getKpis(this.countryID).subscribe(
+    this.overviewService.getKpis().subscribe(
       (resp: any[]) => {
         const kpis1 = resp.filter(kpi => this.kpisLegends1.includes(kpi.string));
         const kpis2 = resp.filter(kpi => this.kpisLegends2.includes(kpi.string));
@@ -961,9 +970,9 @@ export class OverviewWrapperComponent implements OnInit {
 
   getCategoriesBySector(sector: string, selectedTab: number) {
     this.categoriesReqStatus = 1;
-    this.overviewService.getCategoriesBySector(this.countryID, sector).subscribe(
+    this.overviewService.getCategoriesBySector(sector).subscribe(
       (resp: any[]) => {
-        this.categoriesBySector = resp.sort((a, b) => (a.retailer < b.retailer ? -1 : 1));;
+        this.categoriesBySector = resp;
         this.categoriesReqStatus = 2;
       },
       error => {
@@ -981,7 +990,7 @@ export class OverviewWrapperComponent implements OnInit {
     for (let subMetricType of requiredData) {
       const reqStatusObj = this.trafficSalesReqStatus.find(item => item.name === subMetricType);
       reqStatusObj.reqStatus = 1;
-      this.overviewService.getTrafficAndSales(this.countryID, metricType, subMetricType).subscribe(
+      this.overviewService.getTrafficAndSales(metricType, subMetricType).subscribe(
         (resp: any[]) => {
           if (subMetricType === 'gender-and-age') {
             this.trafficAndSales['genderByAge'] = resp;
@@ -1045,5 +1054,11 @@ export class OverviewWrapperComponent implements OnInit {
     }
 
     this.selectedTab2 = selectedTab;
+  }
+
+  ngOnDestroy() {
+    this.countrySub && this.countrySub.unsubscribe();
+    this.retailerSub && this.retailerSub.unsubscribe();
+    this.filtersSub && this.filtersSub.unsubscribe();
   }
 }
