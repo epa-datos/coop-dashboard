@@ -13,6 +13,8 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
   @Input() value = 'value'; // property name in the object to show in valueAxis
   @Input() valueName; // property to show in tooltips
   @Input() valueFormat; // USD MXN Copy shown in tooltip
+  @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
+  @Input() errorLegend: string;
 
   chartID;
   loadStatus: number = 0;
@@ -65,6 +67,9 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
 
     chart.legend = new am4charts.Legend();
     chart.legend.position = 'bottom';
+    chart.legend.align = 'center';
+    chart.legend.contentAlign = 'center';
+
     chart.legend.scrollable = true;
 
     chart.legend.itemContainers.template.events.on('over', function (event) {

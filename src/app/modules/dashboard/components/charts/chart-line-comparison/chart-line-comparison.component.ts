@@ -11,6 +11,8 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
   @Input() category: string = 'date';
   @Input() value1: string = 'value1';
   @Input() value2: string = 'value2';
+  @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
+  @Input() errorLegend: string;
 
   chart;
   chartID;
@@ -85,6 +87,10 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
     // Create chart instance
     let chart = am4core.create(this.chartID, am4charts.XYChart);
 
+    chart.legend = new am4charts.Legend();
+    chart.legend.position = 'bottom';
+    chart.legend.align = 'center';
+    chart.legend.contentAlign = 'center';
 
     // Create axes
     let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
@@ -116,9 +122,6 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
     chart.cursor = new am4charts.XYCursor();
     chart.cursor.xAxis = dateAxis;
     chart.responsive.enabled = true;
-
-    chart.legend = new am4charts.Legend();
-    chart.legend.position = 'bottom';
 
     this.series = { series1: series, series2: series2 };
 
