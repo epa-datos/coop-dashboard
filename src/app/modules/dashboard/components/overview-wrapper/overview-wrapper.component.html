@@ -179,8 +179,9 @@
                     <span class="h4" [hidden]="selectedTab3 === 1">Ventas por Sector</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-line-series [valueName]="valueName" [valueFormat]="selectedTab3 === 2 && 'USD'"
-                        [series]="usersAndSalesBySector" [name]="selectedType + 'sales-users-by-sector'">
+                    <app-chart-line-series [series]="usersAndSalesBySector" [valueName]="valueName"
+                        [valueFormat]="selectedTab3 === 2 && 'USD'" [name]="selectedType + 'sales-users-by-sector'"
+                        [status]="usersAndSalesReqStatus">
                     </app-chart-line-series>
                 </div>
             </div>
@@ -196,7 +197,7 @@
                 <div class="card-body">
                     <app-chart-line-comparison [data]="investmentVsRevenue"
                         [name]="selectedType + 'investment-vs-revenue'" value1="investment" value2="revenue"
-                        valueName1="Inversión" valueName2="Revenue" valueFormat="USD">
+                        valueName1="Inversión" valueName2="Revenue" valueFormat="USD" [status]="invVsRevenueReqStatus">
                     </app-chart-line-comparison>
                 </div>
             </div>

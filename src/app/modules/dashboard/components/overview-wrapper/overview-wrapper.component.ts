@@ -132,6 +132,8 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
   kpisReqStatus: number = 0;
   categoriesReqStatus: number = 0;
+  usersAndSalesReqStatus: number = 0;
+  invVsRevenueReqStatus: number = 0;
   trafficSalesReqStatus = [
     { name: 'device', reqStatus: 0 },
     { name: 'gender', reqStatus: 0 },
@@ -260,13 +262,16 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
   }
 
   getDataByUsersAndSales(metricType: string, selectedTab: number) {
+    this.usersAndSalesReqStatus = 1;
     this.overviewService.getUsersAndSales(metricType).subscribe(
       (resp: any[]) => {
         this.usersAndSalesBySector = resp;
+        this.usersAndSalesReqStatus = 2;
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[overview-wrapper.component]: ${errorMsg}`);
+        this.usersAndSalesReqStatus = 3;
       }
     )
 
@@ -274,13 +279,16 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
   }
 
   getInvestmentVsRevenue() {
+    this.invVsRevenueReqStatus = 1;
     this.overviewService.getInvestmentVsRevenue().subscribe(
       (resp: any[]) => {
         this.investmentVsRevenue = resp;
+        this.invVsRevenueReqStatus = 2;
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[overview-wrapper.component]: ${errorMsg}`);
+        this.invVsRevenueReqStatus = 3;
       }
     )
   }
