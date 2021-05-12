@@ -60,13 +60,11 @@ export class GeneralFiltersComponent implements OnInit {
   prevDate: any = {};
   prevCamps: any[];
 
-  viewType: string; // country, retailer
+  campaignsReqStatus: number = 0;
 
   sectorsErrorMsg: string;
   categoriesErrorMsg: string;
   campaignsErrorMsg: string;
-
-  campaignsReqStatus: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -202,6 +200,7 @@ export class GeneralFiltersComponent implements OnInit {
           this.campaignsReqStatus = 2;
         },
         error => {
+          this.campaignList = [];
           this.campaignsErrorMsg = 'Error al consultar campañas';
           console.error(`[general-filers.component]: ${error}`);
           this.campaignsReqStatus = 3;

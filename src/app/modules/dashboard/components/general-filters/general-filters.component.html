@@ -64,7 +64,7 @@
         <div class="col-12 col-sm-6 col-lg-3 mb-4" [hidden]="!retailerID">
             <span class="mb-1 h4">Campaña</span>
             <mat-select formControlName="campaigns" multiple placeholder="Selecciona una Campaña"
-                [disabled]="campaignList?.length < 1 && campaignsReqStatus === 2">
+                [disabled]="(campaignList?.length < 1 && campaignsReqStatus === 2) || campaignsErrorMsg">
                 <mat-select-trigger>
                     <div class="select-value-container">
                         <span class="select-value">{{campaigns.value ? campaigns.value[0]?.name : ''}}</span>
