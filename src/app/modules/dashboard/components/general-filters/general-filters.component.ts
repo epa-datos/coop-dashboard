@@ -7,6 +7,7 @@ import { OverviewService } from '../../services/overview.service';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { FiltersStateService } from '../../services/filters-state.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -71,6 +72,7 @@ export class GeneralFiltersComponent implements OnInit {
     private appStateService: AppStateService,
     private usersMngmtService: UsersMngmtService,
     private overviewService: OverviewService,
+    private filtersStateService: FiltersStateService
   ) { }
 
   ngOnInit() {
@@ -219,6 +221,15 @@ export class GeneralFiltersComponent implements OnInit {
 
   areAllCampaignsSelected(): boolean {
     return JSON.stringify(this.campaignList) == JSON.stringify(this.campaigns.value) ? true : false;
+  }
+
+  applyFilters() {
+    this.filtersStateService.selectPeriod({ startDate: this.startDate.value._d, endDate: this.endDate.value._d });
+    this.filtersStateService.selectSectors(this.sectors.value);
+    this.filtersStateService.selectCategories(this.categories.value);
+    this.filtersStateService.selectCampaigns(this.campaigns.value);
+
+    this.filtersStateService.convertFiltersToQueryParams();
   }
 
   ngOnDestroy() {
