@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { AppStateService } from 'src/app/services/app-state.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { AppStateService } from 'src/app/services/app-state.service';
     { provide: MatFormFieldControl, useExisting: RetailerComponent }
   ]
 })
-export class RetailerComponent implements OnInit, AfterViewInit {
+export class RetailerComponent implements OnInit, AfterViewInit, OnDestroy {
   countryName;
   retailerName;
   retailerID: number;
@@ -128,6 +129,8 @@ export class RetailerComponent implements OnInit, AfterViewInit {
     panel4: false
   }
 
+  retailerSub: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private appStateServ: AppStateService
@@ -139,7 +142,7 @@ export class RetailerComponent implements OnInit, AfterViewInit {
       this.retailerName = params['retailer']
     });
 
-    this.appStateServ.selectedRetailer$
+    this.retailerSub = this.appStateServ.selectedRetailer$
       .subscribe(
         retailer => {
           this.retailerID = retailer?.id;
@@ -157,5 +160,9 @@ export class RetailerComponent implements OnInit, AfterViewInit {
 
   panelChange(panel, value) {
     this.extPanelIsOpen[panel] = value
+  }
+
+  ngOnDestroy() {
+    this.retailerSub?.unsubscribe();
   }
 }
