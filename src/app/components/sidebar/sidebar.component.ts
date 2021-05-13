@@ -515,13 +515,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
         if (this.userRole !== 'retailer') {
           if (this.selectedItemL1.param && this.selectedItemL1.paramName !== 'region') {
             // When a country is selectedItemL1
-            this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+            if (this.selectedCountryID !== this.selectedItemL1.id)
+              this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
           } else if (this.selectedItemL2.param) {
             // When a country is selectedItemL2 (There is a region value in selectedItemL1)
             if (item.param === 'latam') {
-              this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+              if (this.selectedCountryID !== this.selectedItemL1.id)
+                this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
             } else {
-              this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+              if (this.selectedCountryID !== this.selectedItemL2.id)
+                this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
             }
           }
 
@@ -531,24 +534,37 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
       case 'retailer':
         if (this.userRole === 'retailer') {
+          if (this.selectedRetailerID !== this.selectedItemL1.id) {
+            this.appStateService.selectRetailer({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+          }
           this.appStateService.selectCountry();
-          this.appStateService.selectRetailer({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+
         } else {
           if (this.selectedItemL1.param && this.selectedItemL1.paramName !== 'region') {
             // When a country is selectedItemL1
-            this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
-            this.appStateService.selectRetailer({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+            if (this.selectedRetailerID !== this.selectedItemL2.id) {
+              this.appStateService.selectRetailer({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+            }
+
+            if (this.selectedCountryID !== this.selectedItemL1.id) {
+              this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+            }
           } else if (this.selectedItemL2.param) {
+            if (this.selectedRetailerID !== this.selectedItemL3.id) {
+              this.appStateService.selectRetailer({ id: this.selectedItemL3.id, name: this.selectedItemL3.title });
+            }
+
             // When a country is selectedItemL2 (There is a region value in selectedItemL1)
-            this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
-            this.appStateService.selectRetailer({ id: this.selectedItemL3.id, name: this.selectedItemL3.title });
+            if (this.selectedCountryID !== this.selectedItemL2.id) {
+              this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+            }
           }
         }
         break;
 
       default:
-        this.appStateService.selectCountry();
         this.appStateService.selectRetailer();
+        this.appStateService.selectCountry();
     }
   }
 
@@ -563,8 +579,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.countrySub.unsubscribe();
-    this.retailerSub.unsubscribe();
+    this.countrySub?.unsubscribe();
+    this.retailerSub?.unsubscribe();
     this.appStateService.selectCountry();
     this.appStateService.selectRetailer();
   }
