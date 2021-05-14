@@ -141,7 +141,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     }
 
     if (this.selectedType === 'country') {
-      this.appStateService.selectedCountry$.subscribe(country => {
+      this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
         if (country?.id !== this.countryID) {
           this.countryID = country?.id;
 
