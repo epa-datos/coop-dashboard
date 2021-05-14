@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { AppStateService } from 'src/app/services/app-state.service';
 
 @Component({
   selector: 'app-country',
@@ -10,26 +9,14 @@ import { AppStateService } from 'src/app/services/app-state.service';
 export class CountryComponent implements OnInit {
 
   countryName;
-  countryID: number;
 
   constructor(
-    private route: ActivatedRoute,
-    private appStateServ: AppStateService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params: Params) => {
       this.countryName = params['country'];
     });
-
-    this.appStateServ.selectedCountry$
-      .subscribe(
-        country => {
-          this.countryID = country?.id;
-        },
-        error => {
-          console.error(`[country.component]: ${error}`);
-        }
-      )
   }
 }

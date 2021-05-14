@@ -35,15 +35,11 @@ export class OverviewService {
     }
 
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
-      this.countryID = country?.id !== this.countryID
-        ? country?.id
-        : undefined;
+      this.countryID = country?.id;
     });
 
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
-      this.retailerID = retailer?.id !== this.retailerID
-        ? retailer?.id
-        : undefined;
+      this.retailerID = retailer?.id;
     });
   }
 
@@ -69,32 +65,36 @@ export class OverviewService {
 
   // *** kpis ***
   getKpis() {
-    if (!this.countryID) {
-      return throwError('[overview.service]: not countryID provided');
-    }
-
     let queryParams = this.concatedQueryParams();
-    return this.http.get(`${this.baseUrl}/countries/${this.countryID}/kpis?${queryParams}`);
+
+    if (this.retailerID) {
+      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/kpis?${queryParams}`);
+    } else if (this.countryID) {
+      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/kpis?${queryParams}`);
+    } else {
+      return throwError('[overview.service]: not retailerID or countryID provided');
+    }
   }
 
   // *** categories by sector ***
   getCategoriesBySector(sector: string) {
-    if (!this.countryID) {
-      return throwError('[overview.service]: not countryID provided');
-    }
     if (!sector) {
       return throwError('[overview.service]: not sector provided');
     }
 
     let queryParams = this.concatedQueryParams();
-    return this.http.get(`${this.baseUrl}/countries/${this.countryID}/retailer/categories?sector=${sector}&${queryParams}`);
+
+    if (this.retailerID) {
+      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/categories?sector=${sector}&${queryParams}`);
+    } else if (this.countryID) {
+      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/retailer/categories?sector=${sector}&${queryParams}`);
+    } else {
+      return throwError('[overview.service]: not retailerID or countryID provided');
+    }
   }
 
   // *** traffic and sales ***
   getTrafficAndSales(metricType: string, subMetricType: string) {
-    if (!this.countryID) {
-      return throwError('[overview.service]: not countryID provided');
-    }
     if (!metricType) {
       return throwError('[overview.service]: not metricType provided');
     }
@@ -103,24 +103,41 @@ export class OverviewService {
     }
 
     let queryParams = this.concatedQueryParams();
-    return this.http.get(`${this.baseUrl}/countries/${this.countryID}/${metricType}/${subMetricType}?${queryParams}`);
+
+    if (this.retailerID) {
+      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/${metricType}/${subMetricType}?${queryParams}`);
+    } else if (this.countryID) {
+      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/${metricType}/${subMetricType}?${queryParams}`);
+    } else {
+      return throwError('[overview.service]: not retailerID or countryID provided');
+    }
   }
 
   getUsersAndSales(metricType: string) {
-    if (!this.countryID) {
-      return throwError('[overview.service]: not countryID provided');
+    if (!metricType) {
+      return throwError('[overview.service]: not metricType provided');
     }
 
     let queryParams = this.concatedQueryParams();
-    return this.http.get(`${this.baseUrl}/countries/${this.countryID}/${metricType}?${queryParams}`);
+
+    if (this.retailerID) {
+      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/${metricType}?${queryParams}`);
+    } else if (this.countryID) {
+      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/${metricType}?${queryParams}`);
+    } else {
+      return throwError('[overview.service]: not retailerID or countryID provided');
+    }
   }
 
   getInvestmentVsRevenue() {
-    if (!this.countryID) {
-      return throwError('[overview.service]: not countryID provided');
-    }
-
     let queryParams = this.concatedQueryParams();
-    return this.http.get(`${this.baseUrl}/countries/${this.countryID}/investment-vs-revenue?${queryParams}`);
+
+    if (this.retailerID) {
+      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/investment-vs-revenue?${queryParams}`);
+    } else if (this.countryID) {
+      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/investment-vs-revenue?${queryParams}`);
+    } else {
+      return throwError('[overview.service]: not retailerID or countryID provided');
+    }
   }
 }

@@ -11,8 +11,8 @@
         </div>
     </div>
 
-    <div class="row mt-5" *ngIf="selectedType === 'country'">
-        <div class="col-12">
+    <div class="row mt-5">
+        <div class="col-12" *ngIf="selectedType === 'country'">
             <div class="pills-container">
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
@@ -33,11 +33,13 @@
         <div class="col-12 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <ng-container [ngSwitch]="selectedTab1">
+                    <ng-container *ngIf="selectedType === 'country'" [ngSwitch]="selectedTab1">
                         <span *ngSwitchCase="1" class="h4">Categorías por Retailer - Search</span>
                         <span *ngSwitchCase="2" class="h4">Categorías por Retailer - Marketing</span>
                         <span *ngSwitchCase="3" class="h4">Categorías por Retailer - Ventas</span>
                     </ng-container>
+
+                    <span *ngIf="selectedType === 'retailer'" class="h4">Categorías por Sector</span>
                 </div>
                 <div class="card-body">
                     <div class="chart-legend mt-0 mb-2">
@@ -51,36 +53,9 @@
                         </div>
                     </div>
                     <app-chart-heat-map [data]="categoriesBySector" [name]="selectedType + 'categories-by-sector'"
-                        categoryX="retailer" categoryY="category" height="250px" [showTooltipValue]="false"
-                        [showGridBorders]="true" [showHeatLegend]="false" [status]="categoriesReqStatus" [minValue]="0"
-                        [maxValue]="1" initialColor="#e9e9e9">
-                    </app-chart-heat-map>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-5" *ngIf="selectedType === 'retailer'">
-        <div class="col-12 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Categorías por Sector</span>
-                </div>
-                <div class="card-body">
-                    <div class="chart-legend mt-0 mb-2">
-                        <div class="legend-container">
-                            <div class="legend-square on"></div>
-                            <div class="legend-label">Activas</div>
-                        </div>
-                        <div class="legend-container ml-3">
-                            <div class="legend-square off"></div>
-                            <div class="legend-label">Inactivas</div>
-                        </div>
-                    </div>
-                    <app-chart-heat-map [data]="categoriesXSector" [name]="selectedType + 'categories-by-sector'"
-                        categoryX="sector" categoryY="category" height="250px" [showTooltipValue]="false"
-                        [showGridBorders]="true" [showHeatLegend]="false" [minValue]="0" [maxValue]="1"
-                        initialColor="#e9e9e9">
+                        [categoryX]="selectedType === 'country' ? 'retailer' : 'sector'" categoryY="category"
+                        height="250px" [showTooltipValue]="false" [showGridBorders]="true" [showHeatLegend]="false"
+                        [status]="categoriesReqStatus" [minValue]="0" [maxValue]="1" initialColor="#e9e9e9">
                     </app-chart-heat-map>
                 </div>
             </div>
