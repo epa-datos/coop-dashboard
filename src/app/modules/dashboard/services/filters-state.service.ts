@@ -73,6 +73,11 @@ export class FiltersStateService {
     return stringArray.substring(1);
   }
 
+  clearCampaignsSelection() {
+    this.selectCampaigns([]);
+    delete this.campaignsQParams;
+  }
+
   filtersChange() {
     this.convertFiltersToQueryParams();
     this.filtersSource.next();
