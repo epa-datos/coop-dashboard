@@ -23,7 +23,7 @@
     </ul>
 
     <ng-container *ngIf="activeTabView === 1">
-        <app-overview-wrapper selectedType="retailer"></app-overview-wrapper>
+        <app-overview-wrapper selectedType="retailer" [requestInfoChange]="requestInfoChange$"></app-overview-wrapper>
     </ng-container>
 
     <ng-container *ngIf="activeTabView === 2">

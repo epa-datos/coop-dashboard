@@ -1,10 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { AppStateService } from 'src/app/services/app-state.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { FiltersStateService } from '../../services/filters-state.service';
 
 
 @Component({
@@ -15,10 +13,7 @@ import { Subscription } from 'rxjs';
     { provide: MatFormFieldControl, useExisting: RetailerComponent }
   ]
 })
-export class RetailerComponent implements OnInit, AfterViewInit, OnDestroy {
-  countryName;
-  retailerName;
-  retailerID: number;
+export class RetailerComponent implements OnInit, OnDestroy {
 
   activeTabView: number = 1;
 
@@ -129,34 +124,40 @@ export class RetailerComponent implements OnInit, AfterViewInit, OnDestroy {
     panel4: false
   }
 
+  retailerID: number;
+
+  filtersSub: Subscription;
   retailerSub: Subscription;
 
+  private requestInfoSource = new Subject<void>();
+  requestInfoChange$ = this.requestInfoSource.asObservable();
+
   constructor(
-    private route: ActivatedRoute,
-    private appStateServ: AppStateService
+    private appStateService: AppStateService,
+    private filtersStateService: FiltersStateService,
   ) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params: Params) => {
-      this.countryName = params['country'];
-      this.retailerName = params['retailer']
+    const selectedRetailer = this.appStateService.selectedCountry;
+    this.retailerID = selectedRetailer?.id && selectedRetailer?.id;
+
+    this.filtersSub = this.filtersStateService.filtersChange$.subscribe(() => {
+      this.requestInfoSource.next();
     });
 
-    this.retailerSub = this.appStateServ.selectedRetailer$
-      .subscribe(
-        retailer => {
-          this.retailerID = retailer?.id;
-        },
-        error => {
-          console.error(`[retailer.component]: ${error}`);
+    this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
+      if (retailer?.id !== this.retailerID) {
+        this.retailerID = retailer?.id;
+
+        if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
+          if (this.retailerID) {
+            this.filtersStateService.clearCampaignsSelection();
+            this.requestInfoSource.next();
+          }
         }
-      )
+      }
+    });
   }
-
-  ngAfterViewInit() {
-    // this.loadPaginator();
-  }
-
 
   panelChange(panel, value) {
     this.extPanelIsOpen[panel] = value
@@ -164,5 +165,6 @@ export class RetailerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.retailerSub?.unsubscribe();
+    this.filtersSub?.unsubscribe();
   }
 }
