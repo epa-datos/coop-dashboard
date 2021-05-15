@@ -513,6 +513,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     switch (item.paramName) {
       case 'country':
         if (this.userRole !== 'retailer') {
+          this.appStateService.selectRetailer();
+
           if (this.selectedItemL1.param && this.selectedItemL1.paramName !== 'region') {
             // When a country is selectedItemL1
             if (this.selectedCountryID !== this.selectedItemL1.id)
@@ -527,8 +529,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
                 this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
             }
           }
-
-          this.appStateService.selectRetailer();
         }
         break;
 
