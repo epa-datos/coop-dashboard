@@ -144,6 +144,8 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     femaleRange.label.fontWeight = '600';
     femaleRange.grid.strokeOpacity = 1;
 
+    chart.zoomOutButton.disabled = true;
+
 
     this.labels = { labelLeft: maleLabel, labelRight: femaleLabel };
     this.loadValueFormat(this.valueFormat);
