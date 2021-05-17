@@ -68,15 +68,16 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                            (click)="getDataByTrafficAndSales('traffic', 1)">Tráfico</a>
+                            (click)="getDataByTrafficAndSales('traffic', 1); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                            (click)="getDataByTrafficAndSales('sales', 2)">Ventas</a>
+                            (click)="getDataByTrafficAndSales('sales', 2); chartsInitLoad = chartsInitLoad && false;">Ventas</a>
                     </li>
                 </ul>
             </div>
         </div>
+
         <!-- devices -->
         <div class="col-12 col-md-6 mt-4">
             <div class="card">
@@ -126,10 +127,28 @@
                 <div class="card-header">
                     <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por Género y Edad</span>
                 </div>
-                <div class="card-body">
-                    <app-chart-pyramid [data]="trafficAndSales['genderByAge']" [name]="selectedType + 'age-and-gender'"
+                <div class="card-body" style="height: 328px">
+                    <!-- loader -->
+                    <app-chart-loader *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus === 1">
+                    </app-chart-loader>
+
+                    <!-- ready -->
+                    <app-chart-pyramid *ngIf="trafficAndSales['genderByAge']?.length > 0"
+                        [data]="trafficAndSales['genderByAge']" [name]="selectedType + 'age-and-gender'"
                         [status]="trafficSalesReqStatus[3].reqStatus" height="280px">
                     </app-chart-pyramid>
+
+                    <!-- empty data -->
+                    <div *ngIf="trafficSalesReqStatus[3].reqStatus === 2 && trafficAndSales['genderByAge']?.length === 0"
+                        class="chart-error-container text-muted">
+                        <span>Sin datos disponibles</span>
+                    </div>
+
+                    <!-- error -->
+                    <div *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus === 3"
+                        class="chart-error-container text-muted">
+                        <span>Error al consultar datos</span>
+                    </div>
                 </div>
             </div>
         </div>

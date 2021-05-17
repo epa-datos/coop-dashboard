@@ -90,6 +90,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
   ];
 
   requestInfoSub: Subscription;
+  chartsInitLoad: boolean = true;
 
   constructor(
     private filtersStateService: FiltersStateService,
@@ -113,6 +114,8 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     this.getDataByTrafficAndSales('traffic', 1);
     this.getDataByUsersAndSales('users', 1);
     this.getInvestmentVsRevenue();
+
+    this.chartsInitLoad = true;
   }
 
   getKpis() {
