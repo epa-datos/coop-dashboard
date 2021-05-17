@@ -42,7 +42,7 @@ export class GeneralFiltersComponent implements OnInit {
   categoryList: any[];
   campaignList: any[];
   filteredCampaignList: any[];
-  filteredCampaigns: boolean; // flag to kwnow is campaignsList is te result of a search filter
+  filteredCampaigns: boolean; // flag to know is campaignsList is the result of a search filter
   campaignsFilter: string; // filtered value in campaignsList
 
   countryID: number;
