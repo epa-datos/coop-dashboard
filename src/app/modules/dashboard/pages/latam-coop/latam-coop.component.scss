@@ -36,6 +36,25 @@
     }
 }
 
+.card-body {
+    .nav-tabs {
+        .nav-link {
+            cursor: pointer;
+            color:rgba(0, 0, 0, 0.5);
+    
+            &.active {
+                color: rgba(0, 0, 0, 0.9);
+            }
+        }
+    }
+
+    .pills-container {
+        .nav-link {
+            box-shadow: 0 2px 3px rgb(50 50 93 / 11%), 0 1px 3px rgb(0 0 0 / 8%);
+        } 
+    }
+}
+
 .chart-legend {
     align-items: center;
     display: flex;

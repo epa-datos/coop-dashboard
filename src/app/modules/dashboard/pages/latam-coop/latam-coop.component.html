@@ -33,7 +33,7 @@
         </div>
 
         <div class="row mt-5">
-            <div class="col-12">
+            <!-- <div class="col-12">
                 <div class="pills-container">
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
@@ -50,15 +50,16 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div> -->
             <div class="col-12 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <ng-container [ngSwitch]="selectedTab1">
+                        <!-- <ng-container [ngSwitch]="selectedTab1">
                             <span *ngSwitchCase="1" class="h4">Categorías por Retailer - Search</span>
                             <span *ngSwitchCase="2" class="h4">Categorías por Retailer - Marketing</span>
                             <span *ngSwitchCase="3" class="h4">Categorías por Retailer - Ventas</span>
-                        </ng-container>
+                        </ng-container> -->
+                        <span class="h4">Categorías por sector y país</span>
                     </div>
                     <div class="card-body">
                         <div class="chart-legend mt-0 mb-2">
@@ -86,11 +87,11 @@
                 <div class="pills-container">
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
-                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
                                 (click)="getDataByTrafficAndSales('traffic', 1); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
                                 (click)="getDataByTrafficAndSales('sales', 2); chartsInitLoad = chartsInitLoad && false;">Ventas</a>
                         </li>
                     </ul>
@@ -101,7 +102,7 @@
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por dispositivos</span>
+                        <span class="h4">{{selectedTab1 === 1 ? 'Tráfico' : 'Ventas'}} por dispositivos</span>
                     </div>
                     <div class="card-body">
                         <app-chart-pictorial [data]="trafficAndSales['device']" name="latam-devices" category="name"
@@ -115,7 +116,7 @@
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por Género</span>
+                        <span class="h4">{{selectedTab1 === 1 ? 'Tráfico' : 'Ventas'}} por Género</span>
                     </div>
                     <div class="card-body">
                         <app-chart-pictorial [data]="trafficAndSales['gender']" name="latam-gender" category="name"
@@ -129,11 +130,11 @@
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por Edad</span>
+                        <span class="h4">{{selectedTab1 === 1 ? 'Tráfico' : 'Ventas'}} por Edad</span>
                     </div>
                     <div class="card-body">
                         <app-chart-lollipop [data]="trafficAndSales['age']" name="latam-age" category="age"
-                            [value]="selectedTab2 === 1 ? 'visits' : 'sales'" height="280px"
+                            [value]="selectedTab1 === 1 ? 'visits' : 'sales'" height="280px"
                             [status]="trafficSalesReqStatus[2].reqStatus">
                         </app-chart-lollipop>
                     </div>
@@ -144,7 +145,7 @@
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por Género y Edad</span>
+                        <span class="h4">{{selectedTab1 === 1 ? 'Tráfico' : 'Ventas'}} por Género y Edad</span>
                     </div>
                     <div class="card-body" style="height: 328px">
                         <!-- loader -->
@@ -178,26 +179,131 @@
                 <div class="pills-container">
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
-                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
                                 (click)="getDataByUsersAndSales('users', 1)">Usuarios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
                                 (click)="getDataByUsersAndSales('sales', 2)">Ventas</a>
                         </li>
                     </ul>
                 </div>
             </div>
+
             <div class="col-12 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4" [hidden]="selectedTab3 === 2">Usuarios por Sector</span>
-                        <span class="h4" [hidden]="selectedTab3 === 1">Ventas por Sector</span>
+                        <span class="h4">{{ selectedTab2 === 1 ? 'Usuarios' : 'Ventas'}} por </span>
+                        <ng-container [ngSwitch]="selectedTab3">
+                            <span *ngSwitchCase="1" class="h4">Sector</span>
+                            <span *ngSwitchCase="2" class="h4">Categoría</span>
+                            <span *ngSwitchCase="3" class="h4">Medio</span>
+                        </ng-container>
                     </div>
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link" [ngClass]="{'active bg-light' : selectedTab3 === 1}"
+                                            (click)="selectedTab3 = 1; selectedTab4 = 1">
+                                            <span>Sector</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" [ngClass]="{'active bg-light' : selectedTab3 === 2}"
+                                            (click)="selectedTab3 = 2; selectedTab4 = 1">
+                                            <span>Categoría</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" [ngClass]="{'active bg-light' : selectedTab3 === 3}"
+                                            (click)="selectedTab3 = 3; selectedTab4 = 1">
+                                            <span>Medio</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-12 mb-4">
+                                <div class="pills-container">
+                                    <!-- sector -->
+                                    <ul class="nav nav-pills nav-fill" *ngIf="selectedTab3 === 1">
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 1}"
+                                                (click)="selectedTab4 = 1">Todo</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 2}"
+                                                (click)="selectedTab4 = 2">Search</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 3}"
+                                                (click)="selectedTab4 = 3">Marketing</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 4}"
+                                                (click)="selectedTab4 = 4">Ventas</a>
+                                        </li>
+                                    </ul>
+
+                                    <!-- categoria -->
+                                    <ul class="nav nav-pills nav-fill" *ngIf="selectedTab3 === 2">
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 1}"
+                                                (click)="selectedTab4 = 1">Todo</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 2}"
+                                                (click)="selectedTab4 = 2">PS</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 3}"
+                                                (click)="selectedTab4 = 3">Print</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 4}"
+                                                (click)="selectedTab4 = 4">Supplies</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 5}"
+                                                (click)="selectedTab4 = 5">Accessories</a>
+                                        </li>
+                                    </ul>
+
+                                    <!-- medio -->
+                                    <ul class="nav nav-pills nav-fill" *ngIf="selectedTab3 === 3">
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 1}"
+                                                (click)="selectedTab4 = 1">Todo</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 2}"
+                                                (click)="selectedTab4 = 2">Google</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 3}"
+                                                (click)="selectedTab4 = 3">Facebook</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 4}"
+                                                (click)="selectedTab4 = 4">Programmatic</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 5}"
+                                                (click)="selectedTab4 = 5">Institucional</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 6}"
+                                                (click)="selectedTab4 = 6">Otro</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
                         <app-chart-line-series [series]="usersAndSalesBySector"
-                            [valueName]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'"
-                            [valueFormat]="selectedTab3 === 2 && 'USD'" name="latam-sales-users-by-sector"
+                            [valueName]="selectedTab2 === 1 ? 'Usuarios' : 'Ventas'"
+                            [valueFormat]="selectedTab2 === 2 && 'USD'" name="latam-sales-users-by-sector"
                             [status]="usersAndSalesReqStatus">
                         </app-chart-line-series>
                     </div>

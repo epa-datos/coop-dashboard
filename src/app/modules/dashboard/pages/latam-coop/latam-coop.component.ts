@@ -15,6 +15,7 @@ export class LatamCoopComponent implements OnInit, OnDestroy {
   selectedTab1: number = 1;
   selectedTab2: number = 1;
   selectedTab3: number = 1;
+  selectedTab4: number = 1;
 
   kpisLegends1 = ['investment', 'clicks', 'bounce_rate', 'transactions', 'revenue']
   kpisLegends2 = ['ctr', 'users', 'cr', 'roas']
@@ -177,7 +178,7 @@ export class LatamCoopComponent implements OnInit, OnDestroy {
           reqStatusObj.reqStatus = 3;
         });
 
-      this.selectedTab2 = selectedTab;
+      this.selectedTab1 = selectedTab;
     }
   }
 
@@ -187,21 +188,6 @@ export class LatamCoopComponent implements OnInit, OnDestroy {
       (resp: any[]) => {
         this.usersAndSalesBySector = resp;
         this.usersAndSalesReqStatus = 2;
-
-        this.usersAndSalesBySector[0].customLineColor = '#67B6DC';
-        this.usersAndSalesBySector[1].customLineColor = '#67B6DC';
-
-        this.usersAndSalesBySector[2].customLineColor = '#A367DC';
-        this.usersAndSalesBySector[3].customLineColor = '#A367DC';
-
-        this.usersAndSalesBySector[4].customLineColor = '#DC67CE';
-        this.usersAndSalesBySector[5].customLineColor = '#DC67CE';
-
-
-
-        this.usersAndSalesBySector[1].customLineStye = 'dashed';
-        this.usersAndSalesBySector[3].customLineStye = 'dashed';
-        this.usersAndSalesBySector[5].customLineStye = 'dashed';
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
@@ -210,7 +196,7 @@ export class LatamCoopComponent implements OnInit, OnDestroy {
       }
     )
 
-    this.selectedTab3 = selectedTab;
+    this.selectedTab2 = selectedTab;
   }
 
   getInvestmentVsRevenue() {
