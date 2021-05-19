@@ -138,8 +138,8 @@ export class RetailerComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const selectedRetailer = this.appStateService.selectedCountry;
-    this.retailerID = selectedRetailer?.id && selectedRetailer?.id;
+    const selectedRetailer = this.appStateService.selectedRetailer;
+    this.retailerID = selectedRetailer?.id;
 
     this.filtersSub = this.filtersStateService.filtersChange$.subscribe(() => {
       this.requestInfoSource.next();
