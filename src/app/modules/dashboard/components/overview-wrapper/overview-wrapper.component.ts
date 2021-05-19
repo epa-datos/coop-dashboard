@@ -26,6 +26,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     {
       metricTitle: 'inversión',
       metricName: 'investment',
+      metricValue: 0,
       metricFormat: 'currency',
       metricSymbol: 'USD',
       icon: 'fas fa-wallet',
@@ -34,8 +35,10 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     {
       metricTitle: 'clicks',
       metricName: 'clicks',
+      metricValue: 0,
       subMetricTitle: 'ctr',
       subMetricName: 'ctr',
+      subMetricValue: 0,
       subMetricFormat: 'percentage',
       icon: 'fas fa-hand-pointer',
       iconBg: '#2f9998'
@@ -44,17 +47,21 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     {
       metricTitle: 'bounce rate',
       metricName: 'bounce_rate',
+      metricValue: 0,
       metricFormat: 'percentage',
       subMetricTitle: 'usuarios',
       subMetricName: 'users',
+      subMetricValue: 0,
       icon: 'fas fa-stopwatch',
       iconBg: '#a77dcc'
     },
     {
       metricTitle: 'transacciones',
       metricName: 'transactions',
+      metricValue: 0,
       subMetricTitle: 'CR',
       subMetricName: 'cr',
+      subMetricValue: 0,
       subMetricFormat: 'percentage',
       icon: 'fas fa-shopping-basket',
       iconBg: '#f89934'
@@ -62,9 +69,11 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     {
       metricTitle: 'revenue',
       metricName: 'revenue',
+      metricValue: 0,
       metricFormat: 'currency',
       subMetricTitle: 'roas',
       subMetricName: 'roas',
+      subMetricValue: 0,
       subMetricFormat: 'decimals',
       icon: 'fas fa-hand-holding-usd',
       iconBg: '#fbc001'
