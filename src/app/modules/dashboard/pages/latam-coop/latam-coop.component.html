@@ -291,10 +291,10 @@
                         <span class="h4">Inversión vs Revenue</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-line-comparison [data]="investmentVsRevenue" name="latam-investment-vs-revenue"
-                            value1="investment" value2="revenue" valueName1="Inversión" valueName2="Revenue"
-                            valueFormat="USD" [status]="invVsRevenueReqStatus">
-                        </app-chart-line-comparison>
+                        <app-chart-multiple-axes [data]="investmentVsRevenue" valueName1="Inversión"
+                            valueName2="Revenue" value1="investment" value2="revenue" name="latam-investment-vs-revenue"
+                            [status]="invVsRevenueReqStatus">
+                        </app-chart-multiple-axes>
                     </div>
                 </div>
             </div>
