@@ -9,7 +9,6 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
   styleUrls: ['./chart-multiple-axes.component.scss']
 })
 export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
-  @Input() data;
   @Input() height: string = '350px'; // height property value valid in css
   @Input() value1: string = 'value1'; // object property represented as valueAxis1 (left axis)
   @Input() value2: string = 'value2'; // object property represented as valueAxis2 (right axis)
@@ -17,6 +16,8 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
   @Input() valueName2: string = 'Value 2';
   @Input() valueFormat1: string;
   @Input() valueFormat2: string;
+  @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
+  @Input() errorLegend: string;
 
   private _name: string;
   get name() {
@@ -27,8 +28,17 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
     this.chartID = `chart-multiple-axes-${this.name}`
   }
 
+  private _data;
+  get data() {
+    return this._data;
+  }
+  @Input() set data(value) {
+    this._data = value;
+    this.chart && this.loadChartData(this.chart);
+  }
+
   chartID;
-  loadStatus: number = 0;
+  chart;
 
   constructor() { }
 
@@ -42,8 +52,7 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
   loadChart() {
     am4core.useTheme(am4themes_animated);
     let chart = am4core.create(this.chartID, am4charts.XYChart);
-    chart.data = this.data;
-    chart.numberFormatter.numberFormat = "#.##";
+    chart.numberFormatter.numberFormat = '#,###.##';
 
     // Create axes
     let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
@@ -64,24 +73,31 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
     series1.dataFields.valueY = this.value1;
     series1.dataFields.dateX = 'date';
     series1.name = this.valueName1;
-    series1.strokeWidth = 2;
-    series1.tensionX = 0.7;
     series1.yAxis = valueAxis1;
-    series1.tooltipText = `{name}\n[bold font-size: 20]{valueY} ${this.valueFormat1 ? this.valueFormat1 : ''}[/]`;
+    series1.strokeWidth = 2;
+    series1.tensionX = 0.85;
+    // {name}\n[bold font-size: 20]{valueY}
+    series1.tooltipText = `{name}: [bold]{valueY} ${this.valueFormat1 ? this.valueFormat1 : ''}[/]`;
+    series1.tooltip.autoTextColor = false;
+    series1.tooltip.label.fill = am4core.color('#fff');
 
     let series2 = chart.series.push(new am4charts.LineSeries());
     series2.dataFields.valueY = this.value2;
     series2.dataFields.dateX = 'date';
     series2.name = this.valueName2;
-    series2.strokeWidth = 2;
-    series2.tensionX = 0.7;
     series2.yAxis = valueAxis2;
-    series2.tooltipText = `{name}\n[bold font-size: 20]{valueY} ${this.valueFormat2 ? this.valueFormat2 : ''}[/]`;
+    series2.strokeWidth = 2;
+    series2.strokeDasharray = '3,4';
+    series2.stroke = series2.stroke;
+    series2.tensionX = 0.85;
+    series2.tooltipText = `{name}: [bold]{valueY} ${this.valueFormat2 ? this.valueFormat2 : ''}[/]`;
+    series2.tooltip.autoTextColor = false;
+    series2.tooltip.label.fill = am4core.color('#fff');
 
-    let bullet3 = series2.bullets.push(new am4charts.CircleBullet());
-    bullet3.circle.radius = 3;
-    bullet3.circle.strokeWidth = 2;
-    bullet3.circle.fill = am4core.color('#fff');
+    // let bullet3 = series2.bullets.push(new am4charts.CircleBullet());
+    // bullet3.circle.radius = 3;
+    // bullet3.circle.strokeWidth = 2;
+    // bullet3.circle.fill = am4core.color('#fff');
 
     // Add cursor
     chart.cursor = new am4charts.XYCursor();
@@ -89,5 +105,12 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
     // Add legend
     chart.legend = new am4charts.Legend();
     chart.legend.position = 'bottom';
+
+    this.loadChartData(chart);
+  }
+
+  loadChartData(chart) {
+    chart.data = this.data;
+    this.chart = chart;
   }
 }
