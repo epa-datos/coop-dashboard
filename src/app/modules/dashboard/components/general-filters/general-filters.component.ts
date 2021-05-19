@@ -40,8 +40,11 @@ export const MY_FORMATS = {
 })
 export class GeneralFiltersComponent implements OnInit {
 
+  countryList: any[];
+  retailerList: any[];
   sectorList: any[];
   categoryList: any[];
+  campaignList: any[];
   sourceList: any[] = [
     { id: 1, name: 'Google' },
     { id: 2, name: 'Facebook' },
@@ -49,16 +52,26 @@ export class GeneralFiltersComponent implements OnInit {
     { id: 4, name: 'Institucional' },
     { id: 5, name: 'Otro' }
   ];
-  campaignList: any[];
+
+  filteredCountryList: any[];
+  filteredCountry: boolean; // flag to know is filteredCountryList is the result of a search filter
+  countryFilter: string; // filtered value in filteredCountryList
+
+  filteredRetailerList: any[];
+  filteredRetailer: boolean; // flag to know is filteredRetailerList is the result of a search filter
+  retailerFilter: string; // filtered value in filteredRetailerList
+
   filteredCampaignList: any[];
-  filteredCampaigns: boolean; // flag to know is campaignsList is the result of a search filter
-  campaignsFilter: string; // filtered value in campaignsList
+  filteredCampaign: boolean; // flag to know is campaignsList is the result of a search filter
+  campaignFilter: string; // filtered value in campaignsList
 
   countryID: number;
   retailerID: number;
   isLatamSelected: boolean;
 
   form: FormGroup;
+  countries: AbstractControl;
+  retailers: AbstractControl;
   startDate: AbstractControl;
   endDate: AbstractControl;
   sectors: AbstractControl;
@@ -71,6 +84,8 @@ export class GeneralFiltersComponent implements OnInit {
   retailerSub: Subscription;
   routeSub: Subscription;
 
+  prevCountries: any[];
+  prevRetailers: any[];
   prevSectors: any[];
   prevCategories: any[];
   prevDate: any = {};
@@ -78,6 +93,8 @@ export class GeneralFiltersComponent implements OnInit {
 
   campaignsReqStatus: number = 0;
 
+  countriesErrorMsg: string;
+  retailersErrorMsg: string;
   sectorsErrorMsg: string;
   categoriesErrorMsg: string;
   campaignsErrorMsg: string;
@@ -106,23 +123,22 @@ export class GeneralFiltersComponent implements OnInit {
       this.retailerID = selectedRetailer?.id ? selectedRetailer.id : undefined;
     }
 
-    this.isLatamSelected = this.router.url.includes('latam') ? true : false;
+    this.loadLatamContent();
 
     this.routeSub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     )
       .subscribe(event => {
         if (event instanceof NavigationEnd)
-          this.isLatamSelected = event.url.includes('latam')
+          this.loadLatamContent();
       });
-
 
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       this.retailerID = retailer?.id;
 
       if (this.campaigns.value) {
         this.campaigns.setValue([]);
-        this.campaignsFilter = '';
+        this.campaignFilter = '';
       }
 
       if (this.retailerID) {
@@ -134,7 +150,7 @@ export class GeneralFiltersComponent implements OnInit {
       this.countryID = country?.id;
       if (this.campaigns.value) {
         this.campaigns.setValue([]);
-        this.campaignsFilter = '';
+        this.campaignFilter = '';
       }
     });
   }
@@ -149,6 +165,8 @@ export class GeneralFiltersComponent implements OnInit {
     endDate.setDate(today.getDate() - 1);
 
     this.form = this.fb.group({
+      countries: new FormControl(),
+      retailers: new FormControl(),
       startDate: new FormControl(startDate, [Validators.required]),
       endDate: new FormControl(endDate, [Validators.required]),
       sectors: new FormControl(),
@@ -157,6 +175,8 @@ export class GeneralFiltersComponent implements OnInit {
       sources: new FormControl([...this.sourceList.map(item => item)])
     });
 
+    this.countries = this.form.controls['countries'];
+    this.retailers = this.form.controls['retailers'];
     this.startDate = this.form.controls['startDate'];
     this.endDate = this.form.controls['endDate'];
     this.sectors = this.form.controls['sectors'];
@@ -199,6 +219,51 @@ export class GeneralFiltersComponent implements OnInit {
       });
   }
 
+  loadLatamContent() {
+    this.isLatamSelected = this.router.url.includes('latam') ? true : false;
+    if (this.isLatamSelected) {
+      this.getCountries();
+      this.getRetailers();
+    }
+  }
+
+  getCountries() {
+    return this.usersMngmtService.getCountries()
+      .toPromise()
+      .then((res: any[]) => {
+        this.countryList = res;
+        this.filteredCountryList = res;
+        this.countries.patchValue([...this.countryList.map(item => item)]);
+        this.prevCountries = this.countries.value;
+        this.countriesErrorMsg && delete this.countriesErrorMsg;
+      })
+      .catch((error) => {
+        this.countriesErrorMsg = 'Error al consultar ciudades';
+        console.error(`[general-filers.component]: ${error}`);
+      });
+  }
+
+  getRetailers() {
+    return this.usersMngmtService.getRetailers()
+      .toPromise()
+      .then((res: any[]) => {
+        const retailers = res.map(retailer => {
+          return { id: retailer.id, name: `${retailer.country_code} - ${retailer.name}` }
+        });
+
+        this.retailerList = retailers;
+        this.filteredRetailerList = retailers;
+
+        this.retailers.patchValue([...this.retailerList.map(item => item)]);
+        this.prevRetailers = this.retailers.value;
+        this.retailersErrorMsg && delete this.retailersErrorMsg;
+      })
+      .catch((error) => {
+        this.retailersErrorMsg = 'Error al consultar retailers';
+        console.error(`[general-filers.component]: ${error}`);
+      });
+  }
+
   getSectors() {
     return this.usersMngmtService.getSectors()
       .toPromise()
@@ -231,8 +296,8 @@ export class GeneralFiltersComponent implements OnInit {
 
   getCampaigns() {
     this.campaigns.setValue([]);
-    this.campaignsFilter = '';
-    this.filteredCampaigns = false;
+    this.campaignFilter = '';
+    this.filteredCampaign = false;
 
     this.campaignsReqStatus = 1;
     const sectorsStrList = this.convertArrayToString(this.sectors.value, 'id');
@@ -265,16 +330,21 @@ export class GeneralFiltersComponent implements OnInit {
   }
 
   areAllCampaignsSelected(): boolean {
-    if (this.filteredCampaigns) {
+    if (this.filteredCampaign) {
       return false;
     }
     return JSON.stringify(this.campaignList) == JSON.stringify(this.campaigns.value) ? true : false;
   }
 
-  filterCampaigns(value) {
-    this.campaignList = this.filteredCampaignList.filter(camp => camp.name.toLowerCase().includes(value.toLowerCase()));
+  filterFromList(listName: string, value: string) {
+    const arrayReference = `${listName}List`;
+    const listNamePascalCase = `${listName.charAt(0).toUpperCase()}${listName.slice(1)}`;
+    const filteredArrayReference = `filtered${listNamePascalCase}List`;
+    const filteredFlagReference = `filtered${listNamePascalCase}`;
 
-    this.filteredCampaigns = value.length > 0 ? true : false;
+    this[arrayReference] = this[filteredArrayReference].filter(camp => camp.name.toLowerCase().includes(value.toLowerCase()));
+
+    this[filteredFlagReference] = value.length > 0 ? true : false;
   }
 
   applyFilters() {
