@@ -5,11 +5,11 @@ import { FiltersStateService } from '../../services/filters-state.service';
 import { OverviewService } from '../../services/overview.service';
 
 @Component({
-  selector: 'app-latam-coop',
-  templateUrl: './latam-coop.component.html',
-  styleUrls: ['./latam-coop.component.scss']
+  selector: 'app-overview-latam',
+  templateUrl: './overview-latam.component.html',
+  styleUrls: ['./overview-latam.component.scss']
 })
-export class LatamCoopComponent implements OnInit, OnDestroy {
+export class OverviewLatamComponent implements OnInit, OnDestroy {
 
   activeTabView = 1;
 
