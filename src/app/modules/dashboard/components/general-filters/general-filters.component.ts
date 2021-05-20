@@ -378,7 +378,6 @@ export class GeneralFiltersComponent implements OnInit {
   }
 
   applyFilters(emitChange?: boolean) {
-    console.log('applyFilters')
     this.filtersStateService.selectPeriod({ startDate: this.startDate.value._d, endDate: this.endDate.value._d });
     this.filtersStateService.selectSectors(this.sectors.value);
     this.filtersStateService.selectCategories(this.categories.value);
@@ -388,7 +387,6 @@ export class GeneralFiltersComponent implements OnInit {
 
     // in init or when Filter button is clicked
     if (emitChange) {
-      console.log('emit change')
       this.filtersStateService.filtersChange();
     }
   }
