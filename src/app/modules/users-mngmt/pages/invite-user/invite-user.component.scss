@@ -33,3 +33,24 @@
         width: 130px;
     }
 }
+
+
+.options-container {
+    height: 400px;
+    overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+.options-filter {
+    .form-control {
+        height: auto;
+        padding: 0;
+    }
+
+    .input-group-text {
+        padding: 0.525rem 0.75rem;
+    }
+}

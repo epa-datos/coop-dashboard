@@ -45,6 +45,9 @@ export class InviteUserComponent implements OnInit {
   inviteReqStatus: number = 0;
   inviteErrorMsg: string;
 
+  countriesFilter: string;
+  retailersFilter: string;
+
   constructor(
     private fb: FormBuilder,
     private usersMngmtService: UsersMngmtService
@@ -102,7 +105,13 @@ export class InviteUserComponent implements OnInit {
     return this.usersMngmtService.getRetailers()
       .toPromise()
       .then((resp: any[]) => {
-        this.retailers = resp;
+        const retailers = resp.map(retailer => {
+          return { id: retailer.id, name: `${retailer.country_code} - ${retailer.name}` }
+        })
+
+        retailers.sort((a, b) => a.name.localeCompare(b.name));
+
+        this.retailers = retailers;
       })
       .catch((error) => {
         console.error(`[invite-user.component]: ${error}`);
@@ -144,6 +153,16 @@ export class InviteUserComponent implements OnInit {
 
     // add validators based on selected role
     this.addFormValidators();
+
+    if (this.countriesFilter) {
+      this.filterFromList('countries', '');
+      delete this.countriesFilter;
+    }
+
+    if (this.retailersFilter) {
+      this.filterFromList('retailers', '');
+      delete this.retailersFilter;
+    }
   }
 
   fillFormOptions() {
@@ -282,6 +301,15 @@ export class InviteUserComponent implements OnInit {
     });
 
     return permissions;
+  }
+
+  filterFromList(listName: string, value: string) {
+    this[listName].forEach(element => {
+      element.hidden && delete element.hidden;
+      if (!element.name.toLowerCase().includes(value.toLowerCase())) {
+        element.hidden = true;
+      }
+    });
   }
 
   onSubmit() {

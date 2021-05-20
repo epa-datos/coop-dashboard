@@ -46,7 +46,7 @@
 
                             <div class="col-12 col-sm-6">
                                 <mat-select formControlName="role" placeholder="Select a role" [(value)]="selectedRole"
-                                    (selectionChange)="roleChange()">
+                                    (selectionChange)="roleChange()" disableOptionCentering>
                                     <mat-option *ngFor="let role of roles" [value]="role" [ngSwitch]="role.name">
                                         <span *ngSwitchCase="'admin'"> {{ 'administrador' | titlecase }}</span>
                                         <span *ngSwitchCase="'country'"> {{ 'país' | titlecase }}</span>
@@ -105,7 +105,8 @@
                                                 </div>
 
                                                 <div class="col-12 col-lg-6 mb-2">
-                                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    <button *ngIf="countriesFilter?.length === 0 || !countriesFilter"
+                                                        type="button" class="btn btn-outline-primary btn-sm"
                                                         (click)="convertAllOptionsTo('countries')">
                                                         <div *ngIf="!allOptionsSelected('countries')">
                                                             <i class="fas fa-check"></i>
@@ -123,16 +124,37 @@
                                                 </div>
                                             </div>
 
-                                            <div class="custom-control custom-control-alternative custom-checkbox my-1"
-                                                *ngFor="let country of countries; let i = index"
-                                                formArrayName="countries">
-                                                <input type="checkbox" class="custom-control-input"
-                                                    [formControlName]="i" [id]="'country-custom-checkbox-'+i">
-                                                <label class="custom-control-label"
-                                                    [for]="'country-custom-checkbox-'+i">
-                                                    <span class="text-muted">{{ country.name }}</span>
-                                                </label>
+                                            <div class="row">
+                                                <div class="col-12 col-lg-7 mb-2 options-filter">
+                                                    <div class="input-group input-group-alternative">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-search"></i></span>
+                                                        </div>
+                                                        <input class="form-control" [(ngModel)]="countriesFilter"
+                                                            matInput type="text"
+                                                            (keyup)="filterFromList('countries', $event.target.value)"
+                                                            placeholder="Buscar País"
+                                                            [ngModelOptions]="{standalone: true}">
+                                                    </div>
+                                                </div>
                                             </div>
+
+                                            <div class="options-container">
+                                                <ng-container *ngFor="let country of countries; let i = index"
+                                                    formArrayName="countries">
+                                                    <div [hidden]="country.hidden"
+                                                        class="custom-control custom-control-alternative custom-checkbox my-1">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            [formControlName]="i" [id]="'country-custom-checkbox-'+i">
+                                                        <label class="custom-control-label"
+                                                            [for]="'country-custom-checkbox-'+i">
+                                                            <span class="text-muted">{{ country.name }}</span>
+                                                        </label>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+
                                         </ng-container>
 
                                         <!-- RETAILERS -->
@@ -144,7 +166,8 @@
                                                 </div>
 
                                                 <div class="col-12 col-lg-6 mb-2">
-                                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    <button *ngIf="retailersFilter?.length === 0 || !retailersFilter"
+                                                        type="button" class="btn btn-outline-primary btn-sm"
                                                         (click)="convertAllOptionsTo('retailers')">
                                                         <div *ngIf="!allOptionsSelected('retailers')">
                                                             <i class="fas fa-check"></i>
@@ -162,15 +185,36 @@
                                                 </div>
                                             </div>
 
-                                            <div class="custom-control custom-control-alternative custom-checkbox my-1"
-                                                *ngFor="let retailer of retailers; let i = index"
-                                                formArrayName="retailers">
-                                                <input type="checkbox" class="custom-control-input"
-                                                    [formControlName]="i" [id]="'retailer-custom-checkbox-'+i">
-                                                <label class="custom-control-label"
-                                                    [for]="'retailer-custom-checkbox-'+i">
-                                                    <span class="text-muted">{{ retailer.name }}</span>
-                                                </label>
+                                            <div class="row">
+                                                <div class="col-12 col-lg-7 mb-2 options-filter">
+                                                    <div class="input-group input-group-alternative">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i
+                                                                    class="fas fa-search"></i></span>
+                                                        </div>
+                                                        <input class="form-control" [(ngModel)]="retailersFilter"
+                                                            matInput type="text"
+                                                            (keyup)="filterFromList('retailers', $event.target.value)"
+                                                            placeholder="Buscar Retailer"
+                                                            [ngModelOptions]="{standalone: true}">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="options-container">
+                                                <ng-container *ngFor="let retailer of retailers; let i = index"
+                                                    formArrayName="retailers">
+                                                    <div [hidden]="retailer.hidden"
+                                                        class="custom-control custom-control-alternative custom-checkbox my-1">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            [formControlName]="i" [id]="'retailer-custom-checkbox-'+i">
+                                                        <label class="custom-control-label"
+                                                            [for]="'retailer-custom-checkbox-'+i">
+                                                            <span class="text-muted">{{ retailer.name }}</span>
+                                                        </label>
+                                                    </div>
+                                                </ng-container>
+
                                             </div>
                                         </ng-container>
                                     </div>
