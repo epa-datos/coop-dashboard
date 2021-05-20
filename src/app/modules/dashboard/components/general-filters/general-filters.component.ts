@@ -68,6 +68,7 @@ export class GeneralFiltersComponent implements OnInit {
   countryID: number;
   retailerID: number;
   isLatamSelected: boolean;
+  defaultPeriod: any = {};
 
   form: FormGroup;
   countries: AbstractControl;
@@ -113,7 +114,7 @@ export class GeneralFiltersComponent implements OnInit {
 
     await this.getSectors();
     await this.getCategories();
-    this.applyFilters();
+    this.applyFilters(true);
 
     const selectedCountry = this.appStateService.selectedCountry;
     const selectedRetailer = this.appStateService.selectedRetailer;
@@ -136,23 +137,35 @@ export class GeneralFiltersComponent implements OnInit {
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       this.retailerID = retailer?.id;
 
-      if (this.campaigns.value) {
-        this.campaigns.setValue([]);
-        this.campaignFilter = '';
-      }
-
       if (this.retailerID) {
         this.getCampaigns();
       }
+
+      this.restoreFilters(false);
     });
 
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
       this.countryID = country?.id;
-      if (this.campaigns.value) {
-        this.campaigns.setValue([]);
-        this.campaignFilter = '';
-      }
+      this.restoreFilters(false);
     });
+  }
+
+  restoreFilters(changeFromButton: boolean) {
+    this.startDate.setValue(this.defaultPeriod.startDate);
+    this.endDate.setValue(this.defaultPeriod.endDate);
+    this.countryList && this.countries.patchValue([...this.countryList.map(item => item)]);
+    this.retailerList && this.retailers.patchValue([...this.retailerList.map(item => item)]);
+    this.sectorList && this.sectors.patchValue([...this.sectorList.map(item => item)]);
+    this.categoryList && this.categories.patchValue([...this.categoryList.map(item => item)]);
+    this.sourceList && this.sources.patchValue([...this.sourceList.map(item => item)]);
+    this.campaigns.setValue([]);
+
+    this.countryFilter && delete this.countryFilter;
+    this.retailerFilter && delete this.retailerFilter;
+    this.campaignFilter && delete this.campaignFilter;
+
+    this.applyFilters(changeFromButton);
+    this.filtersStateService.convertFiltersToQueryParams();
   }
 
   loadForm() {
@@ -184,7 +197,8 @@ export class GeneralFiltersComponent implements OnInit {
     this.campaigns = this.form.controls['campaigns'];
     this.sources = this.form.controls['sources']
 
-    this.prevDate = { startDate: startDate, endDate: endDate }
+    this.defaultPeriod = { startDate: startDate, endDate: endDate };
+    this.prevDate = { startDate: startDate, endDate: endDate };
 
     this.formSub = this.form.valueChanges
       .pipe(debounceTime(5))
@@ -349,7 +363,7 @@ export class GeneralFiltersComponent implements OnInit {
     this[filteredFlagReference] = value.length > 0 ? true : false;
   }
 
-  applyFilters() {
+  applyFilters(emitChange?: boolean) {
     this.filtersStateService.selectPeriod({ startDate: this.startDate.value._d, endDate: this.endDate.value._d });
     this.filtersStateService.selectSectors(this.sectors.value);
     this.filtersStateService.selectCategories(this.categories.value);
@@ -357,7 +371,10 @@ export class GeneralFiltersComponent implements OnInit {
     const areAllCampsSelected = this.areAllCampaignsSelected();
     this.filtersStateService.selectCampaigns(areAllCampsSelected ? [] : this.campaigns.value);
 
-    this.filtersStateService.filtersChange();
+    // in init or when Filter button is clicked
+    if (emitChange) {
+      this.filtersStateService.filtersChange();
+    }
   }
 
   ngOnDestroy() {
