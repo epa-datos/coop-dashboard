@@ -68,7 +68,6 @@ export class GeneralFiltersComponent implements OnInit {
   countryID: number;
   retailerID: number;
   isLatamSelected: boolean;
-  defaultPeriod: any = {};
 
   form: FormGroup;
   countries: AbstractControl;
@@ -89,8 +88,10 @@ export class GeneralFiltersComponent implements OnInit {
   prevRetailers: any[];
   prevSectors: any[];
   prevCategories: any[];
-  prevDate: any = {};
+  prevPeriod: any = {};
   prevCamps: any[];
+
+  defaultPeriod: any = {};
 
   campaignsReqStatus: number = 0;
 
@@ -151,8 +152,11 @@ export class GeneralFiltersComponent implements OnInit {
   }
 
   restoreFilters(changeFromButton: boolean) {
-    this.startDate.setValue(this.defaultPeriod.startDate);
-    this.endDate.setValue(this.defaultPeriod.endDate);
+    if (this.defaultPeriod) {
+      this.startDate.setValue(this.defaultPeriod.startDate);
+      this.endDate.setValue(this.defaultPeriod.endDate);
+    }
+
     this.countryList && this.countries.patchValue([...this.countryList.map(item => item)]);
     this.retailerList && this.retailers.patchValue([...this.retailerList.map(item => item)]);
     this.sectorList && this.sectors.patchValue([...this.sectorList.map(item => item)]);
@@ -198,7 +202,7 @@ export class GeneralFiltersComponent implements OnInit {
     this.sources = this.form.controls['sources']
 
     this.defaultPeriod = { startDate: startDate, endDate: endDate };
-    this.prevDate = { startDate: startDate, endDate: endDate };
+    this.prevPeriod = { startDate: startDate, endDate: endDate };
 
     this.formSub = this.form.valueChanges
       .pipe(debounceTime(5))
@@ -207,6 +211,7 @@ export class GeneralFiltersComponent implements OnInit {
 
         if (this.sectors.value && this.categories.value && !this.campaigns.value && this.countryID) {
           // initial campaigns load
+          // console.log('initial campaigns load')
           this.getCampaigns();
         } else if (this.sectors.value?.length > 0 && this.categories.value?.length > 0 && this.form.valid) {
           if (this.prevSectors !== this.sectors.value) {
@@ -219,11 +224,11 @@ export class GeneralFiltersComponent implements OnInit {
             // console.log('different categories')
             this.getCampaigns();
             this.prevCategories = this.categories.value;
-          } else if (this.prevDate.startDate.getTime() !== this.startDate.value._d.getTime() || this.prevDate.endDate.getTime() !== this.endDate.value._d.getTime()) {
+          } else if (this.prevPeriod.startDate.getTime() !== this.startDate.value._d.getTime() || this.prevPeriod.endDate.getTime() !== this.endDate.value._d.getTime()) {
             // change in date selection
             // console.log('different date')
             this.getCampaigns();
-            this.prevDate = { startDate: this.startDate.value._d, endDate: this.endDate.value._d }
+            this.prevPeriod = { startDate: this.startDate.value._d, endDate: this.endDate.value._d }
           } else if (this.prevCamps !== this.campaigns.value) {
             // change in campaign selection
             // console.log('different campaigns')
@@ -247,8 +252,10 @@ export class GeneralFiltersComponent implements OnInit {
       .then((res: any[]) => {
         this.countryList = res;
         this.filteredCountryList = res;
+
         this.countries.patchValue([...this.countryList.map(item => item)]);
         this.prevCountries = this.countries.value;
+
         this.countriesErrorMsg && delete this.countriesErrorMsg;
       })
       .catch((error) => {
@@ -272,6 +279,7 @@ export class GeneralFiltersComponent implements OnInit {
 
         this.retailers.patchValue([...this.retailerList.map(item => item)]);
         this.prevRetailers = this.retailers.value;
+
         this.retailersErrorMsg && delete this.retailersErrorMsg;
       })
       .catch((error) => {
@@ -285,8 +293,10 @@ export class GeneralFiltersComponent implements OnInit {
       .toPromise()
       .then((res: any[]) => {
         this.sectorList = res;
+
         this.sectors.patchValue([...this.sectorList.map(item => item)]);
         this.prevSectors = this.sectors.value;
+
         this.sectorsErrorMsg && delete this.sectorsErrorMsg;
       })
       .catch((error) => {
@@ -300,8 +310,10 @@ export class GeneralFiltersComponent implements OnInit {
       .toPromise()
       .then((res: any[]) => {
         this.categoryList = res;
+
         this.categories.patchValue([...this.categoryList.map(item => item)]);
         this.prevCategories = this.categories.value;
+
         this.categoriesErrorMsg && delete this.categoriesErrorMsg;
       })
       .catch((error) => {
@@ -324,6 +336,7 @@ export class GeneralFiltersComponent implements OnInit {
         (res: any[]) => {
           this.campaignList = res;
           this.filteredCampaignList = res;
+
           this.campaignsErrorMsg && delete this.campaignsErrorMsg;
           this.campaignsReqStatus = 2;
         },
@@ -349,7 +362,8 @@ export class GeneralFiltersComponent implements OnInit {
     if (this.filteredCampaign) {
       return false;
     }
-    return JSON.stringify(this.campaignList) == JSON.stringify(this.campaigns.value) ? true : false;
+
+    return this.arraysAreEquals(this.campaignList, this.campaigns.value);
   }
 
   filterFromList(listName: string, value: string) {
@@ -364,6 +378,7 @@ export class GeneralFiltersComponent implements OnInit {
   }
 
   applyFilters(emitChange?: boolean) {
+    console.log('applyFilters')
     this.filtersStateService.selectPeriod({ startDate: this.startDate.value._d, endDate: this.endDate.value._d });
     this.filtersStateService.selectSectors(this.sectors.value);
     this.filtersStateService.selectCategories(this.categories.value);
@@ -373,8 +388,13 @@ export class GeneralFiltersComponent implements OnInit {
 
     // in init or when Filter button is clicked
     if (emitChange) {
+      console.log('emit change')
       this.filtersStateService.filtersChange();
     }
+  }
+
+  arraysAreEquals(array1: any[], array2: any[]): boolean {
+    return JSON.stringify(array1) == JSON.stringify(array2) ? true : false;
   }
 
   ngOnDestroy() {
