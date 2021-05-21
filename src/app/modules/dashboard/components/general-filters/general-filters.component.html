@@ -22,7 +22,15 @@
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option *ngFor="let country of countryList" [value]="country">{{country.name}}</mat-option>
+                <mat-option #allSelectedCountries
+                    (click)="toggleAllSelection('allSelectedCountries','countries', 'countryList')" [value]="0"
+                    class="font-weight-bold">
+                    Todos
+                </mat-option>
+                <mat-option *ngFor="let country of countryList" [value]="country"
+                    (click)="tosslePerOne('allSelectedCountries', 'countries', 'countryList')">
+                    {{country.name}}
+                </mat-option>
             </mat-select>
             <small class="text-danger" *ngIf="countries?.value?.length < 1 && countries.touched">
                 Selecciona al menos un País
@@ -53,7 +61,15 @@
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option *ngFor="let retailer of retailerList" [value]="retailer">{{retailer.name}}</mat-option>
+                <mat-option #allSelectedRetailers
+                    (click)="toggleAllSelection('allSelectedRetailers','retailers', 'retailerList')" [value]="0"
+                    class="font-weight-bold">
+                    Todos
+                </mat-option>
+                <mat-option *ngFor="let retailer of retailerList" [value]="retailer"
+                    (click)="tosslePerOne('allSelectedRetailers', 'retailers', 'retailerList')">
+                    {{retailer.name}}
+                </mat-option>
             </mat-select>
             <small class="text-danger" *ngIf="retailers?.value?.length < 1 && retailers.touched">
                 Selecciona al menos un Retailer
@@ -97,7 +113,15 @@
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option *ngFor="let sector of sectorList" [value]="sector">{{sector.name}}</mat-option>
+                <mat-option #allSelectedSectors
+                    (click)="toggleAllSelection('allSelectedSectors','sectors', 'sectorList')" [value]="0"
+                    class="font-weight-bold">
+                    Todos
+                </mat-option>
+                <mat-option *ngFor="let sector of sectorList" [value]="sector"
+                    (click)="tosslePerOne('allSelectedSectors', 'sectors', 'sectorList')">
+                    {{sector.name}}
+                </mat-option>
             </mat-select>
             <small class="text-danger" *ngIf="sectors?.value?.length < 1 && sectors.touched">
                 Selecciona al menos un Sector
@@ -120,7 +144,15 @@
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option *ngFor="let category of categoryList" [value]="category">{{category.name}}</mat-option>
+                <mat-option #allSelectedCategories
+                    (click)="toggleAllSelection('allSelectedCategories','categories', 'categoryList')" [value]="0"
+                    class="font-weight-bold">
+                    Todas
+                </mat-option>
+                <mat-option *ngFor="let category of categoryList" [value]="category"
+                    (click)="tosslePerOne('allSelectedCategories', 'categories', 'categoryList')">
+                    {{category.name}}
+                </mat-option>
             </mat-select>
             <small class="text-danger" *ngIf="categories?.value?.length < 1 && categories.touched">
                 Selecciona al menos una Categoría
@@ -153,7 +185,15 @@
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option *ngFor="let campaign of campaignList" [value]="campaign">{{campaign.name}}</mat-option>
+                <mat-option #allSelectedCampaigns
+                    (click)="toggleAllSelection('allSelectedCampaigns','campaigns', 'campaignList')" [value]="0"
+                    class="font-weight-bold">
+                    Todas
+                </mat-option>
+                <mat-option *ngFor="let campaign of campaignList" [value]="campaign"
+                    (click)="tosslePerOne('allSelectedCampaigns', 'campaigns', 'campaignList')">
+                    {{campaign.name}}
+                </mat-option>
             </mat-select>
             <small class="text-muted mt-1" *ngIf="campaignList?.length < 1 && campaignsReqStatus === 2">
                 No existen campañas para el Periodo, Sectores y Categorías seleccionados
@@ -163,7 +203,7 @@
             </small>
         </div>
 
-        <!-- medium -->
+        <!-- source -->
         <div [hidden]="!isLatamSelected" class="col-12 col-sm-6 col-lg-2 mb-4">
             <span class="mb-1 h4">Fuente</span>
             <mat-select formControlName="sources" multiple placeholder="Selecciona una Fuente">
@@ -176,7 +216,15 @@
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option *ngFor="let source of sourceList" [value]="source">{{source.name}}</mat-option>
+                <mat-option #allSelectedSources
+                    (click)="toggleAllSelection('allSelectedSources','sources', 'sourceList')" [value]="0"
+                    class="font-weight-bold">
+                    Todas
+                </mat-option>
+                <mat-option *ngFor="let source of sourceList" [value]="source"
+                    (click)="tosslePerOne('allSelectedSources', 'sources', 'sourceList')">
+                    {{source.name}}
+                </mat-option>
             </mat-select>
         </div>
     </div>
@@ -189,7 +237,7 @@
         (!endDate.valid && endDate.touched) ||
         (sectors?.value?.length < 1 && sectors.touched) ||
         (categories?.value?.length < 1 && categories.touched)
-        " (click)="applyFilters(true)">
+        " (click)="applyFilters()">
             <i class="fas fa-filter mr-2"></i>
             Filtrar
         </button>

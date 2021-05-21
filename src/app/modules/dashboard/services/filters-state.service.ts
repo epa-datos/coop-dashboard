@@ -11,24 +11,28 @@ export class FiltersStateService {
   private periodSource = new Subject<Period>();
   period$ = this.periodSource.asObservable();
   period: Period;
+  periodInitial: Period;
   periodQParams;
 
   // selected sectors
   private sectorsSource = new Subject<any[]>();
   sectors$ = this.sectorsSource.asObservable();
   sectors: any[];
+  sectorsInitial: any[];
   sectorsQParams;
 
   // selected categories
   private categoriesSource = new Subject<any[]>();
   categories$ = this.categoriesSource.asObservable();
   categories: any[];
+  categoriesInitial: any[];
   categoriesQParams;
 
   // selected campaigns
   private cammpaignsSource = new Subject<any[]>();
   campaigns$ = this.cammpaignsSource.asObservable();
   campaigns: any[];
+  campaignsInitial: any[];
   campaignsQParams;
 
   // filtersChange
@@ -67,15 +71,18 @@ export class FiltersStateService {
   convertArrayToQueryParams(array, param: string): string {
     let stringArray = '';
     for (let i = 0; i < array.length; i++) {
-      stringArray = stringArray.concat(',', array[i][param]);
+      stringArray = array[i][param] ? stringArray.concat(',', array[i][param]) : stringArray;
     }
 
     return stringArray.substring(1);
   }
 
-  clearCampaignsSelection() {
+  restoreFilters() {
+    this.period = this.periodInitial;
+    this.sectors = this.sectorsInitial;
+    this.categories = this.categoriesInitial;
     this.selectCampaigns([]);
-    delete this.campaignsQParams;
+    this.convertFiltersToQueryParams();
   }
 
   filtersChange() {

@@ -49,7 +49,7 @@ export class CountryComponent implements OnInit, OnDestroy {
         if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
 
           if (!this.retailerID) {
-            this.filtersStateService.clearCampaignsSelection();
+            this.filtersStateService.restoreFilters();
             this.requestInfoSource.next();
           }
         }

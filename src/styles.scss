@@ -94,6 +94,12 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
     }
 }
 
+.mat-select-panel {
+  &::-webkit-scrollbar {
+    width: 6px !important;
+  }
+}
+
 .mat-select-disabled .mat-select-trigger {
   background-color: rgba(0,0,0,.02) !important;
 }
