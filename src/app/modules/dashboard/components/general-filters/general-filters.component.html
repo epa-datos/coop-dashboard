@@ -15,10 +15,16 @@
                 </div>
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{countries.value ? countries.value[0]?.name : ''}}</span>
-                        <span *ngIf="countries.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{countries.value?.length === 2 ? 'otro' : 'otros'}}
-                            {{ countries.value?.length === 2 ? '' : countries.value.length - 1}})
+                        <span class="select-value">
+                            {{countries.value
+                            ? countries.value[0]?.name
+                            ? countries.value[0]?.name
+                            : countries.value[1]?.name
+                            : ''}}
+                        </span>
+                        <span *ngIf="countriesCounter > 1" class="example-additional-selection ml-1">
+                            (+ {{countriesCounter === 2 ? 'otro' : 'otros'}}
+                            {{ countriesCounter === 2 ? '' : countriesCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
@@ -56,10 +62,18 @@
                 </div>
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{retailers.value ? retailers.value[0]?.name : ''}}</span>
+                        <span class="select-value">
+                            {{
+                            retailers.value
+                            ? retailers.value[0]?.name
+                            ? retailers.value[0]?.name
+                            : retailers.value[1]?.name
+                            : ''
+                            }}
+                        </span>
                         <span *ngIf="retailers.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{retailers.value?.length === 2 ? 'otro' : 'otros'}}
-                            {{ retailers.value?.length === 2 ? '' : retailers.value.length - 1}})
+                            (+ {{retailersCounter === 2 ? 'otro' : 'otros'}}
+                            {{ retailersCounter === 2 ? '' : retailersCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
@@ -110,15 +124,22 @@
             <mat-select formControlName="sectors" multiple placeholder="Selecciona un Sector">
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{sectors.value ? sectors.value[0]?.name : ''}}</span>
+                        <span class="select-value">
+                            {{
+                            sectors.value
+                            ? sectors.value[0]?.name
+                            ? sectors.value[0]?.name
+                            : sectors.value[1]?.name
+                            : ''
+                            }}
+                        </span>
                         <span *ngIf="sectors.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{sectors.value?.length === 2 ? 'otro' : 'otros'}}
-                            {{ sectors.value?.length === 2 ? '' : sectors.value.length - 1}})
+                            (+ {{sectorsCounter ? 'otro' : 'otros'}}
+                            {{ sectorsCounter === 2 ? '' : sectorsCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option #allSelectedSectors
-                    (click)="toggleAllSelection('allSelectedSectors','sectors', 'sectorList')" [value]="0"
+                <mat-option #allSelectedSectors (click)="toggleAllSelection('sectors','sector')" [value]="0"
                     class="font-weight-bold">
                     Todos
                 </mat-option>
@@ -141,15 +162,22 @@
             <mat-select formControlName="categories" multiple placeholder="Selecciona una Categoría">
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{categories.value ? categories.value[0]?.name : ''}}</span>
+                        <span class="select-value">
+                            {{
+                            categories.value
+                            ? categories.value[0]?.name
+                            ? categories.value[0]?.name
+                            : categories.value[1]?.name
+                            : ''
+                            }}
+                        </span>
                         <span *ngIf="categories.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{categories.value?.length === 2 ? 'otra' : 'otras'}}
-                            {{ categories.value?.length === 2 ? '' : categories.value.length - 1}})
+                            (+ {{categoriesCounter === 2 ? 'otra' : 'otras'}}
+                            {{ categoriesCounter === 2 ? '' : categoriesCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option #allSelectedCategories
-                    (click)="toggleAllSelection('allSelectedCategories','categories', 'categoryList')" [value]="0"
+                <mat-option #allSelectedCategories (click)="toggleAllSelection('categories', 'category')" [value]="0"
                     class="font-weight-bold">
                     Todas
                 </mat-option>
@@ -182,14 +210,21 @@
                 </div>
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{campaigns.value ? campaigns.value[0]?.name : ''}}</span>
+                        <span class="select-value">
+                            {{
+                            campaigns.value
+                            ? campaigns.value[0]?.name
+                            ? campaigns.value[0]?.name
+                            : campaigns.value[1]?.name
+                            : ''
+                            }}
+                        </span>
                         <span *ngIf="campaigns.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{campaigns.value?.length === 2 ? 'otra' : 'otras'}}
-                            {{ campaigns.value?.length === 2 ? '' : campaigns.value.length - 1}})
+                            (+ {{campaignsCounter === 2 ? 'otra' : 'otras'}}
+                            {{ campaignsCounter === 2 ? '' : campaignsCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
-                <!-- (click)="toggleAllSelection('allSelectedCampaigns','campaigns', 'campaignList')" -->
                 <mat-option #allSelectedCampaigns (click)="toggleAllSelection('campaigns', 'campaign')" [value]="0"
                     class="font-weight-bold">
                     Todas
@@ -216,15 +251,22 @@
             <mat-select formControlName="sources" multiple placeholder="Selecciona una Fuente">
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{sources.value ? sources.value[0]?.name : ''}}</span>
+                        <span class="select-value">
+                            {{
+                            sources.value
+                            ? sources.value[0]?.name
+                            ? sources.value[0]?.name
+                            : sources.value[1]?.name
+                            : ''
+                            }}
+                        </span>
                         <span *ngIf="sources.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{sources.value?.length === 2 ? 'otro' : 'otros'}}
-                            {{ sources.value?.length === 2 ? '' : sources.value.length - 1}})
+                            (+ {{sourcesCounter === 2 ? 'otra' : 'otras'}}
+                            {{ sourcesCounter === 2 ? '' : sourcesCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option #allSelectedSources
-                    (click)="toggleAllSelection('allSelectedSources','sources', 'sourceList')" [value]="0"
+                <mat-option #allSelectedSources (click)="toggleAllSelection('sources', 'source')" [value]="0"
                     class="font-weight-bold">
                     Todas
                 </mat-option>
@@ -240,7 +282,10 @@
 <div class="row">
     <div class="col-12 text-right">
         <button type="button" class="btn btn-primary" [disabled]="
-        (!startDate.valid && startDate.touched) || 
+        (isLatamSelected && this.countries?.value?.length < 1) ||
+        (isLatamSelected && this.retailers?.value?.length < 1) ||
+        (isLatamSelected && this.sources?.value?.length < 1) ||
+        (!startDate.valid && startDate.touched) ||
         (!endDate.valid && endDate.touched) ||
         (sectors?.value?.length < 1 && sectors.touched) ||
         (categories?.value?.length < 1 && categories.touched)

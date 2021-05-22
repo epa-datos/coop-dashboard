@@ -101,6 +101,13 @@ export class GeneralFiltersComponent implements OnInit {
   categoriesErrorMsg: string;
   campaignsErrorMsg: string;
 
+  countriesCounter: number;
+  retailersCounter: number;
+  sectorsCounter: number;
+  categoriesCounter: number;
+  campaignsCounter: number = 0;
+  sourcesCounter: number = this.sourceList.length;
+
   @ViewChild('allSelectedCountries') private allSelectedCountries: MatOption;
   @ViewChild('allSelectedRetailers') private allSelectedRetailers: MatOption;
   @ViewChild('allSelectedSectors') private allSelectedSectors: MatOption;
@@ -175,6 +182,13 @@ export class GeneralFiltersComponent implements OnInit {
     this.countryFilter && delete this.countryFilter;
     this.retailerFilter && delete this.retailerFilter;
     this.campaignFilter && delete this.campaignFilter;
+
+    this.countriesCounter = this.filtersStateService.countriesInitial?.length;
+    this.retailersCounter = this.filtersStateService.retailersInitial?.length;
+    this.sectorsCounter = this.filtersStateService.sectorsInitial?.length;
+    this.categoriesCounter = this.filtersStateService.categoriesInitial?.length;
+    this.campaignsCounter = 0;
+    this.sourcesCounter = this.sourceList.length;
   }
 
   loadForm() {
@@ -258,6 +272,8 @@ export class GeneralFiltersComponent implements OnInit {
       .then((res: any[]) => {
         this.countryList = res;
         this.filteredCountryList = res;
+        this.countriesCounter = res.length;
+        this.filtersStateService.countriesInitial = res;
 
         this.countries.patchValue([...this.countryList.map(item => item), 0]);
         this.prevCountries = this.countries.value;
@@ -282,6 +298,8 @@ export class GeneralFiltersComponent implements OnInit {
 
         this.retailerList = retailers;
         this.filteredRetailerList = retailers;
+        this.retailersCounter = retailers.length;
+        this.filtersStateService.retailersInitial = res;
 
         this.retailers.patchValue([...this.retailerList.map(item => item), 0]);
         this.prevRetailers = this.retailers.value;
@@ -299,10 +317,11 @@ export class GeneralFiltersComponent implements OnInit {
       .toPromise()
       .then((res: any[]) => {
         this.sectorList = res;
+        this.sectorsCounter = res.length;
+        this.filtersStateService.sectorsInitial = res;
 
         this.sectors.patchValue([...this.sectorList.map(item => item), 0]);
         this.prevSectors = this.sectors.value;
-        this.filtersStateService.sectorsInitial = this.sectors.value;
 
         this.sectorsErrorMsg && delete this.sectorsErrorMsg;
       })
@@ -317,10 +336,11 @@ export class GeneralFiltersComponent implements OnInit {
       .toPromise()
       .then((res: any[]) => {
         this.categoryList = res;
+        this.categoriesCounter = res.length;
+        this.filtersStateService.categoriesInitial = res;
 
         this.categories.patchValue([...this.categoryList.map(item => item), 0]);
         this.prevCategories = this.categories.value;
-        this.filtersStateService.categoriesInitial = this.categories.value;
 
         this.categoriesErrorMsg && delete this.categoriesErrorMsg;
       })
@@ -376,7 +396,7 @@ export class GeneralFiltersComponent implements OnInit {
 
   /**
   * filterFromList
-  * Generic function to be used for sarch filter when all options in filters are selected by default
+  * Generic function to be used for sarch filter
   * @param controlRef // associated form control name
   * @param listRef // associated elementList name
   * @param value // filtered value
@@ -440,11 +460,11 @@ export class GeneralFiltersComponent implements OnInit {
     const filteredArrayRef = `filtered${listRefPascalCase}List`;
     const matOptionRef = `allSelected${controlRefPascalCase}`;
 
-
     const allSelected = this[matOptionRef].selected;
     const shownElements = this[arrayReference].filter(item => !item.hidden);
 
-    this[controlRef].patchValue(this[filteredArrayRef].filter(item => {
+    const initialArrayRef = this[filteredArrayRef] ? filteredArrayRef : arrayReference;
+    this[controlRef].patchValue(this[initialArrayRef].filter(item => {
       const isSelectedElement = this[controlRef].value.includes(item);
       const isShownElement = shownElements.includes(item);
 
@@ -468,9 +488,12 @@ export class GeneralFiltersComponent implements OnInit {
     }));
 
     this.allAreItemsSelected(controlRef, arrayReference, matOptionRef);
+    this.updateSelectionCounter(controlRef);
   }
 
   tosslePerOne(matOptionRef: string, controlRef: string, listRef: string) {
+    this.updateSelectionCounter(controlRef);
+
     if (this[matOptionRef].selected) {
       this[matOptionRef].deselect();
       return false;
@@ -481,10 +504,14 @@ export class GeneralFiltersComponent implements OnInit {
     }
   }
 
+  updateSelectionCounter(controlRef: string) {
+    const counterRef = `${controlRef}Counter`;
+
+    const selectionCounter = this[controlRef].value.filter(item => item.id);
+    this[counterRef] = selectionCounter.length;
+  }
+
   applyFilters() {
-    console.log('countries.value', this.countries.value)
-    console.log('retailers.value', this.retailers.value)
-    console.log('campaigns.value', this.campaigns.value)
     this.filtersStateService.selectPeriod({ startDate: this.startDate.value._d, endDate: this.endDate.value._d });
     this.filtersStateService.selectSectors(this.sectors.value);
     this.filtersStateService.selectCategories(this.categories.value);
