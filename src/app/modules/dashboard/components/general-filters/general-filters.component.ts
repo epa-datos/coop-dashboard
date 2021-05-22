@@ -101,6 +101,13 @@ export class GeneralFiltersComponent implements OnInit {
   categoriesErrorMsg: string;
   campaignsErrorMsg: string;
 
+  countriesCounter: number;
+  retailersCounter: number;
+  sectorsCounter: number;
+  categoriesCounter: number;
+  campaignsCounter: number = 0;
+  sourcesCounter: number = this.sourceList.length;
+
   @ViewChild('allSelectedCountries') private allSelectedCountries: MatOption;
   @ViewChild('allSelectedRetailers') private allSelectedRetailers: MatOption;
   @ViewChild('allSelectedSectors') private allSelectedSectors: MatOption;
@@ -175,6 +182,13 @@ export class GeneralFiltersComponent implements OnInit {
     this.countryFilter && delete this.countryFilter;
     this.retailerFilter && delete this.retailerFilter;
     this.campaignFilter && delete this.campaignFilter;
+
+    this.countriesCounter = this.filtersStateService.countriesInitial?.length;
+    this.retailersCounter = this.filtersStateService.retailersInitial?.length;
+    this.sectorsCounter = this.filtersStateService.sectorsInitial?.length;
+    this.categoriesCounter = this.filtersStateService.categoriesInitial?.length;
+    this.campaignsCounter = 0;
+    this.sourcesCounter = this.sourceList.length;
   }
 
   loadForm() {
@@ -258,6 +272,8 @@ export class GeneralFiltersComponent implements OnInit {
       .then((res: any[]) => {
         this.countryList = res;
         this.filteredCountryList = res;
+        this.countriesCounter = res.length;
+        this.filtersStateService.countriesInitial = res;
 
         this.countries.patchValue([...this.countryList.map(item => item), 0]);
         this.prevCountries = this.countries.value;
@@ -282,6 +298,8 @@ export class GeneralFiltersComponent implements OnInit {
 
         this.retailerList = retailers;
         this.filteredRetailerList = retailers;
+        this.retailersCounter = retailers.length;
+        this.filtersStateService.retailersInitial = res;
 
         this.retailers.patchValue([...this.retailerList.map(item => item), 0]);
         this.prevRetailers = this.retailers.value;
@@ -299,10 +317,11 @@ export class GeneralFiltersComponent implements OnInit {
       .toPromise()
       .then((res: any[]) => {
         this.sectorList = res;
+        this.sectorsCounter = res.length;
+        this.filtersStateService.sectorsInitial = res;
 
         this.sectors.patchValue([...this.sectorList.map(item => item), 0]);
         this.prevSectors = this.sectors.value;
-        this.filtersStateService.sectorsInitial = this.sectors.value;
 
         this.sectorsErrorMsg && delete this.sectorsErrorMsg;
       })
@@ -317,10 +336,11 @@ export class GeneralFiltersComponent implements OnInit {
       .toPromise()
       .then((res: any[]) => {
         this.categoryList = res;
+        this.categoriesCounter = res.length;
+        this.filtersStateService.categoriesInitial = res;
 
         this.categories.patchValue([...this.categoryList.map(item => item), 0]);
         this.prevCategories = this.categories.value;
-        this.filtersStateService.categoriesInitial = this.categories.value;
 
         this.categoriesErrorMsg && delete this.categoriesErrorMsg;
       })
@@ -374,15 +394,121 @@ export class GeneralFiltersComponent implements OnInit {
     return this.arraysAreEquals(this.campaignList, this.campaigns.value);
   }
 
-  filterFromList(listName: string, value: string) {
-    const arrayReference = `${listName}List`;
-    const listNamePascalCase = `${listName.charAt(0).toUpperCase()}${listName.slice(1)}`;
-    const filteredArrayReference = `filtered${listNamePascalCase}List`;
-    const filteredFlagReference = `filtered${listNamePascalCase}`;
+  /**
+  * filterFromList
+  * Generic function to be used for sarch filter
+  * @param controlRef // associated form control name
+  * @param listRef // associated elementList name
+  * @param value // filtered value
+  */
 
-    this[arrayReference] = this[filteredArrayReference].filter(camp => camp.name.toLowerCase().includes(value.toLowerCase()));
+  filterFromList(controlRef: string, listRef: string, value: string) {
+    const controlRefPascalCase = `${controlRef.charAt(0).toUpperCase()}${controlRef.slice(1)}`;
+    const listRefPascalCase = `${listRef.charAt(0).toUpperCase()}${listRef.slice(1)}`;
 
+    const arrayReference = `${listRef}List`;
+    const filteredArrayRef = `filtered${listRefPascalCase}List`;
+    const matOptionRef = `allSelected${controlRefPascalCase}`;
+    const filteredFlagReference = `filtered${listRefPascalCase}`;
+
+    if (value) {
+      this[controlRef].patchValue(this[filteredArrayRef].filter(item => {
+        const isSelected = this[controlRef].value.includes(item);
+
+        if (isSelected) {
+          return this[controlRef].value.includes(item)
+        } else {
+          return this[controlRef].value.includes(item), 0
+        }
+      }));
+    }
+
+    this[arrayReference].forEach(item => {
+      delete item.hidden;
+      if (!item.name.toLowerCase().includes(value.toLowerCase())) {
+        item.hidden = true;
+      }
+    });
+
+    this.allAreItemsSelected(controlRef, arrayReference, matOptionRef);
     this[filteredFlagReference] = value.length > 0 ? true : false;
+  }
+
+  allAreItemsSelected(controlRef: string, arrayReference: string, matOptionRef: string) {
+    const shownElements = this[arrayReference].filter(item => !item.hidden);
+    let allAreSelected = true;
+    for (let item of shownElements) {
+      if (this[controlRef].value.includes(item)) {
+      } else {
+        allAreSelected = false;
+        break;
+      }
+    };
+
+    if (allAreSelected) {
+      this[matOptionRef].select();
+    } else {
+      this[matOptionRef].deselect();
+    }
+  }
+
+  toggleAllSelection(controlRef: string, listRef: string) {
+    const controlRefPascalCase = `${controlRef.charAt(0).toUpperCase()}${controlRef.slice(1)}`;
+    const listRefPascalCase = `${listRef.charAt(0).toUpperCase()}${listRef.slice(1)}`;
+
+    const arrayReference = `${listRef}List`;
+    const filteredArrayRef = `filtered${listRefPascalCase}List`;
+    const matOptionRef = `allSelected${controlRefPascalCase}`;
+
+    const allSelected = this[matOptionRef].selected;
+    const shownElements = this[arrayReference].filter(item => !item.hidden);
+
+    const initialArrayRef = this[filteredArrayRef] ? filteredArrayRef : arrayReference;
+    this[controlRef].patchValue(this[initialArrayRef].filter(item => {
+      const isSelectedElement = this[controlRef].value.includes(item);
+      const isShownElement = shownElements.includes(item);
+
+      if (isShownElement) {
+        // change selection depending on allSelect new value
+        if (allSelected) {
+          return shownElements.includes(item)
+
+        } else {
+          return shownElements.includes(item), 0
+        }
+
+      } else {
+        // preserve the original selection
+        if (isSelectedElement) {
+          return this[controlRef].value.includes(item)
+        } else {
+          return this[controlRef].value.includes(item), 0
+        }
+      }
+    }));
+
+    this.allAreItemsSelected(controlRef, arrayReference, matOptionRef);
+    this.updateSelectionCounter(controlRef);
+  }
+
+  tosslePerOne(matOptionRef: string, controlRef: string, listRef: string) {
+    this.updateSelectionCounter(controlRef);
+
+    if (this[matOptionRef].selected) {
+      this[matOptionRef].deselect();
+      return false;
+    }
+
+    if (this[controlRef].value.length == this[listRef].length) {
+      this[matOptionRef].select();
+    }
+  }
+
+  updateSelectionCounter(controlRef: string) {
+    const counterRef = `${controlRef}Counter`;
+
+    const selectionCounter = this[controlRef].value.filter(item => item.id);
+    this[counterRef] = selectionCounter.length;
   }
 
   applyFilters() {
@@ -394,24 +520,6 @@ export class GeneralFiltersComponent implements OnInit {
     this.filtersStateService.selectCampaigns(areAllCampsSelected ? [] : this.campaigns.value);
 
     this.filtersStateService.filtersChange();
-  }
-
-  toggleAllSelection(matOpionRef: string, controlRef: string, listRef: string) {
-    if (this[matOpionRef].selected) {
-      this[controlRef].patchValue([...this[listRef].map(item => item), 0]);
-    } else {
-      this[controlRef].patchValue([]);
-    }
-  }
-
-  tosslePerOne(matOpionRef: string, controlRef: string, listRef: string) {
-    if (this[matOpionRef].selected) {
-      this[matOpionRef].deselect();
-      return false;
-    }
-    if (this[controlRef].value.length == this[listRef].length) {
-      this[matOpionRef].select();
-    }
   }
 
   arraysAreEquals(array1: any[], array2: any[]): boolean {

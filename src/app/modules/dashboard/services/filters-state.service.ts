@@ -7,6 +7,20 @@ import * as moment from 'moment';
 })
 export class FiltersStateService {
 
+  // selected countries
+  private countriesSource = new Subject<any[]>();
+  countries$ = this.countriesSource.asObservable();
+  countries: any[];
+  countriesInitial: any[];
+  countriesQParams;
+
+  // selected retailers
+  private retailersSource = new Subject<any[]>();
+  retailers$ = this.retailersSource.asObservable();
+  retailers: any[];
+  retailersInitial: any[];
+  retailersQParams;
+
   // selected period
   private periodSource = new Subject<Period>();
   period$ = this.periodSource.asObservable();
@@ -40,6 +54,16 @@ export class FiltersStateService {
   filtersChange$ = this.filtersSource.asObservable();
 
   constructor() { }
+
+  selectCountries(countries: any[]) {
+    this.countriesSource.next(countries);
+    this.countries = countries;
+  }
+
+  selectRetailers(retailers: any[]) {
+    this.retailersSource.next(retailers);
+    this.retailers = retailers;
+  }
 
   selectPeriod(period: Period) {
     this.periodSource.next(period);
@@ -78,6 +102,8 @@ export class FiltersStateService {
   }
 
   restoreFilters() {
+    this.countries = this.countriesInitial;
+    this.retailers = this.retailersInitial;
     this.period = this.periodInitial;
     this.sectors = this.sectorsInitial;
     this.categories = this.categoriesInitial;
