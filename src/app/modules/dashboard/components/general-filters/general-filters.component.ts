@@ -504,6 +504,18 @@ export class GeneralFiltersComponent implements OnInit {
     }
   }
 
+  uniqueSelection(controlRef: string, listRef: string, value) {
+    const listRefPascalCase = `${listRef.charAt(0).toUpperCase()}${listRef.slice(1)}`;
+
+    const arrayReference = `${listRef}List`;
+    const filteredArrayRef = `filtered${listRefPascalCase}List`;
+
+    const initialArrayRef = this[filteredArrayRef] ? filteredArrayRef : arrayReference;
+    this[controlRef].patchValue(this[initialArrayRef].filter(item => {
+      item === value;
+    }));
+  }
+
   updateSelectionCounter(controlRef: string) {
     const counterRef = `${controlRef}Counter`;
 
