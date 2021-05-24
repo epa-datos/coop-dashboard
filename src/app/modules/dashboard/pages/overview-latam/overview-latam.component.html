@@ -35,16 +35,6 @@
                             País</span>
                     </div>
                     <div class="card-body">
-                        <!-- <div class="chart-legend mt-0 mb-2">
-                            <div class="legend-container">
-                                <div class="legend-square on"></div>
-                                <div class="legend-label">Activas</div>
-                            </div>
-                            <div class="legend-container ml-3">
-                                <div class="legend-square off"></div>
-                                <div class="legend-label">Inactivas</div>
-                            </div>
-                        </div> -->
                         <app-chart-heat-map [data]="categoriesBySector" name="latam-categories-by-sector'"
                             categoryX="country" [categoryY]="selectedTab1 === 1 ? 'sector' : 'category'" height="250px"
                             [showGridBorders]="true" [showHeatLegend]="false" [status]="categoriesReqStatus"
@@ -274,6 +264,21 @@
                                         </li>
                                     </ul>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="period-popover" ngbDropdown>
+                            <a ngbDropdownToggle>
+                                <i class="fas fa-question-circle"></i>
+                            </a>
+                            <div class="content" ngbDropdownMenu>
+                                <li class="period text-sm" *ngFor="let serie of usersAndSalesBySector; let i = index">
+                                    <div class="line mr-2"
+                                        [ngClass]="{'first': i === 0, 'second': i === 1, 'third': i === 2}">
+                                    </div>
+                                    <strong class="mr-2">{{ serie.name }}</strong>
+                                    <span>{{ serie.period }}</span>
+                                </li>
                             </div>
                         </div>
 
