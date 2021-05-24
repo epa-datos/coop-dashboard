@@ -46,11 +46,11 @@ export class GeneralFiltersComponent implements OnInit {
   categoryList: any[];
   campaignList: any[];
   sourceList: any[] = [
-    { id: 1, name: 'Google' },
-    { id: 2, name: 'Facebook' },
-    { id: 3, name: 'Programmatic' },
-    { id: 4, name: 'Institucional' },
-    { id: 5, name: 'Otro' }
+    { id: 'google', name: 'Google' },
+    { id: 'facebook', name: 'Facebook' },
+    { id: 'programmatic', name: 'Programmatic' },
+    { id: 'institucional', name: 'Institucional' },
+    { id: 'otros', name: 'Otros' }
   ];
 
   filteredCountryList: any[];
@@ -129,7 +129,6 @@ export class GeneralFiltersComponent implements OnInit {
 
     await this.getSectors();
     await this.getCategories();
-    this.applyFilters();
 
     const selectedCountry = this.appStateService.selectedCountry;
     const selectedRetailer = this.appStateService.selectedRetailer;
@@ -258,12 +257,20 @@ export class GeneralFiltersComponent implements OnInit {
       });
   }
 
-  loadLatamContent() {
+  async loadLatamContent() {
     this.isLatamSelected = this.router.url.includes('latam') ? true : false;
     if (this.isLatamSelected) {
-      this.getCountries();
-      this.getRetailers();
+
+      if (!this.filtersStateService.countriesInitial) {
+        await this.getCountries();
+      }
+
+      if (!this.filtersStateService.retailersInitial) {
+        await this.getRetailers();
+      }
     }
+
+    this.applyFilters();
   }
 
   getCountries() {
@@ -299,7 +306,7 @@ export class GeneralFiltersComponent implements OnInit {
         this.retailerList = retailers;
         this.filteredRetailerList = retailers;
         this.retailersCounter = retailers.length;
-        this.filtersStateService.retailersInitial = res;
+        this.filtersStateService.retailersInitial = retailers;
 
         this.retailers.patchValue([...this.retailerList.map(item => item), 0]);
         this.prevRetailers = this.retailers.value;
@@ -527,6 +534,12 @@ export class GeneralFiltersComponent implements OnInit {
     this.filtersStateService.selectPeriod({ startDate: this.startDate.value._d, endDate: this.endDate.value._d });
     this.filtersStateService.selectSectors(this.sectors.value);
     this.filtersStateService.selectCategories(this.categories.value);
+
+    if (this.isLatamSelected) {
+      this.filtersStateService.selectCountries(this.countries.value);
+      this.filtersStateService.selectRetailers(this.retailers.value);
+      this.filtersStateService.selectSources(this.sources.value);
+    }
 
     const areAllCampsSelected = this.areAllCampaignsSelected();
     this.filtersStateService.selectCampaigns(areAllCampsSelected ? [] : this.campaigns.value);
