@@ -88,8 +88,10 @@
 }
 
 .adaptable-container {
+    min-height: 250px;
     overflow: auto;
-
+    position: relative;
+   
     table {
         width: 100%;
     
@@ -109,4 +111,21 @@
             display: inline-block;
         }
     }
+
+    &.auto {
+        min-height: auto;
+    }
+}
+
+.loading-shade {
+    align-items: center;
+    background: rgba(0, 0, 0, 0.03);
+    bottom: 0px;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
 }
