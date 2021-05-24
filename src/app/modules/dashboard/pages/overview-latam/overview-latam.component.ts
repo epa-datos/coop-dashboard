@@ -86,6 +86,12 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   usersAndSalesBySector: any[] = [];
   investmentVsRevenue: any[] = [];
 
+  // top products
+  selectedCategories: any[] = [];
+  topProductsColumns: string[] = ['rank', 'product', 'amount'];
+  topProducts: any[] = [];
+  topProductsSource = new MatTableDataSource<any>();
+
   // requests status
   kpisReqStatus: number = 0;
   categoriesReqStatus: number = 0;
@@ -97,18 +103,10 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     { name: 'age', reqStatus: 0 },
     { name: 'gender-and-age', reqStatus: 0 }
   ];
+  topProductsReqStatus: number = 0;
 
   filtersSub: Subscription;
   chartsInitLoad: boolean = true;
-
-  displayedColumns: string[] = ['rank', 'product', 'amount'];
-  private products = [
-    { rank: 1, product: 'Laptop HP 15-EF1005LA 15.6" AMD 3020e 4 GB RAM 128 SSD Negra', amount: 22 },
-    { rank: 2, product: 'Laptop HP 15-GW0012LA 15.6" AMD Ryzen 5 12 GB RAM 256 GB Roja', amount: 20 },
-    { rank: 3, product: 'Laptop HP 14-DK1013LA 14" AMD Athlon Silver 4 GB RAM 500 GB Gris', amount: 19 },
-    { rank: 4, product: 'Laptop HP 15-EF1007LA 15.6" AMD Ryzen 3 12 GB RAM 256 GB SSD Azul', amount: 15 }
-  ]
-  dataSource = new MatTableDataSource<any>(this.products);
 
   constructor(
     private filtersStateService: FiltersStateService,
@@ -131,6 +129,8 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     this.getDataByTrafficAndSales('sales', 2);
     this.getDataByUsersAndSales('sales', 2);
     this.getInvestmentVsRevenue();
+    this.selectedCategories = this.filtersStateService.categories.filter(item => item.id);
+    this.getTopProducts(this.selectedCategories[0].id);
 
     this.chartsInitLoad = true;
   }
@@ -155,7 +155,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[overview-wrapper.component]: ${errorMsg}`);
+        console.error(`[overview-latam.component]: ${errorMsg}`);
         this.kpisReqStatus = 3;
       });
   }
@@ -169,7 +169,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[overview-wrapper.component]: ${errorMsg}`);
+        console.error(`[overview-latam.component]: ${errorMsg}`);
         this.categoriesReqStatus = 3;
       });
 
@@ -195,7 +195,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
         },
         error => {
           const errorMsg = error?.error?.message ? error.error.message : error?.message;
-          console.error(`[overview-wrapper.component]: ${errorMsg}`);
+          console.error(`[overview-latam.component]: ${errorMsg}`);
           reqStatusObj.reqStatus = 3;
         });
 
@@ -212,7 +212,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[overview-wrapper.component]: ${errorMsg}`);
+        console.error(`[overview-latam.component]: ${errorMsg}`);
         this.usersAndSalesReqStatus = 3;
       }
     )
@@ -229,52 +229,28 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[overview-wrapper.component]: ${errorMsg}`);
+        console.error(`[overview-latam.component]: ${errorMsg}`);
         this.invVsRevenueReqStatus = 3;
       }
     )
   }
 
-  showTopProducts(category: string) {
-    switch (category) {
-      case 'ps':
-        this.products = [
-          { rank: 1, product: 'Laptop HP 15-EF1005LA 15.6" AMD 3020e 4 GB RAM 128 SSD Negra', amount: 22 },
-          { rank: 2, product: 'Laptop HP 15-GW0012LA 15.6" AMD Ryzen 5 12 GB RAM 256 GB Roja', amount: 20 },
-          { rank: 3, product: 'Laptop HP 14-DK1013LA 14" AMD Athlon Silver 4 GB RAM 500 GB Gris', amount: 19 },
-          { rank: 4, product: 'Laptop HP 15-EF1007LA 15.6" AMD Ryzen 3 12 GB RAM 256 GB SSD Azul', amount: 15 }
-        ]
-        break;
+  getTopProducts(categoryID?: number) {
+    this.topProductsReqStatus = 1;
+    this.overviewService.getTopProductsLatam(categoryID).subscribe(
+      (resp: any[]) => {
+        this.topProducts = resp;
 
-      case 'print':
-        this.products = [
-          { rank: 1, product: 'Impresora Multifunción HP INK TANK 415 - HP', amount: 10 },
-          { rank: 2, product: 'Impresora HP Deskjet Ink Advantage 1275 - HP', amount: 8 },
-          { rank: 3, product: 'Impresora HP INK TANK 115 - HP', amount: 7 },
-          { rank: 4, product: 'Impresora Multifunción HP Deskjet INK Advantage 2375 - HP', amount: 5 }
-        ]
-        break;
+        this.topProductsSource = new MatTableDataSource<any>(this.topProducts);
+        this.topProductsReqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[overview-latam.component]: ${errorMsg}`);
+        this.topProductsReqStatus = 3;
+      }
+    )
 
-      case 'supplies':
-        this.products = [
-          { rank: 1, product: 'Cartucho de tinta HP 664 Negra - HP', amount: 60 },
-          { rank: 2, product: 'Cartucho de tinta HP 662 Negra - HP', amount: 56 },
-          { rank: 3, product: 'Cartucho HP 122 CH561HL Negro - HP', amount: 45 },
-          { rank: 4, product: 'Cartucho HP 10 C48444A Negro - HP', amount: 35 }
-        ]
-        break;
-
-      case 'accesories':
-        this.products = [
-          { rank: 1, product: 'Funda HP Carry de 13"', amount: 32 },
-          { rank: 2, product: 'Teclado HP Pavilion Gaming 500', amount: 25 },
-          { rank: 3, product: 'Teclado y Mouse HP 320MK', amount: 13 },
-          { rank: 4, product: 'Estación de acomplamiento mini HP USB-C', amount: 15 }
-        ]
-        break;
-    }
-
-    this.dataSource = new MatTableDataSource<any>(this.products);
   }
 
   ngOnDestroy() {

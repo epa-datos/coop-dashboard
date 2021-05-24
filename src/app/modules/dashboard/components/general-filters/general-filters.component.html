@@ -10,27 +10,41 @@
                         <span class="input-group-text"><i class="fas fa-search"></i></span>
                     </div>
                     <input class="form-control" [(ngModel)]="countryFilter" matInput type="text"
-                        (keyup)="filterFromList('country', $event.target.value)" placeholder="Buscar País"
+                        (keyup)="filterFromList('countries', 'country', $event.target.value)" placeholder="Buscar País"
                         [ngModelOptions]="{standalone: true}">
                 </div>
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{countries.value ? countries.value[0]?.name : ''}}</span>
-                        <span *ngIf="countries.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{countries.value?.length === 2 ? 'otro' : 'otros'}}
-                            {{ countries.value?.length === 2 ? '' : countries.value.length - 1}})
+                        <span class="select-value">
+                            {{countries.value
+                            ? countries.value[0]?.name
+                            ? countries.value[0]?.name
+                            : countries.value[1]?.name
+                            : ''}}
+                        </span>
+                        <span *ngIf="countriesCounter > 1" class="example-additional-selection ml-1">
+                            (+ {{countriesCounter === 2 ? 'otro' : 'otros'}}
+                            {{ countriesCounter === 2 ? '' : countriesCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option #allSelectedCountries
-                    (click)="toggleAllSelection('allSelectedCountries','countries', 'countryList')" [value]="0"
-                    class="font-weight-bold">
+                <mat-option #allSelectedCountries [value]="0" class="font-weight-bold"
+                    (click)="toggleAllSelection('countries', 'country')">
                     Todos
                 </mat-option>
-                <mat-option *ngFor="let country of countryList" [value]="country"
-                    (click)="tosslePerOne('allSelectedCountries', 'countries', 'countryList')">
-                    {{country.name}}
-                </mat-option>
+                <ng-container *ngFor="let country of countryList">
+                    <mat-option [hidden]="country.hidden" [value]="country"
+                        (click)="tosslePerOne('allSelectedCountries', 'countries', 'countryList')">
+                        <div class="mat-option-container">
+                            <span>{{country.name}}</span>
+                            <button type="button" class="btn btn-sm btn-secondary"
+                                (click)="uniqueSelection('countries', 'country', country)">
+                                Only
+                            </button>
+                        </div>
+                    </mat-option>
+                </ng-container>
+
             </mat-select>
             <small class="text-danger" *ngIf="countries?.value?.length < 1 && countries.touched">
                 Selecciona al menos un País
@@ -49,27 +63,43 @@
                         <span class="input-group-text"><i class="fas fa-search"></i></span>
                     </div>
                     <input class="form-control" [(ngModel)]="retailerFilter" matInput type="text"
-                        (keyup)="filterFromList('retailer', $event.target.value)" placeholder="Buscar Retailer"
-                        [ngModelOptions]="{standalone: true}">
+                        (keyup)="filterFromList('retailers', 'retailer', $event.target.value)"
+                        placeholder="Buscar Retailer" [ngModelOptions]="{standalone: true}">
                 </div>
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{retailers.value ? retailers.value[0]?.name : ''}}</span>
+                        <span class="select-value">
+                            {{
+                            retailers.value
+                            ? retailers.value[0]?.name
+                            ? retailers.value[0]?.name
+                            : retailers.value[1]?.name
+                            : ''
+                            }}
+                        </span>
                         <span *ngIf="retailers.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{retailers.value?.length === 2 ? 'otro' : 'otros'}}
-                            {{ retailers.value?.length === 2 ? '' : retailers.value.length - 1}})
+                            (+ {{retailersCounter === 2 ? 'otro' : 'otros'}}
+                            {{ retailersCounter === 2 ? '' : retailersCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option #allSelectedRetailers
-                    (click)="toggleAllSelection('allSelectedRetailers','retailers', 'retailerList')" [value]="0"
+                <mat-option #allSelectedRetailers (click)="toggleAllSelection('retailers', 'retailer')" [value]="0"
                     class="font-weight-bold">
                     Todos
                 </mat-option>
-                <mat-option *ngFor="let retailer of retailerList" [value]="retailer"
-                    (click)="tosslePerOne('allSelectedRetailers', 'retailers', 'retailerList')">
-                    {{retailer.name}}
-                </mat-option>
+                <ng-container *ngFor="let retailer of retailerList">
+                    <mat-option [hidden]="retailer.hidden" [value]="retailer"
+                        (click)="tosslePerOne('allSelectedRetailers', 'retailers', 'retailerList')">
+                        <div class="mat-option-container">
+                            <span>{{retailer.name}}</span>
+                            <button type="button" class="btn btn-sm btn-secondary"
+                                (click)="uniqueSelection('retailers', 'retailer', retailer)">
+                                Only
+                            </button>
+                        </div>
+                    </mat-option>
+                </ng-container>
+
             </mat-select>
             <small class="text-danger" *ngIf="retailers?.value?.length < 1 && retailers.touched">
                 Selecciona al menos un Retailer
@@ -106,21 +136,34 @@
             <mat-select formControlName="sectors" multiple placeholder="Selecciona un Sector">
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{sectors.value ? sectors.value[0]?.name : ''}}</span>
+                        <span class="select-value">
+                            {{
+                            sectors.value
+                            ? sectors.value[0]?.name
+                            ? sectors.value[0]?.name
+                            : sectors.value[1]?.name
+                            : ''
+                            }}
+                        </span>
                         <span *ngIf="sectors.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{sectors.value?.length === 2 ? 'otro' : 'otros'}}
-                            {{ sectors.value?.length === 2 ? '' : sectors.value.length - 1}})
+                            (+ {{sectorsCounter ? 'otro' : 'otros'}}
+                            {{ sectorsCounter === 2 ? '' : sectorsCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option #allSelectedSectors
-                    (click)="toggleAllSelection('allSelectedSectors','sectors', 'sectorList')" [value]="0"
+                <mat-option #allSelectedSectors (click)="toggleAllSelection('sectors','sector')" [value]="0"
                     class="font-weight-bold">
                     Todos
                 </mat-option>
                 <mat-option *ngFor="let sector of sectorList" [value]="sector"
                     (click)="tosslePerOne('allSelectedSectors', 'sectors', 'sectorList')">
-                    {{sector.name}}
+                    <div class="mat-option-container">
+                        <span>{{sector.name}}</span>
+                        <button type="button" class="btn btn-sm btn-secondary"
+                            (click)="uniqueSelection('sectors', 'sector', sector)">
+                            Only
+                        </button>
+                    </div>
                 </mat-option>
             </mat-select>
             <small class="text-danger" *ngIf="sectors?.value?.length < 1 && sectors.touched">
@@ -137,21 +180,34 @@
             <mat-select formControlName="categories" multiple placeholder="Selecciona una Categoría">
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{categories.value ? categories.value[0]?.name : ''}}</span>
+                        <span class="select-value">
+                            {{
+                            categories.value
+                            ? categories.value[0]?.name
+                            ? categories.value[0]?.name
+                            : categories.value[1]?.name
+                            : ''
+                            }}
+                        </span>
                         <span *ngIf="categories.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{categories.value?.length === 2 ? 'otra' : 'otras'}}
-                            {{ categories.value?.length === 2 ? '' : categories.value.length - 1}})
+                            (+ {{categoriesCounter === 2 ? 'otra' : 'otras'}}
+                            {{ categoriesCounter === 2 ? '' : categoriesCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option #allSelectedCategories
-                    (click)="toggleAllSelection('allSelectedCategories','categories', 'categoryList')" [value]="0"
+                <mat-option #allSelectedCategories (click)="toggleAllSelection('categories', 'category')" [value]="0"
                     class="font-weight-bold">
                     Todas
                 </mat-option>
                 <mat-option *ngFor="let category of categoryList" [value]="category"
                     (click)="tosslePerOne('allSelectedCategories', 'categories', 'categoryList')">
-                    {{category.name}}
+                    <div class="mat-option-container">
+                        <span>{{category.name}}</span>
+                        <button type="button" class="btn btn-sm btn-secondary"
+                            (click)="uniqueSelection('categories', 'category', category)">
+                            Only
+                        </button>
+                    </div>
                 </mat-option>
             </mat-select>
             <small class="text-danger" *ngIf="categories?.value?.length < 1 && categories.touched">
@@ -173,27 +229,42 @@
                         <span class="input-group-text"><i class="fas fa-search"></i></span>
                     </div>
                     <input class="form-control" [(ngModel)]="campaignFilter" matInput type="text"
-                        (keyup)="filterFromList('campaign', $event.target.value)" placeholder="Buscar Campaña"
-                        [ngModelOptions]="{standalone: true}">
+                        (keyup)="filterFromList('campaigns', 'campaign', $event.target.value)"
+                        placeholder="Buscar Campaña" [ngModelOptions]="{standalone: true}">
                 </div>
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{campaigns.value ? campaigns.value[0]?.name : ''}}</span>
+                        <span class="select-value">
+                            {{
+                            campaigns.value
+                            ? campaigns.value[0]?.name
+                            ? campaigns.value[0]?.name
+                            : campaigns.value[1]?.name
+                            : ''
+                            }}
+                        </span>
                         <span *ngIf="campaigns.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{campaigns.value?.length === 2 ? 'otra' : 'otras'}}
-                            {{ campaigns.value?.length === 2 ? '' : campaigns.value.length - 1}})
+                            (+ {{campaignsCounter === 2 ? 'otra' : 'otras'}}
+                            {{ campaignsCounter === 2 ? '' : campaignsCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option #allSelectedCampaigns
-                    (click)="toggleAllSelection('allSelectedCampaigns','campaigns', 'campaignList')" [value]="0"
+                <mat-option #allSelectedCampaigns (click)="toggleAllSelection('campaigns', 'campaign')" [value]="0"
                     class="font-weight-bold">
                     Todas
                 </mat-option>
-                <mat-option *ngFor="let campaign of campaignList" [value]="campaign"
-                    (click)="tosslePerOne('allSelectedCampaigns', 'campaigns', 'campaignList')">
-                    {{campaign.name}}
-                </mat-option>
+                <ng-container *ngFor="let campaign of campaignList">
+                    <mat-option [hidden]="campaign.hidden" [value]="campaign"
+                        (click)="tosslePerOne('allSelectedCampaigns', 'campaigns', 'campaignList')">
+                        <div class="mat-option-container">
+                            <span>{{campaign.name}}</span>
+                            <button type="button" class="btn btn-sm btn-secondary"
+                                (click)="uniqueSelection('campaigns', 'campaign', campaign)">
+                                Only
+                            </button>
+                        </div>
+                    </mat-option>
+                </ng-container>
             </mat-select>
             <small class="text-muted mt-1" *ngIf="campaignList?.length < 1 && campaignsReqStatus === 2">
                 No existen campañas para el Periodo, Sectores y Categorías seleccionados
@@ -209,21 +280,34 @@
             <mat-select formControlName="sources" multiple placeholder="Selecciona una Fuente">
                 <mat-select-trigger>
                     <div class="select-value-container">
-                        <span class="select-value">{{sources.value ? sources.value[0]?.name : ''}}</span>
+                        <span class="select-value">
+                            {{
+                            sources.value
+                            ? sources.value[0]?.name
+                            ? sources.value[0]?.name
+                            : sources.value[1]?.name
+                            : ''
+                            }}
+                        </span>
                         <span *ngIf="sources.value?.length > 1" class="example-additional-selection ml-1">
-                            (+ {{sources.value?.length === 2 ? 'otro' : 'otros'}}
-                            {{ sources.value?.length === 2 ? '' : sources.value.length - 1}})
+                            (+ {{sourcesCounter === 2 ? 'otra' : 'otras'}}
+                            {{ sourcesCounter === 2 ? '' : sourcesCounter - 1}})
                         </span>
                     </div>
                 </mat-select-trigger>
-                <mat-option #allSelectedSources
-                    (click)="toggleAllSelection('allSelectedSources','sources', 'sourceList')" [value]="0"
+                <mat-option #allSelectedSources (click)="toggleAllSelection('sources', 'source')" [value]="0"
                     class="font-weight-bold">
                     Todas
                 </mat-option>
                 <mat-option *ngFor="let source of sourceList" [value]="source"
                     (click)="tosslePerOne('allSelectedSources', 'sources', 'sourceList')">
-                    {{source.name}}
+                    <div class="mat-option-container">
+                        <span>{{source.name}}</span>
+                        <button type="button" class="btn btn-sm btn-secondary"
+                            (click)="uniqueSelection('sources', 'source', source)">
+                            Only
+                        </button>
+                    </div>
                 </mat-option>
             </mat-select>
         </div>
@@ -233,7 +317,10 @@
 <div class="row">
     <div class="col-12 text-right">
         <button type="button" class="btn btn-primary" [disabled]="
-        (!startDate.valid && startDate.touched) || 
+        (isLatamSelected && this.countries?.value?.length < 1) ||
+        (isLatamSelected && this.retailers?.value?.length < 1) ||
+        (isLatamSelected && this.sources?.value?.length < 1) ||
+        (!startDate.valid && startDate.touched) ||
         (!endDate.valid && endDate.touched) ||
         (sectors?.value?.length < 1 && sectors.touched) ||
         (categories?.value?.length < 1 && categories.touched)

@@ -43,14 +43,22 @@ export class OverviewService {
     });
   }
 
-  concatedQueryParams(): string {
+  concatedQueryParams(isLatam?: boolean, uniqueCategoryID?: number): string {
     let startDate = this.filtersStateService.periodQParams.startDate;
     let endDate = this.filtersStateService.periodQParams.endDate;
     let sectors = this.filtersStateService.sectorsQParams;
-    let categories = this.filtersStateService.categoriesQParams;
+    let categories = !uniqueCategoryID ? this.filtersStateService.categoriesQParams : uniqueCategoryID;
     let campaigns = this.filtersStateService.campaignsQParams;
 
-    return `start_date=${startDate}&end_date=${endDate}&sectors=${sectors}&categories=${categories}${campaigns ? `&campaigns=${campaigns}` : ''}`;
+    const baseQParams = `start_date=${startDate}&end_date=${endDate}&sectors=${sectors}&categories=${categories}`
+    if (!isLatam) {
+      return `${baseQParams}${campaigns ? `&campaigns=${campaigns}` : ''}`;
+    } else {
+      let countries = this.filtersStateService.countriesQParams;
+      let retailers = this.filtersStateService.retailersQParams;
+      let sources = this.filtersStateService.sourcesQParams;
+      return `countries=${countries}&retailers=${retailers}&sources=${sources}&${baseQParams}`;
+    }
   }
 
   /**** COUNTRIES AND RETAILERS
@@ -153,8 +161,7 @@ export class OverviewService {
 
   // *** kpis ***
   getKpisLatam() {
-    let queryParams = this.concatedQueryParams();
-    return this.http.get(`${this.baseUrl}/countries/1/kpis?${queryParams}`);
+    let queryParams = this.concatedQueryParams(true);
     return this.http.get(`${this.baseUrl}/latam/kpis?${queryParams}`);
   }
 
@@ -164,9 +171,8 @@ export class OverviewService {
       return throwError('[overview.service]: not metricType provided');
     }
 
-    let queryParams = this.concatedQueryParams();
-    // return this.http.get(`${this.baseUrl}/countries/1/retailer/categories?sector=${sector}&${queryParams}`);
-    return this.http.get(`http://localhost:3000/api/v1/latam/categories/${metricType}?${queryParams}`);
+    let queryParams = this.concatedQueryParams(true);
+    return this.http.get(`${this.baseUrl}/latam/countries/${metricType}/segments?${queryParams}`);
   }
 
   // *** traffic and sales ***
@@ -178,9 +184,8 @@ export class OverviewService {
       return throwError('[overview.service]: not subMetricType provided');
     }
 
-    let queryParams = this.concatedQueryParams();
-    return this.http.get(`${this.baseUrl}/countries/1/${metricType}/${subMetricType}?${queryParams}`);
-
+    let queryParams = this.concatedQueryParams(true);
+    return this.http.get(`${this.baseUrl}/latam/${metricType}/${subMetricType}?${queryParams}`);
   }
 
   // *** users and sales ***
@@ -189,15 +194,19 @@ export class OverviewService {
       return throwError('[overview.service]: not metricType provided');
     }
 
-    let queryParams = this.concatedQueryParams();
-    // return this.http.get(`${this.baseUrl}/countries/1/${metricType}?${queryParams}`);
-    return this.http.get(`http://localhost:3000/api/v1/latam/${metricType}?${queryParams}`);
+    let queryParams = this.concatedQueryParams(true);
+    return this.http.get(`${this.baseUrl}/latam/${metricType}?${queryParams}`);
   }
 
   // *** investment vs revenue ***
   getInvestmentVsRevenueLatam() {
-    let queryParams = this.concatedQueryParams();
-    return this.http.get(`${this.baseUrl}/countries/1/investment-vs-revenue?${queryParams}`);
+    let queryParams = this.concatedQueryParams(true);
     return this.http.get(`${this.baseUrl}/latam/investment-vs-revenue?${queryParams}`);
+  }
+
+  // *** top products ***
+  getTopProductsLatam(categoryID: number) {
+    let queryParams = this.concatedQueryParams(true, categoryID);
+    return this.http.get(`${this.baseUrl}/latam/top-products?${queryParams}`);
   }
 }
