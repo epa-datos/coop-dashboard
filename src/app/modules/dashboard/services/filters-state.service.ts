@@ -49,6 +49,12 @@ export class FiltersStateService {
   campaignsInitial: any[];
   campaignsQParams;
 
+  // selected sources
+  private sourcesSource = new Subject<any[]>();
+  sources$ = this.sourcesSource.asObservable();
+  sources: any[];
+  sourcesQParams;
+
   // filtersChange
   private filtersSource = new Subject<any>();
   filtersChange$ = this.filtersSource.asObservable();
@@ -85,10 +91,18 @@ export class FiltersStateService {
     this.campaigns = campaigns;
   }
 
+  selectSources(sources: any[]) {
+    this.sourcesSource.next(sources);
+    this.sources = sources;
+  }
+
   convertFiltersToQueryParams() {
     this.periodQParams = { startDate: moment(this.period.startDate).format('YYYY-MM-DD'), endDate: moment(this.period.endDate).format('YYYY-MM-DD') }
     this.sectorsQParams = this.sectors && this.convertArrayToQueryParams(this.sectors, 'id');
     this.categoriesQParams = this.categories && this.convertArrayToQueryParams(this.categories, 'id');
+    this.countriesQParams = this.countries && this.convertArrayToQueryParams(this.countries, 'id');
+    this.retailersQParams = this.retailers && this.convertArrayToQueryParams(this.retailers, 'id');
+    this.sourcesQParams = this.retailers && this.convertArrayToQueryParams(this.sources, 'id');
     this.campaignsQParams = this.campaigns && this.convertArrayToQueryParams(this.campaigns, 'id');
   }
 
