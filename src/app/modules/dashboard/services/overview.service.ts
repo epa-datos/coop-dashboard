@@ -43,10 +43,10 @@ export class OverviewService {
     });
   }
 
-  concatedQueryParams(isLatam?: boolean, uniqueCategoryID?: number): string {
+  concatedQueryParams(isLatam?: boolean, uniqueSectorID?: number, uniqueCategoryID?: number, uniqueSourceID?: number): string {
     let startDate = this.filtersStateService.periodQParams.startDate;
     let endDate = this.filtersStateService.periodQParams.endDate;
-    let sectors = this.filtersStateService.sectorsQParams;
+    let sectors = !uniqueSectorID ? this.filtersStateService.sectorsQParams : uniqueSectorID;
     let categories = !uniqueCategoryID ? this.filtersStateService.categoriesQParams : uniqueCategoryID;
     let campaigns = this.filtersStateService.campaignsQParams;
 
@@ -56,7 +56,7 @@ export class OverviewService {
     } else {
       let countries = this.filtersStateService.countriesQParams;
       let retailers = this.filtersStateService.retailersQParams;
-      let sources = this.filtersStateService.sourcesQParams;
+      let sources = !uniqueSourceID ? this.filtersStateService.sourcesQParams : uniqueSourceID;
       return `countries=${countries}&retailers=${retailers}&sources=${sources}&${baseQParams}`;
     }
   }
@@ -189,12 +189,12 @@ export class OverviewService {
   }
 
   // *** users and sales ***
-  getUsersAndSalesLatam(metricType: string) {
+  getUsersAndSalesLatam(metricType: string, sectorID?: number, categoryID?: number, sourceID?: number) {
     if (!metricType) {
       return throwError('[overview.service]: not metricType provided');
     }
 
-    let queryParams = this.concatedQueryParams(true);
+    let queryParams = this.concatedQueryParams(true, sectorID, categoryID, sourceID);
     return this.http.get(`${this.baseUrl}/latam/${metricType}?${queryParams}`);
   }
 
@@ -206,7 +206,7 @@ export class OverviewService {
 
   // *** top products ***
   getTopProductsLatam(categoryID: number) {
-    let queryParams = this.concatedQueryParams(true, categoryID);
+    let queryParams = this.concatedQueryParams(true, null, categoryID);
     return this.http.get(`${this.baseUrl}/latam/top-products?${queryParams}`);
   }
 }

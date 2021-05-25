@@ -83,11 +83,11 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   categoriesBySector: any[] = [];
   trafficAndSales = {};
 
-  usersAndSalesBySector: any[] = [];
+  usersAndSalesMetrics: string[] = ['sector', 'categoría', 'medio'];
+  usersAndSalesByMetric: any[] = [];
   investmentVsRevenue: any[] = [];
 
   // top products
-  selectedCategories: any[] = [];
   topProductsColumns: string[] = ['rank', 'product', 'amount'];
   topProducts: any[] = [];
   topProductsSource = new MatTableDataSource<any>();
@@ -104,6 +104,11 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     { name: 'gender-and-age', reqStatus: 0 }
   ];
   topProductsReqStatus: number = 0;
+
+  // available tabs
+  selectedCategories: any[] = []; // for topProducts and usersAndSalesByMetric
+  selectedSectors: any[] = []; // for usersAndSalesByMetric
+  selectedSources: any[] = []; // for usersAndSalesByMetric
 
   filtersSub: Subscription;
   chartsInitLoad: boolean = true;
@@ -124,12 +129,15 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   }
 
   getAllData() {
+    this.selectedSectors = this.filtersStateService.sectors;
+    this.selectedCategories = this.filtersStateService.categories;
+    this.selectedSources = this.filtersStateService.sources;
+
     this.getKpis();
     this.getSectorsAndCategories('sectors', 1);
     this.getDataByTrafficAndSales('sales', 2);
-    this.getDataByUsersAndSales('sales', 2);
+    this.getDataByUsersAndSales('sales');
     this.getInvestmentVsRevenue();
-    this.selectedCategories = this.filtersStateService.categories.filter(item => item.id);
     this.getTopProducts(this.selectedCategories[0].id);
 
     this.chartsInitLoad = true;
@@ -203,11 +211,13 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDataByUsersAndSales(metricType: string, selectedTab: number) {
+  getDataByUsersAndSales(metricType: string, sectorID?: number, categoryID?: number, sourceID?: number) {
     this.usersAndSalesReqStatus = 1;
-    this.overviewService.getUsersAndSalesLatam(metricType).subscribe(
+
+    this.overviewService.getUsersAndSalesLatam(metricType, sectorID, categoryID, sourceID).subscribe(
       (resp: any[]) => {
-        this.usersAndSalesBySector = resp;
+        this.usersAndSalesByMetric = resp;
+        console.log('usersAndSalesByMetric', this.usersAndSalesByMetric)
         this.usersAndSalesReqStatus = 2;
       },
       error => {
@@ -216,8 +226,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
         this.usersAndSalesReqStatus = 3;
       }
     )
-
-    this.selectedTab3 = selectedTab;
+    this.selectedTab3 = metricType === 'users' ? 1 : 2;
   }
 
   getInvestmentVsRevenue() {
