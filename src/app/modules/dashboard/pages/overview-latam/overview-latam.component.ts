@@ -217,7 +217,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     this.overviewService.getUsersAndSalesLatam(metricType, sectorID, categoryID, sourceID).subscribe(
       (resp: any[]) => {
         this.usersAndSalesByMetric = resp;
-        console.log('usersAndSalesByMetric', this.usersAndSalesByMetric)
         this.usersAndSalesReqStatus = 2;
       },
       error => {
@@ -260,6 +259,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       }
     )
 
+    this.selectedTab6 = categoryID;
   }
 
   ngOnDestroy() {

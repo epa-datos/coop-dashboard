@@ -78,6 +78,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     }
   ];
 
+  selectedSectors: any[] = [];
   categoriesBySector: any[] = [];
   trafficAndSales = {};
 
@@ -116,8 +117,10 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
   }
 
   getAllData() {
+    this.selectedSectors = this.filtersStateService.sectors;
+
     this.getKpis();
-    this.getCategoriesBySector('Search', 1);
+    this.getCategoriesBySector('Search', this.selectedSectors[0]?.id);
     this.getDataByTrafficAndSales('traffic', 1);
     this.getDataByUsersAndSales('users', 1);
     this.getInvestmentVsRevenue();

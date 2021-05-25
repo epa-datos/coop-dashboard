@@ -288,7 +288,15 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">Top Productos</span>
+                        <span class="h4">Top Productos </span>
+                        <ng-container *ngIf="selectedCategories?.length > 1">
+                            <ng-container [ngSwitch]="selectedTab6">
+                                <span *ngSwitchCase="1" class="h4">- PS</span>
+                                <span *ngSwitchCase="2" class="h4">- HW Print</span>
+                                <span *ngSwitchCase="3" class="h4">- Supplies</span>
+                            </ng-container>
+                        </ng-container>
+
                     </div>
                     <div class="card-body">
                         <div class="adaptable-container" [ngClass]="{'auto': topProductsReqStatus === 3}">

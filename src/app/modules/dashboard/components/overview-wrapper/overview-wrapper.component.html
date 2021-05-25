@@ -14,18 +14,12 @@
     <div class="row mt-5">
         <div class="col-12" *ngIf="selectedType === 'country'">
             <div class="pills-container">
-                <ul class="nav nav-pills nav-fill">
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                            (click)="getCategoriesBySector('Search', 1)">Search</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                            (click)="getCategoriesBySector('Marketing', 2)">Marketing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
-                            (click)="getCategoriesBySector('Ventas', 3)">Ventas</a>
+                <ul class="nav nav-pills nav-fill" *ngIf="selectedSectors?.length > 1">
+                    <li class="nav-item mb-2" *ngFor="let sector of selectedSectors; let i = index">
+                        <a class="nav-link p-2" [ngClass]="{'active': sector.id === selectedTab1}"
+                            (click)="selectedTab1 = sector.id; getCategoriesBySector(sector.name, sector.id)">
+                            {{ sector.name }}
+                        </a>
                     </li>
                 </ul>
             </div>
