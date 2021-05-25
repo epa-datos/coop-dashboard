@@ -20,7 +20,7 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
-   
+    
     span {
         display: inline-block;
         overflow: hidden;
@@ -41,4 +41,11 @@
             display: block;
         }
     }
+}
+
+::ng-deep .custom-tooltip {
+    font-size: 12px !important;
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+    max-width: unset !important;
 }
