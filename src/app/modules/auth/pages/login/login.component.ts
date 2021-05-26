@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { FiltersStateService } from 'src/app/modules/dashboard/services/filters-state.service';
-import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
 import { UserService } from 'src/app/services/user.service';
 import { EmailValidator } from 'src/app/tools/validators/email.validator';
 
@@ -28,14 +25,11 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private usersMngmtService: UsersMngmtService,
-    private router: Router,
-    private cookieService: CookieService,
-    private filtersStateService: FiltersStateService
+    private cookieService: CookieService
   ) {
     const islogged = this.userService.isLoggedIn();
 
-    islogged && this.redirect();
+    islogged && this.userService.redirectToDefaultPage();
   }
 
   ngOnInit() {
@@ -83,7 +77,9 @@ export class LoginComponent implements OnInit {
           } else {
             this.userService.deleteUserCookieIfExists();
           }
-          this.redirect();
+          this.userService.redirectToDefaultPage().then(() => {
+            this.reqStatus = 2;
+          });
         },
         error => {
           this.errorMsg = error?.error?.message ? error.error.message : error?.message;
@@ -92,41 +88,6 @@ export class LoginComponent implements OnInit {
         }
       )
     }
-  }
-
-  async redirect() {
-    await this.getCountries();
-    await this.getRetailers();
-
-    const { url, queryParams } = this.userService.getDefaultRedirect();
-    this.router.navigate([url], { queryParams });
-
-    this.reqStatus = 2;
-  }
-
-  getCountries() {
-    return this.usersMngmtService.getCountries()
-      .toPromise()
-      .then((countries: any[]) => {
-        this.filtersStateService.countriesInitial = countries;
-      })
-      .catch((error) => {
-        console.error(`[login.component]: ${error}`);
-      });
-  }
-
-  getRetailers() {
-    return this.usersMngmtService.getRetailers()
-      .toPromise()
-      .then((res: any[]) => {
-        const retailers = res.map(retailer => {
-          return { id: retailer.id, name: `${retailer.country_code} - ${retailer.name}` }
-        });
-        this.filtersStateService.retailersInitial = retailers;
-      })
-      .catch((error) => {
-        console.error(`[login.component]: ${error}`);
-      });
   }
 
   rememberPsw() {
