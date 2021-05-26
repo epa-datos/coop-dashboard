@@ -20,7 +20,7 @@ export class UserService {
 
   private _loggedIn = false;
 
-  defaultRedirect: string; // default url to redirect after login and sidebar icons
+  defaultRedirect: Route; // default url to redirect after login and sidebar icons
   viewLevel: string; // 'latam' to be redirected to latam page or 'general' to be redirected to the first country or retailer depending on role 
 
   get user(): User {
@@ -152,6 +152,7 @@ export class UserService {
   redirectToDefaultPage() {
     return new Promise<void>((resolve) => {
       this.getDefaultRedirect().then((route: Route) => {
+        this.defaultRedirect = route;
 
         const { url, queryParams } = route;
         this.router.navigate([url], { queryParams });
