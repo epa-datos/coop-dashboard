@@ -261,13 +261,10 @@ export class GeneralFiltersComponent implements OnInit {
     this.isLatamSelected = this.router.url.includes('latam') ? true : false;
     if (this.isLatamSelected) {
 
-      if (!this.filtersStateService.countriesInitial) {
-        await this.getCountries();
-      }
-
-      if (!this.filtersStateService.retailersInitial) {
-        await this.getRetailers();
-      }
+      // There are countriesInitial and retailerInitial after login
+      // There aren't countriesInitial and retailerInitial after a page refresh
+      this.filtersStateService.countriesInitial ? this.loadCountriesData() : await this.getCountries();
+      this.filtersStateService.retailersInitial ? this.loadRetailersData() : await this.getRetailers();
     }
 
     this.applyFilters();
@@ -277,14 +274,7 @@ export class GeneralFiltersComponent implements OnInit {
     return this.usersMngmtService.getCountries()
       .toPromise()
       .then((res: any[]) => {
-        this.countryList = res;
-        this.filteredCountryList = res;
-        this.countriesCounter = res.length;
-        this.filtersStateService.countriesInitial = res;
-
-        this.countries.patchValue([...this.countryList.map(item => item), 0]);
-        this.prevCountries = this.countries.value;
-
+        this.loadCountriesData(res);
         this.countriesErrorMsg && delete this.countriesErrorMsg;
       })
       .catch((error) => {
@@ -303,20 +293,37 @@ export class GeneralFiltersComponent implements OnInit {
 
         retailers.sort((a, b) => a.name.localeCompare(b.name));
 
-        this.retailerList = retailers;
-        this.filteredRetailerList = retailers;
-        this.retailersCounter = retailers.length;
-        this.filtersStateService.retailersInitial = retailers;
-
-        this.retailers.patchValue([...this.retailerList.map(item => item), 0]);
-        this.prevRetailers = this.retailers.value;
-
+        this.loadRetailersData(retailers);
         this.retailersErrorMsg && delete this.retailersErrorMsg;
       })
       .catch((error) => {
         this.retailersErrorMsg = 'Error al consultar retailers';
         console.error(`[general-filers.component]: ${error}`);
       });
+  }
+
+  loadCountriesData(newCountries?: any[]) {
+    const countries = newCountries ? newCountries : this.filtersStateService.countriesInitial;
+    this.countryList = countries;
+    this.filteredCountryList = countries;
+    this.countriesCounter = countries.length;
+    this.filtersStateService.countriesInitial = countries;
+
+    this.countries.patchValue([...this.countryList.map(item => item), 0]);
+    this.prevCountries = this.countries.value;
+  }
+
+  loadRetailersData(newRetailers?: any[]) {
+    const retailers = newRetailers ? newRetailers : this.filtersStateService.retailersInitial;
+    retailers.sort((a, b) => a.name.localeCompare(b.name));
+
+    this.retailerList = retailers;
+    this.filteredRetailerList = retailers;
+    this.retailersCounter = retailers.length;
+    this.filtersStateService.retailersInitial = retailers;
+
+    this.retailers.patchValue([...this.retailerList.map(item => item), 0]);
+    this.prevRetailers = this.retailers.value;
   }
 
   getSectors() {

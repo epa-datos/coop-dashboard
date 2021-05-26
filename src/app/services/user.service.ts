@@ -7,6 +7,7 @@ import { tap } from 'rxjs/operators';
 import { Md5 } from 'ts-md5';
 import { Configuration } from '../app.constants';
 import { User } from '../models/user';
+import { FiltersStateService } from '../modules/dashboard/services/filters-state.service';
 
 @Injectable()
 export class UserService {
@@ -17,7 +18,9 @@ export class UserService {
   user$ = this.userSource.asObservable();
 
   private _loggedIn = false;
-  redirectUrl: string;
+
+  defaultRedirect: string; // default url to redirect after login and sidebar icons
+  viewLevel: string; // 'latam' to be redirected to latam page or 'general' to be redirected to the first country or retailer depending on role 
 
   get user(): User {
     return this._user;
@@ -39,17 +42,25 @@ export class UserService {
     private http: HttpClient,
     private router: Router,
     private config: Configuration,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private filtersStateService: FiltersStateService
   ) {
     this._loggedIn = !!window.localStorage.getItem('auth_token');
+
     this.user.email = !!window.localStorage.getItem('usermail')
       ? window.localStorage.getItem('usermail')
       : '';
+
     this.user.username = !!window.localStorage.getItem('username')
       ? window.localStorage.getItem('username')
       : '';
+
     this.user.role_name = !!window.localStorage.getItem('role_name')
       ? window.localStorage.getItem('role_name')
+      : '';
+
+    this.viewLevel = !!window.localStorage.getItem('view_level')
+      ? window.localStorage.getItem('view_level')
       : '';
 
     this.baseUrl = this.config.endpoint;
@@ -85,15 +96,17 @@ export class UserService {
     return this.http
       .post(`${this.baseUrl}/auth`, { email, password })
       .pipe(
-        tap((resp: any) => {
-          if (resp.user && resp.token && resp.role) {
+        tap((auth: any) => {
+          if (auth.user && auth.token && auth.role) {
             // this.user.email = email;
-            window.localStorage.setItem('usermail', resp.user.email);
-            window.localStorage.setItem('auth_token', resp.token);
-            window.localStorage.setItem('role_name', resp.role.name);
+            window.localStorage.setItem('usermail', auth.user.email);
+            window.localStorage.setItem('auth_token', auth.token);
+            window.localStorage.setItem('role_name', auth.role.name);
+            window.localStorage.setItem('view_level', auth.level);
 
-            this.user = resp.user;
-            this.user.role_name = resp.role.name;
+            this.user = auth.user;
+            this.user.role_name = auth.role.name;
+            this.viewLevel = auth.level;
 
             this._loggedIn = true;
           }
@@ -134,8 +147,60 @@ export class UserService {
     return role_name === 'admin' ? true : false;
   }
 
+  getDefaultRedirect(): Route {
+    const role = this.user.role_name;
+    let redirect: Route;
+
+    if ((role === 'admin' || role === 'hp') || (role === 'countries' && this.viewLevel === 'latam')) {
+      // For users who have enable LATAM view
+      redirect = {
+        url: '/dashboard/main-region',
+        queryParams: { ['main-region']: 'latam' }
+      }
+    } else if (role === 'country' && this.viewLevel === 'general') {
+      // For users who have country role and general level
+      // the redirection is the first country that which they have access
+      let countries = this.filtersStateService.countriesInitial;
+
+      for (let country of countries) {
+        country.title = country.region ? country.region : country.name;
+      }
+
+      if (countries.some(country => country.region)) {
+        countries = countries.sort((a, b) => (a.title < b.title ? -1 : 1));
+      }
+
+      // If the first country that which they have access belongs to a region
+      // is necessary to include it in a 'region' query param
+      let queryParams;
+      if (!countries[0].region) {
+        queryParams = { ['country']: countries[0]?.name.toLowerCase().replaceAll(' ', '-') }
+      } else {
+        queryParams = {
+          ['region']: countries[0]?.region.toLowerCase().replaceAll(' ', '-'),
+          ['country']: countries[0]?.name.toLowerCase().replaceAll(' ', '-')
+        }
+      }
+
+      redirect = { url: '/dashboard/country', queryParams }
+
+    } else if (role === 'retailer' && this.viewLevel === 'general') {
+      // For users who have retailer role and general level
+      // the redirection is the first retailer that which they have access
+      const retailers = this.filtersStateService.retailersInitial;
+      const retailerName = retailers[0]?.name.split(' - ')[1];
+      redirect = {
+        url: '/dashboard/retailer',
+        queryParams: { ['retailer']: retailerName.toLowerCase().replaceAll(' ', '-') }
+      }
+    }
+
+    return redirect;
+  }
+
   logout() {
     this.cleanUserData();
+    this.filtersStateService.deleteFilters();
   }
 
   cleanUserData() {
@@ -155,4 +220,9 @@ export class UserService {
       this.cookieService.delete('coop_user');
     }
   }
+}
+
+export interface Route {
+  url: string;
+  queryParams: any;
 }

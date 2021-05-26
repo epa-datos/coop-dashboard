@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { FiltersStateService } from 'src/app/modules/dashboard/services/filters-state.service';
 import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
 import { UserService } from 'src/app/services/user.service';
 import { EmailValidator } from 'src/app/tools/validators/email.validator';
@@ -29,7 +30,8 @@ export class LoginComponent implements OnInit {
     private userService: UserService,
     private usersMngmtService: UsersMngmtService,
     private router: Router,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private filtersStateService: FiltersStateService
   ) {
     const islogged = this.userService.isLoggedIn();
 
@@ -70,7 +72,6 @@ export class LoginComponent implements OnInit {
     this.usermail = um === 'null' ? '' : um;
   }
 
-
   login(email: string, password: string) {
     this.reqStatus = 1;
     if (this.form.valid) {
@@ -82,7 +83,6 @@ export class LoginComponent implements OnInit {
           } else {
             this.userService.deleteUserCookieIfExists();
           }
-          this.reqStatus = 2;
           this.redirect();
         },
         error => {
@@ -94,28 +94,39 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  redirect() {
-    let urlRedirect: string;
-    let queryParams;
-    if (this.userService.user.role_name !== 'retailer') {
-      urlRedirect = '/dashboard/coop';
-      queryParams = { ['country']: 'latam' };
+  async redirect() {
+    await this.getCountries();
+    await this.getRetailers();
 
-      this.router.navigate([urlRedirect], { queryParams });
-    } else {
-      this.usersMngmtService.getRetailers()
-        .subscribe((retailers: any[]) => {
-          if (retailers.length > 0) {
-            urlRedirect = '/dashboard/retailer';
-            queryParams = { ['retailer']: retailers[0]?.name.toLowerCase().replaceAll(' ', '-') };
+    const { url, queryParams } = this.userService.getDefaultRedirect();
+    this.router.navigate([url], { queryParams });
 
-            this.router.navigate([urlRedirect], { queryParams });
-          }
-        }, error => {
-          const errMsg = error?.error?.message ? error.error.message : error?.message;
-          throw (new Error(errMsg));
-        })
-    }
+    this.reqStatus = 2;
+  }
+
+  getCountries() {
+    return this.usersMngmtService.getCountries()
+      .toPromise()
+      .then((countries: any[]) => {
+        this.filtersStateService.countriesInitial = countries;
+      })
+      .catch((error) => {
+        console.error(`[login.component]: ${error}`);
+      });
+  }
+
+  getRetailers() {
+    return this.usersMngmtService.getRetailers()
+      .toPromise()
+      .then((res: any[]) => {
+        const retailers = res.map(retailer => {
+          return { id: retailer.id, name: `${retailer.country_code} - ${retailer.name}` }
+        });
+        this.filtersStateService.retailersInitial = retailers;
+      })
+      .catch((error) => {
+        console.error(`[login.component]: ${error}`);
+      });
   }
 
   rememberPsw() {

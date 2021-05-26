@@ -81,8 +81,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     try {
       this.menuReqStatus = 1;
       if (this.userRole === 'admin' || this.userRole === 'hp' || this.userRole === 'country') {
+
         // load LATAM menu items
-        this.loadLatamSubmenu();
+        this.userService.viewLevel === 'latam' && this.loadLatamSubmenu();
+
         // load countries menu items
         await this.getAvailableCountries();
       } else if (this.userRole === 'retailer') {
@@ -122,20 +124,20 @@ export class SidebarComponent implements OnInit, OnDestroy {
       submenu: [
         {
           title: 'Programa COOP',
-          path: '/dashboard/coop',
-          paramName: 'country',
+          path: '/dashboard/main-region',
+          paramName: 'main-region',
           param: 'latam'
         },
         {
           title: 'Otras herramientas',
           path: '/dashboard/tools',
-          paramName: 'country',
+          paramName: 'main-region',
           param: 'latam'
         },
         {
           title: 'Análisis de sentimientos OmniChat',
           path: '/dashboard/omnichat',
-          paramName: 'country',
+          paramName: 'main-region',
           param: 'latam'
         }
       ],
@@ -147,6 +149,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   async getPrevSelection() {
     const params = this.route.snapshot.queryParams;
 
+    const mainRegion = params['main-region'];
     const region = params['region'];
     const country = params['country'];
     const retailer = params['retailer'];
@@ -202,8 +205,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.selectedItemL2 = itemL2;
       }
 
-    } else if (country && country === 'latam') {
-      this.selectedItemL1 = this.menuItems.find(item => item.title.toLowerCase() === country);
+    } else if (mainRegion && mainRegion === 'latam') {
+      this.selectedItemL1 = this.menuItems.find(item => item.title.toLowerCase() === mainRegion);
       this.selectedItemL1.submenuOpen = true;
       this.selectedItemL2 = this.getSelectionUsingRoute(this.selectedItemL1);
       this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });

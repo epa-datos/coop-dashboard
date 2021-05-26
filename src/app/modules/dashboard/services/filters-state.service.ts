@@ -97,12 +97,12 @@ export class FiltersStateService {
   }
 
   convertFiltersToQueryParams() {
-    this.periodQParams = { startDate: moment(this.period.startDate).format('YYYY-MM-DD'), endDate: moment(this.period.endDate).format('YYYY-MM-DD') }
+    this.periodQParams = { startDate: moment(this.period.startDate).format('YYYY-MM-DD'), endDate: moment(this.period.endDate).format('YYYY-MM-DD') };
     this.sectorsQParams = this.sectors && this.convertArrayToQueryParams(this.sectors, 'id');
     this.categoriesQParams = this.categories && this.convertArrayToQueryParams(this.categories, 'id');
     this.countriesQParams = this.countries && this.convertArrayToQueryParams(this.countries, 'id');
     this.retailersQParams = this.retailers && this.convertArrayToQueryParams(this.retailers, 'id');
-    this.sourcesQParams = this.retailers && this.convertArrayToQueryParams(this.sources, 'id');
+    this.sourcesQParams = this.sources && this.convertArrayToQueryParams(this.sources, 'id');
     this.campaignsQParams = this.campaigns && this.convertArrayToQueryParams(this.campaigns, 'id');
   }
 
@@ -125,6 +125,34 @@ export class FiltersStateService {
     this.convertFiltersToQueryParams();
   }
 
+  deleteFilters() {
+    if (this.countriesInitial) {
+      delete this.countriesInitial;
+      delete this.countries;
+    }
+
+    if (this.retailersInitial) {
+      delete this.retailersInitial;
+      delete this.retailers;
+    }
+
+    if (this.periodInitial) {
+      delete this.periodInitial;
+      delete this.period;
+    }
+
+    if (this.sectorsInitial) {
+      delete this.sectorsInitial;
+      delete this.sectors;
+    }
+
+    if (this.categoriesInitial) {
+      delete this.categoriesInitial;
+      delete this.categories;
+    }
+    this.selectCampaigns([]);
+  }
+
   filtersChange() {
     this.convertFiltersToQueryParams();
     this.filtersSource.next();
@@ -135,4 +163,3 @@ interface Period {
   startDate: Date,
   endDate: Date
 }
-
