@@ -118,7 +118,13 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     private overviewService: OverviewService) { }
 
   ngOnInit(): void {
-    if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
+    if (this.filtersStateService.countries &&
+      this.filtersStateService.retailers &&
+      this.filtersStateService.period &&
+      this.filtersStateService.sectors &&
+      this.filtersStateService.categories &&
+      this.filtersStateService.sources) {
+
       this.filtersStateService.restoreFilters();
       this.getAllData();
     }
