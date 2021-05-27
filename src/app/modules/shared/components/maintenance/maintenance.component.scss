@@ -1,7 +1,8 @@
-.main-container {
+.message-container {
     align-items: center;
     display: flex;
-    height: calc(90vh - 64px);
+    flex-direction: column;
+    height: 100%;
     justify-content: center;
     width: 100%;
 }

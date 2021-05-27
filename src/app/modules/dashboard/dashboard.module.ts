@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '../shared/shared.module';
 
 // **** Angular Material ****
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
@@ -102,7 +103,8 @@ import { ChartLoaderComponent } from './components/charts/chart-loader/chart-loa
     MatPaginatorModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
-    NgbModule
+    NgbModule,
+    SharedModule
   ],
   providers: [{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'never' } }]
 })
