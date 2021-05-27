@@ -42,9 +42,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public submenuReqStatus: number = 0;
   public isCollapsed = true;
 
+  public selectedMainRegionName;
   public selectedCountryID;
   public selectedRetailerID;
 
+  public mainRegionSub: Subscription;
   public countrySub: Subscription;
   public retailerSub: Subscription;
 
@@ -65,6 +67,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.isCollapsed = true;
     });
 
+    this.mainRegionSub = this.appStateService.selectedMainRegion$.subscribe(mainRegion => {
+      this.selectedMainRegionName = mainRegion?.name ? mainRegion.name : undefined;
+    });
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
       this.selectedCountryID = country?.id ? country.id : undefined;
     });
@@ -98,7 +103,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
       path: '/campaign-comparator',
     }
     this.menuItems.push(menuItem1);
-    this.appStateService.updateSidebarData(this.menuItems);
 
     // Admin routes
     const menuItem2 = {
@@ -107,6 +111,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       isForAdmin: true
     }
     this.menuItems.push(menuItem2);
+
     this.appStateService.updateSidebarData(this.menuItems);
 
     this.getPrevSelection();
@@ -174,7 +179,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.selectedItemL3 = this.getSelectionUsingRoute(this.selectedItemL2);
       }
 
-    } else if (country && country !== 'latam') {
+      // country && country !== 'latam'
+    } else if (country) {
       this.selectedItemL1 = this.menuItems.find(item => item.param === country);
 
       const defaultSubmenu = this.addDefaultSubmenuToCountry({ name: this.selectedItemL1.param.replaceAll('-', ' ') });
@@ -203,7 +209,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.selectedItemL1 = this.menuItems.find(item => item.title.toLowerCase() === mainRegion);
       this.selectedItemL1.submenuOpen = true;
       this.selectedItemL2 = this.getSelectionUsingRoute(this.selectedItemL1);
-      this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+      this.appStateService.selectMainRegion({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
     }
     else if (retailer) {
       const item = this.menuItems.find(item => item.title.toLowerCase() === retailer.replaceAll('-', ' '));
@@ -292,7 +298,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         }
 
         this.menuItems = [...this.menuItems, ...menuItems];
-        this.appStateService.updateSidebarData(this.menuItems);
+        // this.appStateService.updateSidebarData(this.menuItems);
       })
       .catch(error => {
         const errMsg = error?.error?.message ? error.error.message : error?.message;
@@ -507,6 +513,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   emitNewSelection(item) {
     switch (item.paramName) {
+      case 'main-region':
+        if (this.selectedItemL2.param && item.param === 'latam' && this.selectedMainRegionName !== this.selectedItemL1.title) {
+          this.appStateService.selectRetailer();
+          this.appStateService.selectCountry();
+          this.appStateService.selectMainRegion({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+        }
+        break;
       case 'country':
         if (this.userRole !== 'retailer') {
           this.appStateService.selectRetailer();
@@ -517,14 +530,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
               this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
           } else if (this.selectedItemL2.param) {
             // When a country is selectedItemL2 (There is a region value in selectedItemL1)
-            if (item.param === 'latam') {
-              if (this.selectedCountryID !== this.selectedItemL1.id)
-                this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
-            } else {
-              if (this.selectedCountryID !== this.selectedItemL2.id)
-                this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
-            }
+            // if (item.param === 'latam') {
+            //   if (this.selectedCountryID !== this.selectedItemL1.id)
+            //     this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+            // } else {
+            if (this.selectedCountryID !== this.selectedItemL2.id)
+              this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+            // }
           }
+          this.appStateService.selectMainRegion();
         }
         break;
 
@@ -555,12 +569,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
               this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
             }
           }
+          this.appStateService.selectMainRegion();
         }
         break;
 
       default:
         this.appStateService.selectRetailer();
         this.appStateService.selectCountry();
+        this.appStateService.selectMainRegion();
     }
   }
 
@@ -575,6 +591,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.mainRegionSub?.unsubscribe();
     this.countrySub?.unsubscribe();
     this.retailerSub?.unsubscribe();
     this.appStateService.selectCountry();
