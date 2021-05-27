@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:3000/api/v1',
+  apiUrl: 'https://bdd-epa-digital.uc.r.appspot.com/api/v1',
 };
