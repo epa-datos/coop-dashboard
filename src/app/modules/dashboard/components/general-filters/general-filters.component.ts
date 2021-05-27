@@ -138,14 +138,18 @@ export class GeneralFiltersComponent implements OnInit {
       this.retailerID = selectedRetailer?.id ? selectedRetailer.id : undefined;
     }
 
-    this.loadLatamContent();
+    this.loadLatamContent().then(() => {
+      this.applyFilters();
+    });
 
     this.routeSub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     )
       .subscribe(event => {
         if (event instanceof NavigationEnd)
-          this.loadLatamContent();
+          this.loadLatamContent().then(() => {
+            this.isLatamSelected && this.applyFilters();
+          });
       });
 
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
@@ -257,17 +261,18 @@ export class GeneralFiltersComponent implements OnInit {
       });
   }
 
-  async loadLatamContent() {
-    this.isLatamSelected = this.router.url.includes('latam') ? true : false;
-    if (this.isLatamSelected) {
+  loadLatamContent() {
+    return new Promise<void>(async (resolve) => {
+      this.isLatamSelected = this.router.url.includes('latam') ? true : false;
 
-      // There are countriesInitial and retailerInitial after login
-      // There aren't countriesInitial and retailerInitial after a page refresh
-      this.filtersStateService.countriesInitial ? this.loadCountriesData() : await this.getCountries();
-      this.filtersStateService.retailersInitial ? this.loadRetailersData() : await this.getRetailers();
-    }
-
-    this.applyFilters();
+      if (this.isLatamSelected) {
+        // There are countriesInitial or retailerInitial after login
+        // There aren't countriesInitial and retailerInitial after a page refresh
+        this.filtersStateService.countriesInitial ? this.loadCountriesData() : await this.getCountries();
+        this.filtersStateService.retailersInitial ? this.loadRetailersData() : await this.getRetailers();
+      }
+      resolve();
+    });
   }
 
   getCountries() {
