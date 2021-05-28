@@ -1,6 +1,6 @@
 <div class="chart" [style.height]="height">
     <!-- loader -->
-    <app-chart-loader [hidden]="status !== 1"></app-chart-loader>
+    <app-chart-loader [hidden]="status > 1"></app-chart-loader>
 
     <!-- ready -->
     <div [hidden]="status !== 2 || data?.length < 1" [id]="graphID" style="height: 100%"></div>

@@ -115,7 +115,6 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
     let bullet = series.bullets.create(am4charts.CircleBullet);
 
     chart.cursor = new am4charts.XYCursor();
-    chart.responsive.enabled = true;
   }
 
   loadChartData(chart) {

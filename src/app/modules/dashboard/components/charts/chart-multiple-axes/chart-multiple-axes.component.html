@@ -1,6 +1,6 @@
 <div class="chart" [style.height]="height">
     <!-- loader -->
-    <app-chart-loader *ngIf="status === 1"></app-chart-loader>
+    <app-chart-loader [hidden]="status > 1"></app-chart-loader>
 
     <!-- ready -->
     <div [ngClass]="{'chart-hidden': status !== 2}" [id]="chartID" style="height: 100%"></div>
