@@ -77,7 +77,6 @@ export class ChartHeatMapComponent implements OnInit, AfterViewInit {
 
     let chart = am4core.create(this.chartID, am4charts.XYChart);
     chart.maskBullets = false;
-    chart.responsive.enabled = true;
     chart.numberFormatter.numberFormat = '#,###.##';
 
     let xAxis = chart.xAxes.push(new am4charts.CategoryAxis());
