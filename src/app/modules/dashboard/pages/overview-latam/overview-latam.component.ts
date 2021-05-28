@@ -223,7 +223,8 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
     this.overviewService.getUsersAndSalesLatam(metricType, sectorID, categoryID, sourceID).subscribe(
       (resp: any[]) => {
-        this.usersAndSalesByMetric = resp;
+        // this.usersAndSalesByMetric = resp;
+        this.usersAndSalesByMetric = resp.filter(serie => +serie.name >= 2021);
         this.usersAndSalesReqStatus = 2;
       },
       error => {
