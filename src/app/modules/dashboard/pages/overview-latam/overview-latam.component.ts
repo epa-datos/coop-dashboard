@@ -71,6 +71,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       metricName: 'revenue',
       metricValue: 0,
       metricFormat: 'currency',
+      metricSymbol: 'USD',
       subMetricTitle: 'roas',
       subMetricName: 'roas',
       subMetricValue: 0,

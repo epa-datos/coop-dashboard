@@ -69,6 +69,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       metricName: 'revenue',
       metricValue: 0,
       metricFormat: 'currency',
+      metricSymbol: 'USD',
       subMetricTitle: 'roas',
       subMetricName: 'roas',
       subMetricValue: 0,
