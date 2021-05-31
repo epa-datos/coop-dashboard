@@ -33,15 +33,13 @@
                     Todos
                 </mat-option>
                 <ng-container *ngFor="let country of countryList">
-                    <mat-option [hidden]="country.hidden" [value]="country"
+                    <mat-option class="mat-option-container" [hidden]="country.hidden" [value]="country"
                         (click)="tosslePerOne('allSelectedCountries', 'countries', 'countryList')">
-                        <div class="mat-option-container">
-                            <span>{{ country.name }}</span>
-                            <button type="button" class="btn btn-sm btn-secondary"
-                                (click)="uniqueSelection('countries', 'country', country)">
-                                Only
-                            </button>
-                        </div>
+                        <span class="option-name">{{ country.name }}</span>
+                        <button type="button" class="btn btn-sm btn-secondary"
+                            (click)="uniqueSelection('countries', 'country', country)">
+                            Solamente
+                        </button>
                     </mat-option>
                 </ng-container>
 
@@ -90,15 +88,13 @@
                     Todos
                 </mat-option>
                 <ng-container *ngFor="let retailer of retailerList">
-                    <mat-option [hidden]="retailer.hidden" [value]="retailer"
+                    <mat-option class="mat-option-container" [hidden]="retailer.hidden" [value]="retailer"
                         (click)="tosslePerOne('allSelectedRetailers', 'retailers', 'retailerList')">
-                        <div class="mat-option-container">
-                            <span>{{ retailer.name }}</span>
-                            <button type="button" class="btn btn-sm btn-secondary"
-                                (click)="uniqueSelection('retailers', 'retailer', retailer)">
-                                Only
-                            </button>
-                        </div>
+                        <span class="option-name">{{ retailer.name }}</span>
+                        <button type="button" class="btn btn-sm btn-secondary"
+                            (click)="uniqueSelection('retailers', 'retailer', retailer)">
+                            Solamente
+                        </button>
                     </mat-option>
                 </ng-container>
 
@@ -157,15 +153,13 @@
                     class="font-weight-bold">
                     Todos
                 </mat-option>
-                <mat-option *ngFor="let sector of sectorList" [value]="sector"
+                <mat-option class="mat-option-container" *ngFor="let sector of sectorList" [value]="sector"
                     (click)="tosslePerOne('allSelectedSectors', 'sectors', 'sectorList')">
-                    <div class="mat-option-container">
-                        <span>{{ sector.name }}</span>
-                        <button type="button" class="btn btn-sm btn-secondary"
-                            (click)="uniqueSelection('sectors', 'sector', sector)">
-                            Only
-                        </button>
-                    </div>
+                    <span class="option-name">{{ sector.name }}</span>
+                    <button type="button" class="btn btn-sm btn-secondary"
+                        (click)="uniqueSelection('sectors', 'sector', sector)">
+                        Solamente
+                    </button>
                 </mat-option>
             </mat-select>
             <small class="text-danger" *ngIf="sectors?.value?.length < 1 && sectors.touched">
@@ -202,15 +196,13 @@
                     class="font-weight-bold">
                     Todas
                 </mat-option>
-                <mat-option *ngFor="let category of categoryList" [value]="category"
+                <mat-option class="mat-option-container" *ngFor="let category of categoryList" [value]="category"
                     (click)="tosslePerOne('allSelectedCategories', 'categories', 'categoryList')">
-                    <div class="mat-option-container">
-                        <span>{{ category.name }}</span>
-                        <button type="button" class="btn btn-sm btn-secondary"
-                            (click)="uniqueSelection('categories', 'category', category)">
-                            Only
-                        </button>
-                    </div>
+                    <span class="option-name">{{ category.name }}</span>
+                    <button type="button" class="btn btn-sm btn-secondary"
+                        (click)="uniqueSelection('categories', 'category', category)">
+                        Solamente
+                    </button>
                 </mat-option>
             </mat-select>
             <small class="text-danger" *ngIf="categories?.value?.length < 1 && categories.touched">
@@ -257,18 +249,16 @@
                     Todas
                 </mat-option>
                 <ng-container *ngFor="let campaign of campaignList">
-                    <mat-option [hidden]="campaign.hidden" [value]="campaign"
+                    <mat-option class="mat-option-container" [hidden]="campaign.hidden" [value]="campaign"
                         (click)="tosslePerOne('allSelectedCampaigns', 'campaigns', 'campaignList')">
-                        <div class="mat-option-container">
-                            <span #tooltip="matTooltip" md-raised-button [matTooltip]="campaign.name"
-                                matTooltipPosition="below" matTooltipClass="custom-tooltip">
-                                {{ campaign.name }}
-                            </span>
-                            <button type="button" class="btn btn-sm btn-secondary"
-                                (click)="uniqueSelection('campaigns', 'campaign', campaign)">
-                                Only
-                            </button>
-                        </div>
+                        <span class="option-name" #tooltip="matTooltip" md-raised-button [matTooltip]="campaign.name"
+                            matTooltipPosition="below" matTooltipClass="custom-tooltip">
+                            {{ campaign.name }}
+                        </span>
+                        <button type="button" class="btn btn-sm btn-secondary"
+                            (click)="uniqueSelection('campaigns', 'campaign', campaign)">
+                            Solamente
+                        </button>
                     </mat-option>
                 </ng-container>
             </mat-select>
@@ -305,15 +295,13 @@
                     class="font-weight-bold">
                     Todas
                 </mat-option>
-                <mat-option *ngFor="let source of sourceList" [value]="source"
+                <mat-option class="mat-option-container" *ngFor="let source of sourceList" [value]="source"
                     (click)="tosslePerOne('allSelectedSources', 'sources', 'sourceList')">
-                    <div class="mat-option-container">
-                        <span>{{ source.name }}</span>
-                        <button type="button" class="btn btn-sm btn-secondary"
-                            (click)="uniqueSelection('sources', 'source', source)">
-                            Only
-                        </button>
-                    </div>
+                    <span class="option-name">{{ source.name }}</span>
+                    <button type="button" class="btn btn-sm btn-secondary"
+                        (click)="uniqueSelection('sources', 'source', source)">
+                        Solamente
+                    </button>
                 </mat-option>
             </mat-select>
         </div>
