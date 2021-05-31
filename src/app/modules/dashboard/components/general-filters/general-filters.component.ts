@@ -565,7 +565,12 @@ export class GeneralFiltersComponent implements OnInit {
     this[counterRef] = selectionCounter.length;
   }
 
-  applyFilters() {
+
+  /**
+   * Applys filters
+   * @param [manualTriggered] change made by "filter" button click triggered manually by the user
+   */
+  applyFilters(manualTriggered?: boolean) {
     this.filtersStateService.selectPeriod({ startDate: this.startDate.value._d, endDate: this.endDate.value._d });
     this.filtersStateService.selectSectors(this.sectors.value.filter(item => item.id));
     this.filtersStateService.selectCategories(this.categories.value.filter(item => item.id));
@@ -579,7 +584,7 @@ export class GeneralFiltersComponent implements OnInit {
     const areAllCampsSelected = this.areAllCampaignsSelected();
     this.filtersStateService.selectCampaigns(areAllCampsSelected ? [] : this.campaigns.value.filter(item => item.id));
 
-    this.filtersStateService.filtersChange();
+    this.filtersStateService.filtersChange(manualTriggered);
   }
 
   arraysAreEquals(array1: any[], array2: any[]): boolean {

@@ -318,7 +318,7 @@
             (!endDate.valid && endDate.touched) ||
             (sectors?.value?.length < 1 && sectors.touched) ||
             (categories?.value?.length < 1 && categories.touched)
-            " (click)="applyFilters()">
+            " (click)="applyFilters(true)">
             <i class="fas fa-filter mr-2"></i>
             Filtrar
         </button>
