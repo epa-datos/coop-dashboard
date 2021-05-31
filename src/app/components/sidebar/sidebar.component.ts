@@ -106,8 +106,17 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     // Admin routes
     const menuItem2 = {
-      title: 'Administrar usuarios',
-      path: '/dashboard/users',
+      title: 'Administrador',
+      submenu: [
+        {
+          title: 'Usuarios',
+          path: '/dashboard/users',
+        },
+        {
+          title: 'Registro de actividad',
+          path: '/dashboard/users/activity-register',
+        }
+      ],
       isForAdmin: true
     }
     this.menuItems.push(menuItem2);
@@ -224,7 +233,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
       }
     } else {
       const item = this.menuItems.find(item => item.path == this.router.url);
-      this.selectedItemL1 = item;
+      if (item) {
+        this.selectedItemL1 = item;
+      } else {
+        // applies for menu options with submenus
+        for (let item of this.menuItems) {
+          if (item.submenu) {
+            let newSubMenuItem = item.submenu.find(title => title.path === this.router.url);
+            if (newSubMenuItem) {
+              this.selectedItemL1 = item;
+              this.selectedItemL1.submenuOpen = true;
+
+              this.selectedItemL2 = newSubMenuItem;
+            }
+          }
+        }
+      }
+
       this.appStateService.selectCountry();
       this.appStateService.selectRetailer();
     }
