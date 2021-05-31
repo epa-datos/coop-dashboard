@@ -115,6 +115,36 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   font-size: 0.875rem !important;
 }
 
+.mat-option-container {
+  .mat-option-text {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .option-name {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+  
+    .btn-secondary {
+      box-shadow: 0 2px 2px rgb(50 50 93 / 5%), 0 1px 3px rgb(0 0 0 / 4%);
+      display: none;
+    }
+  
+    &:hover {
+      .option-name {
+        width: calc(100% - 50px);
+      }
+      .btn-secondary {
+        display: block;
+      }
+    }
+  }
+}
+
 // *** paginator ***
 .mat-paginator-page-size-select {
   width: 70px !important;
