@@ -56,7 +56,7 @@ export class FiltersStateService {
   sourcesQParams;
 
   // filtersChange
-  private filtersSource = new Subject<any>();
+  private filtersSource = new Subject<boolean>();
   filtersChange$ = this.filtersSource.asObservable();
 
   constructor() { }
@@ -153,9 +153,13 @@ export class FiltersStateService {
     this.selectCampaigns([]);
   }
 
-  filtersChange() {
+  /**
+   * Filters change
+   * @param manualChange change made by "filter" button click triggered manually by the user
+   */
+  filtersChange(manualChange: boolean) {
     this.convertFiltersToQueryParams();
-    this.filtersSource.next();
+    this.filtersSource.next(manualChange);
   }
 }
 
