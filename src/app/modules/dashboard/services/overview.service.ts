@@ -44,14 +44,14 @@ export class OverviewService {
     });
   }
 
-  concatedQueryParams(isLatam?: boolean, uniqueSectorID?: number, uniqueCategoryID?: number, uniqueSourceID?: number): string {
+  concatedQueryParams(isLatam?: boolean, uniqueSectorID?: number, uniqueCategoryID?: number, uniqueSourceID?: number, omitSectors?: boolean): string {
     let startDate = this.filtersStateService.periodQParams.startDate;
     let endDate = this.filtersStateService.periodQParams.endDate;
     let sectors = !uniqueSectorID ? this.filtersStateService.sectorsQParams : uniqueSectorID;
     let categories = !uniqueCategoryID ? this.filtersStateService.categoriesQParams : uniqueCategoryID;
     let campaigns = this.filtersStateService.campaignsQParams;
 
-    const baseQParams = `start_date=${startDate}&end_date=${endDate}&sectors=${sectors}&categories=${categories}`
+    const baseQParams = `start_date=${startDate}&end_date=${endDate}${!omitSectors ? `&sectors=${sectors}` : ''}&categories=${categories}`;
     if (!isLatam) {
       return `${baseQParams}${campaigns ? `&campaigns=${campaigns}` : ''}`;
     } else {
@@ -93,16 +93,12 @@ export class OverviewService {
   }
 
   // *** categories by sector ***
-  getCategoriesBySector(sector: string) {
-    if (!sector) {
-      return throwError('[overview.service]: not sector provided');
-    }
-
-    let queryParams = this.concatedQueryParams();
-
+  getCategoriesBySector(sector?: string) {
     if (this.retailerID) {
-      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/categories?sector=${sector}&${queryParams}`);
+      let queryParams = this.concatedQueryParams();
+      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/categories?${queryParams}`);
     } else if (this.countryID) {
+      let queryParams = this.concatedQueryParams(null, null, null, null, true);
       return this.http.get(`${this.baseUrl}/countries/${this.countryID}/retailer/categories?sector=${sector}&${queryParams}`);
     } else {
       return throwError('[overview.service]: not retailerID or countryID provided');
