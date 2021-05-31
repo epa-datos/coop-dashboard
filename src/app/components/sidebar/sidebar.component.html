@@ -70,6 +70,12 @@
       <!-- Navigation -->
       <ul class="navbar-nav" *ngIf="menuItems?.length > 1">
         <ng-container *ngFor="let menuItem of menuItems">
+
+          <div class="admin-header" *ngIf="menuItem.title === 'Administrador'">
+            <hr class="my-3">
+            <h6 class="navbar-heading text-muted">Configuración</h6>
+          </div>
+
           <li class="{{menuItem.class}} nav-item" *ngIf="!menuItem.isForAdmin || (menuItem.isForAdmin && userIsAdmin)">
             <a routerLinkActive="active" class="nav-link" [ngClass]="{'active' : menuItem === selectedItemL1 }"
               (click)="selectItem(menuItem)">

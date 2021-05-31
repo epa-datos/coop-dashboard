@@ -106,6 +106,18 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.customTitle = newMenuItem.title;
       this.customSubtitle && delete this.customSubtitle;
     } else {
+
+      // applies for menu options with submenus
+      for (let item of this.listTitles) {
+        if (item.submenu) {
+          const newSubMenuItem = item.submenu.find(title => title.path === currentUrl);
+          if (newSubMenuItem) {
+            this.customTitle = item.title;
+            this.customSubtitle && delete this.customSubtitle;
+          }
+        }
+      }
+
       if (this.newRetailer?.id) {
         if (this.userService.user.role_name === 'retailer') {
           this.customTitle = this.newRetailer.name;

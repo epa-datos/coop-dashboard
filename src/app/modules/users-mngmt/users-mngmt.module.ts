@@ -13,6 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UsersMngmtService } from './services/users-mngmt.service';
 import { InvitationComponent } from './components/invitation/invitation.component';
+import { ActivityRegisterComponent } from './pages/activity-register/activity-register.component';
 
 
 
@@ -23,6 +24,7 @@ import { InvitationComponent } from './components/invitation/invitation.componen
     UsersComponent,
     InviteUserComponent,
     InvitationComponent,
+    ActivityRegisterComponent,
   ],
   imports: [
     CommonModule,
