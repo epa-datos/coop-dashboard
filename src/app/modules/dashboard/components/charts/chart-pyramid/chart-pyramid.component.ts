@@ -70,7 +70,8 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     this.loadChartData(chart);
 
     // Use only absolute numbers
-    chart.numberFormatter.numberFormat = '#.#s';
+    // chart.numberFormatter.numberFormat = '#.#s';
+    chart.numberFormatter.numberFormat = '#,###.##s';
 
     // Create axes
     let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());

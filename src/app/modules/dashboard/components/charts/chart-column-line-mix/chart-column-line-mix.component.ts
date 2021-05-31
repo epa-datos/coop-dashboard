@@ -48,6 +48,7 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
     // Create chart instance
     var chart = am4core.create(this.chartID, am4charts.XYChart);
     chart.data = this.data;
+    chart.numberFormatter.numberFormat = '#,###.##';
 
     // chart.exporting.menu = new am4core.ExportMenu();
 

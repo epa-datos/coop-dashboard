@@ -52,6 +52,7 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
     this.loadStatus = 1;
     am4core.useTheme(am4themes_animated);
     let chart = am4core.create(this.chartID, am4charts.XYChart);
+    chart.numberFormatter.numberFormat = '#,###.##';
 
     // Create axes
     let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
