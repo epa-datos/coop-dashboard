@@ -8,9 +8,18 @@
     
     .metric-container {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr;
         gap: 16px;
         padding: 1rem 1.5rem;
+        height: calc(100% - 24px);
+        
+        &.with-icon{
+            grid-template-columns: 1fr auto;
+        }
+
+        &.with-submetric {
+            overflow-y: auto;
+        }
 
         .icon {
             height: 2rem;
@@ -25,7 +34,10 @@
         width: 100%;
     
         .submetric-data {
-            padding: 0.3rem 1.5rem; 
+            padding: 0.3rem 1.5rem;
+            height: 25px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }
