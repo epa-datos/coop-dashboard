@@ -1,5 +1,74 @@
-<div class="row mt-4">
+<div class="row mt-5">
     <div *ngFor="let stat of kpis" class="col-12 col-md-6 col-lg-4 col-xl-2 mb-2">
         <app-card-stat [stat]="stat" [loader]="kpisReqStatus <= 1" [smallHeader]="true" height="100px"></app-card-stat>
+    </div>
+</div>
+
+<div class="row mt-1">
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Chats por país</span>
+            </div>
+            <div class="card-body">
+                <app-chart-bar-horizontal [data]="chatsByCountry" name="chats-by-country" category="country"
+                    value="chats">
+                </app-chart-bar-horizontal>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Chats por retailer</span>
+            </div>
+            <div class="card-body">
+                <div class="retailers-chart-container">
+                    <app-chart-bar-horizontal [data]="chatsByRetailer" name="chats-by-retailer" category="retailer"
+                        value="chats" height="600px">
+                    </app-chart-bar-horizontal>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Chats por dispositivo</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pictorial [data]="chatsByDevices" name="chats-by-devices" category="name" iconType="monitor"
+                    [status]="devicesReqStatus">
+                </app-chart-pictorial>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Chats por categoría</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pie [data]="chatsByCategories" name="chats-by-category" legendPosition="bottom">
+                </app-chart-pie>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Histórico de chats</span>
+            </div>
+            <div class="card-body">
+                <app-chart-line [data]="chatHistory" name="chat-history">
+                </app-chart-line>
+            </div>
+        </div>
     </div>
 </div>
