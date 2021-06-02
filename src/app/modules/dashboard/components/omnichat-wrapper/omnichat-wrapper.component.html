@@ -5,6 +5,7 @@
     </div>
 </div>
 
+<!-- CHATS POR PAIS Y RETAILER -->
 <div class="row mt-1">
     <div class="col-12 col-md-6 mt-4">
         <div class="card">
@@ -34,6 +35,7 @@
     </div>
 </div>
 
+<!-- CHATS (TRAFFICO, DISPOSITIVO Y CATEGORIA) -->
 <div class="row">
     <div class="col-12 col-lg-4 mt-4">
         <app-card-stat [stat]="proactiveChatData" [loader]="false" [smallHeader]="true" height="100px"></app-card-stat>
@@ -73,6 +75,7 @@
     </div>
 </div>
 
+<!-- HISTORICO DE CHATS -->
 <div class="row mt-5">
     <div class="col-12">
         <div class="card">
@@ -87,7 +90,7 @@
     </div>
 </div>
 
-<!-- TRAFFIC AND SALES -->
+<!-- TRAFFICO Y VENTAS (4 GRAFICOS) -->
 <ng-container>
     <div class="row mt-5">
         <div class="col-12">
@@ -249,3 +252,147 @@
         </div>
     </div>
 </ng-container>
+
+
+<!-- TRANSACCIONES -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="mb-3">
+            <span class="h3">Transacciones</span>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="row">
+            <div *ngFor="let item of transactionsData; let i = index" class="mb-xl-2"
+                [ngClass]="{'col-12' : i === 0, 'col-md-6 col-lg-12 col-xl-6' : i > 0}">
+                <app-card-stat [stat]="item" [loader]="false" [smallHeader]="true" height="80px">
+                </app-card-stat>
+            </div>
+            <div class="col-12">
+                <p>* Un usuario puede generar mas de 1 chat.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Usuarios vs Transacciones</span>
+            </div>
+            <div class="card-body">
+                <app-chart-multiple-axes [data]="trafficVsTransactions" valueName1="Tráfico" valueName2="Transacciones"
+                    value1="traffic" value2="transactions" name="traffic-vs-transactions">
+                </app-chart-multiple-axes>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Transacciones por país</span>
+            </div>
+            <div class="card-body">
+                <app-chart-bar-horizontal [data]="chatsByCountry" name="transactions-by-country" category="country"
+                    value="chats">
+                </app-chart-bar-horizontal>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Transacciones por retailer</span>
+            </div>
+            <div class="card-body">
+                <div class="retailers-chart-container">
+                    <app-chart-bar-horizontal [data]="chatsByRetailer" name="transactions-by-retailer"
+                        category="retailer" value="chats" height="600px">
+                    </app-chart-bar-horizontal>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- TRAFFICO Y VENTAS (CATEGORIAS) -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="mb-3">
+            <span class="h3">Tráfico y conversiones por hora y por día</span>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="pills-container">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
+                        (click)="selectedTab3 = 1">Tráfico</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
+                        (click)="selectedTab3 = 2">Conversiones</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-12">
+        <p class="h4">Tasas de conversión</p>
+        <div class="row">
+            <div *ngFor="let stat of conversionByCategories" class="col-lg-4 mb-2">
+                <app-card-stat [stat]="stat" [loader]="false" [smallHeader]="true" height="auto"></app-card-stat>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-xl-3 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Transacciones por categoría</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pie [data]="chatsByCategories" name="transactions-by-category" legendPosition="bottom">
+                </app-chart-pie>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-xl-9 mt-3">
+        <div class="pills-container">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 1}" (click)="selectedTab4 = 1">PS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 2}" (click)="selectedTab4 = 2">HW
+                        Print</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 3}"
+                        (click)="selectedTab4 = 3">Supplies</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-xl-5 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h4">Transacciones por producto</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-bar-horizontal [data]="transactionsByProduct" name="transactions-by-product"
+                            category="product" value="transactions" [truncateLabels]="true">
+                        </app-chart-bar-horizontal>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xl-7">
+                Usuarios, Transacciones y Tasa
+            </div>
+        </div>
+    </div>
+</div>

@@ -1424,9 +1424,98 @@ export class OmnichatWrapperComponent implements OnInit {
     subMetricSymbol: '%',
   }
 
+  transactionsData = [
+    {
+      metricTitle: 'usuarios *',
+      metricName: 'users',
+      metricValue: 173199,
+      metricFormat: 'integer'
+    },
+    {
+      metricTitle: 'transacciones',
+      metricName: 'transactions',
+      metricValue: 6695,
+      metricFormat: 'integer'
+    },
+    {
+      metricTitle: 'tasa de conversión',
+      metricName: 'transactions',
+      metricValue: 3.9,
+      metricFormat: 'percentage',
+    }
+  ]
+
+  trafficVsTransactions = [{
+    date: '2021-03-15',
+    traffic: 1298,
+    transactions: 66,
+  }, {
+    date: '2021-03-16',
+    traffic: 816,
+    transactions: 39,
+  }, {
+    date: '2021-03-17',
+    traffic: 1963,
+    transactions: 43,
+  }, {
+    date: '2021-03-18',
+    traffic: 1809,
+    transactions: 29,
+  }, {
+    date: '2021-03-19',
+    traffic: 1434,
+    transactions: 36,
+  }, {
+    date: '2021-03-20',
+    traffic: 2359,
+    transactions: 16,
+  }, {
+    date: '2021-03-21',
+    traffic: 2114,
+    transactions: 66,
+  },];
+
+  conversionByCategories = [
+    {
+      metricTitle: 'ps',
+      metricName: 'ps',
+      metricValue: 2.6,
+      metricFormat: 'percentage'
+    },
+    {
+      metricTitle: 'hw Print',
+      metricName: 'hw_print',
+      metricValue: 7.6,
+      metricFormat: 'percentage'
+    },
+    {
+      metricTitle: 'Supplies',
+      metricName: 'supplies',
+      metricValue: 16.2,
+      metricFormat: 'percentage',
+    }
+  ]
+
+  transactionsByProduct = [
+    { product: 'Impresora Multifunción HP In 2', transactions: 7 },
+    { product: 'Impresora HP Ink Tank 115 - HP 2', transactions: 8 },
+    { product: 'Impresora Multifunción HP Ink 2', transactions: 10 },
+    { product: 'Impresora Láser HP 107W - HP 2', transactions: 20 },
+    { product: 'Impresora Multifunción HP Deskjet 2', transactions: 25 },
+    { product: 'Impresora HP Deskjet Ink Advance 2', transactions: 28 },
+    { product: 'Impresora Multifunción HP In', transactions: 30 },
+    { product: 'Impresora HP Ink Tank 115 - HP', transactions: 37 },
+    { product: 'Impresora Multifunción HP Ink', transactions: 41 },
+    { product: 'Impresora Láser HP 107W - HP', transactions: 41 },
+    { product: 'Impresora Multifunción HP Deskjet', transactions: 74 },
+    { product: 'Impresora HP Deskjet Ink Advance', transactions: 89 },
+
+  ]
 
   selectedTab1 = 1;
   selectedTab2 = 1;
+  selectedTab3 = 1;
+  selectedTab4 = 1;
 
   constructor() { }
 
