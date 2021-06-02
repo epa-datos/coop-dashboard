@@ -414,7 +414,10 @@
                                 <div class="legend-label">Tasa de conversión</div>
                             </div>
                         </div>
-                        <app-chart-bar-group name="omnichat-users-transactions-rate" height="325px">
+                        <app-chart-bar-group [data]="usersTransactionsConversion"
+                            name="omnichat-users-transactions-rate" height="325px" valueBar1="users"
+                            valueBar2="transactions" valueLine1="conversion_rate" valueNameBar1="Usuarios"
+                            valueNameBar2="Transacciones" valueFormatLine1="%">
                         </app-chart-bar-group>
                     </div>
                 </div>

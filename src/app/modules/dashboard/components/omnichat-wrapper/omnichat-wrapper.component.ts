@@ -1563,6 +1563,29 @@ export class OmnichatWrapperComponent implements OnInit {
     { date: '2021-03-21', value1: 1100, value2: 120 }
   ]
 
+  usersTransactionsConversion = {
+    'Ene 21': {
+      'users': 1517,
+      'transactions': 68,
+      'conversion_rate': 5
+    },
+    'Feb 21': {
+      'users': 2400,
+      'transactions': 81,
+      'conversion_rate': 6
+    },
+    'Abr 21': {
+      'users': 2941,
+      'transactions': 134,
+      'conversion_rate': 7
+    },
+    'May 21': {
+      'users': 6780,
+      'transactions': 328,
+      'conversion_rate': 9
+    }
+  }
+
   selectedTab1 = 1;
   selectedTab2 = 1;
   selectedTab3 = 1;
