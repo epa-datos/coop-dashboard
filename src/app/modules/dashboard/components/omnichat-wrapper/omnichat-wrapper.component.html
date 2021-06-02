@@ -14,7 +14,7 @@
             </div>
             <div class="card-body">
                 <app-chart-bar-horizontal [data]="chatsByCountry" name="omnichat-chats-by-country" category="country"
-                    value="chats">
+                    value="chats" [showCategoryInToolip]="true" [singleColorBars]="true">
                 </app-chart-bar-horizontal>
             </div>
         </div>
@@ -27,7 +27,8 @@
             <div class="card-body">
                 <div class="retailers-chart-container">
                     <app-chart-bar-horizontal [data]="chatsByRetailer" name="omnichat-chats-by-retailer"
-                        category="retailer" value="chats" height="600px">
+                        category="retailer" value="chats" height="600px" [showCategoryInToolip]="true"
+                        [singleColorBars]="true">
                     </app-chart-bar-horizontal>
                 </div>
             </div>
@@ -296,7 +297,7 @@
             </div>
             <div class="card-body">
                 <app-chart-bar-horizontal [data]="chatsByCountry" name="omnichat-transactions-by-country"
-                    category="country" value="chats">
+                    category="country" value="chats" [showCategoryInToolip]="true" [singleColorBars]="true">
                 </app-chart-bar-horizontal>
             </div>
         </div>
@@ -309,7 +310,8 @@
             <div class="card-body">
                 <div class="retailers-chart-container">
                     <app-chart-bar-horizontal [data]="chatsByRetailer" name="omnichat-transactions-by-retailer"
-                        category="retailer" value="chats" height="600px">
+                        category="retailer" value="chats" height="600px" [showCategoryInToolip]="true"
+                        [singleColorBars]="true">
                     </app-chart-bar-horizontal>
                 </div>
             </div>
@@ -386,7 +388,8 @@
                     </div>
                     <div class="card-body">
                         <app-chart-bar-horizontal [data]="transactionsByProduct" name="omnichat-transactions-by-product"
-                            category="product" value="transactions" [truncateLabels]="true">
+                            category="product" value="transactions" [truncateLabels]="true"
+                            [showCategoryInToolip]="true" [singleColorBars]="true">
                         </app-chart-bar-horizontal>
                     </div>
                 </div>
