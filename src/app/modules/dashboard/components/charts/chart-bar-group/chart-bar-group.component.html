@@ -1,0 +1,13 @@
+<div class="chart" [style.height]="height">
+    <!-- loader -->
+    <app-chart-loader [hidden]="status > 1"></app-chart-loader>
+
+    <!-- ready -->
+    <div [ngClass]="{'chart-hidden': status !== 2}" [id]="chartID" style="height: 100%"></div>
+
+    <!-- error -->
+    <div [hidden]="status !== 3" class="chart-error-container text-muted">
+        <span [hidden]="!errorLegend">{{ errorLegend }}</span>
+        <span [hidden]="errorLegend">Error al consultar datos</span>
+    </div>
+</div>

@@ -56,6 +56,7 @@ import { ChartMultipleAxesComponent } from './components/charts/chart-multiple-a
 import { ChartLoaderComponent } from './components/charts/chart-loader/chart-loader.component';
 import { OmnichatWrapperComponent } from './components/omnichat-wrapper/omnichat-wrapper.component';
 import { ChartGaugeComponent } from './components/charts/chart-gauge/chart-gauge.component';
+import { ChartBarGroupComponent } from './components/charts/chart-bar-group/chart-bar-group.component';
 
 
 @NgModule({
@@ -92,6 +93,7 @@ import { ChartGaugeComponent } from './components/charts/chart-gauge/chart-gauge
     OverviewLatamComponent,
     OmnichatWrapperComponent,
     ChartGaugeComponent,
+    ChartBarGroupComponent,
   ],
   imports: [
     CommonModule,
