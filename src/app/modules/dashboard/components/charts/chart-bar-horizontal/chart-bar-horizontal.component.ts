@@ -14,6 +14,7 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
   @Input() value: string;
   @Input() category: string;
   @Input() height: string = '350px'; // height property value valid in css
+  @Input() truncateLabels: boolean = false; // for reduced spaces with labels too long
 
   chartID;
   loadStatus: number = 0;
@@ -48,7 +49,6 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
     categoryAxis.renderer.labels.template.verticalCenter = 'middle';
     categoryAxis.tooltip.disabled = true;
 
-
     let valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
     valueAxis.renderer.minWidth = 50;
 
@@ -58,10 +58,18 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
     let series = chart.series.push(new am4charts.ColumnSeries());
     series.dataFields.valueX = this.value;
     series.dataFields.categoryY = this.category;
-    series.tooltipText = '[{categoryY}: bold]{valueX}[/]';
     series.columns.template.strokeWidth = 0;
 
     series.tooltip.pointerOrientation = 'left';
+
+    if (this.truncateLabels) {
+      let label = categoryAxis.renderer.labels.template;
+      label.truncate = true;
+      label.maxWidth = 150;
+      series.tooltipText = '[bold]{valueX}[/] - {categoryY}';
+    } else {
+      series.tooltipText = '{valueX}';
+    }
 
     // series.columns.template.column.cornerRadiusTopLeft = 10;
     series.columns.template.column.cornerRadiusTopRight = 10;
