@@ -6,9 +6,6 @@
                 <!-- content -->
                 <ng-container *ngIf="!loader">
                     <ng-container [ngSwitch]="stat.metricFormat">
-                        <span *ngSwitchCase="'currency'" class="h3 font-weight-bold mb-0">
-                            {{ stat.metricValue | number : '1.0-0' }}
-                        </span>
                         <span *ngSwitchCase="'percentage'" class="h3 font-weight-bold mb-0">
                             {{ stat.metricValue | number : '1.2-2' }}%
                         </span>
@@ -16,7 +13,7 @@
                             {{ stat.metricValue | number : '1.2-2' }}
                         </span>
                         <span *ngSwitchDefault class="h3 font-weight-bold mb-0">
-                            {{ stat.metricValue }}
+                            {{ stat.metricValue | number : '1.0-0' }}
                         </span>
                     </ng-container>
                     <span class="h3 font-weight-bold mb-0">{{ stat.metricSymbol }}</span>
@@ -39,9 +36,6 @@
                 <!-- content -->
                 <ng-container *ngIf="!loader">
                     <ng-container [ngSwitch]="stat.subMetricFormat">
-                        <span *ngSwitchCase="'currency'">
-                            {{ stat.subMetricValue | number : '1.0-0' }}
-                        </span>
                         <span *ngSwitchCase="'percentage'">
                             {{ stat.subMetricValue | number : '1.2-2' }}%
                         </span>
@@ -49,7 +43,7 @@
                             {{ stat.subMetricValue | number : '1.2-2' }}
                         </span>
                         <span *ngSwitchDefault>
-                            {{ stat.subMetricValue }}
+                            {{ stat.subMetricValue | number : '1.0-0' }}
                         </span>
                     </ng-container>
                     <span>{{ stat.subMetricSymbol }}</span>

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavigationExtras, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
 import { UserService } from 'src/app/services/user.service';
 import { EmailValidator } from 'src/app/tools/validators/email.validator';
 
@@ -27,13 +25,11 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private usersMngmtService: UsersMngmtService,
-    private router: Router,
     private cookieService: CookieService
   ) {
     const islogged = this.userService.isLoggedIn();
 
-    islogged && this.redirect();
+    islogged && this.userService.redirectToDefaultPage();
   }
 
   ngOnInit() {
@@ -70,7 +66,6 @@ export class LoginComponent implements OnInit {
     this.usermail = um === 'null' ? '' : um;
   }
 
-
   login(email: string, password: string) {
     this.reqStatus = 1;
     if (this.form.valid) {
@@ -82,8 +77,9 @@ export class LoginComponent implements OnInit {
           } else {
             this.userService.deleteUserCookieIfExists();
           }
-          this.reqStatus = 2;
-          this.redirect();
+          this.userService.redirectToDefaultPage().then(() => {
+            this.reqStatus = 2;
+          });
         },
         error => {
           this.errorMsg = error?.error?.message ? error.error.message : error?.message;
@@ -91,30 +87,6 @@ export class LoginComponent implements OnInit {
           this.reqStatus = 3;
         }
       )
-    }
-  }
-
-  redirect() {
-    let urlRedirect: string;
-    let queryParams;
-    if (this.userService.user.role_name !== 'retailer') {
-      urlRedirect = '/dashboard/coop';
-      queryParams = { ['country']: 'latam' };
-
-      this.router.navigate([urlRedirect], { queryParams });
-    } else {
-      this.usersMngmtService.getRetailers()
-        .subscribe((retailers: any[]) => {
-          if (retailers.length > 0) {
-            urlRedirect = '/dashboard/retailer';
-            queryParams = { ['retailer']: retailers[0]?.name.toLowerCase().replaceAll(' ', '-') };
-
-            this.router.navigate([urlRedirect], { queryParams });
-          }
-        }, error => {
-          const errMsg = error?.error?.message ? error.error.message : error?.message;
-          throw (new Error(errMsg));
-        })
     }
   }
 

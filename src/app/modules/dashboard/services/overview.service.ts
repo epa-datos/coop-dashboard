@@ -4,6 +4,7 @@ import { Subscription, throwError } from 'rxjs';
 import { Configuration } from 'src/app/app.constants';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { FiltersStateService } from './filters-state.service';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -43,20 +44,20 @@ export class OverviewService {
     });
   }
 
-  concatedQueryParams(isLatam?: boolean, uniqueCategoryID?: number): string {
+  concatedQueryParams(isLatam?: boolean, uniqueSectorID?: number, uniqueCategoryID?: number, uniqueSourceID?: number, omitSectors?: boolean): string {
     let startDate = this.filtersStateService.periodQParams.startDate;
     let endDate = this.filtersStateService.periodQParams.endDate;
-    let sectors = this.filtersStateService.sectorsQParams;
+    let sectors = !uniqueSectorID ? this.filtersStateService.sectorsQParams : uniqueSectorID;
     let categories = !uniqueCategoryID ? this.filtersStateService.categoriesQParams : uniqueCategoryID;
     let campaigns = this.filtersStateService.campaignsQParams;
 
-    const baseQParams = `start_date=${startDate}&end_date=${endDate}&sectors=${sectors}&categories=${categories}`
+    const baseQParams = `start_date=${startDate}&end_date=${endDate}${!omitSectors ? `&sectors=${sectors}` : ''}&categories=${categories}`;
     if (!isLatam) {
       return `${baseQParams}${campaigns ? `&campaigns=${campaigns}` : ''}`;
     } else {
       let countries = this.filtersStateService.countriesQParams;
       let retailers = this.filtersStateService.retailersQParams;
-      let sources = this.filtersStateService.sourcesQParams;
+      let sources = !uniqueSourceID ? this.filtersStateService.sourcesQParams : uniqueSourceID;
       return `countries=${countries}&retailers=${retailers}&sources=${sources}&${baseQParams}`;
     }
   }
@@ -66,12 +67,16 @@ export class OverviewService {
   * ****/
 
   // *** filters ***
-  getCampaigns(sectorsStrList?: string, categoriesStrList?: string) {
+  getCampaigns(period?: any, sectorsStrList?: string, categoriesStrList?: string) {
     if (!this.retailerID) {
       return throwError('[overview.service]: not countryID provided');
     }
 
-    return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/campaigns?sectors=${sectorsStrList}&categories=${categoriesStrList}`);
+    const periodQParams = period ? `start_date=${moment(period.startDate).format('YYYY-MM-DD')}&end_date=${moment(period.endDate).format('YYYY-MM-DD')}` : '';
+    const sectorsQParams = sectorsStrList ? `sectors=${sectorsStrList}` : '';
+    const categoriesQParams = categoriesStrList ? `categories=${categoriesStrList}` : '';
+
+    return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/campaigns?${periodQParams}&${sectorsQParams}&${categoriesQParams}`);
   }
 
   // *** kpis ***
@@ -88,16 +93,12 @@ export class OverviewService {
   }
 
   // *** categories by sector ***
-  getCategoriesBySector(sector: string) {
-    if (!sector) {
-      return throwError('[overview.service]: not sector provided');
-    }
-
-    let queryParams = this.concatedQueryParams();
-
+  getCategoriesBySector(sector?: string) {
     if (this.retailerID) {
-      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/categories?sector=${sector}&${queryParams}`);
+      let queryParams = this.concatedQueryParams();
+      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/categories?${queryParams}`);
     } else if (this.countryID) {
+      let queryParams = this.concatedQueryParams(null, null, null, null, true);
       return this.http.get(`${this.baseUrl}/countries/${this.countryID}/retailer/categories?sector=${sector}&${queryParams}`);
     } else {
       return throwError('[overview.service]: not retailerID or countryID provided');
@@ -189,12 +190,12 @@ export class OverviewService {
   }
 
   // *** users and sales ***
-  getUsersAndSalesLatam(metricType: string) {
+  getUsersAndSalesLatam(metricType: string, sectorID?: number, categoryID?: number, sourceID?: number) {
     if (!metricType) {
       return throwError('[overview.service]: not metricType provided');
     }
 
-    let queryParams = this.concatedQueryParams(true);
+    let queryParams = this.concatedQueryParams(true, sectorID, categoryID, sourceID);
     return this.http.get(`${this.baseUrl}/latam/${metricType}?${queryParams}`);
   }
 
@@ -206,7 +207,7 @@ export class OverviewService {
 
   // *** top products ***
   getTopProductsLatam(categoryID: number) {
-    let queryParams = this.concatedQueryParams(true, categoryID);
+    let queryParams = this.concatedQueryParams(true, null, categoryID);
     return this.http.get(`${this.baseUrl}/latam/top-products?${queryParams}`);
   }
 }

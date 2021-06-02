@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { OverviewService } from '../../services/overview.service';
+import { equalsArrays } from 'src/app/tools/validators/arrays-comparator';
 
 @Component({
   selector: 'app-overview-latam',
@@ -14,8 +15,8 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   activeTabView = 1;
 
   selectedTab1: number = 1;
-  selectedTab2: number = 1;
-  selectedTab3: number = 1;
+  selectedTab2: number = 2;
+  selectedTab3: number = 2;
   selectedTab4: number = 1;
   selectedTab5: number = 1;
   selectedTab6: number = 1;
@@ -71,6 +72,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       metricName: 'revenue',
       metricValue: 0,
       metricFormat: 'currency',
+      metricSymbol: 'USD',
       subMetricTitle: 'roas',
       subMetricName: 'roas',
       subMetricValue: 0,
@@ -83,11 +85,11 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   categoriesBySector: any[] = [];
   trafficAndSales = {};
 
-  usersAndSalesBySector: any[] = [];
+  usersAndSalesMetrics: string[] = ['sector', 'categoría', 'medio'];
+  usersAndSalesByMetric: any[] = [];
   investmentVsRevenue: any[] = [];
 
   // top products
-  selectedCategories: any[] = [];
   topProductsColumns: string[] = ['rank', 'product', 'amount'];
   topProducts: any[] = [];
   topProductsSource = new MatTableDataSource<any>();
@@ -105,6 +107,16 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   ];
   topProductsReqStatus: number = 0;
 
+  // available tabs
+  selectedCategories: any[] = []; // for topProducts and usersAndSalesByMetric
+  selectedSectors: any[] = []; // for usersAndSalesByMetric
+  selectedSources: any[] = []; // for usersAndSalesByMetric
+
+  selectedCategoryTab1: any // for usersAndSalesByMetric selected tab
+  selectedCategoryTab2: any; // for topProducts selected tab
+  selectedSectorTab: any;
+  selectedSourceTab: any;
+
   filtersSub: Subscription;
   chartsInitLoad: boolean = true;
 
@@ -113,7 +125,13 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     private overviewService: OverviewService) { }
 
   ngOnInit(): void {
-    if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
+    if (this.filtersStateService.countries &&
+      this.filtersStateService.retailers &&
+      this.filtersStateService.period &&
+      this.filtersStateService.sectors &&
+      this.filtersStateService.categories &&
+      this.filtersStateService.sources) {
+
       this.filtersStateService.restoreFilters();
       this.getAllData();
     }
@@ -124,13 +142,31 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   }
 
   getAllData() {
+    this.selectedSectors = this.filtersStateService.sectors;
+    this.selectedCategories = this.filtersStateService.categories;
+    this.selectedSources = this.filtersStateService.sources;
+
+    const sectorOrCategory = this.selectedTab1 === 1 ? 'sectors' : 'categories';
+    const trafficOrSales = this.selectedTab2 === 1 ? 'traffic' : 'sales';
+    const usersOrSales = this.selectedTab3 === 1 ? 'users' : 'sales';
+
+    const previousSector = this.selectedSectors.find(sector => sector.id === this.selectedSectorTab?.id);
+    const previousCategory = this.selectedCategories.find(category => category.id === this.selectedCategoryTab1?.id);
+    const previousSource = this.selectedSources.find(source => source.id === this.selectedSourceTab?.id);
+    const previousCategory2 = this.selectedCategories.find(category => category.id === this.selectedCategoryTab2?.id);
+
+    const selectedSector = previousSector ? previousSector : null;
+    const selectedCategory = previousCategory ? previousCategory : null;
+    const selectedSources = previousSource ? previousSource : null;
+    const selectedCategory2 = previousCategory2 ? previousCategory2 : this.selectedCategories[0];
+
     this.getKpis();
-    this.getSectorsAndCategories('sectors', 1);
-    this.getDataByTrafficAndSales('sales', 2);
-    this.getDataByUsersAndSales('sales', 2);
+    this.getSectorsAndCategories(sectorOrCategory);
+    this.getDataByTrafficAndSales(trafficOrSales);
+    this.getDataByUsersAndSales(usersOrSales, selectedSector, selectedCategory, selectedSources);
+
     this.getInvestmentVsRevenue();
-    this.selectedCategories = this.filtersStateService.categories.filter(item => item.id);
-    this.getTopProducts(this.selectedCategories[0].id);
+    this.getTopProducts(selectedCategory2);
 
     this.chartsInitLoad = true;
   }
@@ -160,7 +196,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       });
   }
 
-  getSectorsAndCategories(metricType: string, selectedTab: number) {
+  getSectorsAndCategories(metricType: string) {
     this.categoriesReqStatus = 1;
     this.overviewService.getSectorsAndCategoriesLatam(metricType).subscribe(
       (resp: any[]) => {
@@ -173,10 +209,10 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
         this.categoriesReqStatus = 3;
       });
 
-    this.selectedTab1 = selectedTab;
+    this.selectedTab1 = metricType === 'sectors' ? 1 : 2;
   }
 
-  getDataByTrafficAndSales(metricType: string, selectedTab: number) {
+  getDataByTrafficAndSales(metricType: string) {
     const requiredData = ['device', 'gender', 'age', 'gender-and-age']
 
     for (let subMetricType of requiredData) {
@@ -199,15 +235,17 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
           reqStatusObj.reqStatus = 3;
         });
 
-      this.selectedTab2 = selectedTab;
+      this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
     }
   }
 
-  getDataByUsersAndSales(metricType: string, selectedTab: number) {
+  getDataByUsersAndSales(metricType: string, sector?: any, category?: any, source?: any) {
     this.usersAndSalesReqStatus = 1;
-    this.overviewService.getUsersAndSalesLatam(metricType).subscribe(
+
+    this.overviewService.getUsersAndSalesLatam(metricType, sector?.id, category?.id, source?.id).subscribe(
       (resp: any[]) => {
-        this.usersAndSalesBySector = resp;
+        // this.usersAndSalesByMetric = resp;
+        this.usersAndSalesByMetric = resp.filter(serie => +serie.name >= 2021);
         this.usersAndSalesReqStatus = 2;
       },
       error => {
@@ -216,8 +254,16 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
         this.usersAndSalesReqStatus = 3;
       }
     )
+    this.selectedTab3 = metricType === 'users' ? 1 : 2;
 
-    this.selectedTab3 = selectedTab;
+    if (!sector && !category && !source) {
+      this.selectedSectorTab = this.selectedSectors[0];
+      this.selectedTab5 = 1
+    } else {
+      this.selectedSectorTab = sector;
+      this.selectedCategoryTab1 = category;
+      this.selectedSourceTab = source;
+    }
   }
 
   getInvestmentVsRevenue() {
@@ -235,9 +281,10 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     )
   }
 
-  getTopProducts(categoryID?: number) {
+  getTopProducts(selectedCategory?: any) {
     this.topProductsReqStatus = 1;
-    this.overviewService.getTopProductsLatam(categoryID).subscribe(
+    this.selectedCategoryTab2 = selectedCategory;
+    this.overviewService.getTopProductsLatam(selectedCategory.id).subscribe(
       (resp: any[]) => {
         this.topProducts = resp;
 
@@ -251,6 +298,13 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       }
     )
 
+    this.selectedTab6 = selectedCategory.id;
+  }
+
+  clearUsersAndSalesTabs() {
+    this.selectedSectorTab && delete this.selectedSectorTab;
+    this.selectedCategoryTab1 && delete this.selectedCategoryTab1;
+    this.selectedSourceTab && delete this.selectedSourceTab;
   }
 
   ngOnDestroy() {

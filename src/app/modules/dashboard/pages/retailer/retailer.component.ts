@@ -129,7 +129,7 @@ export class RetailerComponent implements OnInit, OnDestroy {
   filtersSub: Subscription;
   retailerSub: Subscription;
 
-  private requestInfoSource = new Subject<void>();
+  private requestInfoSource = new Subject<boolean>();
   requestInfoChange$ = this.requestInfoSource.asObservable();
 
   constructor(
@@ -141,8 +141,8 @@ export class RetailerComponent implements OnInit, OnDestroy {
     const selectedRetailer = this.appStateService.selectedRetailer;
     this.retailerID = selectedRetailer?.id;
 
-    this.filtersSub = this.filtersStateService.filtersChange$.subscribe(() => {
-      this.requestInfoSource.next();
+    this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
+      this.requestInfoSource.next(manualChange);
     });
 
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {

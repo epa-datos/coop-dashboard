@@ -3,7 +3,8 @@
   <div class="container-fluid">
     <!-- Brand -->
     <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" routerLinkActive="active">
-      {{ customTitle ? customTitle + (customSubtitle ? ' - ' + customSubtitle : '') : getTitleByRoute() }}
+      <!-- {{ customTitle ? customTitle + (customSubtitle ? ' - ' + customSubtitle : '') : getTitleByRoute() }} -->
+      {{ customTitle ? customTitle + (customSubtitle ? ' - ' + customSubtitle : '') : '' }}
     </a>
     <!-- User -->
     <ul class="navbar-nav align-items-center d-none d-md-flex">
@@ -19,15 +20,15 @@
           </div>
         </a>
         <div class="dropdown-menu-arrow dropdown-menu-right" ngbDropdownMenu>
-          <a routerLinkActive="active" class="dropdown-item">
+          <!-- <a routerLinkActive="active" class="dropdown-item">
             <i class="ni ni-single-02"></i>
             <span>Mi perfil</span>
           </a>
           <a routerLinkActive="active" class="dropdown-item">
             <i class="ni ni-support-16"></i>
             <span>Soporte</span>
-          </a>
-          <div class="dropdown-divider"></div>
+          </a> -->
+          <!-- <div class="dropdown-divider"></div> -->
           <a class="dropdown-item" (click)="logout()">
             <i class="ni ni-user-run"></i>
             <span>Cerrar sesión</span>

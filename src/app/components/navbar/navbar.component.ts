@@ -3,8 +3,9 @@ import { Location } from '@angular/common';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user';
 import { AppStateService } from 'src/app/services/app-state.service';
-import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
@@ -12,23 +13,35 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  public focus;
-  public listTitles: any[] = [];
-  public location: Location;
-  public user: User;
-  public customTitle: string;
-  public customSubtitle: string;
-  public routes: any[] = [];
+  focus;
+  listTitles: any[] = [];
+  location: Location;
+  user: User;
+  customTitle: string;
+  customSubtitle: string;
+  routes: any[] = [];
+  currentRoute;
 
-  public sidebarSub: Subscription;
-  public countrySub: Subscription;
-  public retailerSub: Subscription;
+  sidebarSub: Subscription;
+  routeSub: Subscription;
+
+  mainRegionSub: Subscription;
+  countrySub: Subscription;
+  retailerSub: Subscription;
+
+  newMainRegion;
+  newCountry;
+  newRetailer;
+
+  mainRegionInit: boolean = true;
+  countryInit: boolean = true;
+  retailerInit: boolean = true;
 
   constructor(
     location: Location,
     private userService: UserService,
     private appStateService: AppStateService,
-    private route: ActivatedRoute,
+    private router: Router,
   ) {
     this.location = location;
   }
@@ -36,69 +49,108 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.user = this.userService.user;
 
-    if (this.appStateService.selectedCountry) {
-      this.customTitle = this.appStateService.selectedCountry.name;
-    }
-    if (this.appStateService.selectedRetailer && this.user.role_name !== 'retailer') {
-      this.customSubtitle = this.appStateService.selectedRetailer.name;
-    } else if (this.appStateService.selectedRetailer) {
-      this.customTitle = this.appStateService.selectedRetailer.name;
-    }
+    this.newRetailer = this.appStateService.selectedRetailer;
+    this.newCountry = this.appStateService.selectedCountry;
+    this.newMainRegion = this.appStateService.selectedMainRegion;
 
     // sidebar titles
     this.sidebarSub = this.appStateService.sidebarData$.subscribe(resp => {
       this.routes = resp;
       this.listTitles = this.routes.filter(listTitle => listTitle);
+      this.loadCustomTitles(this.router.url);
     }, error => {
       console.error(`[navbar.component]: ${error}`);
     })
 
     // custom title
+    this.mainRegionSub = this.appStateService.selectedMainRegion$.subscribe(resp => {
+      this.newMainRegion = resp;
+      this.mainRegionInit && this.loadCustomTitles(this.router.url);
+      this.mainRegionInit = false;
+    }, error => {
+      console.error(`[navbar.component]: ${error}`);
+    });
+
+    // custom title
     this.countrySub = this.appStateService.selectedCountry$.subscribe(resp => {
-      this.customTitle = resp?.name ? resp?.name : undefined;
-      // this.customizeTitle();
+      this.newCountry = resp;
+      this.countryInit && this.loadCustomTitles(this.router.url);
+      this.countryInit = false;
     }, error => {
       console.error(`[navbar.component]: ${error}`);
     });
 
     // custom subtitle
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(resp => {
-      if (this.userService.user.role_name === 'retailer') {
-        this.customTitle = resp?.name ? resp?.name : undefined;
-      } else {
-        this.customSubtitle = resp?.name ? resp?.name : undefined;
-      }
-      // this.customizeTitle();
+      this.newRetailer = resp;
+      this.retailerInit && this.loadCustomTitles(this.router.url);
+      this.retailerInit = false;
     }, error => {
       console.error(`[navbar.component]: ${error}`);
     });
+
+    this.routeSub = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd))
+      .subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          this.loadCustomTitles(event.url);
+        }
+      });
   }
 
-  getTitlesByParams() {
-    const params = this.route.snapshot.queryParams;
-    if (params['country'] || params['retailer']) {
-      this.customTitle = params['country'];
-      this.customSubtitle = params['retailer'];
-      this.customizeTitle();
+  loadCustomTitles(currentUrl: string) {
+    const newMenuItem = this.listTitles.find(title => title.path === currentUrl);
+
+    if (newMenuItem) {
+      // applies for simple options of menu (without submenu property)
+      this.customTitle = newMenuItem.title;
+      this.customSubtitle && delete this.customSubtitle;
+    } else {
+
+      // applies for menu options with submenus
+      for (let item of this.listTitles) {
+        if (item.submenu) {
+          const newSubMenuItem = item.submenu.find(title => title.path === currentUrl);
+          if (newSubMenuItem) {
+            this.customTitle = item.title;
+            this.customSubtitle && delete this.customSubtitle;
+          }
+        }
+      }
+
+      if (this.newRetailer?.id) {
+        if (this.userService.user.role_name === 'retailer') {
+          this.customTitle = this.newRetailer.name;
+        } else {
+          this.customTitle = this.newCountry.name;
+          this.customSubtitle = this.newRetailer.name;
+        }
+      } else if (this.newCountry?.id) {
+        this.customTitle = this.newCountry.name;
+        this.customSubtitle && delete this.customSubtitle;
+      } else if (this.newMainRegion?.name) {
+        this.customTitle = this.newMainRegion.name;
+        this.customSubtitle && delete this.customSubtitle;
+      }
     }
   }
 
   getTitleByRoute() {
-    var titlee = this.location.prepareExternalUrl(this.location.path());
-    if (titlee.charAt(0) === '#') {
-      titlee = titlee.slice(1);
+    let title = this.location.prepareExternalUrl(this.location.path());
+    if (title.charAt(0) === '#') {
+      title = title.slice(1);
     }
 
     for (var item = 0; item < this.listTitles.length; item++) {
-      if (this.listTitles[item].path === titlee) {
+      if (this.listTitles[item].path === title) {
         return this.listTitles[item].title;
       }
 
-      if (titlee.includes(this.listTitles[item].path)) {
+      if (title.includes(this.listTitles[item].path)) {
         return this.listTitles[item].title
       }
     }
-    return 'Dashboard';
+    return 'dashboard';
   }
 
   customizeTitle() {
@@ -115,7 +167,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sidebarSub?.unsubscribe();
+    this.mainRegionSub?.unsubscribe();
     this.countrySub?.unsubscribe();
     this.retailerSub?.unsubscribe();
+    this.routeSub?.unsubscribe();
   }
 }

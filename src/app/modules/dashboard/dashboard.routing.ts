@@ -13,5 +13,5 @@ export const DashboardRoutes: Routes = [
     { path: 'tools', component: OtherToolsComponent },
     { path: 'campaign-comparator', component: CampaignComparatorComponent },
     { path: 'omnichat', component: SentimentAnalysisComponent },
-    { path: 'coop', component: OverviewLatamComponent },
+    { path: 'main-region', component: OverviewLatamComponent },
 ];

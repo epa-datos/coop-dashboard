@@ -10,6 +10,11 @@ export class AppStateService {
   private sidebarSource = new Subject<any>();
   sidebarData$ = this.sidebarSource.asObservable();
 
+  // selected main region as LATAM
+  private mainRegionSource = new Subject<any>();
+  selectedMainRegion$ = this.mainRegionSource.asObservable();
+  selectedMainRegion;
+
   // selected country
   private countrySource = new Subject<any>();
   selectedCountry$ = this.countrySource.asObservable();
@@ -21,6 +26,16 @@ export class AppStateService {
   selectedRetailer;
 
   constructor() { }
+
+  selectMainRegion(mainRegion?) {
+    if (mainRegion) {
+      this.mainRegionSource.next(mainRegion);
+      this.selectedMainRegion = mainRegion;
+    } else {
+      this.mainRegionSource.next();
+      this.selectedMainRegion && delete this.selectedMainRegion;
+    }
+  }
 
   selectCountry(country?) {
     if (country) {
@@ -40,7 +55,6 @@ export class AppStateService {
       this.retailerSource.next();
       this.selectedRetailer && delete this.selectedRetailer;
     }
-
   }
 
   updateSidebarData(data) {

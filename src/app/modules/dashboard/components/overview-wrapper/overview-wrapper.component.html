@@ -14,18 +14,12 @@
     <div class="row mt-5">
         <div class="col-12" *ngIf="selectedType === 'country'">
             <div class="pills-container">
-                <ul class="nav nav-pills nav-fill">
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                            (click)="getCategoriesBySector('Search', 1)">Search</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                            (click)="getCategoriesBySector('Marketing', 2)">Marketing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
-                            (click)="getCategoriesBySector('Ventas', 3)">Ventas</a>
+                <ul class="nav nav-pills nav-fill" *ngIf="selectedSectors?.length > 1">
+                    <li class="nav-item mb-2" *ngFor="let sector of selectedSectors; let i = index">
+                        <a class="nav-link p-2" [ngClass]="{'active': sector.id === selectedTab1}"
+                            (click)="getCategoriesBySector(sector)">
+                            {{ sector.name }}
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -68,11 +62,11 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                            (click)="getDataByTrafficAndSales('traffic', 1); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
+                            (click)="getDataByTrafficAndSales('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                            (click)="getDataByTrafficAndSales('sales', 2); chartsInitLoad = chartsInitLoad && false;">Ventas</a>
+                            (click)="getDataByTrafficAndSales('sales'); chartsInitLoad = chartsInitLoad && false;">Ventas</a>
                     </li>
                 </ul>
             </div>
@@ -129,7 +123,7 @@
                 </div>
                 <div class="card-body" style="height: 328px">
                     <!-- loader -->
-                    <app-chart-loader *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus === 1">
+                    <app-chart-loader *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus <= 1">
                     </app-chart-loader>
 
                     <!-- ready -->
@@ -163,11 +157,11 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
-                            (click)="getDataByUsersAndSales('users', 1)">Usuarios</a>
+                            (click)="getDataByUsersAndSales('users')">Usuarios</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
-                            (click)="getDataByUsersAndSales('sales', 2)">Ventas</a>
+                            (click)="getDataByUsersAndSales('sales')">Ventas</a>
                     </li>
                 </ul>
             </div>
@@ -181,8 +175,7 @@
                 <div class="card-body">
                     <app-chart-line-series [series]="usersAndSalesBySector"
                         [valueName]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'"
-                        [valueFormat]="selectedTab3 === 2 && 'USD'" [name]="selectedType + 'sales-users-by-sector'"
-                        [status]="usersAndSalesReqStatus">
+                        [name]="selectedType + 'sales-users-by-sector'" [status]="usersAndSalesReqStatus">
                     </app-chart-line-series>
                 </div>
             </div>

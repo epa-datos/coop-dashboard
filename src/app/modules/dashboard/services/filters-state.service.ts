@@ -56,7 +56,7 @@ export class FiltersStateService {
   sourcesQParams;
 
   // filtersChange
-  private filtersSource = new Subject<any>();
+  private filtersSource = new Subject<boolean>();
   filtersChange$ = this.filtersSource.asObservable();
 
   constructor() { }
@@ -97,12 +97,12 @@ export class FiltersStateService {
   }
 
   convertFiltersToQueryParams() {
-    this.periodQParams = { startDate: moment(this.period.startDate).format('YYYY-MM-DD'), endDate: moment(this.period.endDate).format('YYYY-MM-DD') }
+    this.periodQParams = { startDate: moment(this.period.startDate).format('YYYY-MM-DD'), endDate: moment(this.period.endDate).format('YYYY-MM-DD') };
     this.sectorsQParams = this.sectors && this.convertArrayToQueryParams(this.sectors, 'id');
     this.categoriesQParams = this.categories && this.convertArrayToQueryParams(this.categories, 'id');
     this.countriesQParams = this.countries && this.convertArrayToQueryParams(this.countries, 'id');
     this.retailersQParams = this.retailers && this.convertArrayToQueryParams(this.retailers, 'id');
-    this.sourcesQParams = this.retailers && this.convertArrayToQueryParams(this.sources, 'id');
+    this.sourcesQParams = this.sources && this.convertArrayToQueryParams(this.sources, 'id');
     this.campaignsQParams = this.campaigns && this.convertArrayToQueryParams(this.campaigns, 'id');
   }
 
@@ -125,9 +125,41 @@ export class FiltersStateService {
     this.convertFiltersToQueryParams();
   }
 
-  filtersChange() {
+  deleteFilters() {
+    if (this.countriesInitial) {
+      delete this.countriesInitial;
+      delete this.countries;
+    }
+
+    if (this.retailersInitial) {
+      delete this.retailersInitial;
+      delete this.retailers;
+    }
+
+    if (this.periodInitial) {
+      delete this.periodInitial;
+      delete this.period;
+    }
+
+    if (this.sectorsInitial) {
+      delete this.sectorsInitial;
+      delete this.sectors;
+    }
+
+    if (this.categoriesInitial) {
+      delete this.categoriesInitial;
+      delete this.categories;
+    }
+    this.selectCampaigns([]);
+  }
+
+  /**
+   * Filters change
+   * @param manualChange change made by "filter" button click triggered manually by the user
+   */
+  filtersChange(manualChange: boolean) {
     this.convertFiltersToQueryParams();
-    this.filtersSource.next();
+    this.filtersSource.next(manualChange);
   }
 }
 
@@ -135,4 +167,3 @@ interface Period {
   startDate: Date,
   endDate: Date
 }
-

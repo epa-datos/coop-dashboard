@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
+import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES";
 
 @Component({
   selector: 'app-chart-line-comparison',
@@ -86,6 +87,9 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
     this.loadStatus = 1;
     // Create chart instance
     let chart = am4core.create(this.chartID, am4charts.XYChart);
+    chart.language.locale = am4lang_es_ES;
+    chart.language.locale["_decimalSeparator"] = ".";
+    chart.language.locale["_thousandSeparator"] = ",";
 
     // Create axes
     let dateAxis = chart.xAxes.push(new am4charts.DateAxis());

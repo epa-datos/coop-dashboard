@@ -10,6 +10,8 @@ import { debounceTime } from 'rxjs/operators';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { UserService } from 'src/app/services/user.service';
+import { equalsArrays } from 'src/app/tools/validators/arrays-comparator';
 
 export const MY_FORMATS = {
   parse: {
@@ -108,6 +110,8 @@ export class GeneralFiltersComponent implements OnInit {
   campaignsCounter: number = 0;
   sourcesCounter: number = this.sourceList.length;
 
+  campsGetByRetailerChange: boolean;
+
   @ViewChild('allSelectedCountries') private allSelectedCountries: MatOption;
   @ViewChild('allSelectedRetailers') private allSelectedRetailers: MatOption;
   @ViewChild('allSelectedSectors') private allSelectedSectors: MatOption;
@@ -121,6 +125,7 @@ export class GeneralFiltersComponent implements OnInit {
     private usersMngmtService: UsersMngmtService,
     private overviewService: OverviewService,
     private filtersStateService: FiltersStateService,
+    private userService: UserService,
     private router: Router,
   ) { }
 
@@ -129,6 +134,7 @@ export class GeneralFiltersComponent implements OnInit {
 
     await this.getSectors();
     await this.getCategories();
+    this.userService.user.role_name === 'retailer' && this.getCampaigns();
 
     const selectedCountry = this.appStateService.selectedCountry;
     const selectedRetailer = this.appStateService.selectedRetailer;
@@ -138,24 +144,28 @@ export class GeneralFiltersComponent implements OnInit {
       this.retailerID = selectedRetailer?.id ? selectedRetailer.id : undefined;
     }
 
-    this.loadLatamContent();
+    this.loadLatamContent().then(() => {
+      this.applyFilters();
+    });
 
     this.routeSub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     )
       .subscribe(event => {
         if (event instanceof NavigationEnd)
-          this.loadLatamContent();
+          this.loadLatamContent().then(() => {
+            this.isLatamSelected && this.applyFilters();
+          });
       });
 
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       this.retailerID = retailer?.id;
+      this.restoreFilters();
 
       if (this.retailerID) {
         this.getCampaigns();
+        this.campsGetByRetailerChange = true;
       }
-
-      this.restoreFilters();
     });
 
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
@@ -177,6 +187,11 @@ export class GeneralFiltersComponent implements OnInit {
     this.sourceList && this.sources.patchValue([...this.sourceList.map(item => item), 0]);
 
     this.campaigns.setValue([]);
+
+    this.prevPeriod = { startDate: this.startDate.value._d, endDate: this.endDate.value._d };
+    this.prevSectors = this.sectors.value;
+    this.prevCategories = this.categories.value;
+    this.prevCamps = this.campaigns.value;
 
     this.countryFilter && delete this.countryFilter;
     this.retailerFilter && delete this.retailerFilter;
@@ -228,63 +243,65 @@ export class GeneralFiltersComponent implements OnInit {
       .subscribe(form => {
         if (!this.retailerID) return;
 
+        if (this.campsGetByRetailerChange) {
+          this.campsGetByRetailerChange = false;
+          return;
+        };
+
         if (this.sectors.value && this.categories.value && !this.campaigns.value && this.countryID) {
           // initial campaigns load
           // console.log('initial campaigns load')
           this.getCampaigns();
         } else if (this.sectors.value?.length > 0 && this.categories.value?.length > 0 && this.form.valid) {
-          if (this.prevSectors !== this.sectors.value) {
+          if (!equalsArrays(this.prevSectors, this.sectors.value)) {
             // change in sectors selection
             // console.log('diffrentent sectors')
             this.getCampaigns();
             this.prevSectors = this.sectors.value;
-          } else if (this.prevCategories !== this.categories.value) {
+          } else if (!equalsArrays(this.prevCategories, this.categories.value)) {
             // change in categories selection
             // console.log('different categories')
             this.getCampaigns();
             this.prevCategories = this.categories.value;
-          } else if (this.prevPeriod.startDate.getTime() !== this.startDate.value._d.getTime() || this.prevPeriod.endDate.getTime() !== this.endDate.value._d.getTime()) {
+          } else {
             // change in date selection
-            // console.log('different date')
-            this.getCampaigns();
-            this.prevPeriod = { startDate: this.startDate.value._d, endDate: this.endDate.value._d }
-          } else if (this.prevCamps !== this.campaigns.value) {
-            // change in campaign selection
-            // console.log('different campaigns')
-            this.prevCamps = this.campaigns.value;
+            const prevPeriodObj = { startDate: this.prevPeriod.startDate.getTime(), endDate: this.prevPeriod.endDate.getTime() }
+            const periodObj = { startDate: this.startDate.value._d.getTime(), endDate: this.endDate.value._d.getTime() }
+            const equalsPeriodObjs = JSON.stringify(prevPeriodObj) == JSON.stringify(periodObj);
+
+            if (!equalsPeriodObjs) {
+              // console.log('different date')
+              this.getCampaigns();
+              this.prevPeriod = { startDate: this.startDate.value._d, endDate: this.endDate.value._d }
+            } else {
+              // console.log('change in campaigns')
+              // if (equalsArrays(this.prevCategories, this.categories.value))
+              // this.prevCamps = this.campaigns.value;
+            }
           }
         }
       });
   }
 
-  async loadLatamContent() {
-    this.isLatamSelected = this.router.url.includes('latam') ? true : false;
-    if (this.isLatamSelected) {
+  loadLatamContent() {
+    return new Promise<void>(async (resolve) => {
+      this.isLatamSelected = this.router.url.includes('latam') ? true : false;
 
-      if (!this.filtersStateService.countriesInitial) {
-        await this.getCountries();
+      if (this.isLatamSelected) {
+        // There are countriesInitial or retailerInitial after login
+        // There aren't countriesInitial and retailerInitial after a page refresh
+        this.filtersStateService.countriesInitial ? this.loadCountriesData() : await this.getCountries();
+        this.filtersStateService.retailersInitial ? this.loadRetailersData() : await this.getRetailers();
       }
-
-      if (!this.filtersStateService.retailersInitial) {
-        await this.getRetailers();
-      }
-    }
-
-    this.applyFilters();
+      resolve();
+    });
   }
 
   getCountries() {
     return this.usersMngmtService.getCountries()
       .toPromise()
       .then((res: any[]) => {
-        this.countryList = res;
-        this.filteredCountryList = res;
-        this.countriesCounter = res.length;
-        this.filtersStateService.countriesInitial = res;
-
-        this.countries.patchValue([...this.countryList.map(item => item), 0]);
-        this.prevCountries = this.countries.value;
-
+        this.loadCountriesData(res);
         this.countriesErrorMsg && delete this.countriesErrorMsg;
       })
       .catch((error) => {
@@ -303,20 +320,37 @@ export class GeneralFiltersComponent implements OnInit {
 
         retailers.sort((a, b) => a.name.localeCompare(b.name));
 
-        this.retailerList = retailers;
-        this.filteredRetailerList = retailers;
-        this.retailersCounter = retailers.length;
-        this.filtersStateService.retailersInitial = retailers;
-
-        this.retailers.patchValue([...this.retailerList.map(item => item), 0]);
-        this.prevRetailers = this.retailers.value;
-
+        this.loadRetailersData(retailers);
         this.retailersErrorMsg && delete this.retailersErrorMsg;
       })
       .catch((error) => {
         this.retailersErrorMsg = 'Error al consultar retailers';
         console.error(`[general-filers.component]: ${error}`);
       });
+  }
+
+  loadCountriesData(newCountries?: any[]) {
+    const countries = newCountries ? newCountries : this.filtersStateService.countriesInitial;
+    this.countryList = countries;
+    this.filteredCountryList = countries;
+    this.countriesCounter = countries.length;
+    this.filtersStateService.countriesInitial = countries;
+
+    this.countries.patchValue([...this.countryList.map(item => item), 0]);
+    this.prevCountries = this.countries.value;
+  }
+
+  loadRetailersData(newRetailers?: any[]) {
+    const retailers = newRetailers ? newRetailers : this.filtersStateService.retailersInitial;
+    retailers.sort((a, b) => a.name.localeCompare(b.name));
+
+    this.retailerList = retailers;
+    this.filteredRetailerList = retailers;
+    this.retailersCounter = retailers.length;
+    this.filtersStateService.retailersInitial = retailers;
+
+    this.retailers.patchValue([...this.retailerList.map(item => item), 0]);
+    this.prevRetailers = this.retailers.value;
   }
 
   getSectors() {
@@ -365,8 +399,9 @@ export class GeneralFiltersComponent implements OnInit {
     this.campaignsReqStatus = 1;
     const sectorsStrList = this.convertArrayToString(this.sectors.value, 'id');
     const categoriesStrList = this.convertArrayToString(this.categories.value, 'id');
+    const period = { startDate: this.startDate.value._d, endDate: this.endDate.value._d }
 
-    this.overviewService.getCampaigns(sectorsStrList, categoriesStrList)
+    this.overviewService.getCampaigns(period, sectorsStrList, categoriesStrList)
       .subscribe(
         (res: any[]) => {
           this.campaignList = res;
@@ -530,21 +565,26 @@ export class GeneralFiltersComponent implements OnInit {
     this[counterRef] = selectionCounter.length;
   }
 
-  applyFilters() {
+
+  /**
+   * Applys filters
+   * @param [manualTriggered] change made by "filter" button click triggered manually by the user
+   */
+  applyFilters(manualTriggered?: boolean) {
     this.filtersStateService.selectPeriod({ startDate: this.startDate.value._d, endDate: this.endDate.value._d });
-    this.filtersStateService.selectSectors(this.sectors.value);
-    this.filtersStateService.selectCategories(this.categories.value);
+    this.filtersStateService.selectSectors(this.sectors.value.filter(item => item.id));
+    this.filtersStateService.selectCategories(this.categories.value.filter(item => item.id));
 
     if (this.isLatamSelected) {
-      this.filtersStateService.selectCountries(this.countries.value);
-      this.filtersStateService.selectRetailers(this.retailers.value);
-      this.filtersStateService.selectSources(this.sources.value);
+      this.filtersStateService.selectCountries(this.countries.value.filter(item => item.id));
+      this.filtersStateService.selectRetailers(this.retailers.value.filter(item => item.id));
+      this.filtersStateService.selectSources(this.sources.value.filter(item => item.id));
     }
 
     const areAllCampsSelected = this.areAllCampaignsSelected();
-    this.filtersStateService.selectCampaigns(areAllCampsSelected ? [] : this.campaigns.value);
+    this.filtersStateService.selectCampaigns(areAllCampsSelected ? [] : this.campaigns.value.filter(item => item.id));
 
-    this.filtersStateService.filtersChange();
+    this.filtersStateService.filtersChange(manualTriggered);
   }
 
   arraysAreEquals(array1: any[], array2: any[]): boolean {

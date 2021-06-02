@@ -17,7 +17,7 @@ export class CountryComponent implements OnInit, OnDestroy {
   retailerSub: Subscription;
   filtersSub: Subscription;
 
-  private requestInfoSource = new Subject<void>();
+  private requestInfoSource = new Subject<boolean>();
   requestInfoChange$ = this.requestInfoSource.asObservable();
 
   constructor(
@@ -32,8 +32,8 @@ export class CountryComponent implements OnInit, OnDestroy {
     this.countryID = selectedCountry?.id && selectedCountry?.id;
     this.retailerID = selectedRetailer?.id && selectedRetailer?.id;
 
-    this.filtersSub = this.filtersStateService.filtersChange$.subscribe(() => {
-      this.requestInfoSource.next();
+    this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
+      this.requestInfoSource.next(manualChange);
     });
 
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {

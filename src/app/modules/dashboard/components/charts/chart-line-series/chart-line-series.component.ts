@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
+import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES";
 
 @Component({
   selector: 'app-chart-line-series',
@@ -52,6 +53,10 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
     this.loadStatus = 1;
     am4core.useTheme(am4themes_animated);
     let chart = am4core.create(this.chartID, am4charts.XYChart);
+    chart.numberFormatter.numberFormat = '#,###.##';
+    chart.language.locale = am4lang_es_ES;
+    chart.language.locale["_decimalSeparator"] = ".";
+    chart.language.locale["_thousandSeparator"] = ",";
 
     // Create axes
     let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
@@ -84,7 +89,6 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
     chart.cursor = new am4charts.XYCursor();
     chart.cursor.xAxis = dateAxis;
     this.chart = chart;
-    chart.responsive.enabled = true;
   }
 
   loadChartData(chart) {

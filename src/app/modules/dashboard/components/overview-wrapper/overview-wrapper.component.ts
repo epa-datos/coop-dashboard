@@ -11,7 +11,7 @@ import { OverviewService } from '../../services/overview.service';
 export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
   @Input() selectedType: string; // country or retailer
-  @Input() requestInfoChange: Observable<void>;
+  @Input() requestInfoChange: Observable<boolean>;
   @Input() showTrafficAndSalesSection: boolean = true;
 
   selectedTab1: number = 1;
@@ -69,6 +69,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       metricName: 'revenue',
       metricValue: 0,
       metricFormat: 'currency',
+      metricSymbol: 'USD',
       subMetricTitle: 'roas',
       subMetricName: 'roas',
       subMetricValue: 0,
@@ -78,6 +79,8 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     }
   ];
 
+  selectedSectors: any[] = [];
+  selectedSectorTab: any;
   categoriesBySector: any[] = [];
   trafficAndSales = {};
 
@@ -110,16 +113,33 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       this.getAllData();
     }
 
-    this.requestInfoSub = this.requestInfoChange.subscribe(() => {
-      this.getAllData();
+    this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
+      this.getAllData(manualChange);
     })
   }
 
-  getAllData() {
+  getAllData(preserveSelectedTabs?: boolean) {
+    this.selectedSectors = this.filtersStateService.sectors;
+
+    let selectedSector;
+    let trafficOrSales;
+    let usersOrSales;
+
+    if (!preserveSelectedTabs) {
+      selectedSector = this.selectedSectors[0];
+      trafficOrSales = 'traffic';
+      usersOrSales = 'users';
+    } else {
+      const previousSector = this.selectedSectors.find(sector => sector.id === this.selectedSectorTab.id);
+      selectedSector = previousSector ? previousSector : this.selectedSectors[0];
+      trafficOrSales = this.selectedTab2 === 1 ? 'traffic' : 'sales';
+      usersOrSales = this.selectedTab3 === 1 ? 'users' : 'sales';
+    }
+
     this.getKpis();
-    this.getCategoriesBySector('Search', 1);
-    this.getDataByTrafficAndSales('traffic', 1);
-    this.getDataByUsersAndSales('users', 1);
+    this.getCategoriesBySector(selectedSector);
+    this.getDataByTrafficAndSales(trafficOrSales);
+    this.getDataByUsersAndSales(usersOrSales);
     this.getInvestmentVsRevenue();
 
     this.chartsInitLoad = true;
@@ -150,9 +170,10 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       });
   }
 
-  getCategoriesBySector(sector: string, selectedTab: number) {
+  getCategoriesBySector(selectedSector: any) {
     this.categoriesReqStatus = 1;
-    this.overviewService.getCategoriesBySector(sector).subscribe(
+    this.selectedSectorTab = selectedSector;
+    this.overviewService.getCategoriesBySector(selectedSector?.name).subscribe(
       (resp: any[]) => {
         this.categoriesBySector = resp;
         this.categoriesReqStatus = 2;
@@ -163,10 +184,11 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
         this.categoriesReqStatus = 3;
       });
 
-    this.selectedTab1 = selectedTab;
+    // Tabs are only used for country view
+    this.selectedTab1 = selectedSector.id;
   }
 
-  getDataByTrafficAndSales(metricType: string, selectedTab: number) {
+  getDataByTrafficAndSales(metricType: string) {
     const requiredData = ['device', 'gender', 'age', 'gender-and-age']
 
     for (let subMetricType of requiredData) {
@@ -189,11 +211,11 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
           reqStatusObj.reqStatus = 3;
         });
 
-      this.selectedTab2 = selectedTab;
+      this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
     }
   }
 
-  getDataByUsersAndSales(metricType: string, selectedTab: number) {
+  getDataByUsersAndSales(metricType: string) {
     this.usersAndSalesReqStatus = 1;
     this.overviewService.getUsersAndSales(metricType).subscribe(
       (resp: any[]) => {
@@ -207,7 +229,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       }
     )
 
-    this.selectedTab3 = selectedTab;
+    this.selectedTab3 = metricType === 'users' ? 1 : 2;
   }
 
   getInvestmentVsRevenue() {

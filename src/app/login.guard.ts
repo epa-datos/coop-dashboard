@@ -20,7 +20,6 @@ export class LoginGuard implements CanActivate {
             return true;
         } else {
             // Store the attempted URL for redirecting
-            this.userService.redirectUrl = rss.url;
             this.router.navigate(['/login']);
         }
         return false;
