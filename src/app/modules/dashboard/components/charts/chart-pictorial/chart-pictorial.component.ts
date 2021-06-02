@@ -18,6 +18,9 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
   @Input() uniqueDimensionConf: OneDimensionPictorial;
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
+  @Input() position: am4charts.LegendPosition = 'left';
+  @Input() valing: am4core.VerticalAlign = 'bottom';
+  @Input() legendSquareSize: number;
 
   chart;
   chartID;
@@ -75,9 +78,19 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
     if (!this.uniqueDimensionConf) {
       // default settings
       chart.legend = new am4charts.Legend();
-      chart.legend.position = 'left';
-      chart.legend.valign = 'bottom';
       chart.legend.fontSize = 12;
+      chart.legend.position = this.position;
+      chart.legend.valign = this.valing;
+
+      if (this.position === 'bottom') {
+        chart.legend.marginTop = 25;
+      }
+
+      if (this.legendSquareSize) {
+        let markerTemplate = chart.legend.markers.template;
+        markerTemplate.width = this.legendSquareSize;
+        markerTemplate.height = this.legendSquareSize;
+      }
 
     } else {
       // customize the unique serie
