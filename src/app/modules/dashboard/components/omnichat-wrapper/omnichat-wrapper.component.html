@@ -1,0 +1,251 @@
+<div class="row mt-5">
+    <div *ngFor="let stat of kpis" class="col-12 col-md-6 col-lg-4 col-xl-2 mb-xl-4"
+        [ngClass]="{'offset-xl-8' : stat.metricName === 'transactions' }">
+        <app-card-stat [stat]="stat" [loader]="kpisReqStatus <= 1" [smallHeader]="true" height="100px"></app-card-stat>
+    </div>
+</div>
+
+<div class="row mt-1">
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Chats por país</span>
+            </div>
+            <div class="card-body">
+                <app-chart-bar-horizontal [data]="chatsByCountry" name="chats-by-country" category="country"
+                    value="chats">
+                </app-chart-bar-horizontal>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Chats por retailer</span>
+            </div>
+            <div class="card-body">
+                <div class="retailers-chart-container">
+                    <app-chart-bar-horizontal [data]="chatsByRetailer" name="chats-by-retailer" category="retailer"
+                        value="chats" height="600px">
+                    </app-chart-bar-horizontal>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-4 mt-4">
+        <app-card-stat [stat]="proactiveChatData" [loader]="false" [smallHeader]="true" height="100px"></app-card-stat>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <span class="h4">Chats Vs Tráfico</span>
+            </div>
+            <div class="card-body">
+                chart
+            </div>
+        </div>
+
+    </div>
+    <div class="col-12 col-md-4 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Chats por dispositivo</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pictorial [data]="chatsByDevices" name="chats-by-devices" category="name" iconType="monitor"
+                    [status]="devicesReqStatus" position="bottom" valign="middle" [legendSquareSize]="14">
+                </app-chart-pictorial>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Chats por categoría</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pie [data]="chatsByCategories" name="chats-by-category" legendPosition="bottom">
+                </app-chart-pie>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Histórico de chats</span>
+            </div>
+            <div class="card-body">
+                <app-chart-line [data]="chatHistory" name="chat-history">
+                </app-chart-line>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TRAFFIC AND SALES -->
+<ng-container>
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="pills-container">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
+                            (click)="getDataByTrafficAndSales('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
+                            (click)="getDataByTrafficAndSales('sales'); chartsInitLoad = chartsInitLoad && false;">Ventas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- devices -->
+        <div class="col-12 col-md-6 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h4">{{selectedTab1 === 1 ? 'Tráfico' : 'Ventas'}} por dispositivos</span>
+                </div>
+                <div class="card-body">
+                    <app-chart-pictorial [data]="trafficAndSales['device']" name="latam-devices" category="name"
+                        iconType="monitor" [status]="trafficSalesReqStatus[0].reqStatus" height="280px">
+                    </app-chart-pictorial>
+                </div>
+            </div>
+        </div>
+
+        <!-- gender -->
+        <div class="col-12 col-md-6 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h4">{{selectedTab1 === 1 ? 'Tráfico' : 'Ventas'}} por Género</span>
+                </div>
+                <div class="card-body">
+                    <app-chart-pictorial [data]="trafficAndSales['gender']" name="latam-gender" category="name"
+                        iconType="man" [status]="trafficSalesReqStatus[1].reqStatus" height="280px">
+                    </app-chart-pictorial>
+                </div>
+            </div>
+        </div>
+
+        <!-- age -->
+        <div class="col-12 col-md-6 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h4">{{selectedTab1 === 1 ? 'Tráfico' : 'Ventas'}} por Edad</span>
+                </div>
+                <div class="card-body">
+                    <app-chart-lollipop [data]="trafficAndSales['age']" name="latam-age" category="age"
+                        [value]="selectedTab1 === 1 ? 'visits' : 'sales'" height="280px"
+                        [status]="trafficSalesReqStatus[2].reqStatus">
+                    </app-chart-lollipop>
+                </div>
+            </div>
+        </div>
+
+        <!-- age and gender -->
+        <div class="col-12 col-md-6 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h4">{{selectedTab1 === 1 ? 'Tráfico' : 'Ventas'}} por Género y Edad</span>
+                </div>
+                <div class="card-body" style="height: 328px">
+                    <!-- loader -->
+                    <app-chart-loader *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus <= 1">
+                    </app-chart-loader>
+
+                    <!-- ready -->
+                    <app-chart-pyramid *ngIf="trafficAndSales['genderByAge']?.length > 0"
+                        [data]="trafficAndSales['genderByAge']" name="latam-age-and-gender"
+                        [status]="trafficSalesReqStatus[3].reqStatus" height="280px">
+                    </app-chart-pyramid>
+
+                    <!-- empty data -->
+                    <div *ngIf="trafficSalesReqStatus[3].reqStatus === 2 && trafficAndSales['genderByAge']?.length === 0"
+                        class="chart-error-container text-muted">
+                        <p class="text-center">
+                            Sin datos disponibles <br>
+                            Muestra insuficiente
+                        </p>
+                    </div>
+
+                    <!-- error -->
+                    <div *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus === 3"
+                        class="chart-error-container text-muted">
+                        <span>Error al consultar datos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+
+<!-- TRAFICO Y CONVERSIONES POR DIA Y HORA -->
+<ng-container>
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="mb-3">
+                <span class="h3">Tráfico y conversiones por hora y por día</span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="pills-container">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
+                            (click)="selectedTab2 = 1">Tráfico</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
+                            (click)="selectedTab2 = 2">Conversiones</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="selectedTab2 === 1 || selectedTab2 === 2">
+        <div class="col-12 col-lg-6 mt-4">
+            <div class="card" style="height: 100%;">
+                <div class="card-header">
+                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}}
+                        por día de la semana y hora del día</span>
+                </div>
+                <div class="card-body">
+                    <app-chart-heat-map [data]="heatmapData" name="weekday-sesions" height="100%">
+                    </app-chart-heat-map>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}}
+                        por día de la semana</span>
+                </div>
+                <div class="card-body">
+                    <app-chart-bar-horizontal [data]="trafficByDay" name="traffic-day" category='weekday' value='value'
+                        height="250px">
+                    </app-chart-bar-horizontal>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}}
+                        por hora del día</span>
+                </div>
+                <div class="card-body">
+                    <app-chart-lollipop [data]="trafficByHour" name="traffic-hour" category="hour" value="visits"
+                        height="250px">
+                    </app-chart-lollipop>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

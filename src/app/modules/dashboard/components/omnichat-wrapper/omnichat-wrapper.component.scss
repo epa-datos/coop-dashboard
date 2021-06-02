@@ -1,0 +1,20 @@
+.retailers-chart-container {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+.pills-container {
+    width: 60%;
+
+    @media screen and (max-width: 820px) {
+        width: 100%;
+    }
+}
+
+.nav-item .nav-link {
+    cursor: pointer;
+}
