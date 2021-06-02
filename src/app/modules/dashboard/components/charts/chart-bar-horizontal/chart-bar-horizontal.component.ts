@@ -15,6 +15,8 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
   @Input() category: string;
   @Input() height: string = '350px'; // height property value valid in css
   @Input() truncateLabels: boolean = false; // for reduced spaces with labels too long
+  @Input() showCategoryInToolip: boolean; // for show category name (object property value) in tooltip
+  @Input() singleColorBars: boolean;
 
   chartID;
   loadStatus: number = 0;
@@ -66,6 +68,9 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
       let label = categoryAxis.renderer.labels.template;
       label.truncate = true;
       label.maxWidth = 150;
+    }
+
+    if (this.showCategoryInToolip) {
       series.tooltipText = '[bold]{valueX}[/] - {categoryY}';
     } else {
       series.tooltipText = '{valueX}';
@@ -82,9 +87,11 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
     hoverState.properties.cornerRadiusBottomRight = 0;
     hoverState.properties.fillOpacity = 1;
 
-    series.columns.template.adapter.add('fill', function (fill, target) {
-      return chart.colors.getIndex(target.dataItem.index);
-    });
+    if (!this.singleColorBars) {
+      series.columns.template.adapter.add('fill', function (fill, target) {
+        return chart.colors.getIndex(target.dataItem.index);
+      });
+    }
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
