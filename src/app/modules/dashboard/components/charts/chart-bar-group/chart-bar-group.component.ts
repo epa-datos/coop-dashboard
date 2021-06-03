@@ -119,20 +119,28 @@ export class ChartBarGroupComponent implements OnInit, AfterViewInit {
     lineSeries.dataFields.valueY = this.valueLine1;
     lineSeries.yAxis = valueAxis2;
     lineSeries.bullets.push(new am4charts.CircleBullet());
-    lineSeries.stroke = chart.colors.getIndex(0);
+    lineSeries.stroke = am4core.color('#FCD713');
     lineSeries.strokeOpacity = 0.8;
     lineSeries.fill = lineSeries.stroke;
     lineSeries.strokeWidth = 2;
     lineSeries.snapTooltip = true;
 
-
     // fill adapter, here we save color value to colors object so that each time the item has the same name, the same color is used
     columnSeries.columns.template.adapter.add('fill', ((fill, target) => {
       let name = target.dataItem.dataContext['realName'];
-      if (!colors[name]) {
-        colors[name] = chart.colors.next();
+
+      if (name === this.valueNameBar1) {
+        return am4core.color('#71B9DA');
       }
-      return colors[name];
+
+      if (name === this.valueNameBar2) {
+        return am4core.color('#DE72D0');
+      }
+
+      // if (!colors[name]) {
+      //   colors[name] = chart.colors.next();
+      // }
+      // return colors[name];
     }));
 
     let rangeTemplate = categoryAxis.axisRanges.template;
