@@ -305,7 +305,7 @@ export class GeneralFiltersComponent implements OnInit {
         this.countriesErrorMsg && delete this.countriesErrorMsg;
       })
       .catch((error) => {
-        this.countriesErrorMsg = 'Error al consultar ciudades';
+        this.countriesErrorMsg = 'Error al consultar países';
         console.error(`[general-filers.component]: ${error}`);
       });
   }
