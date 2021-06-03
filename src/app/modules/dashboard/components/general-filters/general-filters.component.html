@@ -34,7 +34,7 @@
                 </mat-option>
                 <ng-container *ngFor="let country of countryList">
                     <mat-option class="mat-option-container" [hidden]="country.hidden" [value]="country"
-                        (click)="tosslePerOne('allSelectedCountries', 'countries', 'countryList')">
+                        (click)="tosslePerOne('allSelectedCountries', 'countries', 'countryList'); countryChange(country)">
                         <span class="option-name">{{ country.name }}</span>
                         <button type="button" class="btn btn-sm btn-secondary"
                             (click)="uniqueSelection('countries', 'country', country)">
@@ -89,7 +89,7 @@
                 </mat-option>
                 <ng-container *ngFor="let retailer of retailerList">
                     <mat-option class="mat-option-container" [hidden]="retailer.hidden" [value]="retailer"
-                        (click)="tosslePerOne('allSelectedRetailers', 'retailers', 'retailerList')">
+                        (click)="tosslePerOne('allSelectedRetailers', 'retailers', 'retailerList'); retailerChange(retailer)">
                         <span class="option-name">{{ retailer.name }}</span>
                         <button type="button" class="btn btn-sm btn-secondary"
                             (click)="uniqueSelection('retailers', 'retailer', retailer)">

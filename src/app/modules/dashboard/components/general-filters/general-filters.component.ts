@@ -283,6 +283,81 @@ export class GeneralFiltersComponent implements OnInit {
       });
   }
 
+  countryChange(country) {
+    console.log('country change', country)
+
+    const selectedCountry = this.countries.value.some(item => item.id === country.id);
+    console.log('selectedCountry', selectedCountry);
+
+    if (selectedCountry) {
+      this.retailers.patchValue(this.filteredRetailerList.filter(retailer => {
+        console.log('retailer', retailer)
+        const retailerInCountry = retailer.country_id === country.id;
+        const previouslySelected = this.retailers.value.some(prevRetailer => prevRetailer.id === retailer.id);
+        console.log('retailerInCountry', retailerInCountry);
+        console.log('previouslySelected', previouslySelected);
+
+        return retailerInCountry || previouslySelected;
+      }));
+    } else if (!selectedCountry) {
+      // solo apagar aquellos que pertenecen al país seleccionado
+      this.retailers.patchValue(this.filteredRetailerList.filter(retailer => {
+        console.log('retailer', retailer)
+        const retailerInCountry = retailer.country_id === country.id;
+        const previouslyDeselected = !this.retailers.value.some(prevRetailer => prevRetailer.id === retailer.id);
+        console.log('retailerInCountry', retailerInCountry);
+        console.log('previouslyDeselected', previouslyDeselected);
+
+        // conservar apagados los que estaban apagados
+
+        if (previouslyDeselected) {
+          return false;
+        }
+
+        return !retailerInCountry;
+      }));
+    }
+
+    this.allAreItemsSelected('retailers', 'retailerList', 'allSelectedRetailers');
+  }
+
+  retailerChange(retailer) {
+    console.log('retailer change', retailer)
+
+    const selectedRetailer = this.retailers.value.some(item => item.id === retailer.id);
+    console.log('selectedRetailer', selectedRetailer);
+
+    if (selectedRetailer) {
+      // verificar si todos los retailers que tengan el mismo country.id se encuentran en this.retailers.value
+      // o es una ciudad que ya estaba prendida
+
+      const allRetailersInCountry = this.filteredRetailerList.filter(item => item.country_id === retailer.country_id);
+      console.log('allRetailersInCountry', allRetailersInCountry)
+
+      const selectedRetailers = this.retailers.value.filter(item => item.country_id === retailer.country_id);
+      console.log('selectedRetailers', selectedRetailers)
+
+      this.countries.patchValue(this.filteredCountryList.filter(country => {
+        const previouslySelected = this.countries.value.some(prevCountry => prevCountry.id === country.id);
+        console.log('previouslySelected', previouslySelected)
+        if (previouslySelected) {
+          return true;
+        }
+
+        if (country.id === retailer.country_id) {
+          console.log('es el mismo país', country)
+          return allRetailersInCountry.length === selectedRetailers.length;
+        }
+
+        return false;
+
+      }));
+
+    } else if (!selectedRetailer) {
+
+    }
+  }
+
   loadLatamContent() {
     return new Promise<void>(async (resolve) => {
       this.isLatamSelected = this.router.url.includes('latam') ? true : false;
@@ -315,7 +390,12 @@ export class GeneralFiltersComponent implements OnInit {
       .toPromise()
       .then((res: any[]) => {
         const retailers = res.map(retailer => {
-          return { id: retailer.id, name: `${retailer.country_code} - ${retailer.name}` }
+          return {
+            id: retailer.id,
+            name: `${retailer.country_code} - ${retailer.name}`,
+            country_id: retailer.country_id,
+            country_code: retailer.country_code
+          }
         });
 
         retailers.sort((a, b) => a.name.localeCompare(b.name));
