@@ -1,4 +1,9 @@
-.campaigns-tables {
+.adaptable-container {
+    background-color: #ffffff;
+    min-height: 250px;
+    overflow: auto;
+    position: relative;
+  
     table {
         border-collapse: collapse;
         table-layout: auto;
@@ -9,11 +14,7 @@
             text-align: center;
         }
     }
-    
-    .adaptable-container {
-        overflow: auto;
-    }
-    
+
     .lg-container {
         max-width: 700px;
         span {
@@ -24,7 +25,7 @@
             display: inline-block;
         }
     }
-    
+
     .value-container {
         align-items: center;
         display: grid;
@@ -32,8 +33,28 @@
         gap: 8px;
         justify-content: center;
     } 
+
+    &.auto {
+        min-height: auto;
+    }
+
+    .loading-shade {
+        align-items: center;
+        background: rgba(0, 0, 0, 0.03);
+        bottom: 0px;
+        display: flex;
+        justify-content: center;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 1;
+    }
 }
 
-.custom-tooltip {
+::ng-deep .custom-tooltip {
+    font-size: 12px !important;
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
     max-width: unset !important;
 }
