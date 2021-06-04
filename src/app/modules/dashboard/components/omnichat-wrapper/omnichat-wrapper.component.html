@@ -33,10 +33,12 @@
             </div>
             <div class="card-body">
                 <app-chart-multiple-axes [data]="dataByUsersAndRevenue"
+                    [value1]="selectedTab1 === 1 ? 'traffic' : 'aup'"
+                    [value2]="selectedTab1 === 1 ? 'conversions' : 'revenue'"
                     [valueName1]="selectedTab1 === 1 ? 'Tráfico' : 'AUP'"
                     [valueName2]="selectedTab1 === 1 ? 'Conversiones' : 'Revenue'"
-                    [value1]="selectedTab1 === 1 ? 'traffic' : 'aup'"
-                    [value2]="selectedTab1 === 1 ? 'transactions' : 'revenue'" name="omnichat-traffic-vs-conversions">
+                    [valueFormat1]="selectedTab1 === 2 && 'USD'" [valueFormat2]="selectedTab1 === 2 && 'USD'"
+                    name="omnichat-traffic-vs-conversions">
                 </app-chart-multiple-axes>
             </div>
         </div>

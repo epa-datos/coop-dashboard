@@ -1165,31 +1165,31 @@ export class OmnichatWrapperComponent implements OnInit {
   trafficVsConversions = [{
     date: '2021-03-15',
     traffic: 1298,
-    transactions: 66,
+    conversions: 66,
   }, {
     date: '2021-03-16',
     traffic: 816,
-    transactions: 39,
+    conversions: 39,
   }, {
     date: '2021-03-17',
     traffic: 1963,
-    transactions: 43,
+    conversions: 43,
   }, {
     date: '2021-03-18',
     traffic: 1809,
-    transactions: 29,
+    conversions: 29,
   }, {
     date: '2021-03-19',
     traffic: 1434,
-    transactions: 36,
+    conversions: 36,
   }, {
     date: '2021-03-20',
     traffic: 2359,
-    transactions: 16,
+    conversions: 16,
   }, {
     date: '2021-03-21',
     traffic: 2114,
-    transactions: 66,
+    conversions: 66,
   }];
 
   conversionByCategories = [
@@ -1351,7 +1351,7 @@ export class OmnichatWrapperComponent implements OnInit {
 
     if (metricType === 'users') {
       this.dataByUsersAndRevenue = this.trafficVsConversions;
-    } else if (metricType === 'users') {
+    } else if (metricType === 'revenue') {
       this.dataByUsersAndRevenue = this.aupVsRevenue;
     }
 
