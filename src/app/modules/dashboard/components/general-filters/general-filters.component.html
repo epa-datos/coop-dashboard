@@ -100,7 +100,7 @@
                 </ng-container>
 
             </mat-select>
-            <small class="text-danger" *ngIf="retailers?.value?.length < 1 && retailers.touched">
+            <small class="text-danger" *ngIf="retailers?.value?.length < 1 && (retailers.touched || countries.touched)">
                 Selecciona al menos un Retailer
             </small>
             <small class="text-danger" *ngIf="retailersErrorMsg">

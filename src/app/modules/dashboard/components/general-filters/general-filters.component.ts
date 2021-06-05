@@ -395,28 +395,83 @@ export class GeneralFiltersComponent implements OnInit {
     let shownElements;
     switch (filterRef) {
       case 'retailers':
-        shownElements = this.retailerList.filter(item => !item.hidden);
+        // si filtro ma en paises y doy seleccionar o deseleccionar debo afectar solo a los retailers relacionados al filtro
+
+        shownElements = this.countryList.filter(item => !item.hidden);
         const allSelectedCountries = this.allSelectedCountries.selected;
 
         if (allSelectedCountries) {
-          this.retailers.patchValue([...this.retailerList.map(item => item), 0]);
+          // this.retailers.patchValue([...this.retailerList.map(item => item), 0]);
+          this.retailers.patchValue(this.retailerList.filter(retailer => {
+            const relativeToSearch = shownElements.some(item => item.id === retailer.country_id);
+            const previouslySelected = this.retailers.value.some(prevRetailer => prevRetailer.id === retailer.id);
+
+            return relativeToSearch || previouslySelected
+          }))
+        } else {
+          // apagar todos los retailers y forzar al usuario que seleccione alguno
+          // igual, solo aplica a los que estan filtrados 
+
+          // this.retailers.patchValue([]);
+
+          this.retailers.patchValue(this.retailerList.filter(retailer => {
+            const relativeToSearch = shownElements.some(item => item.id === retailer.country_id);
+            const previouslySelected = this.retailers.value.some(prevRetailer => prevRetailer.id === retailer.id);
+
+            if (previouslySelected && !relativeToSearch) {
+              return true;
+            }
+
+            if (relativeToSearch) {
+              return false;
+            }
+
+            return previouslySelected;
+          }))
         }
+        this.allAreItemsSelected('retailers', 'retailerList', 'allSelectedRetailers');
         this.retailersCounter = this.retailers.value.length;
         break;
 
       case 'countries':
         const allSelectedRetailers = this.allSelectedRetailers.selected;
-        // console.log('allSelectedRetailers', allSelectedRetailers)
+        console.log('allSelectedRetailers', allSelectedRetailers)
         shownElements = this.retailerList.filter(item => !item.hidden);
-        // console.log('shownElements', shownElements)
+        console.log('shownElements', shownElements)
 
         // si todos los retailers de un pais resultan ser seleccionados o deseleccionados 
         // debo de prender o apagar el pais correspondiente
 
+
+
         if (allSelectedRetailers) {
+          // *********************************************************************************************
+          // 1. de los retailers mostrados (o filtrados) shownElements obtener todos los .country_id seleccionados (sin repeticiones) y alacenarlos en linkedCountries
+          // 2. iterar linkedCountries y hacer un nuevo arrar con [{id: coutry.id, allSelectedRetailers: boolan}]
+          // 3. con este nuevo array usaremos un some (por id para ver si prendemos el país)
+
+          // const allRetailersInCountry = this.filteredRetailerList.filter(item => item.country_id === retailer.country_id);
+          // console.log('allRetailersInCountry', allRetailersInCountry)
+
+          // const selectedRetailers = this.retailers.value.filter(item => item.country_id === retailer.country_id);
+
           this.countries.patchValue(this.countryList.filter(country => {
             const relativeToSearch = shownElements.some(item => item.country_id === country.id);
             const previouslySelected = this.countries.value.some(prevCountry => prevCountry.id === country.id);
+
+            // aparte debe de considerarse que solo se debe de prender el país si cada uno de los retailers que tiene esta seleccionado
+
+            // console.log('previouslySelected', previouslySelected)
+            // if (previouslySelected) {
+            //   return true;
+            // }
+
+            // if (country.id === retailer.country_id) {
+            //   // console.log('es el mismo país', country)
+            //   return allRetailersInCountry.length === selectedRetailers.length;
+            // }
+
+            // return false;
 
             return relativeToSearch || previouslySelected
           }))
