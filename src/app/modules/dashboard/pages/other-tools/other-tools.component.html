@@ -18,11 +18,10 @@
     </ul>
 
     <ng-container *ngIf="activeTabView === 1">
-        <app-maintenance></app-maintenance>
+        <app-indexed-wrapper></app-indexed-wrapper>
     </ng-container>
 
     <ng-container *ngIf="activeTabView === 2">
-        <!-- <p class="text-muted">OmniChat</p> -->
         <app-omnichat-wrapper></app-omnichat-wrapper>
     </ng-container>
 

@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
+import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES";
 
 @Component({
   selector: 'app-chart-multiple-axes',
@@ -12,12 +13,13 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
   @Input() height: string = '350px'; // height property value valid in css
   @Input() value1: string = 'value1'; // object property represented as valueAxis1 (left axis)
   @Input() value2: string = 'value2'; // object property represented as valueAxis2 (right axis)
-  @Input() valueName1: string = 'Value 1';
-  @Input() valueName2: string = 'Value 2';
-  @Input() valueFormat1: string;
-  @Input() valueFormat2: string;
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
+
+  chartID;
+  chart;
+  series;
+  axis;
 
   private _name: string;
   get name() {
@@ -37,8 +39,41 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
     this.chart && this.loadChartData(this.chart);
   }
 
-  chartID;
-  chart;
+  private _valueName1: string = 'Value 1'; // Property name shown in tooltip
+  get valueName1() {
+    return this._valueName1;
+  }
+  @Input() set valueName1(value) {
+    this._valueName1 = value;
+    this.series && this.loadNamesAndFormats();
+  }
+
+  private _valueName2: string = 'Value 2'; // Property name shown in tooltip
+  get valueName2() {
+    return this._valueName2;
+  }
+  @Input() set valueName2(value) {
+    this._valueName2 = value;
+    this.series && this.loadNamesAndFormats();
+  }
+
+  private _valueFormat1: string; // USD MXN Copy shown in tooltip
+  get valueFormat1() {
+    return this._valueFormat1;
+  }
+  @Input() set valueFormat1(value) {
+    this._valueFormat1 = value;
+    this.series && this.loadNamesAndFormats();
+  }
+
+  private _valueFormat2: string; // USD MXN Copy shown in tooltip
+  get valueFormat2() {
+    return this._valueFormat2;
+  }
+  @Input() set valueFormat2(value) {
+    this._valueFormat2 = value;
+    this.series && this.loadNamesAndFormats();
+  }
 
   constructor() { }
 
@@ -53,6 +88,9 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
     am4core.useTheme(am4themes_animated);
     let chart = am4core.create(this.chartID, am4charts.XYChart);
     chart.numberFormatter.numberFormat = '#,###.##';
+    chart.language.locale = am4lang_es_ES;
+    chart.language.locale["_decimalSeparator"] = ".";
+    chart.language.locale["_thousandSeparator"] = ",";
 
     // Create axes
     let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
@@ -106,11 +144,41 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
     chart.legend = new am4charts.Legend();
     chart.legend.position = 'bottom';
 
+    this.series = { series1, series2 };
+    this.axis = { valueAxis1, valueAxis2 };
+
     this.loadChartData(chart);
   }
 
   loadChartData(chart) {
     chart.data = this.data;
     this.chart = chart;
+
+    this.series.series1.dataFields.valueY = this.value1;
+    this.series.series2.dataFields.valueY = this.value2;
+
+    this.series.series1.tooltipText = `{name}: [bold]{valueY} ${this.valueFormat1 ? this.valueFormat1 : ''}[/]`;
+    this.series.series2.tooltipText = `{name}: [bold]{valueY} ${this.valueFormat2 ? this.valueFormat2 : ''}[/]`;
+
+    this.series.series1.name = this.valueName1;
+    this.series.series2.name = this.valueName2;
+
+    this.axis.valueAxis1.title.text = this.valueName1;
+    this.axis.valueAxis2.title.text = this.valueName2;
+
+  }
+
+  loadNamesAndFormats() {
+    this.series.series1.dataFields.valueY = this.value1;
+    this.series.series2.dataFields.valueY = this.value2;
+
+    this.series.series1.tooltipText = `{name}: [bold]{valueY} ${this.valueFormat1 ? this.valueFormat1 : ''}[/]`;
+    this.series.series2.tooltipText = `{name}: [bold]{valueY} ${this.valueFormat2 ? this.valueFormat2 : ''}[/]`;
+
+    this.series.series1.name = this.valueName1;
+    this.series.series2.name = this.valueName2;
+
+    this.axis.valueAxis1.title.text = this.valueName1;
+    this.axis.valueAxis2.title.text = this.valueName2;
   }
 }

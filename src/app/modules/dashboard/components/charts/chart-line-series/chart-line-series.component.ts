@@ -105,10 +105,12 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
 
     for (var i = 0; i < this.series.length; i++) {
       const color = colors[i] ? colors[i] : colors[0]
-      createSeries(this.value + i, this.series[i], this.value, this.valueName, this.valueFormat, color);
+      // createSeries(this.value + i, this.series[i], this.value, this.valueName, this.valueFormat, color);
+      createSeries(this.value + i, this.series[i], this.value, color);
     }
 
-    function createSeries(s, serieData, serieValueProp, serieValueName, serieValueFormat, color) {
+    // function createSeries(s, serieData, serieValueProp, serieValueName, serieValueFormat, color)
+    function createSeries(s, serieData, serieValueProp, color) {
       let name = serieData.name;
       let serie = serieData.serie;
 
@@ -118,7 +120,8 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
       series.name = name;
       series.tensionX = 0.85;
       series.strokeWidth = 2;
-      series.tooltipText = `${serieValueName ? serieValueName + ': ' : ''}[bold]${typeof serieValueFormat === 'string' ? serieValueFormat : ''} {valueY}[/]`;
+      // series.tooltipText = `${serieValueName ? serieValueName + ': ' : ''}[bold]${typeof serieValueFormat === 'string' ? serieValueFormat : ''} {valueY}[/]`;
+      series.tooltipText = `${serieData.name ? serieData.name + ': ' : ''}[bold]{valueY} ${typeof serieData.valueFormat === 'string' ? serieData.valueFormat : ''}[/]`;
       series.tooltip.getFillFromObject = false;
 
       if (serieData.customLineStye === 'dashed') {

@@ -352,3 +352,11 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 .card .card-header {
   padding: 0.5rem 1.5rem;
 }
+
+.pills-container .nav-pills .nav-item {
+  cursor: pointer;
+}
+
+.card.height-fluid {
+  height: 100%;
+}

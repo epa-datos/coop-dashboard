@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CampaignsTablesComponent } from './campaigns-tables.component';
+import { IndexedWrapperComponent } from './indexed-wrapper.component';
 
-describe('CampaignsTablesComponent', () => {
-  let component: CampaignsTablesComponent;
-  let fixture: ComponentFixture<CampaignsTablesComponent>;
+describe('IndexedWrapperComponent', () => {
+  let component: IndexedWrapperComponent;
+  let fixture: ComponentFixture<IndexedWrapperComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CampaignsTablesComponent ]
+      declarations: [ IndexedWrapperComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CampaignsTablesComponent);
+    fixture = TestBed.createComponent(IndexedWrapperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,25 @@
+<div class="row my-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <app-chart-line-series [series]="campPerformance" [status]="campPerformanceReqStatus"
+                    name="campaign-towards-retail-metrics">
+                </app-chart-line-series>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 mb-5" *ngFor="let campaigns of campList">
+        <div class="header bg-light mb-2">
+            <p class="h4 py-1 ml-3 mr-3">
+                <span>{{ campaigns.name }}</span>
+            </p>
+        </div>
+        <app-generic-table [displayedColumns]="campListDisplayedColumns" [tableData]="campaigns"
+            [tableDataChange]="campaigns.data" errorMsg="Error al consultar campañas"
+            emptyDataMsg="No se encontraron campañas">
+        </app-generic-table>
+    </div>
+</div>

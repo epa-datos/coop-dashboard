@@ -32,6 +32,10 @@ export class CountryComponent implements OnInit, OnDestroy {
     this.countryID = selectedCountry?.id && selectedCountry?.id;
     this.retailerID = selectedRetailer?.id && selectedRetailer?.id;
 
+    if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
+      this.filtersStateService.restoreFilters();
+    }
+
     this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
       this.requestInfoSource.next(manualChange);
     });

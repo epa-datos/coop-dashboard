@@ -112,7 +112,8 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
-      this.filtersStateService.restoreFilters();
+      // removed line and used it from country & retailer components (init)
+      // this.filtersStateService.restoreFilters();
       this.getAllData();
     }
 

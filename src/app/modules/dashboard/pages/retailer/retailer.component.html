@@ -28,18 +28,8 @@
     </ng-container>
 
     <ng-container *ngIf="activeTabView === 2">
-        <div class="row my-5">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <app-chart-line-series [series]="campMetrics" name="campaign-metrics">
-                        </app-chart-line-series>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <app-campaigns-tables></app-campaigns-tables>
+        <app-campaign-towards-retail-wrapper [requestInfoChange]="requestInfoChange$">
+        </app-campaign-towards-retail-wrapper>
     </ng-container>
 
     <ng-container *ngIf="activeTabView === 3">

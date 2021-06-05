@@ -11,8 +11,8 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
 
   @Input() data;
-  @Input() value: string;
-  @Input() category: string;
+  @Input() value: string = 'value';
+  @Input() category: string = 'category';
   @Input() height: string = '350px'; // height property value valid in css
   @Input() truncateLabels: boolean = false; // for reduced spaces with labels too long
   @Input() showCategoryInToolip: boolean; // for show category name (object property value) in tooltip
@@ -62,8 +62,6 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
     series.dataFields.categoryY = this.category;
     series.columns.template.strokeWidth = 0;
 
-    series.tooltip.pointerOrientation = 'left';
-
     if (this.truncateLabels) {
       let label = categoryAxis.renderer.labels.template;
       label.truncate = true;
@@ -72,8 +70,14 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
 
     if (this.showCategoryInToolip) {
       series.tooltipText = '[bold]{valueX}[/] - {categoryY}';
+
+      series.tooltip.fontSize = 12;
+      series.tooltip.label.maxWidth = 250;
+      series.tooltip.label.wrap = true;
+      series.tooltip.pointerOrientation = 'down';
     } else {
       series.tooltipText = '{valueX}';
+      series.tooltip.pointerOrientation = 'left';
     }
 
     // series.columns.template.column.cornerRadiusTopLeft = 10;

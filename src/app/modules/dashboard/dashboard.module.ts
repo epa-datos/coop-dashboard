@@ -21,7 +21,7 @@ import { DashboardComponent } from './dashboard.component';
 import { GeneralFiltersComponent } from './components/general-filters/general-filters.component';
 import { RetailFiltersComponent } from './components/retail-filters/retail-filters.component';
 import { CardStatComponent } from './components/card-stat/card-stat.component';
-import { CampaignsTablesComponent } from './components/campaigns-tables/campaigns-tables.component';
+import { GenericTableComponent } from './components/generic-table/generic-table.component';
 import { GoogleBusinessComponent } from './components/google-business/google-business.component';
 import { CampaignComparatorComponent } from './pages/campaign-comparator/campaign-comparator.component';
 import { SentimentAnalysisComponent } from './pages/sentiment-analysis/sentiment-analysis.component';
@@ -39,6 +39,9 @@ import { AudiencesWrapperComponent } from './components/audiences-wrapper/audien
 import { AcquisitionWrapperComponent } from './components/acquisition-wrapper/acquisition-wrapper.component';
 import { BehaviourWrapperComponent } from './components/behaviour-wrapper/behaviour-wrapper.component';
 import { ConversionWrapperComponent } from './components/conversion-wrapper/conversion-wrapper.component';
+import { OmnichatWrapperComponent } from './components/omnichat-wrapper/omnichat-wrapper.component';
+import { CampaignTowardsRetailWrapperComponent } from './components/campaign-towards-retail-wrapper/campaign-towards-retail-wrapper.component';
+import { IndexedWrapperComponent } from './components/indexed-wrapper/indexed-wrapper.component';
 
 // charts
 import { ChartBarComponent } from './components/charts/chart-bar/chart-bar.component';
@@ -54,9 +57,9 @@ import { ChartPictorialComponent } from './components/charts/chart-pictorial/cha
 import { ChartPyramidComponent } from './components/charts/chart-pyramid/chart-pyramid.component';
 import { ChartMultipleAxesComponent } from './components/charts/chart-multiple-axes/chart-multiple-axes.component';
 import { ChartLoaderComponent } from './components/charts/chart-loader/chart-loader.component';
-import { OmnichatWrapperComponent } from './components/omnichat-wrapper/omnichat-wrapper.component';
 import { ChartGaugeComponent } from './components/charts/chart-gauge/chart-gauge.component';
 import { ChartBarGroupComponent } from './components/charts/chart-bar-group/chart-bar-group.component';
+import { StarRaitingComponent } from './components/star-raiting/star-raiting.component';
 
 
 @NgModule({
@@ -83,7 +86,7 @@ import { ChartBarGroupComponent } from './components/charts/chart-bar-group/char
     ChartColumnLineMixComponent,
     ChartPictorialComponent,
     OverviewWrapperComponent,
-    CampaignsTablesComponent,
+    GenericTableComponent,
     ChartPyramidComponent,
     GoogleBusinessComponent,
     ChartMultipleAxesComponent,
@@ -94,6 +97,9 @@ import { ChartBarGroupComponent } from './components/charts/chart-bar-group/char
     OmnichatWrapperComponent,
     ChartGaugeComponent,
     ChartBarGroupComponent,
+    StarRaitingComponent,
+    CampaignTowardsRetailWrapperComponent,
+    IndexedWrapperComponent,
   ],
   imports: [
     CommonModule,

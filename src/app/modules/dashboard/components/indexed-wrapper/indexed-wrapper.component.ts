@@ -1,146 +1,42 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { NavigationEnd, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { AppStateService } from 'src/app/services/app-state.service';
+import { Component, OnInit } from '@angular/core';
+import { TableItem } from '../generic-table/generic-table.component';
 
 @Component({
-  selector: 'app-omnichat-wrapper',
-  templateUrl: './omnichat-wrapper.component.html',
-  styleUrls: ['./omnichat-wrapper.component.scss']
+  selector: 'app-indexed-wrapper',
+  templateUrl: './indexed-wrapper.component.html',
+  styleUrls: ['./indexed-wrapper.component.scss']
 })
-export class OmnichatWrapperComponent implements OnInit, OnDestroy {
+export class IndexedWrapperComponent implements OnInit {
 
-  kpis: any[] = [
+  selectedTab1: number = 1;
+  mainTabs = [
     {
-      metricTitle: 'total chats',
-      metricName: 'total_chats',
-      metricValue: 380.092,
-      metricFormat: 'decimals'
+      title: 'Usuarios',
+      name: 'users'
     },
     {
-      metricTitle: 'promedio de chats por día',
-      metricName: 'chats_day_avg',
-      metricValue: 998,
-      metricFormat: 'integer'
-
+      title: 'Usuarios nuevos',
+      name: 'new_users'
     },
     {
-      metricTitle: '% dedicado al cliente',
-      metricName: 'chats_client',
-      metricValue: 41,
-      metricFormat: 'percentage'
+      title: 'Sesiones',
+      name: 'sessions'
     },
     {
-      metricTitle: 'mediana de duración',
-      metricName: 'median_duration',
-      metricValue: '00:05:34',
-      subMetricTitle: 'Esperado',
-      subMetricName: 'cr',
-      subMetricValue: '< 10 Min'
+      title: 'Porcentaje de rebote',
+      name: 'bounce_rate'
     },
     {
-      metricTitle: 'mediana de retardo',
-      metricName: 'median_delay',
-      metricValue: '00:00:11',
-      subMetricTitle: 'Benchmark',
-      subMetricName: 'roas',
-      subMetricValue: '< 48 Seg'
+      title: 'Páginas/sesión',
+      name: 'pages_sessions'
     },
     {
-      metricTitle: 'calificación del chat',
-      metricName: 'chat_score',
-      metricValue: 91.1,
-      metricFormat: 'score',
-      subMetricTitle: 'resultado',
-      subMetricName: 'chat_score',
-      subMetricValue: '4.56/5'
-    },
-    {
-      metricTitle: 'usuarios',
-      metricName: 'users',
-      metricValue: '4500',
-      metricFormat: 'integer'
-    },
-    {
-      metricTitle: 'transacciones',
-      metricName: 'transactions',
-      metricValue: 0,
-      metricFormat: 'integer',
-    },
-    {
-      metricTitle: 'conversion rate',
-      metricName: 'conversion_rate',
-      metricValue: 0,
-      metricFormat: 'percentage',
-    },
-    {
-      metricTitle: 'revenue',
-      metricName: 'revenue',
-      metricValue: 0,
-      metricFormat: 'decimals',
-      metricSymbol: 'USD'
+      title: 'Duración media de la sesión',
+      name: 'avg_session_duration'
     }
   ];
 
-  kpisReqStatus = 2;
-
-  chatsByCountry = [
-    { country: 'Panama', chats: 18 },
-    { country: 'Honduras', chats: 135 },
-    { country: 'Guatemala', chats: 202 },
-    { country: 'El Salvador', chats: 405 },
-    { country: 'Costa Rica', chats: 615 },
-    { country: 'Brasil', chats: 625 },
-    { country: 'Colombia', chats: 700 },
-    { country: 'Argentina', chats: 950 },
-    { country: 'Mexico', chats: 1150 },
-    { country: 'Peru', chats: 1250 },
-    { country: 'Chile', chats: 1300 },
-  ];
-
-  chatsByRetailer = [
-    { retailer: 'MX - Pedidos', chats: 0 },
-    { retailer: 'HN - Jestereo', chats: 0 },
-    { retailer: 'HN - Office Depot', chats: 3 },
-    { retailer: 'AR - Musimundo', chats: 4 },
-    { retailer: 'GT - Office Depot', chats: 6 },
-    { retailer: 'SV - Office Depot', chats: 8 },
-    { retailer: 'MX - Dusof', chats: 10 },
-    { retailer: 'CR - Unimart', chats: 20 },
-    { retailer: 'CR - Office Depot', chats: 65 },
-    { retailer: 'BR - Casas Bahia', chats: 70 },
-    { retailer: 'AR - Carrefour', chats: 95 },
-    { retailer: 'BR - Portinfo', chats: 99 },
-    { retailer: 'AR - Fravega', chats: 100 },
-    { retailer: 'BR - Kalunga', chats: 120 },
-    { retailer: 'AR - Garbarino', chats: 145 },
-    { retailer: 'BR - Portifino', chats: 150 },
-    { retailer: 'AR - Compumundo', chats: 198 },
-    { retailer: 'MX - Liverpool', chats: 215 },
-    { retailer: 'MX - Walmart', chats: 250 },
-    { retailer: 'PE - Rodelag', chats: 320 },
-    { retailer: 'PE - Hiroka', chats: 450 },
-    { retailer: 'PE - Riplay', chats: 550 },
-    { retailer: 'CL- PC Factory', chats: 680 },
-    { retailer: 'CL - Alkosto', chats: 750 },
-  ];
-
-  chatsByDevices = [
-    { name: 'Desktop', value: 2500 },
-    { name: 'Mobile', value: 10500 }
-  ];
-
-  devicesReqStatus = 2;
-
-  chatsByCategories = [
-    { category: 'PS', value: 3200 },
-    { category: 'HW Print', value: 1200 },
-    { category: 'Supplies', value: 400 }
-  ]
-  chartsInitLoad: boolean = true;
-  trafficAndSales = {
+  trafficDemographics = {
     device: [
       {
         "name": "Desktop",
@@ -274,7 +170,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     ]
   }
 
-  trafficSalesReqStatus = [
+  trafficDemoStatus = [
     { name: 'device', reqStatus: 2 },
     { name: 'gender', reqStatus: 2 },
     { name: 'age', reqStatus: 2 },
@@ -1145,286 +1041,124 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     { hour: '9 PM', visits: 100 }
   ]
 
-  transactionsData = [
+  brAndPagesView = [
     {
-      metricTitle: 'usuarios *',
-      metricName: 'users',
-      metricValue: 173199,
-      metricFormat: 'integer'
+      name: 'Porcentaje de salidas',
+      serie: [
+        { date: '2021-03-15', value: 10 },
+        { date: '2021-03-16', value: 12 },
+        { date: '2021-03-17', value: 18 },
+        { date: '2021-03-18', value: 35 },
+        { date: '2021-03-19', value: 41 },
+        { date: '2021-03-20', value: 25 },
+        { date: '2021-03-21', value: 44 }
+      ],
+      valueFormat: '%'
     },
     {
-      metricTitle: 'transacciones',
-      metricName: 'transactions',
-      metricValue: 6695,
-      metricFormat: 'integer'
+      name: 'Porcentaje de rebote',
+      serie: [
+        { date: '2021-03-15', value: 30 },
+        { date: '2021-03-16', value: 15 },
+        { date: '2021-03-17', value: 18 },
+        { date: '2021-03-18', value: 25 },
+        { date: '2021-03-19', value: 12 },
+        { date: '2021-03-20', value: 8 },
+        { date: '2021-03-21', value: 45 }
+      ],
+      valueFormat: '%'
     },
     {
-      metricTitle: 'tasa de conversión',
-      metricName: 'transactions',
-      metricValue: 3.9,
-      metricFormat: 'percentage',
+      name: 'Número de páginas vistas',
+      serie: [
+        { date: '2021-03-15', value: 7 },
+        { date: '2021-03-16', value: 6 },
+        { date: '2021-03-17', value: 5 },
+        { date: '2021-03-18', value: 2 },
+        { date: '2021-03-19', value: 3 },
+        { date: '2021-03-20', value: 1 },
+        { date: '2021-03-21', value: 6 }
+      ]
     }
   ]
 
-  trafficVsConversions = [{
-    date: '2021-03-15',
-    traffic: 1298,
-    conversions: 66,
-  }, {
-    date: '2021-03-16',
-    traffic: 816,
-    conversions: 39,
-  }, {
-    date: '2021-03-17',
-    traffic: 1963,
-    conversions: 43,
-  }, {
-    date: '2021-03-18',
-    traffic: 1809,
-    conversions: 29,
-  }, {
-    date: '2021-03-19',
-    traffic: 1434,
-    conversions: 36,
-  }, {
-    date: '2021-03-20',
-    traffic: 2359,
-    conversions: 16,
-  }, {
-    date: '2021-03-21',
-    traffic: 2114,
-    conversions: 66,
-  }];
-
-  conversionByCategories = [
-    {
-      metricTitle: 'ps',
-      metricName: 'ps',
-      metricValue: 2.6,
-      metricFormat: 'percentage'
-    },
-    {
-      metricTitle: 'hw Print',
-      metricName: 'hw_print',
-      metricValue: 7.6,
-      metricFormat: 'percentage'
-    },
-    {
-      metricTitle: 'Supplies',
-      metricName: 'supplies',
-      metricValue: 16.2,
-      metricFormat: 'percentage',
-    }
+  sessionsVsRetVisitor = [
+    { category: 'Visitantes nuevos', value: 3200 },
+    { category: 'Visitante recurrentes', value: 2800 }
   ]
 
-  transactionsByProduct = [
-    { product: 'Impresora Multifunción HP In 2', transactions: 7 },
-    { product: 'Impresora HP Ink Tank 115 - HP 2', transactions: 8 },
-    { product: 'Impresora Multifunción HP Ink 2', transactions: 10 },
-    { product: 'Impresora Láser HP 107W - HP 2', transactions: 20 },
-    { product: 'Impresora Multifunción HP Deskjet 2', transactions: 25 },
-    { product: 'Impresora HP Deskjet Ink Advance 2', transactions: 28 },
-    { product: 'Impresora Multifunción HP In', transactions: 30 },
-    { product: 'Impresora HP Ink Tank 115 - HP', transactions: 37 },
-    { product: 'Impresora Multifunción HP Ink', transactions: 41 },
-    { product: 'Impresora Láser HP 107W - HP', transactions: 41 },
-    { product: 'Impresora Multifunción HP Deskjet', transactions: 74 },
-    { product: 'Impresora HP Deskjet Ink Advance', transactions: 89 },
-
-  ]
-
-  aupVsRevenue = [{
-    date: '2021-03-15',
-    revenue: 2816.232,
-    aup: 35977,
-  }, {
-    date: '2021-03-16',
-    revenue: 3517.643,
-    aup: 22677,
-  }, {
-    date: '2021-03-17',
-    revenue: 8923.765,
-    aup: 25541,
-  }, {
-    date: '2021-03-18',
-    revenue: 6205.837,
-    aup: 28172,
-  }, {
-    date: '2021-03-19',
-    revenue: 2326.599,
-    aup: 26498,
-  }, {
-    date: '2021-03-20',
-    revenue: 3585.788,
-    aup: 43770,
-  }, {
-    date: '2021-03-21',
-    revenue: 4850.785,
-    aup: 40874,
-  }];
-
-  categoryAndUsersColumns: string[] = ['category', 'users', 'conversion_rate', 'conversion_rate_yoy', 'amount', 'amount_yoy', 'revenue', 'revenue_yoy', 'aup', 'aup_yoy'];
-  private categoryAndUsers = [
-    { category: 'PS', users: 5388, conversion_rate: 8, conversion_rate_yoy: 2, amount: 300, amount_yoy: -3, revenue: 3480, revenue_yoy: 6, aup: 10358, aup_yoy: -1 },
-    { category: 'HW Print', users: 2345, conversion_rate: 16, conversion_rate_yoy: 14, amount: 150, amount_yoy: 4, revenue: 7350, revenue_yoy: -4, aup: 10358, aup_yoy: 8 },
-    { category: 'Supplies', users: 1345, conversion_rate: 3, conversion_rate_yoy: -4, amount: 180, amount_yoy: 8, revenue: 12000, revenue_yoy: 0, aup: 10358, aup_yoy: -3 }
+  categoryCoverage = [
+    { category: 'Beauty & Wellness/Frequently Visits Salons', users: 1600 },
+    { category: 'Lifestyles & Hobbies/Family-Focused', users: 2000 },
+    { category: 'Technology/Technophiles', users: 2400 },
+    { category: 'Home & Garden/Do-It-Yourselfers', users: 2900 },
+    { category: 'Lifestyles & Hobbies/Green Living Enthusiasts', users: 3200 },
+    { category: 'Shoppers/Luxury Shoppers', users: 3600 },
+    { category: 'Lifestyles & Hobbies/Business Professional', users: 3800 },
+    { category: 'Media & Entertainment/Movie Lovers', users: 4000 },
+    { category: 'Food & Dining/Cooking Enthusiasts/30 Minute Chefs', users: 4500 },
+    { category: 'Shoppers/Value Shoppers', users: 4731 },
   ];
 
-  categoryAndUsersSource = new MatTableDataSource<any>(this.categoryAndUsers);
-  categoryAndUsersReqStatus = 2;
+  marketSegment = [
+    { category: 'Autos & Vehicles/Motor Vehicles/Motor Vehicles (Used)', users: 1200 },
+    { category: 'Autos & Vehicles/Motor Vehicles/Motor Vehicles (New)', users: 1400 },
+    { category: 'Business Services/Advertising & Marketing Services', users: 1600 },
+    { category: 'Computers & Peripherals/Computers/Laptops', users: 1700 },
+    { category: 'Financial Services/Credit & Lending', users: 1990 },
+    { category: 'Home & Garden/Home Appliances', users: 2300 },
+    { category: 'Financial Services/Investment Services', users: 2400 },
+    { category: 'Financial Services/Credit & Lending/Credit Cards', users: 3100 },
+    { category: 'Consumer Electronics/Mobile Phones', users: 3200 },
+    { category: 'Financial Services/Banking Services', users: 4731 },
+  ]
 
-
-  usersTransactionsConversion = {
-    'Ene 21': {
-      'users': 1517,
-      'transactions': 68,
-      'conversion_rate': 5
+  mostVistitedColumns: TableItem[] = [
+    {
+      name: 'rank',
+      title: 'Posición'
     },
-    'Feb 21': {
-      'users': 2400,
-      'transactions': 81,
-      'conversion_rate': 6
+    {
+      name: 'category',
+      title: 'Categoría del evento',
+      tooltip: true,
     },
-    'Abr 21': {
-      'users': 2941,
-      'transactions': 134,
-      'conversion_rate': 7
-    },
-    'May 21': {
-      'users': 6780,
-      'transactions': 328,
-      'conversion_rate': 9
+    {
+      name: 'sessions',
+      title: 'Sessiones',
+      textAlign: 'center',
+      formatValue: 'integer',
     }
+  ];
+
+  mostVisitedModels = {
+    data: [
+      { rank: 1, category: 'Impresora Multifuncional HP Ink', sessions: 24569 },
+      { rank: 2, category: 'Impresora Multifuncional HP Ink 2', sessions: 23547 },
+      { rank: 3, category: 'Cartucho HP 662 preto Original', sessions: 22475 },
+      { rank: 4, category: 'Cartucho HP 664 preto Original', sessions: 14685 },
+      { rank: 5, category: 'Cartucho tinta HP 122 preto Original', sessions: 14145 }
+    ],
+    reqStatus: 2
   }
 
+  mostVisitedCategories = {
+    data: [
+      { rank: 1, category: 'Cartucho HP 662 preto Original', sessions: 22475 },
+      { rank: 2, category: 'Cartucho HP 664 preto Original', sessions: 14685 },
+      { rank: 3, category: 'Cartucho tinta HP 122 preto Original', sessions: 14145 },
+      { rank: 4, category: 'Impresora Multifuncional HP Ink', sessions: 24569 },
+      { rank: 5, category: 'Impresora Multifuncional HP Ink 2', sessions: 23547 },
+    ],
+    reqStatus: 2
+  }
 
-  dataByUsersAndRevenue: any[] = this.trafficVsConversions;
-
-  sessionsAndConversions = [{
-    date: '2021-03-15',
-    conversions: 2816.232,
-    sessions: 35977,
-  }, {
-    date: '2021-03-16',
-    conversions: 3517.643,
-    sessions: 22677,
-  }, {
-    date: '2021-03-17',
-    conversions: 8923.765,
-    sessions: 25541,
-  }, {
-    date: '2021-03-18',
-    conversions: 6205.837,
-    sessions: 28172,
-  }, {
-    date: '2021-03-19',
-    conversions: 2326.599,
-    sessions: 26498,
-  }, {
-    date: '2021-03-20',
-    conversions: 3585.788,
-    sessions: 43770,
-  }, {
-    date: '2021-03-21',
-    conversions: 4850.785,
-    sessions: 40874,
-  }];
-
-
-  selectedTab1 = 1;
-  selectedTab2 = 1;
-  selectedTab3 = 1;
-  selectedTab4 = 1;
-  selectedTab5 = 1;
-
-  countrySub: Subscription;
-  retailerSub: Subscription;
-  routeSub: Subscription;
-
-  countryID: number;
-  retailerID: number;
-
-  latamView: boolean;
-  countryView: boolean;
-  retailerView: boolean;
-
-  constructor(
-    private router: Router,
-    private appStateService: AppStateService,
-
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
-
-    this.countryID = this.appStateService.selectedCountry?.id;
-    this.retailerID = this.appStateService.selectedRetailer?.id;
-    this.latamView = this.router.url.includes('latam') ? true : false;
-
-    if (this.countryID || this.retailerID || this.latamView) {
-      this.getActiveView();
-    }
-
-    this.routeSub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    )
-      .subscribe(event => {
-        if (event instanceof NavigationEnd)
-          this.latamView = this.router.url.includes('latam') ? true : false;
-        this.getActiveView();
-      });
-
-    this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
-      this.retailerID = retailer?.id;
-      this.getActiveView();
-    });
-
-    this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
-      this.countryID = country?.id;
-      this.getActiveView();
-    });
   }
 
-  getDataByTrafficAndSales(metricType: string) {
-    this.selectedTab1 = metricType === 'traffic' ? 1 : 2;
-  }
-
-  getDataByTrafficAndSales2(metricType: string) {
-    this.selectedTab4 = metricType === 'traffic' ? 1 : 2;
-  }
-
-  getDataByUsersAndRevenue(metricType: string) {
-    this.selectedTab1 = metricType === 'users' ? 1 : 2;
-
-    if (metricType === 'users') {
-      this.dataByUsersAndRevenue = this.trafficVsConversions;
-    } else if (metricType === 'revenue') {
-      this.dataByUsersAndRevenue = this.aupVsRevenue;
-    }
-
-  }
-
-  getActiveView() {
-    if (this.retailerID) {
-      this.retailerView = true;
-      this.countryView = false;
-      this.latamView = false;
-    } else if (this.countryID) {
-      this.countryView = true;
-      this.retailerView = false;
-      this.latamView = false;
-    } else if (this.latamView) {
-      this.countryView = false;
-      this.retailerView = false;
-    }
-  }
-
-  getDataByTrafficAndConversions(metricType: string) {
-    this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
-  }
-
-  ngOnDestroy() {
-    this.routeSub?.unsubscribe();
-    this.countrySub?.unsubscribe();
-    this.retailerSub?.unsubscribe();
+  getDataByMetric(metric: string, selectedTab: number) {
+    this.selectedTab1 = selectedTab;
   }
 }

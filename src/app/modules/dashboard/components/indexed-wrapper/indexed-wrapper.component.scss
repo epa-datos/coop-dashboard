@@ -1,0 +1,25 @@
+.pills-container {
+    width: 100%;
+
+    .nav-pills {
+        @media screen and (max-width: 767px) {
+            justify-content: center; 
+        }
+
+        .nav-item {
+            height: 100%;
+        
+            .nav-link {
+                align-items: center;
+                display: flex;
+                height: inherit;
+                justify-content: center;
+                
+                span {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+    }
+}
