@@ -1,0 +1,207 @@
+<div class="row mt-5">
+    <div class="pills-container">
+        <ul class="nav nav-pills nav-fill">
+            <div class="col-6 col-md-4 col-lg-2 mt-3" *ngFor="let tab of mainTabs; let i = index">
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 ===  i + 1}"
+                        (click)="getDataByMetric(tab.name, i + 1);">
+                        <span>
+                            {{ tab.title }}
+                        </span>
+                    </a>
+                </li>
+            </div>
+        </ul>
+    </div>
+</div>
+
+<div class="row mt-1">
+    <!-- <div class="col-12">
+        <div class="pills-container">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 1}"
+                        (click)="getDataBytrafficDemographics2('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 2}"
+                        (click)="getDataBytrafficDemographics2('sales'); chartsInitLoad = chartsInitLoad && false;">Conversiones</a>
+                </li>
+            </ul>
+        </div>
+    </div> -->
+
+    <!-- devices -->
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Tráfico por dispositivos</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pictorial [data]="trafficDemographics['device']" name="indexed-devices" category="name"
+                    iconType="monitor" [status]="trafficDemoStatus[0].reqStatus" height="280px">
+                </app-chart-pictorial>
+            </div>
+        </div>
+    </div>
+
+    <!-- gender -->
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Tráfico por Género</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pictorial [data]="trafficDemographics['gender']" name="indexed-gender" category="name"
+                    iconType="man" [status]="trafficDemoStatus[1].reqStatus" height="280px">
+                </app-chart-pictorial>
+            </div>
+        </div>
+    </div>
+
+    <!-- age -->
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Tráfico por Edad</span>
+            </div>
+            <div class="card-body">
+                <app-chart-lollipop [data]="trafficDemographics['age']" name="indexed-age" category="age" value="visits"
+                    height="280px" [status]="trafficDemoStatus[2].reqStatus">
+                </app-chart-lollipop>
+            </div>
+        </div>
+    </div>
+
+    <!-- age and gender -->
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Tráfico por Género y Edad</span>
+            </div>
+            <div class="card-body" style="height: 328px">
+                <!-- loader -->
+                <app-chart-loader *ngIf="chartsInitLoad && trafficDemoStatus[3].reqStatus <= 1">
+                </app-chart-loader>
+
+                <!-- ready -->
+                <app-chart-pyramid *ngIf="trafficDemographics['genderByAge']?.length > 0"
+                    [data]="trafficDemographics['genderByAge']" name="indexed-age-and-gender"
+                    [status]="trafficDemoStatus[3].reqStatus" height="280px">
+                </app-chart-pyramid>
+
+                <!-- empty data -->
+                <div *ngIf="trafficDemoStatus[3].reqStatus === 2 && trafficDemographics['genderByAge']?.length === 0"
+                    class="chart-error-container text-muted">
+                    <p class="text-center">
+                        Sin datos disponibles <br>
+                        Muestra insuficiente
+                    </p>
+                </div>
+
+                <!-- error -->
+                <div *ngIf="chartsInitLoad && trafficDemoStatus[3].reqStatus === 3"
+                    class="chart-error-container text-muted">
+                    <span>Error al consultar datos</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- weekday and hour -->
+    <div class="col-12 col-lg-6 mt-4">
+        <div class="card" style="height: 100%;">
+            <div class="card-header">
+                <span class="h4">Tráfico por día de la semana y hora del día</span>
+            </div>
+            <div class="card-body">
+                <app-chart-heat-map [data]="heatmapData" name="indexed-weekday-sesions" height="100%">
+                </app-chart-heat-map>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6 mt-4">
+        <!-- weekday -->
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Tráfico por día de la semana</span>
+            </div>
+            <div class="card-body">
+                <app-chart-bar-horizontal [data]="trafficByDay" name="indexed-traffic-day" category='weekday'
+                    value='value' height="250px">
+                </app-chart-bar-horizontal>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <!-- hour -->
+            <div class="card-header">
+                <span class="h4">Tráfico por hora del día</span>
+            </div>
+            <div class="card-body">
+                <app-chart-lollipop [data]="trafficByHour" name="indexed-traffic-hour" category="hour" value="visits"
+                    height="250px">
+                </app-chart-lollipop>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row my-5">
+    <div class="col-12">
+        <span class="h3">Audiencias - Afinidad y Mercado</span>
+    </div>
+    <div class="col-12 col-xl-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Categoría de afinidad (cobertura)</span>
+            </div>
+            <div class="card-body">
+                <app-chart-bar-horizontal [data]="categoryCoverage" name="indexed-category-coverage" value="users"
+                    [singleColorBars]="true" [showCategoryInToolip]="true" [truncateLabels]="true">
+                </app-chart-bar-horizontal>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-xl-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Segmento de mercado</span>
+            </div>
+            <div class="card-body">
+                <app-chart-bar-horizontal [data]="marketSegment" name="indexed-market-segment" value="users"
+                    [singleColorBars]="true" [showCategoryInToolip]="true" [truncateLabels]="true">
+                </app-chart-bar-horizontal>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12 col-md-6 col-lg-4 mt-4">
+        <div class="card height-fluid">
+            <div class="card-header">
+                <span class="h4">Visitantes nuevos vs Visitantes recurrentes</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pie [data]="sessionsVsRetVisitor" name="indexed-sessions-ret-visitor"
+                    legendPosition="bottom">
+                </app-chart-pie>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-8 mt-4">
+        <div class="card height-fluid">
+            <div class="card-header">
+                <span class="h4">Porcentaje de salidas, rebote y páginas vistas </span>
+            </div>
+            <div class="card-body">
+                <app-chart-line-series [series]="brAndPagesView" name="indexed-br-pages-view">
+                </app-chart-line-series>
+            </div>
+        </div>
+    </div>
+</div>

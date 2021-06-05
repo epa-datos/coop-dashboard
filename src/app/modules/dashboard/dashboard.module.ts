@@ -41,6 +41,7 @@ import { BehaviourWrapperComponent } from './components/behaviour-wrapper/behavi
 import { ConversionWrapperComponent } from './components/conversion-wrapper/conversion-wrapper.component';
 import { OmnichatWrapperComponent } from './components/omnichat-wrapper/omnichat-wrapper.component';
 import { CampaignTowardsRetailWrapperComponent } from './components/campaign-towards-retail-wrapper/campaign-towards-retail-wrapper.component';
+import { IndexedWrapperComponent } from './components/indexed-wrapper/indexed-wrapper.component';
 
 // charts
 import { ChartBarComponent } from './components/charts/chart-bar/chart-bar.component';
@@ -98,6 +99,7 @@ import { StarRaitingComponent } from './components/star-raiting/star-raiting.com
     ChartBarGroupComponent,
     StarRaitingComponent,
     CampaignTowardsRetailWrapperComponent,
+    IndexedWrapperComponent,
   ],
   imports: [
     CommonModule,
