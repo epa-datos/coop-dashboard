@@ -8,15 +8,9 @@
         border-collapse: collapse;
         table-layout: auto;
         width: 100%;
-    
-        th:not(:first-of-type),
-        td:not(:first-of-type) {
-            text-align: center;
-        }
     }
 
     .lg-container {
-        max-width: 700px;
         span {
             text-overflow: ellipsis;
             overflow: hidden;
@@ -29,8 +23,8 @@
     .value-container {
         align-items: center;
         display: grid;
-        grid-template-columns: 40px 30px;
-        gap: 8px;
+        grid-template-columns: 40px 14px;
+        gap: 4px;
         justify-content: center;
     } 
 

@@ -10,5 +10,16 @@
     </div>
 </div>
 
-<app-campaigns-tables *ngFor="let campaigns of campList" [campList]="campaigns" [campListChange]="campaigns.campaigns">
-</app-campaigns-tables>
+<div class="row">
+    <div class="col-12 mb-5" *ngFor="let campaigns of campList">
+        <div class="header bg-light mb-2">
+            <p class="h4 py-1 ml-3 mr-3">
+                <span>{{ campaigns.name }}</span>
+            </p>
+        </div>
+        <app-generic-table [displayedColumns]="campListDisplayedColumns" [tableData]="campaigns"
+            [tableDataChange]="campaigns.data" errorMsg="Error al consultar campañas"
+            emptyDataMsg="No se encontraron campañas">
+        </app-generic-table>
+    </div>
+</div>

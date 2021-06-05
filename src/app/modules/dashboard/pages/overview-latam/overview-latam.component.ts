@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { OverviewService } from '../../services/overview.service';
-import { equalsArrays } from 'src/app/tools/validators/arrays-comparator';
+import { TableItem } from '../../components/generic-table/generic-table.component';
 
 @Component({
   selector: 'app-overview-latam',
@@ -93,9 +92,28 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   investmentVsRevenue: any[] = [];
 
   // top products
-  topProductsColumns: string[] = ['rank', 'product', 'amount'];
-  topProducts: any[] = [];
-  topProductsSource = new MatTableDataSource<any>();
+  topProductsColumns: TableItem[] = [
+    {
+      name: 'rank',
+      title: 'Posición',
+      tooltip: true,
+    },
+    {
+      name: 'product',
+      title: 'Producto',
+      tooltip: true,
+    },
+    {
+      name: 'amount',
+      title: 'Cantidad',
+      textAlign: 'center'
+    }
+  ];
+
+  topProducts = {
+    data: [],
+    reqStatus: 0
+  }
 
   // requests status
   kpisReqStatus: number = 0;
@@ -108,7 +126,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     { name: 'age', reqStatus: 0 },
     { name: 'gender-and-age', reqStatus: 0 }
   ];
-  topProductsReqStatus: number = 0;
 
   // available tabs
   selectedCategories: any[] = []; // for topProducts and usersAndSalesByMetric
@@ -285,19 +302,17 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   }
 
   getTopProducts(selectedCategory?: any) {
-    this.topProductsReqStatus = 1;
+    this.topProducts.reqStatus = 1;
     this.selectedCategoryTab2 = selectedCategory;
     this.overviewService.getTopProductsLatam(selectedCategory.id).subscribe(
       (resp: any[]) => {
-        this.topProducts = resp;
-
-        this.topProductsSource = new MatTableDataSource<any>(this.topProducts);
-        this.topProductsReqStatus = 2;
+        this.topProducts.data = resp;
+        this.topProducts.reqStatus = 2;
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[overview-latam.component]: ${errorMsg}`);
-        this.topProductsReqStatus = 3;
+        this.topProducts.reqStatus = 3;
       }
     )
 

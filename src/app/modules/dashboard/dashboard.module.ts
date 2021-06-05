@@ -21,7 +21,7 @@ import { DashboardComponent } from './dashboard.component';
 import { GeneralFiltersComponent } from './components/general-filters/general-filters.component';
 import { RetailFiltersComponent } from './components/retail-filters/retail-filters.component';
 import { CardStatComponent } from './components/card-stat/card-stat.component';
-import { CampaignsTablesComponent } from './components/campaigns-tables/campaigns-tables.component';
+import { GenericTableComponent } from './components/generic-table/generic-table.component';
 import { GoogleBusinessComponent } from './components/google-business/google-business.component';
 import { CampaignComparatorComponent } from './pages/campaign-comparator/campaign-comparator.component';
 import { SentimentAnalysisComponent } from './pages/sentiment-analysis/sentiment-analysis.component';
@@ -86,7 +86,7 @@ import { StarRaitingComponent } from './components/star-raiting/star-raiting.com
     ChartColumnLineMixComponent,
     ChartPictorialComponent,
     OverviewWrapperComponent,
-    CampaignsTablesComponent,
+    GenericTableComponent,
     ChartPyramidComponent,
     GoogleBusinessComponent,
     ChartMultipleAxesComponent,
