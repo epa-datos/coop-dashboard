@@ -9,6 +9,9 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class GenericTableComponent implements OnInit, AfterViewInit {
 
+  @Input() errorMsg = 'Error al consultar datos';
+  @Input() emptyDataMsg = 'No se encontraron datos';
+
   private _displayedColumns: TableItem[];
   get displayedColumns() {
     return this._displayedColumns;

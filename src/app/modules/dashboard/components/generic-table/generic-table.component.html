@@ -88,11 +88,11 @@
         <ng-container matColumnDef="disclaimer">
             <td mat-footer-cell *matFooterCellDef colspan="8">
                 <div class="text-muted text-center" *ngIf="tableData?.reqStatus === 3">
-                    Error al consultar datos
+                    {{ errorMsg }}
                 </div>
                 <div class="text-muted text-center"
                     *ngIf="tableData?.campaigns.length === 0 && tableData?.reqStatus !== 3">
-                    No se encontraron campañas
+                    {{ emptyDataMsg }}
                 </div>
             </td>
         </ng-container>
