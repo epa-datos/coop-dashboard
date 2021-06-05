@@ -8,15 +8,9 @@
         border-collapse: collapse;
         table-layout: auto;
         width: 100%;
-    
-        th:not(:first-of-type),
-        td:not(:first-of-type) {
-            text-align: center;
-        }
     }
 
     .lg-container {
-        max-width: 700px;
         span {
             text-overflow: ellipsis;
             overflow: hidden;
