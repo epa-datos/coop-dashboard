@@ -1120,7 +1120,7 @@ export class IndexedWrapperComponent implements OnInit {
     },
     {
       name: 'category',
-      title: 'categoría del evento',
+      title: 'Categoría del evento',
       tooltip: true,
     },
     {
