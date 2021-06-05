@@ -1,4 +1,5 @@
-<div class="row mt-5">
+<!-- TABS -->
+<div class="row mt-2">
     <div class="pills-container">
         <ul class="nav nav-pills nav-fill">
             <div class="col-6 col-md-4 col-lg-2 mt-3" *ngFor="let tab of mainTabs; let i = index">
@@ -15,6 +16,7 @@
     </div>
 </div>
 
+<!-- DEMOGRAPHICS CHARTS -->
 <div class="row mt-1">
     <!-- <div class="col-12">
         <div class="pills-container">
@@ -148,7 +150,7 @@
     </div>
 </div>
 
-
+<!-- AUDIENCES CHARTS -->
 <div class="row my-5">
     <div class="col-12">
         <span class="h3">Audiencias - Afinidad y Mercado</span>
@@ -179,7 +181,7 @@
     </div>
 </div>
 
-
+<!-- NEW VISITORS & BR CHARTS -->
 <div class="row">
     <div class="col-12 col-md-6 col-lg-4 mt-4">
         <div class="card height-fluid">
@@ -201,6 +203,36 @@
             <div class="card-body">
                 <app-chart-line-series [series]="brAndPagesView" name="indexed-br-pages-view">
                 </app-chart-line-series>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODELS AND CATEGORIES TABLES -->
+<div class="row mt-5">
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Modelos más visitados</span>
+            </div>
+            <div class="card-body">
+                <app-generic-table [displayedColumns]="mostVistitedColumns" [tableData]="mostVisitedModels"
+                    [tableDataChange]="mostVisitedModels.data" errorMsg="Error al consultar modelos"
+                    emptyDataMsg="No se encontraron modelos">
+                </app-generic-table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Categorías más visitadas</span>
+            </div>
+            <div class="card-body">
+                <app-generic-table [displayedColumns]="mostVistitedColumns" [tableData]="mostVisitedCategories"
+                    [tableDataChange]="mostVisitedCategories.data" errorMsg="Error al consultar categorías"
+                    emptyDataMsg="No se encontraron categorías">
+                </app-generic-table>
             </div>
         </div>
     </div>

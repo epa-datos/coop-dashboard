@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TableItem } from '../generic-table/generic-table.component';
 
 @Component({
   selector: 'app-indexed-wrapper',
@@ -1112,6 +1113,46 @@ export class IndexedWrapperComponent implements OnInit {
     { category: 'Financial Services/Banking Services', users: 4731 },
   ]
 
+  mostVistitedColumns: TableItem[] = [
+    {
+      name: 'rank',
+      title: 'Posición'
+    },
+    {
+      name: 'category',
+      title: 'categoría del evento',
+      tooltip: true,
+    },
+    {
+      name: 'sessions',
+      title: 'Sessiones',
+      textAlign: 'center',
+      formatValue: 'integer',
+    }
+  ];
+
+  mostVisitedModels = {
+    data: [
+      { rank: 1, category: 'Impresora Multifuncional HP Ink', sessions: 24569 },
+      { rank: 2, category: 'Impresora Multifuncional HP Ink 2', sessions: 23547 },
+      { rank: 3, category: 'Cartucho HP 662 preto Original', sessions: 22475 },
+      { rank: 4, category: 'Cartucho HP 664 preto Original', sessions: 14685 },
+      { rank: 5, category: 'Cartucho tinta HP 122 preto Original', sessions: 14145 }
+    ],
+    reqStatus: 2
+  }
+
+  mostVisitedCategories = {
+    data: [
+      { rank: 1, category: 'Cartucho HP 662 preto Original', sessions: 22475 },
+      { rank: 2, category: 'Cartucho HP 664 preto Original', sessions: 14685 },
+      { rank: 3, category: 'Cartucho tinta HP 122 preto Original', sessions: 14145 },
+      { rank: 4, category: 'Impresora Multifuncional HP Ink', sessions: 24569 },
+      { rank: 5, category: 'Impresora Multifuncional HP Ink 2', sessions: 23547 },
+    ],
+    reqStatus: 2
+  }
+
   constructor() { }
 
   ngOnInit(): void {
@@ -1120,5 +1161,4 @@ export class IndexedWrapperComponent implements OnInit {
   getDataByMetric(metric: string, selectedTab: number) {
     this.selectedTab1 = selectedTab;
   }
-
 }
