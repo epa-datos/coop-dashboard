@@ -55,10 +55,11 @@ export class OverviewService {
     if (!isLatam) {
       return `${baseQParams}${campaigns ? `&campaigns=${campaigns}` : ''}`;
     } else {
-      let countries = this.filtersStateService.countriesQParams;
+      // let countries = this.filtersStateService.countriesQParams; 
+      // * NOTE: countries deprecated in LATAM endpoint, now with retailers list is enough
       let retailers = this.filtersStateService.retailersQParams;
       let sources = !uniqueSourceID ? this.filtersStateService.sourcesQParams : uniqueSourceID;
-      return `countries=${countries}&retailers=${retailers}&sources=${sources}&${baseQParams}`;
+      return `retailers=${retailers}&sources=${sources}&${baseQParams}`;
     }
   }
 
