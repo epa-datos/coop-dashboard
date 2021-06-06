@@ -1,192 +1,26 @@
-<!-- filters -->
-<div class="row">
-    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-        <small class="h4 mb-1">Provincia</small>
-        <mat-select [formControl]="provinces" multiple placeholder="Selecciona una Provincia">
-            <mat-select-trigger>
-                {{provinces.value ? provinces.value[0]?.name : ''}}
-                <span *ngIf="provinces.value?.length > 1" class="example-additional-selection">
-                    (+ {{provinces.value?.length === 2 ? 'otra' : 'otras'}}
-                    {{ provinces.value?.length === 2 ? '' : provinces.value.length - 1}})
-                </span>
-            </mat-select-trigger>
-            <mat-option *ngFor="let province of provinceList" [value]="province">{{province.name}}</mat-option>
-        </mat-select>
-    </div>
-    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-        <small class="h4 mb-1">Ciudad</small>
-        <mat-select [formControl]="cities" multiple placeholder="Selecciona una Ciudad">
-            <mat-select-trigger>
-                {{cities.value ? cities.value[0]?.name : ''}}
-                <span *ngIf="cities.value?.length > 1" class="example-additional-selection">
-                    (+ {{cities.value?.length === 2 ? 'otra' : 'otras'}}
-                    {{ cities.value?.length === 2 ? '' : cities.value.length - 1}})
-                </span>
-            </mat-select-trigger>
-            <mat-option *ngFor="let city of cityList" [value]="city">{{city.name}}</mat-option>
-        </mat-select>
-    </div>
-    <div class="col-12 col-lg-6 mb-4">
-        <div class="button-container">
-            <button type="button" class="btn btn-primary">
-                <i class="fas fa-filter mr-2"></i>
-                Filtrar
-            </button>
+<div class="mt-5">
+    <app-google-business-filters (filtersChange)="filtersChange($event)"></app-google-business-filters>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12 mt-4">
+        <div class="card">
+            <div class="card-body">
+                <app-chart-multiple-axes valueName1="Visitas"
+                    [valueName2]="isVisitRate ? '% Visit Rate' : '% Store Visits Rate'" value1="visits"
+                    [value2]="isVisitRate ? 'visits_rate' : 'store_visits_rate'" valueFormat2="%" name="visits-vs-rate"
+                    [status]="visitsReqStatus" [data]="visits">
+                </app-chart-multiple-axes>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row mt-5">
     <div class="col-12">
-        <div class="pills-container">
-            <ul class="nav nav-pills nav-fill">
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}" (click)="selectedTab1 = 1">Sin
-                        Store Visits</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}" (click)="selectedTab1 = 2">Con
-                        Store Visits</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="col-12 mt-4" *ngIf="selectedTab1 === 1">
-        <div class="card">
-            <div class="card-body">
-                <app-chart-multiple-axes [data]="visitsVsRate" valueName1="Visitas" valueName2="% Visit Rate"
-                    value1="visits" value2="visits_rate" valueFormat2="%" name="visits-vs-rate">
-                </app-chart-multiple-axes>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 mt-4" *ngIf="selectedTab1 === 2">
-        <div class="card">
-            <div class="card-body">
-                <app-chart-multiple-axes [data]="visitsVsRate" valueName1="Visitas" valueName2="% Store Visits Rate"
-                    value1="visits" value2="visits_rate" valueFormat2="%" name="visits-vs-rate-2">
-                </app-chart-multiple-axes>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-5" *ngIf="selectedTab1 === 1">
-    <div class="col-12">
-        <div class="adaptable-container">
-            <table mat-table [dataSource]="dataSource">
-                <!-- province column -->
-                <ng-container matColumnDef="province">
-                    <th mat-header-cell *matHeaderCellDef> Provincia </th>
-                    <td mat-cell *matCellDef="let element"> {{element.province}} </td>
-                </ng-container>
-
-                <!-- city column -->
-                <ng-container matColumnDef="city">
-                    <th mat-header-cell *matHeaderCellDef> Ciudad </th>
-                    <td mat-cell *matCellDef="let element">
-                        <div class="lg-container">
-                            <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.product"
-                                matTooltipPosition="right" matTooltipClass="custom-tooltip">
-                                {{element.city}}
-                            </span>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <!-- store column-->
-                <ng-container matColumnDef="store">
-                    <th mat-header-cell *matHeaderCellDef> Tienda</th>
-                    <td mat-cell *matCellDef="let element"> {{element.store}} </td>
-                </ng-container>
-
-                <!-- visits column -->
-                <ng-container matColumnDef="visits">
-                    <th mat-header-cell *matHeaderCellDef> Visitas</th>
-                    <td mat-cell *matCellDef="let element"> {{element.visits}}% </td>
-                </ng-container>
-
-                <!-- visitRate column -->
-                <ng-container matColumnDef="visitRate">
-                    <th mat-header-cell *matHeaderCellDef> % Visit Rate</th>
-                    <td mat-cell *matCellDef="let element"> {{element.visitRate}}% </td>
-                </ng-container>
-
-                <!-- disclaimer column -->
-                <ng-container matColumnDef="disclaimer">
-                    <td mat-footer-cell *matFooterCellDef colspan="3">
-                        <div class="text-danger text-center" *ngIf="getReqStatus === 3">
-                            Ocurrió un error al consultar los usuarios
-                        </div>
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
-                    [hidden]="getReqStatus !== 3"></tr>
-            </table>
-        </div>
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-    </div>
-</div>
-
-<div class="row mt-5" *ngIf="selectedTab1 === 2">
-    <div class="col-12">
-        <div class="adaptable-container">
-            <table mat-table [dataSource]="dataSource">
-                <!-- province column -->
-                <ng-container matColumnDef="province">
-                    <th mat-header-cell *matHeaderCellDef> Provincia </th>
-                    <td mat-cell *matCellDef="let element"> {{element.province}} </td>
-                </ng-container>
-
-                <!-- city column -->
-                <ng-container matColumnDef="city">
-                    <th mat-header-cell *matHeaderCellDef> Ciudad </th>
-                    <td mat-cell *matCellDef="let element">
-                        <div class="lg-container">
-                            <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.product"
-                                matTooltipPosition="right" matTooltipClass="custom-tooltip">
-                                {{element.city}}
-                            </span>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <!-- store column-->
-                <ng-container matColumnDef="store">
-                    <th mat-header-cell *matHeaderCellDef> Tienda</th>
-                    <td mat-cell *matCellDef="let element"> {{element.store}} </td>
-                </ng-container>
-
-                <!-- visits column -->
-                <ng-container matColumnDef="visits">
-                    <th mat-header-cell *matHeaderCellDef> Visitas</th>
-                    <td mat-cell *matCellDef="let element"> {{element.visits}}% </td>
-                </ng-container>
-
-                <!-- storeVisitsRate column -->
-                <ng-container matColumnDef="storeVisitsRate">
-                    <th mat-header-cell *matHeaderCellDef> % Store Visit Rate</th>
-                    <td mat-cell *matCellDef="let element"> {{element.storeVisitsRate}}% </td>
-                </ng-container>
-
-                <!-- disclaimer column -->
-                <ng-container matColumnDef="disclaimer">
-                    <td mat-footer-cell *matFooterCellDef colspan="3">
-                        <div class="text-danger text-center" *ngIf="getReqStatus === 3">
-                            Ocurrió un error al consultar los usuarios
-                        </div>
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
-                <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
-                    [hidden]="getReqStatus !== 3"></tr>
-            </table>
-        </div>
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        <app-generic-table [displayedColumns]="locationColumns" [tableData]="locations"
+            [tableDataChange]="locations.data" errorMsg="Error al consultar datos"
+            emptyDataMsg="No se encontraron datos">
+        </app-generic-table>
     </div>
 </div>
