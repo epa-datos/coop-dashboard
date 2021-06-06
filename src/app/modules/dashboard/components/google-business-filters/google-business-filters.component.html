@@ -1,0 +1,118 @@
+<div class="row">
+
+    <!-- province -->
+    <div class="col-12 col-sm-6 col-lg-3 mb-4">
+        <small class="h4 mb-1">Provincia</small>
+        <mat-select [formControl]="provinces" multiple placeholder="Selecciona una Provincia" disableOptionCentering>
+            <div class="input-group input-group-alternative mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                </div>
+                <input class="form-control" [(ngModel)]="privinceFilter" matInput type="text"
+                    (keyup)="filterFromList('provinces', 'province', $event.target.value)"
+                    placeholder="Buscar Provincia" [ngModelOptions]="{standalone: true}"
+                    (keydown.space)="$event.stopPropagation()">
+            </div>
+            <mat-select-trigger>
+                <div class="select-value-container">
+                    <span class="select-value">
+                        {{provinces.value
+                        ? provinces.value[0]?.name
+                        ? provinces.value[0]?.name
+                        : provinces.value[1]?.name
+                        : ''}}
+                    </span>
+                    <span *ngIf="provincesCounter > 1" class="example-additional-selection ml-1">
+                        (+ {{ provincesCounter === 2 ? 'otra' : 'otras' }}
+                        {{ provincesCounter === 2 ? '' : provincesCounter - 1 }} )
+                    </span>
+                </div>
+            </mat-select-trigger>
+            <mat-option #allSelectedProvinces [value]="0" class="font-weight-bold"
+                (click)="toggleAllSelection('provinces', 'province')">
+                Todas
+            </mat-option>
+
+            <ng-container *ngFor="let province of provinceList">
+                <mat-option class="mat-option-container" [hidden]="province.hidden" [value]="province"
+                    (click)="tosslePerOne('allSelectedProvinces', 'provinces', 'provinceList')">
+                    <span class="option-name">{{ province.name }}</span>
+                    <button type="button" class="btn btn-sm btn-secondary"
+                        (click)="uniqueSelection('provinces', 'province', province)">
+                        Solamente
+                    </button>
+                </mat-option>
+            </ng-container>
+        </mat-select>
+
+        <small class="text-danger" *ngIf="provincesErrorMsg">
+            {{ provincesErrorMsg }}
+        </small>
+
+        <small class="text-danger"
+            *ngIf="!provincesErrorMsg && !citiesErrorMsg && (provinces?.value?.length < 1 && cities?.value?.length < 1) && (provinces.touched || cities.touched)">
+            Selecciona al menos una Provincia o Ciudad
+        </small>
+    </div>
+
+    <!-- city -->
+    <div class="col-12 col-sm-6 col-lg-3 mb-4">
+        <small class="h4 mb-1">Ciudad</small>
+        <mat-select [formControl]="cities" multiple placeholder="Selecciona una Ciudad" disableOptionCentering>
+            <div class="input-group input-group-alternative mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                </div>
+                <input class="form-control" [(ngModel)]="cityFilter" matInput type="text"
+                    (keyup)="filterFromList('cities', 'city', $event.target.value)" placeholder="Buscar Ciudad"
+                    [ngModelOptions]="{standalone: true}" (keydown.space)="$event.stopPropagation()">
+            </div>
+            <mat-select-trigger>
+                <div class="select-value-container">
+                    <span class="select-value">
+                        {{cities.value
+                        ? cities.value[0]?.name
+                        ? cities.value[0]?.name
+                        : cities.value[1]?.name
+                        : ''}}
+                    </span>
+                    <span *ngIf="citiesCounter > 1" class="example-additional-selection ml-1">
+                        (+ {{ citiesCounter === 2 ? 'otra' : 'otras' }}
+                        {{ citiesCounter === 2 ? '' : citiesCounter - 1 }} )
+                    </span>
+                </div>
+            </mat-select-trigger>
+            <mat-option #allSelectedCities [value]="0" class="font-weight-bold"
+                (click)="toggleAllSelection('cities', 'city')">
+                Todas
+            </mat-option>
+
+            <ng-container *ngFor="let city of cityList">
+                <mat-option class="mat-option-container" [hidden]="city.hidden" [value]="city"
+                    (click)="tosslePerOne('allSelectedCities', 'cities', 'cityList')">
+                    <span class="option-name">{{ city.name }}</span>
+                    <button type="button" class="btn btn-sm btn-secondary"
+                        (click)="uniqueSelection('cities', 'city', city)">
+                        Solamente
+                    </button>
+                </mat-option>
+            </ng-container>
+        </mat-select>
+
+        <small class="text-danger" *ngIf="citiesErrorMsg">
+            {{ citiesErrorMsg }}
+        </small>
+    </div>
+
+    <!-- filter button -->
+    <div class="col-12 col-lg-6 mb-4">
+        <div class="button-container">
+            <button type="button" class="btn btn-primary"
+                [disabled]="!provincesErrorMsg && !citiesErrorMsg && (provinces?.value?.length < 1 && cities?.value?.length < 1)"
+                (click)="applyFilters()">
+                <i class="fas fa-filter mr-2"></i>
+                Filtrar
+            </button>
+        </div>
+    </div>
+</div>
