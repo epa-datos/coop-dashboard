@@ -19,7 +19,7 @@ export class GenericTableComponent implements OnInit, AfterViewInit {
 
   @Input() set displayedColumns(value) {
     this._displayedColumns = value;
-    this.displayedColumnsHeaders = this.displayedColumns.map(item => item.name);
+    this.displayedColumnsHeaders = this.displayedColumns?.map(item => item.name);
   }
 
   private _tableData: any; // object with any properties but "data" and "reqStatus" are required 
@@ -29,12 +29,12 @@ export class GenericTableComponent implements OnInit, AfterViewInit {
 
   @Input() set tableData(value) {
     this._tableData = value;
-    this.dataSource = new MatTableDataSource<any>(this.tableData.data);
+    this.dataSource = new MatTableDataSource<any>(this.tableData?.data);
   }
 
   @Input() set tableDataChange(value) {
-    this.tableData.campaigns = value;
-    this.dataSource = new MatTableDataSource<any>(this.tableData.data);
+    this.tableData.data = value;
+    this.dataSource = new MatTableDataSource<any>(this.tableData?.data);
     this.loadPaginator();
   }
 
@@ -61,6 +61,9 @@ export class GenericTableComponent implements OnInit, AfterViewInit {
       this.paginator.toArray()[i]._intl.itemsPerPageLabel = 'Registros por página';
       this.paginator.toArray()[i]._intl.nextPageLabel = 'Siguiente';
       this.paginator.toArray()[i]._intl.previousPageLabel = 'Anterior';
+      this.paginator.toArray()[i]._intl.firstPageLabel = 'Primera página';
+      this.paginator.toArray()[i]._intl.lastPageLabel = 'Última página';
+
 
       this.paginator.toArray()[i]._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
         if (length == 0 || pageSize == 0) { return `0 de ${length}`; }

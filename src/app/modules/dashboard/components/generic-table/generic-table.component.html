@@ -90,8 +90,7 @@
                 <div class="text-muted text-center" *ngIf="tableData?.reqStatus === 3">
                     {{ errorMsg }}
                 </div>
-                <div class="text-muted text-center"
-                    *ngIf="tableData?.campaigns.length === 0 && tableData?.reqStatus !== 3">
+                <div class="text-muted text-center" *ngIf="tableData?.data.length === 0 && tableData?.reqStatus !== 3">
                     {{ emptyDataMsg }}
                 </div>
             </td>
@@ -103,7 +102,7 @@
         </ng-container>
 
         <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
-            [hidden]="tableData?.reqStatus <=1 || tableData?.campaigns.length > 0"></tr>
+            [hidden]="tableData?.reqStatus <=1 || tableData?.data.length > 0"></tr>
     </table>
 </div>
 <mat-paginator class="paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
