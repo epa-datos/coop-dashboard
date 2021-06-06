@@ -120,16 +120,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
       if (this.newRetailer?.id) {
         if (this.userService.user.role_name === 'retailer') {
-          this.customTitle = this.newRetailer.name;
+          this.customTitle = this.newRetailer?.name;
         } else {
-          this.customTitle = this.newCountry.name;
-          this.customSubtitle = this.newRetailer.name;
+          this.customTitle = this.newCountry?.name;
+          this.customSubtitle = this.newRetailer?.name;
         }
       } else if (this.newCountry?.id) {
-        this.customTitle = this.newCountry.name;
+        this.customTitle = this.newCountry?.name;
         this.customSubtitle && delete this.customSubtitle;
       } else if (this.newMainRegion?.name) {
-        this.customTitle = this.newMainRegion.name;
+        this.customTitle = this.newMainRegion?.name;
         this.customSubtitle && delete this.customSubtitle;
       }
     }
