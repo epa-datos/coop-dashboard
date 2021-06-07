@@ -155,7 +155,7 @@
             <div class="col-12 col-xl-5 mt-4">
                 <div class="card height-fluid superimposed">
                     <div class="card-header">
-                        <span class="h4">Transacciones por producto</span>
+                        <span class="h4">Conversiones por producto</span>
                     </div>
                     <div class="card-body">
                         <app-chart-bar-horizontal [data]="transactionsByProduct" name="omnichat-transactions-by-product"
@@ -168,7 +168,7 @@
             <div class="col-12 col-xl-7 mt-4">
                 <div class="card height-fluid">
                     <div class="card-header">
-                        <span class="h4">Usuarios, Transacciones y Tasa de conversión por fecha</span>
+                        <span class="h4">Usuarios, Conversiones y Tasa de conversión por fecha</span>
                     </div>
                     <div class="card-body">
                         <div class="chart-legend mt-0 mb-2">
@@ -178,7 +178,7 @@
                             </div>
                             <div class="legend-container ml-3">
                                 <div class="legend-square color-2"></div>
-                                <div class="legend-label">Transacciones</div>
+                                <div class="legend-label">Conversiones</div>
                             </div>
                             <div class="legend-container ml-3">
                                 <div class="legend-square color-3"></div>
@@ -188,7 +188,7 @@
                         <app-chart-bar-group [data]="usersTransactionsConversion"
                             name="omnichat-users-transactions-rate" height="325px" valueBar1="users"
                             valueBar2="transactions" valueLine1="conversion_rate" valueNameBar1="Usuarios"
-                            valueNameBar2="Transacciones" valueFormatLine1="%">
+                            valueNameBar2="Conversiones" valueFormatLine1="%">
                         </app-chart-bar-group>
                     </div>
                 </div>
