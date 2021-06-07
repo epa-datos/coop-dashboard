@@ -38,7 +38,7 @@ export class ChartBarGroupComponent implements OnInit, AfterViewInit {
   }
   @Input() set data(value) {
     this._data = value;
-    // this.chart && this.loadChartData(this.chart);
+    this.chart && this.loadChart();
   }
 
   chartID;
@@ -213,6 +213,7 @@ export class ChartBarGroupComponent implements OnInit, AfterViewInit {
     }
 
     chart.data = chartData;
+    this.chart = chart;
 
     // last tick
     let range = categoryAxis.axisRanges.create();
