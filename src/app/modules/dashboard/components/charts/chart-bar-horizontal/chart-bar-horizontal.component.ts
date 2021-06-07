@@ -10,16 +10,14 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 })
 export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
 
-  @Input() data;
   @Input() value: string = 'value';
   @Input() category: string = 'category';
   @Input() height: string = '350px'; // height property value valid in css
   @Input() truncateLabels: boolean = false; // for reduced spaces with labels too long
   @Input() showCategoryInToolip: boolean; // for show category name (object property value) in tooltip
   @Input() singleColorBars: boolean;
-
-  chartID;
-  loadStatus: number = 0;
+  @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
+  @Input() errorLegend: string;
 
   private _name: string;
   get name() {
@@ -29,6 +27,21 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
     this._name = value;
     this.chartID = `chart-bar-horizontal-${this.name}`
   }
+
+  private _data;
+  get data() {
+    return this._data;
+  }
+  @Input() set data(value) {
+    this._data = value;
+    if (this.chart) {
+      this.loadChartData(this.chart);
+    }
+  }
+
+  chartID;
+  chart;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -41,7 +54,7 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
   loadChart() {
     am4core.useTheme(am4themes_animated);
     let chart = am4core.create(this.chartID, am4charts.XYChart);
-    chart.data = this.data;
+    this.loadChartData(chart);
 
     let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = this.category;
@@ -99,5 +112,10 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
+  }
+
+  loadChartData(chart) {
+    chart.data = this.data;
+    this.chart = chart;
   }
 }
