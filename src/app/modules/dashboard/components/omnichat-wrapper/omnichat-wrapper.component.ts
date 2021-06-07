@@ -64,7 +64,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       metricFormat: 'integer'
     },
     {
-      metricTitle: 'transacciones',
+      metricTitle: 'conversiones',
       metricName: 'transactions',
       metricValue: 0,
       metricFormat: 'integer',
