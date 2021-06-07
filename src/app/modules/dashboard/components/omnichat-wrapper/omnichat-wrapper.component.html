@@ -58,11 +58,11 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                        (click)="getDataByTrafficAndConversions('traffic')">Tráfico</a>
+                        (click)="getCountries('traffic'); getCategories('traffic')">Tráfico</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                        (click)="getDataByTrafficAndConversions('conversions')">Conversiones</a>
+                        (click)="getCountries('sales'); getCategories('sales')">Conversiones</a>
                 </li>
             </ul>
         </div>
@@ -74,8 +74,8 @@
                 <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por país</span>
             </div>
             <div class="card-body">
-                <app-chart-bar-horizontal [data]="chatsByCountry" name="omnichat-chats-by-country" category="country"
-                    value="chats" [singleColorBars]="true">
+                <app-chart-bar-horizontal [data]="countries" name="omnichat-chats-by-country" category="country"
+                    value="chats" [singleColorBars]="true" [status]="chartsReqStatus.countries">
                 </app-chart-bar-horizontal>
             </div>
         </div>
@@ -104,7 +104,8 @@
                 <span class="h4" *ngIf="retailerView">Tráfico por categoría</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="chatsByCategories" name="omnichat-chats-by-category-1" legendPosition="bottom">
+                <app-chart-pie [data]="categories" [status]="chartsReqStatus.categories"
+                    name="omnichat-chats-by-category-1" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -139,15 +140,16 @@
         <div class="pills-container">
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}" (click)="selectedTab3 = 1">PS</a>
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
+                        (click)="getDataByCategory(1)">PS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}" (click)="selectedTab3 = 2">HW
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}" (click)="getDataByCategory(2)">HW
                         Print</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 3}"
-                        (click)="selectedTab3 = 3">Supplies</a>
+                        (click)="getDataByCategory(3)">Supplies</a>
                 </li>
             </ul>
         </div>
@@ -192,6 +194,13 @@
                         </app-chart-bar-group>
                     </div>
                 </div>
+            </div>
+
+            <div class="col-12 mt-4">
+                <app-generic-table [displayedColumns]="categoriesAndUsersColumns" [tableData]="categoriesAndUsers2"
+                    [tableDataChange]="categoriesAndUsers2.data" errorMsg="Error al consultar datos"
+                    emptyDataMsg="No se encontraron datos">
+                </app-generic-table>
             </div>
 
             <!-- CATEGORY AND USERS TABLE -->

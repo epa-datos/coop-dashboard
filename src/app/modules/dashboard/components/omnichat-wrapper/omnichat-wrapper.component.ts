@@ -4,6 +4,8 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AppStateService } from 'src/app/services/app-state.service';
+import { OmnichatService } from '../../services/omnichat.service';
+import { TableItem } from '../generic-table/generic-table.component';
 
 @Component({
   selector: 'app-omnichat-wrapper',
@@ -1263,18 +1265,11 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     aup: 40874,
   }];
 
-  categoryAndUsersColumns: string[] = ['category', 'users', 'conversion_rate', 'conversion_rate_yoy', 'amount', 'amount_yoy', 'revenue', 'revenue_yoy', 'aup', 'aup_yoy'];
-  private categoryAndUsers = [
-    { category: 'PS', users: 5388, conversion_rate: 8, conversion_rate_yoy: 2, amount: 300, amount_yoy: -3, revenue: 3480, revenue_yoy: 6, aup: 10358, aup_yoy: -1 },
-    { category: 'HW Print', users: 2345, conversion_rate: 16, conversion_rate_yoy: 14, amount: 150, amount_yoy: 4, revenue: 7350, revenue_yoy: -4, aup: 10358, aup_yoy: 8 },
-    { category: 'Supplies', users: 1345, conversion_rate: 3, conversion_rate_yoy: -4, amount: 180, amount_yoy: 8, revenue: 12000, revenue_yoy: 0, aup: 10358, aup_yoy: -3 }
-  ];
-
-  categoryAndUsersSource = new MatTableDataSource<any>(this.categoryAndUsers);
-  categoryAndUsersReqStatus = 2;
 
 
-  usersTransactionsConversion = {
+
+
+  usersTransactionsConversion: any = {
     'Ene 21': {
       'users': 1517,
       'transactions': 68,
@@ -1330,6 +1325,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     sessions: 40874,
   }];
 
+  // *************************
 
   selectedTab1 = 1;
   selectedTab2 = 1;
@@ -1348,20 +1344,120 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   countryView: boolean;
   retailerView: boolean;
 
+  chartsReqStatus = {
+    countries: 0,
+    retailers: 0,
+    categories: 0
+  }
+
+  countries: any[] = [];
+  retailers: any[] = [];
+  categories: any[] = [];
+
+
+  categoriesAndUsersColumns: TableItem[] = [
+    {
+      name: 'category',
+      title: 'Categoría'
+    },
+    {
+      name: 'users',
+      title: 'Usuarios',
+      textAlign: 'center',
+      formatValue: 'integer'
+    },
+    {
+      name: 'conversion_rate',
+      title: 'Tasa de conversión',
+      textAlign: 'center',
+      // formatValue: 'percentage'
+    },
+    {
+      name: 'conversion_rate_yoy',
+      title: '%YoY',
+      textAlign: 'center',
+      // formatValue: 'percentage',
+      comparativeName: 'conversion_rate'
+    },
+    {
+      name: 'amount',
+      title: 'Cantidad',
+      textAlign: 'center',
+      // formatValue: 'integer'
+    },
+    {
+      name: 'amount_yoy',
+      title: '%YoY',
+      textAlign: 'center',
+      // formatValue: 'percentage',
+      comparativeName: 'amount'
+    },
+    {
+      name: 'revenue',
+      title: 'Revenue',
+      textAlign: 'center',
+      // formatValue: 'currency'
+    },
+    {
+      name: 'revenue_yoy',
+      title: '%YoY',
+      textAlign: 'center',
+      // formatValue: 'percentage',
+      comparativeName: 'revenue'
+    },
+    {
+      name: 'aup',
+      title: 'AUP',
+      textAlign: 'center',
+      // formatValue: 'currency'
+    },
+    {
+      name: 'aup_yoy',
+      title: '%YoY',
+      textAlign: 'center',
+      // formatValue: 'percentage',
+      comparativeName: 'aup'
+    }
+  ];
+
+  categoriesAndUsers2 = {
+    data: [
+      { category: 'PS', users: 5388, conversion_rate: 8, conversion_rate_yoy: 2, amount: 300, amount_yoy: -3, revenue: 3480, revenue_yoy: 6, aup: 10358, aup_yoy: -1 },
+      { category: 'HW Print', users: 2345, conversion_rate: 16, conversion_rate_yoy: 14, amount: 150, amount_yoy: 4, revenue: 7350, revenue_yoy: -4, aup: 10358, aup_yoy: 8 },
+      { category: 'Supplies', users: 1345, conversion_rate: 3, conversion_rate_yoy: -4, amount: 180, amount_yoy: 8, revenue: 12000, revenue_yoy: 0, aup: 10358, aup_yoy: -3 }
+    ],
+    reqStatus: 2
+  }
+
+
+  categoryAndUsersColumns: string[] = ['category', 'users', 'conversion_rate', 'conversion_rate_yoy', 'amount', 'amount_yoy', 'revenue', 'revenue_yoy', 'aup', 'aup_yoy'];
+  private categoryAndUsers = [
+    { category: 'PS', users: 5388, conversion_rate: 8, conversion_rate_yoy: 2, amount: 300, amount_yoy: -3, revenue: 3480, revenue_yoy: 6, aup: 10358, aup_yoy: -1 },
+    { category: 'HW Print', users: 2345, conversion_rate: 16, conversion_rate_yoy: 14, amount: 150, amount_yoy: 4, revenue: 7350, revenue_yoy: -4, aup: 10358, aup_yoy: 8 },
+    { category: 'Supplies', users: 1345, conversion_rate: 3, conversion_rate_yoy: -4, amount: 180, amount_yoy: 8, revenue: 12000, revenue_yoy: 0, aup: 10358, aup_yoy: -3 }
+  ];
+
+
+  categoryAndUsersSource = new MatTableDataSource<any>(this.categoryAndUsers);
+  categoryAndUsersReqStatus = 2;
+
+
+
   constructor(
     private router: Router,
     private appStateService: AppStateService,
+    private omnichatService: OmnichatService
 
   ) { }
 
   ngOnInit(): void {
-
     this.countryID = this.appStateService.selectedCountry?.id;
     this.retailerID = this.appStateService.selectedRetailer?.id;
     this.latamView = this.router.url.includes('latam') ? true : false;
 
     if (this.countryID || this.retailerID || this.latamView) {
       this.getActiveView();
+      this.getAllData();
     }
 
     this.routeSub = this.router.events.pipe(
@@ -1384,6 +1480,13 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     });
   }
 
+  getAllData() {
+    console.log('getAllData')
+    this.getCountries('traffic');
+    this.getCategories('traffic');
+  }
+
+
   getDataByTrafficAndSales(metricType: string) {
     this.selectedTab1 = metricType === 'traffic' ? 1 : 2;
   }
@@ -1400,7 +1503,91 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     } else if (metricType === 'revenue') {
       this.dataByUsersAndRevenue = this.aupVsRevenue;
     }
+  }
 
+  getDataByTrafficAndConversions(metricType: string) {
+    this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
+  }
+
+  getDataByCategory(category) {
+    this.selectedTab3 = category;
+
+    if (category === 1) {
+      this.usersTransactionsConversion = {
+        'Ene 21': {
+          'users': 1517,
+          'transactions': 68,
+          'conversion_rate': 5
+        },
+        'Feb 21': {
+          'users': 2400,
+          'transactions': 81,
+          'conversion_rate': 6
+        },
+        'Abr 21': {
+          'users': 2941,
+          'transactions': 134,
+          'conversion_rate': 7
+        },
+        'May 21': {
+          'users': 6780,
+          'transactions': 328,
+          'conversion_rate': 9
+        }
+      }
+
+    } else if (category === 2) {
+      this.usersTransactionsConversion = {
+        'Ene 21': {
+          'users': 150,
+          'transactions': 2,
+          'conversion_rate': 1
+        },
+        'Feb 21': {
+          'users': 320,
+          'transactions': 4,
+          'conversion_rate': 9
+        },
+        'Abr 21': {
+          'users': 160,
+          'transactions': 6,
+          'conversion_rate': 15
+        },
+        'May 21': {
+          'users': 100,
+          'transactions': 8,
+          'conversion_rate': 26
+        }
+      }
+    } else {
+      this.usersTransactionsConversion = {
+        'Ene 21': {
+          'users': 4200,
+          'transactions': 41,
+          'conversion_rate': 3
+        },
+        'Feb 21': {
+          'users': 2800,
+          'transactions': 24,
+          'conversion_rate': 12
+        },
+        'Abr 21': {
+          'users': 1000,
+          'transactions': 16,
+          'conversion_rate': 14
+        },
+        'May 21': {
+          'users': 800,
+          'transactions': 32,
+          'conversion_rate': 6
+        },
+        'Jun 21': {
+          'users': 800,
+          'transactions': 32,
+          'conversion_rate': 6
+        },
+      }
+    }
   }
 
   getActiveView() {
@@ -1418,9 +1605,65 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDataByTrafficAndConversions(metricType: string) {
+  // solo para latam
+  getCountries(metricType: string) {
+    this.chartsReqStatus.countries = 1;
+
+    this.omnichatService.getCountries(metricType).subscribe(
+      (resp: any[]) => {
+        console.log('countries', resp)
+        this.countries = resp;
+        this.chartsReqStatus.countries = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[omnichat.component]: ${errorMsg}`);
+        this.chartsReqStatus.countries = 3;
+      }
+    )
+
     this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
   }
+
+  // solo para latam y country
+  getRetailers(metricType: string) {
+    this.chartsReqStatus.retailers = 1;
+
+    this.omnichatService.getRetailers(this.latamView, metricType).subscribe(
+      (resp: any[]) => {
+        console.log('retailer', resp)
+        this.retailers = resp;
+        this.chartsReqStatus.retailers = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[omnichat.component]: ${errorMsg}`);
+        this.chartsReqStatus.retailers = 3;
+      }
+    )
+
+    this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
+  }
+
+  getCategories(metricType: string) {
+    this.chartsReqStatus.categories = 1;
+
+    this.omnichatService.getCategories(this.latamView, metricType).subscribe(
+      (resp: any[]) => {
+        console.log('categories', resp)
+        this.categories = resp;
+        this.chartsReqStatus.categories = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[omnichat.component]: ${errorMsg}`);
+        this.chartsReqStatus.categories = 3;
+      }
+    )
+
+    this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
+  }
+
 
   ngOnDestroy() {
     this.routeSub?.unsubscribe();
