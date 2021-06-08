@@ -1,7 +1,7 @@
 import * as am4core from '@amcharts/amcharts4/core';
-import am4lang_en_US from "@amcharts/amcharts4/lang/en_US";
-import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES";
-import am4lang_pt_BR from "@amcharts/amcharts4/lang/pt_BR";
+import am4lang_en_US from '@amcharts/amcharts4/lang/en_US';
+import am4lang_es_ES from '@amcharts/amcharts4/lang/es_ES';
+import am4lang_pt_BR from '@amcharts/amcharts4/lang/pt_BR';
 
 // pt_BR (Portuguese) uses ',' character as decimal separator and '.' for thousand separator
 // es_ES and en_US  (Spanish and English) use '.' character as decimal separator and ',' for thousand separator
