@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
+import { loadLanguage } from 'src/app/tools/functions/chart-lang';
 
 @Component({
   selector: 'app-chart-column-line-mix',
@@ -40,7 +41,11 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
     this.loadChart();
   }
 
-  loadChart() {
+  /**
+ * Load chart 
+ * @param [lang] 'es': Spanish | 'en': English | 'pt': Portuguese
+ */
+  loadChart(lang?: string) {
     this.loadStatus = 1;
 
     am4core.useTheme(am4themes_animated);
@@ -48,8 +53,7 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
     // Create chart instance
     var chart = am4core.create(this.chartID, am4charts.XYChart);
     chart.data = this.data;
-    chart.numberFormatter.numberFormat = '#,###.##';
-
+    loadLanguage(chart, lang);
     // chart.exporting.menu = new am4core.ExportMenu();
 
     /* Create axes */
@@ -68,7 +72,7 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
     columnSeries.dataFields.valueY = this.columnValue;
     columnSeries.dataFields.categoryX = this.category;
 
-    columnSeries.columns.template.tooltipText = `[#fff font-size: 15px]{name} en {categoryX}:\n[/][#fff font-size: 20px]{valueY}[/] [#fff]{additional} ${this.valueFormat ? this.valueFormat : ''}[/]`
+    columnSeries.columns.template.tooltipText = `[#fff font-size: 15px]{name} en {categoryX}:\n[/][#fff font-size: 16px]{valueY}[/] [#fff]{additional} ${this.valueFormat ? this.valueFormat : ''}[/]`
     columnSeries.columns.template.propertyFields.fillOpacity = 'fillOpacity';
     columnSeries.columns.template.propertyFields.stroke = 'stroke';
     columnSeries.columns.template.propertyFields.strokeWidth = 'strokeWidth';
@@ -77,18 +81,18 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
     columnSeries.columns.template.column.cornerRadiusTopLeft = 10;
     columnSeries.columns.template.column.cornerRadiusTopRight = 10;
     columnSeries.columns.template.column.fillOpacity = 0.8;
-    columnSeries.columns.template.adapter.add("fill", function (fill, target) {
+    columnSeries.columns.template.adapter.add('fill', function (fill, target) {
       if (target.dataItem && target.dataItem._index % 2) {
-        return am4core.color("#85A8E3");
+        return am4core.color('#85A8E3');
       }
       else {
         return fill;
       }
     });
 
-    columnSeries.columns.template.adapter.add("stroke", (value, target, key) => {
+    columnSeries.columns.template.adapter.add('stroke', (value, target, key) => {
       if (target.dataItem && target.dataItem._index % 2) {
-        return am4core.color("#85A8E3");
+        return am4core.color('#85A8E3');
       }
       else {
         return value;
@@ -107,7 +111,7 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
 
     let bullet = lineSeries.bullets.push(new am4charts.Bullet());
     bullet.fill = am4core.color('#fdd400'); // tooltips grab fill from parent by default
-    bullet.tooltipText = `[#fff font-size: 15px]{name} en {categoryX}:\n[/][#fff font-size: 20px]{valueY}[/] [#fff]{additional} ${this.valueFormat ? this.valueFormat : ''}[/]`
+    bullet.tooltipText = `[#fff font-size: 15px]{name} en {categoryX}:\n[/][#fff font-size: 16px]{valueY}[/] [#fff]{additional} ${this.valueFormat ? this.valueFormat : ''}[/]`
     let circle = bullet.createChild(am4core.Circle);
     circle.radius = 4;
     circle.fill = am4core.color('#fff');

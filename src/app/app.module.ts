@@ -1,5 +1,5 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -22,6 +22,10 @@ import { LoginGuard } from './login.guard';
 import { ConfigurationProvider } from './app.constants';
 import { SharedModule } from './modules/shared/shared.module';
 import { AppStateService } from './services/app-state.service';
+
+import localeEsAr from '@angular/common/locales/es-AR';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localeEsAr);
 
 @NgModule({
   imports: [
@@ -52,7 +56,8 @@ import { AppStateService } from './services/app-state.service';
       useClass: SessionInterceptor,
       multi: true
     },
-    ConfigurationProvider
+    ConfigurationProvider,
+    { provide: LOCALE_ID, useValue: 'es-Ar' },
   ],
   bootstrap: [AppComponent]
 })

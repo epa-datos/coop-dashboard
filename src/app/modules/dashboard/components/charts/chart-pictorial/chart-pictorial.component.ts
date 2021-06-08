@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
+import { loadLanguage } from 'src/app/tools/functions/chart-lang';
 
 @Component({
   selector: 'app-chart-pictorial',
@@ -52,7 +53,11 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
     this.loadChart();
   }
 
-  loadChart() {
+  /**
+   * Load chart 
+   * @param [lang] 'es': Spanish | 'en': English | 'pt': Portuguese
+   */
+  loadChart(lang?: string) {
     am4core.useTheme(am4themes_animated);
 
     let iconPath = this.iconPath ? this.iconPath : this.getIconPath();
@@ -108,6 +113,7 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
 
     chart.responsive.enabled = true;
     this.loadChartData(chart);
+    loadLanguage(chart, lang);
   }
 
   getIconPath(): string {

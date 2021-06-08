@@ -3,6 +3,7 @@ import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { isPlatformBrowser } from '@angular/common';
+import { loadLanguage } from 'src/app/tools/functions/chart-lang';
 
 @Component({
   selector: 'app-chart-pie',
@@ -61,13 +62,19 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
     this.loadChart();
   }
 
-  loadChart() {
+  /**
+  * Load chart 
+  * @param [lang] 'es': Spanish | 'en': English | 'pt': Portuguese
+  */
+  loadChart(lang?: string) {
     this.browserOnly(() => {
       this.loadStatus = 1;
       // Chart code goes in here
       am4core.useTheme(am4themes_animated);
       let chart = am4core.create(this.chartID, am4charts.PieChart);
+
       this.loadChartData(chart);
+      loadLanguage(chart, lang);
 
       // Add and configure Series
       let pieSeries = chart.series.push(new am4charts.PieSeries());

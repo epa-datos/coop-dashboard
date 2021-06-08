@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
+import { loadLanguage } from 'src/app/tools/functions/chart-lang';
 
 @Component({
   selector: 'app-chart-bar',
@@ -38,13 +39,18 @@ export class ChartBarComponent implements OnInit, AfterViewInit {
     this.loadChart();
   }
 
-  loadChart() {
+  /**
+   * Load chart 
+   * @param [lang] 'es': Spanish | 'en': English | 'pt': Portuguese
+   */
+  loadChart(lang?: string) {
     am4core.useTheme(am4themes_animated);
     // Create chart instance
     let chart = am4core.create(this.chartID, am4charts.XYChart);
     // chart.scrollbarX = new am4core.Scrollbar();
 
     chart.data = this.data;
+    loadLanguage(chart, lang);
 
     // Create axes
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());

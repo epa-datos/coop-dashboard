@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
-import am4lang_es_ES from '@amcharts/amcharts4/lang/es_ES';
+import { loadLanguage } from 'src/app/tools/functions/chart-lang';
 
 @Component({
   selector: 'app-chart-bar-group',
@@ -53,15 +53,13 @@ export class ChartBarGroupComponent implements OnInit, AfterViewInit {
     this.loadChart();
   }
 
-  loadChart() {
+  /**
+ * Load chart 
+ * @param [lang] 'es': Spanish | 'en': English | 'pt': Portuguese
+ */
+  loadChart(lang?: string) {
     am4core.useTheme(am4themes_animated);
     let chart = am4core.create(this.chartID, am4charts.XYChart);
-
-    chart.numberFormatter.numberFormat = '#,###.##';
-    chart.language.locale = am4lang_es_ES;
-    chart.language.locale['_decimalSeparator'] = '.';
-    chart.language.locale['_thousandSeparator'] = ',';
-
     chart.paddingBottom = 50;
     chart.cursor = new am4charts.XYCursor();
 
@@ -214,6 +212,7 @@ export class ChartBarGroupComponent implements OnInit, AfterViewInit {
 
     chart.data = chartData;
     this.chart = chart;
+    loadLanguage(chart, lang);
 
     // last tick
     let range = categoryAxis.axisRanges.create();

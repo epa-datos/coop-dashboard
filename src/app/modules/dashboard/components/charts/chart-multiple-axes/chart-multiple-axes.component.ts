@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
-import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES";
+import { loadLanguage } from 'src/app/tools/functions/chart-lang';
 
 @Component({
   selector: 'app-chart-multiple-axes',
@@ -84,14 +84,13 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
     this.loadChart();
   }
 
-  loadChart() {
+  /**
+   * Loads chart 
+   * @param [lang] 'es': Spanish | 'en': English | 'pt': Portuguese
+   */
+  loadChart(lang?: string) {
     am4core.useTheme(am4themes_animated);
     let chart = am4core.create(this.chartID, am4charts.XYChart);
-    chart.numberFormatter.numberFormat = '#,###.##';
-    chart.language.locale = am4lang_es_ES;
-    chart.language.locale["_decimalSeparator"] = ".";
-    chart.language.locale["_thousandSeparator"] = ",";
-
     // Create axes
     let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.labels.template.fontSize = 12;
@@ -148,6 +147,7 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
     this.axis = { valueAxis1, valueAxis2 };
 
     this.loadChartData(chart);
+    loadLanguage(chart, lang);
   }
 
   loadChartData(chart) {

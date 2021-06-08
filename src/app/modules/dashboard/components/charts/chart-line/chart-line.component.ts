@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
-import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES";
+import { loadLanguage } from 'src/app/tools/functions/chart-lang';
 
 @Component({
   selector: 'app-chart-line',
@@ -35,16 +35,18 @@ export class ChartLineComponent implements OnInit, AfterViewInit {
     this.loadChart();
   }
 
-  loadChart() {
+  /**
+ * Load chart 
+ * @param [lang] 'es': Spanish | 'en': English | 'pt': Portuguese
+ */
+  loadChart(lang?: string) {
     am4core.useTheme(am4themes_animated);
     // Create chart instance
     let chart = am4core.create(this.chartID, am4charts.XYChart);
-    chart.language.locale = am4lang_es_ES;
-    chart.language.locale["_decimalSeparator"] = ".";
-    chart.language.locale["_thousandSeparator"] = ",";
 
     // Add data
     chart.data = this.data;
+    loadLanguage(chart, lang);
 
     // Create axes
     let dateAxis = chart.xAxes.push(new am4charts.DateAxis());

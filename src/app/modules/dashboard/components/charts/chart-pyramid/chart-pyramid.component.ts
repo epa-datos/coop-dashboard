@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
+import { loadLanguage } from 'src/app/tools/functions/chart-lang';
 
 @Component({
   selector: 'app-chart-pyramid',
@@ -63,11 +64,16 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     this.loadChart();
   }
 
-  loadChart() {
+  /**
+  * Load chart 
+  * @param [lang] 'es': Spanish | 'en': English | 'pt': Portuguese
+  */
+  loadChart(lang?: string) {
     am4core.useTheme(am4themes_animated);
     let chart = am4core.create(this.chartID, am4charts.XYChart);
 
     this.loadChartData(chart);
+    loadLanguage(chart, lang);
 
     // Use only absolute numbers
     // chart.numberFormatter.numberFormat = '#.#s';
