@@ -1,18 +1,11 @@
 <!-- TABS -->
 <div class="row mt-2">
-    <div class="pills-container">
-        <ul class="nav nav-pills nav-fill">
-            <div class="col-6 col-md-4 col-lg-2 mt-3" *ngFor="let tab of mainTabs; let i = index">
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 ===  i + 1}"
-                        (click)="getDataByMetric(tab.name, i + 1);">
-                        <span>
-                            {{ tab.title }}
-                        </span>
-                    </a>
-                </li>
-            </div>
-        </ul>
+    <div class="col-12 col-sm-6 col-lg-4 mt-lg-3" *ngFor="let stat of kpis">
+        <app-card-stat [stat]="stat" [loader]="kpisReqStatus <= 1" height="100px">
+        </app-card-stat>
+        <p class="text-center text-muted mt-3 mb-0" [hidden]="kpisReqStatus !== 3">
+            Error al consultar datos
+        </p>
     </div>
 </div>
 
@@ -40,9 +33,32 @@
                 <span class="h4">Tráfico por dispositivos</span>
             </div>
             <div class="card-body">
-                <app-chart-pictorial [data]="trafficDemographics['device']" name="indexed-devices" category="name"
-                    iconType="monitor" [status]="trafficDemoStatus[0].reqStatus" height="280px">
-                </app-chart-pictorial>
+                <div class="row">
+                    <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                        <div class="chart-legend legend-center mt-0">
+                            <div class="legend-container">
+                                <div class="legend-square on color-1"></div>
+                                <div class="legend-label">Desktop {{ desktopTraffic[1].value }}%</div>
+                            </div>
+                        </div>
+                        <app-chart-pictorial [data]="desktopTraffic" name="indexed-devices-desktop"
+                            [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
+                            height="280px">
+                        </app-chart-pictorial>
+                    </div>
+                    <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                        <div class="chart-legend legend-center mt-0">
+                            <div class="legend-container">
+                                <div class="legend-square on color-2"></div>
+                                <div class="legend-label">Mobile {{ mobileTraffic[1].value }}%</div>
+                            </div>
+                        </div>
+                        <app-chart-pictorial [data]="mobileTraffic" name="indexed-devices-mobile"
+                            [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
+                            height="280px">
+                        </app-chart-pictorial>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -54,12 +70,35 @@
                 <span class="h4">Tráfico por Género</span>
             </div>
             <div class="card-body">
-                <app-chart-pictorial [data]="trafficDemographics['gender']" name="indexed-gender" category="name"
-                    iconType="man" [status]="trafficDemoStatus[1].reqStatus" height="280px">
-                </app-chart-pictorial>
+                <div class="row">
+                    <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                        <div class="chart-legend legend-center mt-0">
+                            <div class="legend-container">
+                                <div class="legend-square on color-1"></div>
+                                <div class="legend-label">Hombres {{ menTraffic[1].value }}%</div>
+                            </div>
+                        </div>
+                        <app-chart-pictorial [data]="menTraffic" name="indexed-gender-man"
+                            [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man" height="280px">
+                        </app-chart-pictorial>
+                    </div>
+
+                    <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                        <div class="chart-legend legend-center mt-0">
+                            <div class="legend-container">
+                                <div class="legend-square on color-2"></div>
+                                <div class="legend-label">Mujeres {{ womenTraffic[1].value }}%</div>
+                            </div>
+                        </div>
+                        <app-chart-pictorial [data]="womenTraffic" name="indexed-gender-woman"
+                            [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman" height="280px">
+                        </app-chart-pictorial>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 
     <!-- age -->
     <div class="col-12 col-md-6 mt-4">
@@ -157,25 +196,56 @@
     </div>
     <div class="col-12 col-xl-6 mt-4">
         <div class="card">
-            <div class="card-header">
-                <span class="h4">Categoría de afinidad (cobertura)</span>
+            <div class="card-header header-info">
+                <span class="h4 mr-2 mb-0">Categoría de afinidad</span>
+                <div class="info-popover" ngbDropdown>
+                    <a ngbDropdownToggle>
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <div class="content" ngbDropdownMenu>
+                        <p>
+                            Las categorías de afinidad se utilizan para llegar a clientes potenciales, para que conozcan
+                            la marca o producto. Estos son usuarios que se encuentran más arriba en el embudo de compra,
+                            cerca del comienzo del proceso.
+                        </p>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <app-chart-bar-horizontal [data]="categoryCoverage" name="indexed-category-coverage" value="users"
-                    [singleColorBars]="true" [showCategoryInToolip]="true" [truncateLabels]="true">
+                    [singleColorBars]="true">
                 </app-chart-bar-horizontal>
+
+                <small class="text-muted mt-2 d-block d-sm-none">
+                    Para mejor visualización usar la versión de <strong>Escritorio</strong>
+                </small>
             </div>
         </div>
     </div>
     <div class="col-12 col-xl-6 mt-4">
         <div class="card">
-            <div class="card-header">
-                <span class="h4">Segmento de mercado</span>
+            <div class="card-header header-info">
+                <span class="h4 mr-2 mb-0">Segmento de mercado</span>
+                <div class="info-popover" ngbDropdown>
+                    <a ngbDropdownToggle>
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <div class="content" ngbDropdownMenu>
+                        <p>
+                            Es más probable que los usuarios de estos segmentos estén listos para comprar productos o
+                            servicios en la categoría especificada. Estos son los usuarios que se encuentran más abajo
+                            en el embudo de compra, cerca del final del proceso.
+                        </p>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <app-chart-bar-horizontal [data]="marketSegment" name="indexed-market-segment" value="users"
-                    [singleColorBars]="true" [showCategoryInToolip]="true" [truncateLabels]="true">
+                    [singleColorBars]="true">
                 </app-chart-bar-horizontal>
+                <small class="text-muted mt-2 d-block d-sm-none">
+                    Para mejor visualización usar la versión de <strong>Escritorio</strong>
+                </small>
             </div>
         </div>
     </div>

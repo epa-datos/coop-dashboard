@@ -1,25 +1,52 @@
-.pills-container {
-    width: 100%;
+.card-header.header-info {
+    align-items: center;
+    display: flex;
 
-    .nav-pills {
-        @media screen and (max-width: 767px) {
-            justify-content: center; 
+    .info-popover {
+        i {
+            color: #c7c7c7;
+            cursor: pointer;
+            font-size: 18px;
         }
 
-        .nav-item {
-            height: 100%;
-        
-            .nav-link {
-                align-items: center;
-                display: flex;
-                height: inherit;
-                justify-content: center;
-                
-                span {
-                    overflow: hidden;
-                    text-overflow: ellipsis;
+        .content {
+            padding: 12px;
+           
+            p {
+                font-size: 12.5px;
+                line-height: 18px;
+                color: #000000;
+                margin: 0;
+
+                @media screen and (min-width: 600px) {
+                    width: 250px;
                 }
             }
         }
+    }
+}
+
+.legend-container {
+    align-items: center;
+    display: flex;
+
+    .legend-square {
+        border-radius: 4px;
+        height: 16px;
+        margin-right: 4px;
+        width: 16px;
+
+        &.color-1 {
+            background-color: #67B6DC;
+        }
+
+        &.color-2 {
+            background-color: #6794DC;
+        }
+    }
+
+    .legend-label {
+        color: #000000;
+        font-size: 12px;
     }
 }

@@ -9,32 +9,59 @@ import { TableItem } from '../generic-table/generic-table.component';
 export class IndexedWrapperComponent implements OnInit {
 
   selectedTab1: number = 1;
-  mainTabs = [
+
+  kpis: any[] = [
     {
-      title: 'Usuarios',
-      name: 'users'
+      metricTitle: 'usuarios',
+      metricName: 'users',
+      metricValue: 0,
+      metricFormat: 'integer',
+      icon: 'fas fa-users',
+      iconBg: '#172b4d'
     },
     {
-      title: 'Usuarios nuevos',
-      name: 'new_users'
+      metricTitle: 'usuarios nuevos',
+      metricName: 'new_useres',
+      metricValue: 0,
+      metricFormat: 'integer',
+      icon: 'fas fa-user-plus',
+      iconBg: '#2f9998'
+
     },
     {
-      title: 'Sesiones',
-      name: 'sessions'
+      metricTitle: 'sesiones',
+      metricName: 'sessions',
+      metricValue: 0,
+      metricFormat: 'integer',
+      icon: 'fas fa-eye',
+      iconBg: '#a77dcc'
     },
     {
-      title: 'Porcentaje de rebote',
-      name: 'bounce_rate'
+      metricTitle: 'porcentaje de rebote',
+      metricName: 'bounce_rate',
+      metricValue: 0,
+      metricFormat: 'integer',
+      icon: 'fas fa-low-vision',
+      iconBg: '#f89934'
     },
     {
-      title: 'Páginas/sesión',
-      name: 'pages_sessions'
+      metricTitle: 'páginas/sesión',
+      metricName: 'pages_per_session',
+      metricValue: 0,
+      metricFormat: 'decimals',
+      icon: 'fas fa-file',
+      iconBg: '#fbc001'
     },
     {
-      title: 'Duración media de la sesión',
-      name: 'avg_session_duration'
+      metricTitle: 'duración media de la sesión',
+      metricName: 'avg_sessions_duration',
+      metricValue: '00:03:25',
+      icon: 'fas fa-user-clock',
+      iconBg: '#2B96D5'
     }
   ];
+
+  kpisReqStatus = 2;
 
   trafficDemographics = {
     device: [
@@ -1102,7 +1129,7 @@ export class IndexedWrapperComponent implements OnInit {
 
   marketSegment = [
     { category: 'Autos & Vehicles/Motor Vehicles/Motor Vehicles (Used)', users: 1200 },
-    { category: 'Autos & Vehicles/Motor Vehicles/Motor Vehicles (New)', users: 1400 },
+    { category: 'Autos & Vehicles/Motor Vehicles/Motor Vehicles/Motor Vehicles (New)', users: 1400 },
     { category: 'Business Services/Advertising & Marketing Services', users: 1600 },
     { category: 'Computers & Peripherals/Computers/Laptops', users: 1700 },
     { category: 'Financial Services/Credit & Lending', users: 1990 },
@@ -1115,17 +1142,17 @@ export class IndexedWrapperComponent implements OnInit {
 
   mostVistitedColumns: TableItem[] = [
     {
-      name: 'rank',
-      title: 'Posición'
+      name: 'ranking',
+      title: 'Ranking'
     },
     {
-      name: 'category',
-      title: 'Categoría del evento',
+      name: 'product',
+      title: 'Producto',
       tooltip: true,
     },
     {
-      name: 'sessions',
-      title: 'Sessiones',
+      name: 'users',
+      title: 'Usuarios',
       textAlign: 'center',
       formatValue: 'integer',
     }
@@ -1133,25 +1160,45 @@ export class IndexedWrapperComponent implements OnInit {
 
   mostVisitedModels = {
     data: [
-      { rank: 1, category: 'Impresora Multifuncional HP Ink', sessions: 24569 },
-      { rank: 2, category: 'Impresora Multifuncional HP Ink 2', sessions: 23547 },
-      { rank: 3, category: 'Cartucho HP 662 preto Original', sessions: 22475 },
-      { rank: 4, category: 'Cartucho HP 664 preto Original', sessions: 14685 },
-      { rank: 5, category: 'Cartucho tinta HP 122 preto Original', sessions: 14145 }
+      { ranking: 1, product: 'Impresora Multifuncional HP Ink', users: 24569 },
+      { ranking: 2, product: 'Impresora Multifuncional HP Ink 2', users: 23547 },
+      { ranking: 3, product: 'Cartucho HP 662 preto Original', users: 22475 },
+      { ranking: 4, product: 'Cartucho HP 664 preto Original', users: 14685 },
+      { ranking: 5, product: 'Cartucho tinta HP 122 preto Original', users: 14145 }
     ],
     reqStatus: 2
   }
 
   mostVisitedCategories = {
     data: [
-      { rank: 1, category: 'Cartucho HP 662 preto Original', sessions: 22475 },
-      { rank: 2, category: 'Cartucho HP 664 preto Original', sessions: 14685 },
-      { rank: 3, category: 'Cartucho tinta HP 122 preto Original', sessions: 14145 },
-      { rank: 4, category: 'Impresora Multifuncional HP Ink', sessions: 24569 },
-      { rank: 5, category: 'Impresora Multifuncional HP Ink 2', sessions: 23547 },
+      { ranking: 1, product: 'Cartucho HP 662 preto Original', users: 22475 },
+      { ranking: 2, product: 'Cartucho HP 664 preto Original', users: 14685 },
+      { ranking: 3, product: 'Cartucho tinta HP 122 preto Original', users: 14145 },
+      { ranking: 4, product: 'Impresora Multifuncional HP Ink', users: 24569 },
+      { ranking: 5, product: 'Impresora Multifuncional HP Ink 2', users: 23547 },
     ],
     reqStatus: 2
   }
+
+  desktopTraffic: any[] = [
+    { name: 'empty', value: 70 },
+    { id: 1, name: 'Desktop', value: 30 },
+  ];
+
+  mobileTraffic: any[] = [
+    { name: 'empty', value: 30 },
+    { id: 1, name: 'Mobile', value: 70 },
+  ];
+
+  womenTraffic: any[] = [
+    { name: 'empty', value: 55 },
+    { id: 1, name: 'woman', value: 45 },
+  ]
+
+  menTraffic: any[] = [
+    { name: 'empty', value: 45 },
+    { id: 1, name: 'men', value: 55 },
+  ];
 
   constructor() { }
 
