@@ -1,0 +1,19 @@
+{
+    "navbar": {
+        "logout": "Cerrar sesión",
+        "english": "Inglés",
+        "spanish": "Español",
+        "portuguese": "Portugués"
+    },
+    "dashboard": {
+        "overview": "Visión general",
+        "overviewCountry": "Visión general del país",
+        "overviewRetailer": "Visión general del retailer",
+        "otherTools": "Otras herramientas",
+        "feelingsAnalysis": "Análisis de sentimientos Omnichat"
+    },
+    "overviewLatam": {
+        "chart7ValueName1": "Inversión",
+        "chart7ValueName2": "Revenue"
+    }
+}

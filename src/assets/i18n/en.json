@@ -1,0 +1,19 @@
+{
+    "navbar": {
+        "logout": "Log out",
+        "english": "English",
+        "spanish": "Spanish",
+        "portuguese": "Portuguese"
+    },
+    "dashboard": {
+        "overview": "Overview",
+        "overviewCountry": "Country overview",
+        "overviewRetailer": "Retailer overview",
+        "otherTools": "Other tools",
+        "feelingsAnalysis": "Feelings Analysis Omnichat"
+    },
+    "overviewLatam": {
+        "chart7ValueName1": "Investment",
+        "chart7ValueName2": "Revenue"
+    }
+}

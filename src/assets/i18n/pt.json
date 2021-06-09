@@ -1,0 +1,19 @@
+{
+    "navbar": {
+        "logout": "Sair",
+        "english": "Inglês",
+        "spanish": "Espanhol",
+        "portuguese": "Português"
+    },
+    "dashboard": {
+        "overview": "Visão geral",
+        "overviewCountry": "Visão geral do país",
+        "overviewRetailer": "Visão geral do retailer",
+        "otherTools": "Outras ferramentas",
+        "feelingsAnalysis": "Análise de sentimentos Omnichat"
+    },
+    "overviewLatam": {
+        "chart7ValueName1": "Investimento",
+        "chart7ValueName2": "Revenue"
+    }
+}
