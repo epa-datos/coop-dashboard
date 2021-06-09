@@ -1,15 +1,17 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chart-multiple-axes',
   templateUrl: './chart-multiple-axes.component.html',
   styleUrls: ['./chart-multiple-axes.component.scss']
 })
-export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
+export class ChartMultipleAxesComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() height: string = '350px'; // height property value valid in css
   @Input() value1: string = 'value1'; // object property represented as valueAxis1 (left axis)
   @Input() value2: string = 'value2'; // object property represented as valueAxis2 (right axis)
@@ -75,13 +77,21 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
     this.series && this.loadNamesAndFormats();
   }
 
-  constructor() { }
+  langSub: Subscription;
+
+  constructor(
+    private appStateService: AppStateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.loadChart(lang);
+    });
   }
 
   ngAfterViewInit() {
-    this.loadChart();
+    const defaultLang = this.appStateService.selectedLang;
+    this.loadChart(defaultLang);
   }
 
   /**
@@ -180,5 +190,9 @@ export class ChartMultipleAxesComponent implements OnInit, AfterViewInit {
 
     this.axis.valueAxis1.title.text = this.valueName1;
     this.axis.valueAxis2.title.text = this.valueName2;
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }
