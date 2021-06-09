@@ -262,9 +262,10 @@
                         <span class="h4">Inversión vs Revenue</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-multiple-axes [data]="investmentVsRevenue" valueName1="Inversión"
-                            valueName2="Revenue" value1="investment" value2="revenue" name="latam-investment-vs-revenue"
-                            [status]="invVsRevenueReqStatus">
+                        <app-chart-multiple-axes [data]="investmentVsRevenue"
+                            [valueName1]="'overviewLatam.chart7ValueName1' | translate"
+                            [valueName2]="'overviewLatam.chart7ValueName2' | translate" value1="investment"
+                            value2="revenue" name="latam-investment-vs-revenue" [status]="invVsRevenueReqStatus">
                         </app-chart-multiple-axes>
                     </div>
                 </div>
