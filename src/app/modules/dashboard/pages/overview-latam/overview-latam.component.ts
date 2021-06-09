@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { OverviewService } from '../../services/overview.service';
 import { TableItem } from '../../components/generic-table/generic-table.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-overview-latam',
@@ -138,11 +139,44 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   selectedSourceTab: any;
 
   filtersSub: Subscription;
+  translateSub: Subscription;
   chartsInitLoad: boolean = true;
 
   constructor(
     private filtersStateService: FiltersStateService,
-    private overviewService: OverviewService) { }
+    private overviewService: OverviewService,
+    private translate: TranslateService) {
+
+    this.translateSub = translate.stream('overviewLatam').subscribe(() => {
+      this.kpis[0].metricTitle = this.translate.instant('kpis.investment');
+      this.kpis[2].subMetricTitle = this.translate.instant('general.users');
+      this.kpis[3].metricTitle = this.translate.instant('kpis.transactions');
+      this.kpis[3].metricTitle = this.translate.instant('kpis.transactions');
+
+      this.topProductsColumns[0].title = this.translate.instant('general.ranking');
+      this.topProductsColumns[1].title = this.translate.instant('general.product');
+      this.topProductsColumns[2].title = this.translate.instant('general.amount');
+
+      this.usersAndSalesMetrics[0] = this.translate.instant('general.sector').toLowerCase();
+      this.usersAndSalesMetrics[1] = this.translate.instant('general.category').toLowerCase();
+      this.usersAndSalesMetrics[2] = this.translate.instant('general.source').toLowerCase();
+
+      const salesSector = this.selectedSectors.find(sectors => sectors.id === 3);
+      if (salesSector) {
+        salesSector.name = this.translate.instant('general.sales');
+      }
+
+      const institutionalSource = this.selectedSources.find(sources => sources.id === 'institucional');
+      if (institutionalSource) {
+        institutionalSource.name = this.translate.instant('general.institutional');
+      }
+
+      const othersSource = this.selectedSources.find(sources => sources.id === 'otros');
+      if (othersSource) {
+        othersSource.name = this.translate.instant('general.others');
+      }
+    });
+  }
 
   ngOnInit(): void {
     if (this.filtersStateService.countries &&
@@ -327,5 +361,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.filtersSub?.unsubscribe();
+    this.translateSub?.unsubscribe();
   }
 }
