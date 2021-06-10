@@ -14,7 +14,10 @@
         "campaignComparator": "Comparador de campanhas",
         "settings": "Definições",
         "manager": "Gerenciar",
-        "activityRegister": "Registro de atividades"
+        "activityRegister": "Registro de atividades",
+        "sidebarError1": "Ocorreu um erro ao consultar os",
+        "sidebarError2": "países ou retailers",
+        "sidebarError3": "aos quais você tem acesso. Por favor tente mais tarde."
     },
     "filters": {
         "country": "País",
@@ -62,6 +65,14 @@
         "investment": "investimento",
         "transactions": "transações"
     },
+    "paginator": {
+        "itemsPerPage": "Itens por página",
+        "nextPage": "Próximo",
+        "previousPage": "Anterior",
+        "firstPage": "Primeira página",
+        "lastPage": "Última página",
+        "ofCounter": "de"
+    },
     "general": {
         "coop": "Programa COOP",
         "sector": "Setor",
@@ -77,7 +88,8 @@
         "others": "Outros",
         "errorData": "Erro ao consultar dados",
         "withoutData": "Nenhum dado disponível",
-        "withoutData2": "Amostra insuficiente"
+        "withoutData2": "Amostra insuficiente",
+        "withoutData3": "Nenhum dado encontrado"
     },
     "others": {
         "by": "por",
