@@ -63,6 +63,8 @@ import { ChartGaugeComponent } from './components/charts/chart-gauge/chart-gauge
 import { ChartBarGroupComponent } from './components/charts/chart-bar-group/chart-bar-group.component';
 import { StarRaitingComponent } from './components/star-raiting/star-raiting.component';
 import { GoogleBusinessFiltersComponent } from './components/google-business-filters/google-business-filters.component';
+import { PcSelectorWrapperComponent } from './components/pc-selector-wrapper/pc-selector-wrapper.component';
+import { ChartFunnelComponent } from './components/charts/chart-funnel/chart-funnel.component';
 
 
 @NgModule({
@@ -104,6 +106,8 @@ import { GoogleBusinessFiltersComponent } from './components/google-business-fil
     CampaignTowardsRetailWrapperComponent,
     IndexedWrapperComponent,
     GoogleBusinessFiltersComponent,
+    PcSelectorWrapperComponent,
+    ChartFunnelComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,526 @@
+<!-- TARJETAS DE MÉTRICAS -->
+<div class="row mt-2">
+    <div class="col-12 col-sm-6 col-lg-4 mt-lg-3" *ngFor="let stat of kpis">
+        <app-card-stat [stat]="stat" [loader]="kpisReqStatus <= 1" height="100px">
+        </app-card-stat>
+    </div>
+    <div class="mt-lg-3" [hidden]="kpisReqStatus !== 3">
+        <p class="text-center text-muted mt-3 mb-0">
+            Error al consultar datos
+        </p>
+    </div>
+</div>
+
+<!-- USUARIOS AND REVENUE -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="pills-container">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
+                        (click)="getDataByUsersAndRevenue('users');">Usuarios - Conversiones</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
+                        (click)="getDataByUsersAndRevenue('revenue')">Revenue - AUP</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-12 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">{{ selectedTab1 === 1 ? 'Usuarios vs Conversiones' : 'Revenue vs AUP '}} </span>
+            </div>
+            <div class="card-body">
+                <app-chart-multiple-axes [data]="dataByUsersAndRevenue"
+                    [value1]="selectedTab1 === 1 ? 'conversions' : 'revenue'"
+                    [value2]="selectedTab1 === 1 ? 'traffic' : 'aup'"
+                    [valueName1]="selectedTab1 === 1 ? 'Conversiones' : 'Revenue'"
+                    [valueName2]="selectedTab1 === 1 ? 'Usuarios' : 'AUP'" [valueFormat1]="selectedTab1 === 2 && 'USD'"
+                    [valueFormat2]="selectedTab1 === 2 && 'USD'" name="pc-selector-traffic-vs-conversions">
+                </app-chart-multiple-axes>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<!-- CHATS POR PAÍS & RETAILER -->
+<ng-container *ngIf="!retailerView">
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="mb-3">
+                <span class="h3">Tráfico y Conversiones</span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="pills-container">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
+                            (click)="getDataByCountriesAndRetailers('traffic')">Tráfico</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
+                            (click)="getDataByCountriesAndRetailers('conversions')">Conversiones</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6 mt-4" *ngIf="latamView">
+            <div class="card height-fluid">
+                <div class="card-header">
+                    <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por país</span>
+                </div>
+                <div class="card-body">
+                    <app-chart-bar-horizontal [data]="countries" name="pc-selector-chats-by-country" category="country"
+                        value="chats" [singleColorBars]="true" [status]="chartsReqStatus.countries">
+                    </app-chart-bar-horizontal>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6 mt-4" *ngIf="latamView || countryView" [ngClass]="{'col-lg-12' : !latamView}">
+            <div class="card height-fluid">
+                <div class="card-header">
+                    <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por retailer</span>
+                </div>
+                <div class="card-body retailers-chart-container">
+                    <app-chart-bar-horizontal [data]="retailers" name="pc-selector-chats-by-retailer"
+                        category="retailer" value="chats" [truncateLabels]="true" [singleColorBars]="true"
+                        height="600px">
+                    </app-chart-bar-horizontal>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+</ng-container>
+
+<!-- CONVERSIONES - TASAS DE CONVERSION -->
+<div class="row mt-5">
+    <div class="col-12">
+        <span class="h3">Análisis de conversión</span>
+    </div>
+    <div class="col-12 mt-3">
+        <div class="row">
+            <div class="col-12 mt-4">
+                <div class="card height-fluid superimposed">
+                    <div class="card-header">
+                        <span class="h4">Conversiones por producto</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-bar-horizontal [data]="conversionsByProduct"
+                            name="pc-selector-transactions-by-product" category="product" value="transactions"
+                            [singleColorBars]="true">
+                        </app-chart-bar-horizontal>
+                        <small class="text-muted mt-2 d-block d-sm-none">
+                            Para mejor visualización usar la versión de <strong>Escritorio</strong>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-4">
+                <div class="card height-fluid">
+                    <div class="card-header">
+                        <span class="h4">Usuarios, Conversiones y Tasa de conversión por fecha</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-legend mt-0 mb-2">
+                            <div class="legend-container legend-right">
+                                <div class="legend-square color-1"></div>
+                                <div class="legend-label">Usuarios</div>
+                            </div>
+                            <div class="legend-container ml-3">
+                                <div class="legend-square color-2"></div>
+                                <div class="legend-label">Conversiones</div>
+                            </div>
+                            <div class="legend-container ml-3">
+                                <div class="legend-square color-3"></div>
+                                <div class="legend-label">Tasa de conversión</div>
+                            </div>
+                        </div>
+                        <app-chart-bar-group [data]="usersTransactionsConversion"
+                            name="pc-selector-users-transactions-rate" height="325px" valueBar1="users"
+                            valueBar2="transactions" valueLine1="conversion_rate" valueNameBar1="Usuarios"
+                            valueNameBar2="Conversiones" valueFormatLine1="%">
+                        </app-chart-bar-group>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="col-12 mt-4">
+                <app-generic-table [displayedColumns]="categoriesAndUsersColumns" [tableData]="categoriesAndUsers2"
+                    [tableDataChange]="categoriesAndUsers2.data" errorMsg="Error al consultar datos"
+                    emptyDataMsg="No se encontraron datos">
+                </app-generic-table>
+            </div> -->
+
+            <!-- CATEGORY AND USERS TABLE -->
+            <div class="col-12 mt-4">
+                <div class="adaptable-container" [ngClass]="{'auto': categoryAndUsersReqStatus === 3}">
+                    <div class="loading-shade" [hidden]="categoryAndUsersReqStatus > 1">
+                        <mat-spinner></mat-spinner>
+                    </div>
+
+                    <table mat-table [dataSource]="categoryAndUsersSource">
+                        <!-- category column -->
+                        <ng-container matColumnDef="category">
+                            <th mat-header-cell *matHeaderCellDef>Categoría</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.category }}
+                            </td>
+                        </ng-container>
+
+                        <!-- users column -->
+                        <ng-container matColumnDef="users">
+                            <th mat-header-cell *matHeaderCellDef>Usuarios</th>
+                            <td mat-cell *matCellDef="let element">
+                                <span>{{ element.users | number }}</span>
+                            </td>
+                        </ng-container>
+
+                        <!-- conversion_rate -->
+                        <ng-container matColumnDef="conversion_rate">
+                            <th mat-header-cell *matHeaderCellDef>Tasa de conversión</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.conversion_rate }}%
+                            </td>
+                        </ng-container>
+
+                        <!-- conversion_rate_yoy -->
+                        <ng-container matColumnDef="conversion_rate_yoy">
+                            <th mat-header-cell *matHeaderCellDef>%YoY</th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="value-container">
+                                    <span>{{ element.conversion_rate_yoy }}%</span>
+                                    <i class="fas fa-arrow-up text-success" *ngIf="element.conversion_rate_yoy > 0"></i>
+                                    <i class="fas fa-equals text-warning" *ngIf="element.conversion_rate_yoy === 0"></i>
+                                    <i class="fas fa-arrow-down text-danger"
+                                        *ngIf="element.conversion_rate_yoy < 0"></i>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- amount -->
+                        <ng-container matColumnDef="amount">
+                            <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.amount | number }}
+                            </td>
+                        </ng-container>
+
+                        <!-- amount_yoy -->
+                        <ng-container matColumnDef="amount_yoy">
+                            <th mat-header-cell *matHeaderCellDef>%YoY</th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="value-container">
+                                    <span>{{ element.amount_yoy }}%</span>
+                                    <i class="fas fa-arrow-up text-success" *ngIf="element.amount_yoy > 0"></i>
+                                    <i class="fas fa-equals text-warning" *ngIf="element.amount_yoy === 0"></i>
+                                    <i class="fas fa-arrow-down text-danger" *ngIf="element.amount_yoy < 0"></i>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- revenue -->
+                        <ng-container matColumnDef="revenue">
+                            <th mat-header-cell *matHeaderCellDef>Revenue</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.revenue | number }}
+                            </td>
+                        </ng-container>
+
+                        <!-- revenue_yoy -->
+                        <ng-container matColumnDef="revenue_yoy">
+                            <th mat-header-cell *matHeaderCellDef>%YoY</th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="value-container">
+                                    <span>{{ element.revenue_yoy }}%</span>
+                                    <i class="fas fa-arrow-up text-success" *ngIf="element.revenue_yoy > 0"></i>
+                                    <i class="fas fa-equals text-warning" *ngIf="element.revenue_yoy === 0"></i>
+                                    <i class="fas fa-arrow-down text-danger" *ngIf="element.revenue_yoy < 0"></i>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- aup -->
+                        <ng-container matColumnDef="aup">
+                            <th mat-header-cell *matHeaderCellDef>AUP</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.aup | number }}
+                            </td>
+                        </ng-container>
+
+                        <!-- aup_yoy -->
+                        <ng-container matColumnDef="aup_yoy">
+                            <th mat-header-cell *matHeaderCellDef>%YoY</th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="value-container">
+                                    <span>{{ element.aup_yoy }}%</span>
+                                    <i class="fas fa-arrow-up text-success" *ngIf="element.aup_yoy > 0"></i>
+                                    <i class="fas fa-equals text-warning" *ngIf="element.aup_yoy === 0"></i>
+                                    <i class="fas fa-arrow-down text-danger" *ngIf="element.aup_yoy < 0"></i>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- ERROR COLUMN -->
+                        <ng-container matColumnDef="disclaimer">
+                            <td mat-footer-cell *matFooterCellDef colspan="3">
+                                <div class="text-danger text-center" [hidden]="categoryAndUsersReqStatus !== 3">
+                                    Ocurrió un error al consultar los productos
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="conversionsColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: conversionsColumns;"></tr>
+                        <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
+                            [hidden]="categoryAndUsersReqStatus !== 3"></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<!-- TRAFFICO Y CONVERSIONES (7 GRAFICOS) -->
+<div class="row mt-5">
+    <div class="col-12">
+        <span class="h3">Audiencia</span>
+    </div>
+    <div class="col-12 mt-3">
+        <div class="row">
+            <div class="col-12">
+                <div class="pills-container">
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="nav-item">
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
+                                (click)="getDataByTrafficAndSales('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
+                                (click)="getDataByTrafficAndSales('conversions'); chartsInitLoad = chartsInitLoad && false;">Conversiones</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- devices -->
+            <div class="col-12 col-md-6 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por dispositivos</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend legend-center mt-0">
+                                    <div class="legend-container">
+                                        <div class="legend-square on color-4"></div>
+                                        <div class="legend-label">Desktop {{ demographics.desktop[1].value }}%
+                                        </div>
+                                    </div>
+                                </div>
+                                <app-chart-pictorial [data]="demographics.desktop" name="pc-selectordevices-desktop"
+                                    [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
+                                    height="280px">
+                                </app-chart-pictorial>
+                            </div>
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend legend-center mt-0">
+                                    <div class="legend-container">
+                                        <div class="legend-square on color-5"></div>
+                                        <div class="legend-label">Mobile {{ demographics.mobile[1].value }}%</div>
+                                    </div>
+                                </div>
+                                <app-chart-pictorial [data]="demographics.mobile" name="pc-selectordevices-mobile"
+                                    [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
+                                    height="280px">
+                                </app-chart-pictorial>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- gender -->
+            <div class="col-12 col-md-6 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Género</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend legend-center mt-0">
+                                    <div class="legend-container">
+                                        <div class="legend-square on color-4"></div>
+                                        <div class="legend-label">Hombres {{ demographics.men[1].value }}%</div>
+                                    </div>
+                                </div>
+                                <app-chart-pictorial [data]="demographics.men" name="pc-selectorgender-man"
+                                    [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man"
+                                    height="280px">
+                                </app-chart-pictorial>
+                            </div>
+
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend legend-center mt-0">
+                                    <div class="legend-container">
+                                        <div class="legend-square on color-5"></div>
+                                        <div class="legend-label">Mujeres {{ demographics.women[1].value }}%</div>
+                                    </div>
+                                </div>
+                                <app-chart-pictorial [data]="demographics.women" name="pc-selectorgender-woman"
+                                    [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman"
+                                    height="280px">
+                                </app-chart-pictorial>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- age -->
+            <div class="col-12 col-md-6 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Edad</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-lollipop [data]="demographics['age']" name="pc-selectorage" category="age"
+                            [value]="selectedTab3 === 1 ? 'visits' : 'sales'" height="280px"
+                            [status]="trafficSalesReqStatus[2].reqStatus">
+                        </app-chart-lollipop>
+                    </div>
+                </div>
+            </div>
+
+            <!-- age and gender -->
+            <div class="col-12 col-md-6 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Género y Edad</span>
+                    </div>
+                    <div class="card-body" style="height: 328px">
+                        <!-- loader -->
+                        <app-chart-loader *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus <= 1">
+                        </app-chart-loader>
+
+                        <!-- ready -->
+                        <app-chart-pyramid *ngIf="demographics['genderByAge']?.length > 0"
+                            [data]="demographics['genderByAge']" name="pc-selectorage-and-gender"
+                            [status]="trafficSalesReqStatus[3].reqStatus" height="280px">
+                        </app-chart-pyramid>
+
+                        <!-- empty data -->
+                        <div *ngIf="trafficSalesReqStatus[3].reqStatus === 2 && demographics['genderByAge']?.length === 0"
+                            class="chart-error-container text-muted">
+                            <p class="text-center">
+                                Sin datos disponibles <br>
+                                Muestra insuficiente
+                            </p>
+                        </div>
+
+                        <!-- error -->
+                        <div *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus === 3"
+                            class="chart-error-container text-muted">
+                            <span>Error al consultar datos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- weekday and hour -->
+            <div class="col-12 col-lg-6 mt-4" *ngIf="selectedTab3 === 1">
+                <div class="card" style="height: 100%;">
+                    <div class="card-header">
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}}
+                            por día de la semana y hora del día</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-heat-map [data]="trafficHeatmapData" name="pc-selectorweekday-sesions" height="100%">
+                        </app-chart-heat-map>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6 mt-4">
+                <!-- weekday -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}}
+                            por día de la semana</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-bar-horizontal [data]="trafficByDay" name="pc-selectortraffic-day" category='weekday'
+                            value='value' height="250px">
+                        </app-chart-bar-horizontal>
+                    </div>
+                </div>
+
+                <div class="card mt-4" *ngIf="selectedTab3 === 1">
+                    <!-- hour -->
+                    <div class="card-header">
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}}
+                            por hora del día</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-lollipop [data]="trafficByHour" name="pc-selectortraffic-hour" category="hour"
+                            value="visits" height="250px">
+                        </app-chart-lollipop>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<!-- ASISTENTE VIRTUAL -->
+<div class="row mt-1">
+    <div class="col-12 col-xl-4 mt-4">
+        <div class="row">
+            <div class="col-12 col-lg-6 col-xl-12">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h4">Tasa de Abandono al inicio del proceso</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-pie [data]="bounceRateInInit" name="pc-selector-bounce-rate" legendPosition="bottom"
+                            height="200px">
+                        </app-chart-pie>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 col-xl-12 mt-4 mt-lg-0 mt-xl-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h4">Tasa de Uso de Asistente Virtual</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-pie [data]="useRateVirtualAssistant" name="pc-selector-use-rate"
+                            legendPosition="bottom" height="200px">
+                        </app-chart-pie>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-xl-8 mt-4">
+        <div class="card height-fluid">
+            <div class="card-header">
+                <span class="h4">Tasa de Abandono por pregunta</span>
+            </div>
+            <div class="card-body">
+                <app-chart-funnel [data]="bounceRateByQuestion" name="pc-selector-bounce-rate" height="515px">
+                </app-chart-funnel>
+            </div>
+        </div>
+    </div>
+</div>

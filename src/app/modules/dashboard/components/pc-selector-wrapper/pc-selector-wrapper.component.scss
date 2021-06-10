@@ -1,0 +1,118 @@
+.pills-container {
+    width: 60%;
+
+    .nav-item .nav-link {
+        cursor: pointer;
+    }
+
+    @media screen and (max-width: 820px) {
+        width: 100%;
+    }
+}
+
+.retailers-chart-container {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.chart-legend {
+    display: flex;
+    padding: 0 15px;
+
+    &.legend-right {
+        justify-content: flex-end;
+    }
+
+    &.legend-center {
+        justify-content: center;
+    }
+
+    .legend-container {
+        align-items: center;
+        display: flex;
+
+        .legend-square {
+            border-radius: 4px;
+            height: 16px;
+            margin-right: 4px;
+            width: 16px;
+
+            &.color-1 {
+                background-color: #71B9DA;
+            }
+
+            &.color-2 {
+                background-color: #DE72D0;
+            }
+
+            &.color-3 {
+                background-color: #FCD713;
+            }
+
+            &.color-4 {
+                background-color: #67B6DC;
+            }
+
+            &.color-5 {
+                background-color: #6794DC;
+            }
+        }
+
+        .legend-label {
+            color: #000000;
+            font-size: 12px;
+        }
+    }
+}
+
+.adaptable-container {
+    // min-height: 250px;
+    overflow: auto;
+    position: relative;
+    width: 100%;
+   
+    table {
+        width: 100%;
+    
+        th:nth-of-type(n + 2),
+        td:nth-of-type(n + 2) {
+            text-align: center;
+        }
+    }
+
+    .lg-container {
+        max-width: 27rem;
+        span {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: inherit;
+            display: inline-block;
+        }
+    }
+
+    .value-container {
+        align-items: center;
+        display: grid;
+        grid-template-columns: 40px 16px;
+        gap: 4px;
+        justify-content: center;
+    }
+
+    &.auto {
+        min-height: auto;
+    }
+}
+
+.loading-shade {
+    align-items: center;
+    background: rgba(0, 0, 0, 0.03);
+    bottom: 0px;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+}
