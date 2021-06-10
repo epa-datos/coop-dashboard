@@ -1,17 +1,18 @@
-import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-generic-table',
   templateUrl: './generic-table.component.html',
   styleUrls: ['./generic-table.component.scss']
 })
-export class GenericTableComponent implements OnInit, AfterViewInit {
+export class GenericTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() errorMsg = 'Error al consultar datos';
   @Input() emptyDataMsg = 'No se encontraron datos';
-
   private _displayedColumns: TableItem[];
   get displayedColumns() {
     return this._displayedColumns;
@@ -40,12 +41,20 @@ export class GenericTableComponent implements OnInit, AfterViewInit {
 
   dataSource;
   displayedColumnsHeaders;
+  langSub: Subscription;
 
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
 
-  constructor() { }
+  constructor(
+    private translate: TranslateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.translate.stream('general').subscribe(() => {
+      this.errorMsg = this.translate.instant('general.errorData');
+      this.emptyDataMsg = this.translate.instant('general.withoutData3');
+      this.loadPaginator();
+    });
   }
 
   ngAfterViewInit() {
@@ -58,15 +67,15 @@ export class GenericTableComponent implements OnInit, AfterViewInit {
     // this.dataSource3.paginator = this.paginator.toArray()[2];
 
     for (let i = 0; i < this.paginator.toArray().length; i++) {
-      this.paginator.toArray()[i]._intl.itemsPerPageLabel = 'Registros por página';
-      this.paginator.toArray()[i]._intl.nextPageLabel = 'Siguiente';
-      this.paginator.toArray()[i]._intl.previousPageLabel = 'Anterior';
-      this.paginator.toArray()[i]._intl.firstPageLabel = 'Primera página';
-      this.paginator.toArray()[i]._intl.lastPageLabel = 'Última página';
+      this.paginator.toArray()[i]._intl.itemsPerPageLabel = this.translate.instant('paginator.itemsPerPage');
+      this.paginator.toArray()[i]._intl.nextPageLabel = this.translate.instant('paginator.nextPage');
+      this.paginator.toArray()[i]._intl.previousPageLabel = this.translate.instant('paginator.previousPage');
+      this.paginator.toArray()[i]._intl.firstPageLabel = this.translate.instant('paginator.firstPage');
+      this.paginator.toArray()[i]._intl.lastPageLabel = this.translate.instant('paginator.lastPage');
 
 
       this.paginator.toArray()[i]._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
-        if (length == 0 || pageSize == 0) { return `0 de ${length}`; }
+        if (length == 0 || pageSize == 0) { return `0 ${this.translate.instant('paginator.ofCounter')} ${length}`; }
 
         length = Math.max(length, 0);
 
@@ -77,9 +86,13 @@ export class GenericTableComponent implements OnInit, AfterViewInit {
           Math.min(startIndex + pageSize, length) :
           startIndex + pageSize;
 
-        return `${startIndex + 1} - ${endIndex} de ${length}`;
+        return `${startIndex + 1} - ${endIndex} ${this.translate.instant('paginator.ofCounter')} ${length}`;
       }
     }
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }
 
