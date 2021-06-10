@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
 import { AppStateService } from 'src/app/services/app-state.service';
@@ -49,6 +50,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public mainRegionSub: Subscription;
   public countrySub: Subscription;
   public retailerSub: Subscription;
+  public translateSub: Subscription;
 
   constructor(
     private router: Router,
@@ -56,7 +58,56 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private usersMngmtService: UsersMngmtService,
     private appStateService: AppStateService,
     private route: ActivatedRoute,
-  ) { }
+    private translate: TranslateService
+  ) {
+
+    this.translateSub = translate.stream('dashboard').subscribe(() => {
+      this.loadI18nMenuItems(this.menuItems);
+    });
+  }
+
+  loadI18nMenuItems(menuItems) {
+    if (!menuItems) {
+      return;
+    }
+    for (let item of menuItems) {
+      this.loadTitles(item);
+      if (item.submenu) {
+        this.loadI18nMenuItems(item.submenu)
+      }
+    }
+  }
+
+  loadTitles(item) {
+    const path = item.path?.split('/dashboard/')[1];
+
+    if (!path) {
+      return;
+    }
+
+    switch (path) {
+      case 'main-region':
+      case 'country':
+      case 'retailer':
+        item.title = this.translate.instant('general.coop');
+        break;
+      case 'tools':
+        item.title = this.translate.instant('dashboard.otherTools');
+        break;
+      case 'omnichat':
+        item.title = this.translate.instant('dashboard.feelingsAnalysis');
+        break;
+      case 'campaign-comparator':
+        item.title = this.translate.instant('dashboard.campaignComparator');
+        break;
+      case 'users':
+        item.title = this.translate.instant('general.users');
+        break;
+      case 'users/activity-register':
+        item.title = this.translate.instant('dashboard.activityRegister');
+        break;
+    }
+  }
 
   async ngOnInit() {
     this.userIsAdmin = this.userService.isAdmin();
@@ -89,6 +140,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       } else if (this.userRole === 'retailer') {
         const newMenuItems = await this.getAvailableRetailers();
         this.menuItems = [... this.menuItems, ...newMenuItems];
+        this.loadI18nMenuItems(this.menuItems);
       }
       this.menuReqStatus = 2;
 
@@ -99,21 +151,21 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     // Other routes
     const menuItem1 = {
-      title: 'Comparador de campaña',
-      path: '/campaign-comparator',
+      title: this.translate.instant('dashboard.campaignComparator'),
+      path: '/dashboard/campaign-comparator',
     }
     this.menuItems.push(menuItem1);
 
     // Admin routes
     const menuItem2 = {
-      title: 'Administrador',
+      title: this.translate.instant('dashboard.manager'),
       submenu: [
         {
-          title: 'Usuarios',
+          title: this.translate.instant('general.users'),
           path: '/dashboard/users',
         },
         {
-          title: 'Registro de actividad',
+          title: this.translate.instant('dashboard.activityRegister'),
           path: '/dashboard/users/activity-register',
         }
       ],
@@ -335,13 +387,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
   addDefaultSubmenuToCountry(country): RouteInfo[] {
     const submenu = [
       {
-        title: 'Programa COOP',
+        title: this.translate.instant('general.coop'),
         path: '/dashboard/country',
         paramName: 'country',
         param: country.name.toLowerCase().replaceAll(' ', '-')
       },
       {
-        title: 'Otras herramientas',
+        title: this.translate.instant('dashboard.otherTools'),
         path: '/dashboard/tools',
         paramName: 'country',
         param: country.name.toLowerCase().replaceAll(' ', '-')
@@ -616,6 +668,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.translateSub?.unsubscribe();
     this.mainRegionSub?.unsubscribe();
     this.countrySub?.unsubscribe();
     this.retailerSub?.unsubscribe();
