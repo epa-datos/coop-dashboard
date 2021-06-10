@@ -1,15 +1,17 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chart-bar-group',
   templateUrl: './chart-bar-group.component.html',
   styleUrls: ['./chart-bar-group.component.scss']
 })
-export class ChartBarGroupComponent implements OnInit, AfterViewInit {
+export class ChartBarGroupComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() height: string = '350px'; // height property value valid in css
   @Input() valueBar1: string = 'value1'; // object property represented as first bar
   @Input() valueBar2: string = 'value2'; // object property represented as second bar
@@ -44,13 +46,21 @@ export class ChartBarGroupComponent implements OnInit, AfterViewInit {
   chartID;
   chart;
 
-  constructor() { }
+  langSub: Subscription;
+
+  constructor(
+    private appStateService: AppStateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.loadChart(lang);
+    });
   }
 
   ngAfterViewInit() {
-    this.loadChart();
+    const defaultLang = this.appStateService.selectedLang;
+    this.loadChart(defaultLang);
   }
 
   /**
@@ -221,5 +231,9 @@ export class ChartBarGroupComponent implements OnInit, AfterViewInit {
     range.tick.strokeOpacity = 0.4;
     range.tick.location = 1;
     range.grid.location = 1;
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

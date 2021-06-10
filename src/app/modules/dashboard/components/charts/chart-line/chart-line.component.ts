@@ -1,21 +1,21 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { Subscription } from 'rxjs';
+import { AppStateService } from 'src/app/services/app-state.service';
 
 @Component({
   selector: 'app-chart-line',
   templateUrl: './chart-line.component.html',
   styleUrls: ['./chart-line.component.scss']
 })
-export class ChartLineComponent implements OnInit, AfterViewInit {
+export class ChartLineComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() data;
   @Input() value = 'value';
   @Input() date = 'date';
-  chartID;
-  loadStatus: number = 0;
 
   private _name: string;
   get name() {
@@ -26,13 +26,22 @@ export class ChartLineComponent implements OnInit, AfterViewInit {
     this.chartID = `chart-line${this.name}`
   }
 
-  constructor() { }
+  chartID;
+  langSub: Subscription;
+
+  constructor(
+    private appStateService: AppStateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.loadChart(lang);
+    });
   }
 
   ngAfterViewInit() {
-    this.loadChart();
+    const defaultLang = this.appStateService.selectedLang;
+    this.loadChart(defaultLang);
   }
 
   /**
@@ -78,5 +87,9 @@ export class ChartLineComponent implements OnInit, AfterViewInit {
     chart.cursor = new am4charts.XYCursor();
     chart.cursor.xAxis = dateAxis;
     chart.cursor.snapToSeries = series;
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

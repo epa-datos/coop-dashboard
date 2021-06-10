@@ -1,22 +1,24 @@
-import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { Subscription } from 'rxjs';
+import { AppStateService } from 'src/app/services/app-state.service';
 
 @Component({
   selector: 'app-chart-lollipop',
   templateUrl: './chart-lollipop.component.html',
   styleUrls: ['./chart-lollipop.component.scss']
 })
-export class ChartLollipopComponent implements OnInit, AfterViewInit {
+export class ChartLollipopComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() category: string = 'category';
   @Input() height: string = '350px'; // height property value valid in css
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
 
-  graphID;
+  chartID;
 
   private _name: string;
   get name() {
@@ -24,7 +26,7 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
   }
   @Input() set name(value) {
     this._name = value;
-    this.graphID = `chart-lollipop-${this.name}`
+    this.chartID = `chart-lollipop-${this.name}`
   }
 
   private _data;
@@ -63,14 +65,21 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
 
   chart;
   series;
+  langSub: Subscription;
 
-  constructor() { }
+  constructor(
+    private appStateService: AppStateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.loadChart(lang);
+    });
   }
 
   ngAfterViewInit() {
-    this.loadChart();
+    const defaultLang = this.appStateService.selectedLang;
+    this.loadChart(defaultLang);
   }
 
   /**
@@ -80,7 +89,7 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
   loadChart(lang?: string) {
     am4core.useTheme(am4themes_animated);
 
-    let chart = am4core.create(this.graphID, am4charts.XYChart);
+    let chart = am4core.create(this.chartID, am4charts.XYChart);
     this.loadChartData(chart);
     loadLanguage(chart, lang);
 
@@ -130,5 +139,9 @@ export class ChartLollipopComponent implements OnInit, AfterViewInit {
 
   loadValueFormat() {
     this.series.tooltipText = `{valueY.value} ${this.valueFormat ? this.valueFormat : ''}`;
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

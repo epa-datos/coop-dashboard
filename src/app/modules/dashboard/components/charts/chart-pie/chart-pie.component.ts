@@ -1,16 +1,18 @@
-import { AfterViewInit, Component, Inject, Input, NgZone, OnInit, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, Inject, Input, NgZone, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { isPlatformBrowser } from '@angular/common';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { Subscription } from 'rxjs';
+import { AppStateService } from 'src/app/services/app-state.service';
 
 @Component({
   selector: 'app-chart-pie',
   templateUrl: './chart-pie.component.html',
   styleUrls: ['./chart-pie.component.scss']
 })
-export class ChartPieComponent implements OnInit, AfterViewInit {
+export class ChartPieComponent implements OnInit, AfterViewInit, OnDestroy {
   private chart: am4charts.XYChart;
 
   @Input() value: string = 'value';
@@ -19,9 +21,6 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
   @Input() height: string = '350px'; // height property value valid in css
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
-
-  chartID;
-  loadStatus: number = 0;
 
   private _name: string;
   get name() {
@@ -43,9 +42,14 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
     }
   }
 
+  chartID;
+  langSub: Subscription;
+
   constructor(
     @Inject(PLATFORM_ID) private platformId,
-    private zone: NgZone) { }
+    private zone: NgZone,
+    private appStateService: AppStateService
+  ) { }
 
   // Run the function only in the browser
   browserOnly(f: () => void) {
@@ -56,10 +60,15 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.loadChart(lang);
+    });
+  }
 
   ngAfterViewInit() {
-    this.loadChart();
+    const defaultLang = this.appStateService.selectedLang;
+    this.loadChart(defaultLang);
   }
 
   /**
@@ -68,7 +77,6 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
   */
   loadChart(lang?: string) {
     this.browserOnly(() => {
-      this.loadStatus = 1;
       // Chart code goes in here
       am4core.useTheme(am4themes_animated);
       let chart = am4core.create(this.chartID, am4charts.PieChart);
@@ -157,8 +165,6 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
       //   am4core.color('#923C6C'),
       //   am4core.color('#394856'),
       // ]
-
-      this.loadStatus = 2;
     })
 
   }
@@ -166,5 +172,9 @@ export class ChartPieComponent implements OnInit, AfterViewInit {
   loadChartData(chart) {
     chart.data = this.data;
     this.chart = chart;
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

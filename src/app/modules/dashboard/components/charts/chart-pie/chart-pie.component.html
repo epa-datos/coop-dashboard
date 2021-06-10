@@ -8,14 +8,14 @@
     <!-- empty data -->
     <div [hidden]="status !== 2 || data?.length > 0" class="chart-error-container text-muted">
         <p class="text-center">
-            Sin datos disponibles <br>
-            Muestra insuficiente
+            {{ 'general.withoutData' | translate }} <br>
+            {{ 'general.withoutData2' | translate }}
         </p>
     </div>
 
     <!-- error -->
     <div [hidden]="status !== 3" class="chart-error-container text-muted">
         <span [hidden]="!errorLegend">{{ errorLegend }}</span>
-        <span [hidden]="errorLegend">Error al consultar datos</span>
+        <span [hidden]="errorLegend">{{ 'general.errorData' | translate }}</span>
     </div>
 </div>

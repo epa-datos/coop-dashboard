@@ -1,15 +1,17 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chart-bar-horizontal',
   templateUrl: './chart-bar-horizontal.component.html',
   styleUrls: ['./chart-bar-horizontal.component.scss']
 })
-export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
+export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() value: string = 'value';
   @Input() category: string = 'category';
@@ -43,13 +45,21 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
   chartID;
   chart;
 
-  constructor() { }
+  langSub: Subscription;
+
+  constructor(
+    private appStateService: AppStateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.loadChart(lang);
+    });
   }
 
   ngAfterViewInit() {
-    this.loadChart();
+    const defaultLang = this.appStateService.selectedLang;
+    this.loadChart(defaultLang);
   }
 
   /**
@@ -124,5 +134,9 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit {
   loadChartData(chart) {
     chart.data = this.data;
     this.chart = chart;
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

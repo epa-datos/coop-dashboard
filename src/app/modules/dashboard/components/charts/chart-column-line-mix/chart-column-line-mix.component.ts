@@ -1,15 +1,17 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { Subscription } from 'rxjs';
+import { AppStateService } from 'src/app/services/app-state.service';
 
 @Component({
   selector: 'app-chart-column-line-mix',
   templateUrl: './chart-column-line-mix.component.html',
   styleUrls: ['./chart-column-line-mix.component.scss']
 })
-export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
+export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() data;
   @Input() category: string = 'category';
@@ -19,9 +21,10 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
   @Input() lineName: string;
   @Input() valueFormat: string; // USD MXN Copy shown in tooltip
   @Input() height: string = '350px' // height property value valid in css
+  @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
+  @Input() errorLegend: string;
 
   chartID;
-  loadStatus: number = 0;
 
   private _name: string;
   get name() {
@@ -32,13 +35,21 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
     this.chartID = `chart-column-line-mix-${this.name}`
   }
 
-  constructor() { }
+  langSub: Subscription;
+
+  constructor(
+    private appStateService: AppStateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.loadChart(lang);
+    });
   }
 
   ngAfterViewInit() {
-    this.loadChart();
+    const defaultLang = this.appStateService.selectedLang;
+    this.loadChart(defaultLang);
   }
 
   /**
@@ -46,8 +57,6 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
  * @param [lang] 'es': Spanish | 'en': English | 'pt': Portuguese
  */
   loadChart(lang?: string) {
-    this.loadStatus = 1;
-
     am4core.useTheme(am4themes_animated);
 
     // Create chart instance
@@ -118,5 +127,9 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit {
     circle.strokeWidth = 3;
 
     // chart.responsive.enabled = true;
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

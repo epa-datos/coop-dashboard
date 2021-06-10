@@ -3,11 +3,21 @@
     <app-chart-loader [hidden]="status > 1"></app-chart-loader>
 
     <!-- ready -->
-    <div [ngClass]="{'chart-hidden': status !== 2}" [id]="chartID" style="height: 100%"></div>
+    <div [ngClass]="{'chart-hidden': status !== 2 || chart?.series?.values.length < 1}" [id]="chartID"
+        style="height: 100%">
+    </div>
+
+    <!-- empty data -->
+    <div [hidden]="status !== 2 || chart?.series?.values.length > 0" class="chart-error-container text-muted">
+        <p class="text-center">
+            {{ 'general.withoutData' | translate }} <br>
+            {{ 'general.withoutData2' | translate }}
+        </p>
+    </div>
 
     <!-- error -->
     <div [hidden]="status !== 3" class="chart-error-container text-muted">
         <span [hidden]="!errorLegend">{{ errorLegend }}</span>
-        <span [hidden]="errorLegend">Error al consultar datos</span>
+        <span [hidden]="errorLegend">{{ 'general.errorData' | translate }}</span>
     </div>
 </div>

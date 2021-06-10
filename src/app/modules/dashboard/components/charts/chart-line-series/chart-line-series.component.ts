@@ -20,8 +20,6 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestro
   @Input() errorLegend: string;
 
   chartID;
-  loadStatus: number = 0;
-
   private _name: string;
   get name() {
     return this._name;
@@ -55,7 +53,8 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   ngAfterViewInit() {
-    this.loadChart();
+    const defaultLang = this.appStateService.selectedLang;
+    this.loadChart(defaultLang);
   }
 
   /**
@@ -63,7 +62,6 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestro
    * @param [lang] 'es': Spanish | 'en': English | 'pt': Portuguese
    */
   loadChart(lang?: string) {
-    this.loadStatus = 1;
     am4core.useTheme(am4themes_animated);
     let chart = am4core.create(this.chartID, am4charts.XYChart);
 

@@ -1,14 +1,16 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { Subscription } from 'rxjs';
+import { AppStateService } from 'src/app/services/app-state.service';
 
 @Component({
   selector: 'app-chart-line-comparison',
   templateUrl: './chart-line-comparison.component.html',
   styleUrls: ['./chart-line-comparison.component.scss']
 })
-export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
+export class ChartLineComparisonComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() category: string = 'date';
   @Input() value1: string = 'value1';
   @Input() value2: string = 'value2';
@@ -20,6 +22,7 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
   chartID;
   series;
   loadStatus: number = 0;
+  langSub: Subscription;
 
   private _data;
   get data() {
@@ -75,13 +78,19 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
     this.series && this.loadNamesAndFormats();
   }
 
-  constructor() { }
+  constructor(
+    private appStateService: AppStateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.loadChart(lang);
+    });
   }
 
   ngAfterViewInit() {
-    this.loadChart();
+    const defaultLang = this.appStateService.selectedLang;
+    this.loadChart(defaultLang);
   }
 
   /**
@@ -159,5 +168,9 @@ export class ChartLineComparisonComponent implements OnInit, AfterViewInit {
     this.series.series1.name = serieName1;
 
     this.series.series2.name = serieName2;
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

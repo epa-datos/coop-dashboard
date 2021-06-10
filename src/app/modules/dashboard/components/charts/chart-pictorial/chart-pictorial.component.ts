@@ -1,15 +1,17 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { Subscription } from 'rxjs';
+import { AppStateService } from 'src/app/services/app-state.service';
 
 @Component({
   selector: 'app-chart-pictorial',
   templateUrl: './chart-pictorial.component.html',
   styleUrls: ['./chart-pictorial.component.scss']
 })
-export class ChartPictorialComponent implements OnInit, AfterViewInit {
+export class ChartPictorialComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() value: string = 'value';
   @Input() category: string = 'category';
@@ -44,13 +46,21 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
     this.chart && this.loadChartData(this.chart)
   }
 
-  constructor() { }
+  langSub: Subscription;
+
+  constructor(
+    private appStateService: AppStateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.loadChart(lang);
+    });
   }
 
   ngAfterViewInit() {
-    this.loadChart();
+    const defaultLang = this.appStateService.selectedLang;
+    this.loadChart(defaultLang);
   }
 
   /**
@@ -145,6 +155,10 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit {
   loadChartData(chart) {
     chart.data = this.data;
     this.chart = chart;
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }
 
