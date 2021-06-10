@@ -1,21 +1,24 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { TranslateService } from '@ngx-translate/core';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chart-pyramid',
   templateUrl: './chart-pyramid.component.html',
   styleUrls: ['./chart-pyramid.component.scss']
 })
-export class ChartPyramidComponent implements OnInit, AfterViewInit {
+export class ChartPyramidComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() category: string = 'age';
   @Input() value1: string = 'male';
   @Input() value2: string = 'female';
-  @Input() valueName1: string = 'Hombres';
-  @Input() valueName2: string = 'Mujeres';
+  @Input() valueName1: string = this.translate.instant('others.men');
+  @Input() valueName2: string = this.translate.instant('others.women');
   @Input() height: string = '350px'; // height property value valid in css
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
@@ -54,10 +57,20 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
   labels: any;
   valueAxis: any;
   columns: any;
+  langSub: Subscription;
 
-  constructor() { }
+  constructor(
+    private translate: TranslateService,
+    private appStateService: AppStateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.valueName1 = this.translate.instant('others.men');
+      this.valueName2 = this.translate.instant('others.women');
+
+      this.loadChart(lang);
+    });
   }
 
   ngAfterViewInit() {
@@ -171,5 +184,9 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit {
     this.valueAxis.renderer.labels.template.adapter.add('text', function (text) {
       return `${text} ${valueFormat !== false && valueFormat?.length === 1 ? valueFormat : ''}`;
     })
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }

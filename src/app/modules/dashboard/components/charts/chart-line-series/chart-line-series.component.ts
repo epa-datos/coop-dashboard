@@ -1,15 +1,17 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chart-line-series',
   templateUrl: './chart-line-series.component.html',
   styleUrls: ['./chart-line-series.component.scss']
 })
-export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
+export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() value = 'value'; // property name in the object to show in valueAxis
   @Input() valueName; // property to show in tooltips
@@ -40,10 +42,16 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
 
   chart;
   axis: any;
+  langSub: Subscription;
 
-  constructor() { }
+  constructor(
+    private appStateService: AppStateService
+  ) { }
 
   ngOnInit(): void {
+    this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
+      this.loadChart(lang);
+    });
   }
 
   ngAfterViewInit() {
@@ -166,6 +174,10 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit {
       series.data = data;
       return series;
     }
+  }
+
+  ngOnDestroy() {
+    this.langSub?.unsubscribe();
   }
 }
 
