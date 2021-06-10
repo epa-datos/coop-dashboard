@@ -492,7 +492,7 @@
                         <span class="h4">Tasa de Abandono al inicio del proceso</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-pie [data]="bounceRateInInit" name="pc-selector-bounce-rate" legendPosition="bottom"
+                        <app-chart-pie [data]="churnRateInInit" name="pc-selector-churn-rate" legendPosition="bottom"
                             height="200px">
                         </app-chart-pie>
                     </div>
@@ -518,7 +518,7 @@
                 <span class="h4">Tasa de Abandono por pregunta</span>
             </div>
             <div class="card-body">
-                <app-chart-funnel [data]="bounceRateByQuestion" name="pc-selector-bounce-rate" height="515px">
+                <app-chart-funnel [data]="churnRateByQuestion" name="pc-selector-churn-rate" height="515px">
                 </app-chart-funnel>
             </div>
         </div>

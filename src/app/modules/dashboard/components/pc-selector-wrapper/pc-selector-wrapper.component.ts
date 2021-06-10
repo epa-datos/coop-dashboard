@@ -1383,7 +1383,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     { weekday: 'Lun', value: 230 },
   ];
 
-  bounceRateInInit = [
+  churnRateInInit = [
     { category: 'Abandona', value: 1 },
     { category: 'No abandona', value: 22 }
   ];
@@ -1393,8 +1393,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     { category: 'No utiliza', value: 6 }
   ];
 
-
-  bounceRateByQuestion = [{
+  churnRateByQuestion = [{
     'name': 'Pregunta 2',
     'value': 47
   }, {
@@ -1409,8 +1408,7 @@ export class PcSelectorWrapperComponent implements OnInit {
   }, {
     'name': 'Termina el proceso',
     'value': 631
-  }
-  ];
+  }];
 
   kpisReqStatus = 2;
 
