@@ -2,44 +2,6 @@
     border-radius: 0.375rem;
 }
 
-.header {
-    border-radius: 0.375rem;;
-}
-
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
-
-    @media screen and (max-width: 1200px) {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    @media screen and (max-width: 1000px) {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media screen and (max-width: 480px) {
-        grid-template-columns: 1fr;
-    }
-}
-
-.metric-container,
-.panel-title-container {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 16px;
-
-    .icon {
-        height: 2rem;
-        width: 2rem;
-    }
-}
-
-.panel-title-container {
-    align-items: center;
-}
-
 .nav-link {
     cursor: pointer;
 }

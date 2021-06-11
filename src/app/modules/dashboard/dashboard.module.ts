@@ -20,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DashboardComponent } from './dashboard.component';
 import { GeneralFiltersComponent } from './components/general-filters/general-filters.component';
 import { RetailFiltersComponent } from './components/retail-filters/retail-filters.component';
+import { GoogleBusinessFiltersComponent } from './components/google-business-filters/google-business-filters.component';
 import { CardStatComponent } from './components/card-stat/card-stat.component';
 import { GenericTableComponent } from './components/generic-table/generic-table.component';
 import { CampaignComparatorComponent } from './pages/campaign-comparator/campaign-comparator.component';
@@ -35,6 +36,7 @@ import { OverviewLatamComponent } from './pages/overview-latam/overview-latam.co
 // wrappers
 import { OverviewWrapperComponent } from './components/overview-wrapper/overview-wrapper.component';
 import { CampaignTowardsRetailWrapperComponent } from './components/campaign-towards-retail-wrapper/campaign-towards-retail-wrapper.component';
+import { CampaignInRetailWrapperComponent } from './components/campaign-in-retail-wrapper/campaign-in-retail-wrapper.component';
 import { GoogleBusinessWrapperComponent } from './components/google-business-wrapper/google-business-wrapper.component';
 
 import { AudiencesWrapperComponent } from './components/audiences-wrapper/audiences-wrapper.component';
@@ -62,7 +64,6 @@ import { ChartLoaderComponent } from './components/charts/chart-loader/chart-loa
 import { ChartGaugeComponent } from './components/charts/chart-gauge/chart-gauge.component';
 import { ChartBarGroupComponent } from './components/charts/chart-bar-group/chart-bar-group.component';
 import { StarRaitingComponent } from './components/star-raiting/star-raiting.component';
-import { GoogleBusinessFiltersComponent } from './components/google-business-filters/google-business-filters.component';
 import { PcSelectorWrapperComponent } from './components/pc-selector-wrapper/pc-selector-wrapper.component';
 import { ChartFunnelComponent } from './components/charts/chart-funnel/chart-funnel.component';
 
@@ -108,6 +109,7 @@ import { ChartFunnelComponent } from './components/charts/chart-funnel/chart-fun
     GoogleBusinessFiltersComponent,
     PcSelectorWrapperComponent,
     ChartFunnelComponent,
+    CampaignInRetailWrapperComponent,
   ],
   imports: [
     CommonModule,
