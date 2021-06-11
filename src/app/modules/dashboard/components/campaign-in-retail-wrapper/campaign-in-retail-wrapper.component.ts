@@ -12,16 +12,6 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
 
   @Input() requestInfoChange: Observable<boolean>;
 
-  extPanelIsOpen = {
-    panel1: false,
-    panel2: false,
-    panel3: false,
-    panel4: false
-  }
-
-  selectedFilters: any;
-
-
   kpisLegends1 = ['investment', 'clicks', 'bounce_rate', 'transactions', 'revenue'];
   kpisLegends2 = ['ctr', 'users', 'cr', 'roas'];
   kpis: any[] = [
@@ -89,7 +79,7 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
   roasBySector = [
     {
       metricTitle: 'search',
-      metricName: 'search',
+      metricName: 'Search',
       metricValue: 0,
       metricFormat: 'decimals',
       icon: 'fab fa-google',
@@ -97,7 +87,7 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
     },
     {
       metricTitle: 'marketing',
-      metricName: 'marketing',
+      metricName: 'Marketing',
       metricValue: 0,
       metricFormat: 'decimals',
       icon: 'fas fa-bullhorn',
@@ -105,19 +95,27 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
     },
     {
       metricTitle: 'ventas',
-      metricName: 'ventas',
+      metricName: 'Ventas',
       metricValue: 0,
       metricFormat: 'decimals',
       icon: 'fas fa-store',
       iconBg: '#a77dcc'
     }
 
-  ]
+  ];
+
   kpisReqStatus: number = 0;
   roasReqStatus: number = 0;
-  requestInfoSub: Subscription;
-  retailFiltersSub: Subscription;
 
+  extPanelIsOpen = {
+    panel1: false,
+    panel2: false,
+    panel3: false,
+    panel4: false
+  }
+
+  generalFiltersSub: Subscription;
+  retailFiltersSub: Subscription;
 
   constructor(
     private campInRetailService: CampaignInRetailService,
@@ -125,7 +123,7 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
+    this.generalFiltersSub = this.requestInfoChange.subscribe(() => {
       this.getAllData();
     })
 
@@ -143,6 +141,11 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
     this.kpisReqStatus = 1;
     this.campInRetailService.getKpis().subscribe(
       (resp: any[]) => {
+
+        if (resp?.length < 1) {
+          return;
+        }
+
         const kpis1 = resp.filter(kpi => this.kpisLegends1.includes(kpi.string));
         const kpis2 = resp.filter(kpi => this.kpisLegends2.includes(kpi.string));
 
@@ -168,6 +171,14 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
     this.roasReqStatus = 1;
     this.campInRetailService.getRoasBySector().subscribe(
       (resp: any[]) => {
+        if (resp?.length < 1) {
+          return;
+        }
+
+        for (let i = 0; i < this.roasBySector.length; i++) {
+          const baseObj = resp.find(item => item.name === this.roasBySector[i].metricName);
+          this.roasBySector[i].metricValue = baseObj.value;
+        }
 
         this.roasReqStatus = 2;
       },
@@ -183,7 +194,7 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.requestInfoSub?.unsubscribe();
+    this.generalFiltersSub?.unsubscribe();
     this.retailFiltersSub?.unsubscribe();
   }
 

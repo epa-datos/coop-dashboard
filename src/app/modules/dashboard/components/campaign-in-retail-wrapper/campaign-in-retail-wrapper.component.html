@@ -1,3 +1,4 @@
+<!-- FILTERS -->
 <div class="mt-5">
     <app-retail-filters></app-retail-filters>
 </div>
@@ -6,25 +7,30 @@
 <div class="row mt-5">
     <div class="col-12">
         <div class="stats-container">
-            <app-card-stat *ngFor="let kpi of kpis" [stat]="kpi"></app-card-stat>
+            <app-card-stat *ngFor="let kpi of kpis" [stat]="kpi" [loader]="kpisReqStatus <= 1"></app-card-stat>
         </div>
+        <p class="text-center text-muted mt-2 mb-0" [hidden]="kpisReqStatus !== 3">
+            Error al consultar datos
+        </p>
     </div>
 </div>
 
-
 <!-- ROAS CARDS -->
-<div class="row mt-5 mb-2">
+<div class="row mt-5">
     <div class="col-12">
         <span class="h3">ROAS por Sector</span>
     </div>
 </div>
-
-<div class="row">
+<div class="row mt-2">
     <div *ngFor="let sector of roasBySector" class="col-12 col-sm-4 mb-4">
-        <app-card-stat [stat]="sector" height="76px"></app-card-stat>
+        <app-card-stat [stat]="sector" [loader]="roasReqStatus <= 1" height="76px"></app-card-stat>
+    </div>
+    <div class="col-12 mt--4" [hidden]="roasReqStatus !== 3">
+        <p class="text-center text-muted mb-0">
+            Error al consultar datos
+        </p>
     </div>
 </div>
-
 
 <!-- ACCORDION -->
 <div class="mt-5">
