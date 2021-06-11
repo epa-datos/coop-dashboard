@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -476,7 +475,6 @@ export class PcSelectorWrapperComponent implements OnInit {
     { product: 'LAPTOP HP 240 G7 INTEL CELERON N4020 4 GB 500 GB', transactions: 2 },
   ]
 
-
   usersTransactionsConversion: any = {
     'Mar 21': {
       'users': 0,
@@ -499,12 +497,6 @@ export class PcSelectorWrapperComponent implements OnInit {
       'conversion_rate': 2.35
     }
   }
-
-  conversionsColumns: string[] = ['category', 'users', 'conversion_rate', 'conversion_rate_yoy', 'amount', 'amount_yoy', 'revenue', 'revenue_yoy', 'aup', 'aup_yoy'];
-  private conversionsDataSource = [
-    { category: 'PS', users: 58, conversion_rate: 2.35, conversion_rate_yoy: 0, amount: 2, amount_yoy: 0, revenue: 16799.4, revenue_yoy: 0, aup: 7399.7, aup_yoy: 0 },
-  ];
-
 
   trafficDemographic = {
     desktop: [
@@ -1700,9 +1692,6 @@ export class PcSelectorWrapperComponent implements OnInit {
   retailers: any[] = this.trafficByRetailer;
   demographics: any = this.trafficDemographic;
   weekdays: any[] = this.trafficByDay;
-
-  categoryAndUsersSource = new MatTableDataSource<any>(this.conversionsDataSource);
-  categoryAndUsersReqStatus = 2;
 
   selectedTab1: number = 1;
   selectedTab2: number = 1;
