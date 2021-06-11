@@ -1,0 +1,94 @@
+<!-- FILTERS -->
+<div class="mt-5">
+    <app-retail-filters></app-retail-filters>
+</div>
+
+<!-- CARD STATS -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="stats-container">
+            <app-card-stat *ngFor="let kpi of kpis" [stat]="kpi" [loader]="kpisReqStatus <= 1"></app-card-stat>
+        </div>
+        <p class="text-center text-muted mt-2 mb-0" [hidden]="kpisReqStatus !== 3">
+            Error al consultar datos
+        </p>
+    </div>
+</div>
+
+<!-- ROAS CARDS -->
+<div class="row mt-5">
+    <div class="col-12">
+        <span class="h3">ROAS por Sector</span>
+    </div>
+</div>
+<div class="row mt-2">
+    <div *ngFor="let sector of roasBySector" class="col-12 col-sm-4 mb-4">
+        <app-card-stat [stat]="sector" [loader]="roasReqStatus <= 1" height="76px"></app-card-stat>
+    </div>
+    <div class="col-12 mt--4" [hidden]="roasReqStatus !== 3">
+        <p class="text-center text-muted mb-0">
+            Error al consultar datos
+        </p>
+    </div>
+</div>
+
+<!-- ACCORDION -->
+<div class="mt-5">
+    <mat-accordion multi>
+        <mat-expansion-panel (opened)="panelChange('panel1',true)" (closed)="panelChange('panel1',false)">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div class="panel-title-container">
+                        <div class="icon icon-shape text-white rounded-circle shadow bg-default">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span class="h3 mb-0">Audiencias</span>
+                    </div>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-audiences-wrapper *ngIf="extPanelIsOpen.panel1"></app-audiences-wrapper>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel (opened)="panelChange('panel2',true)" (closed)="panelChange('panel2',false)">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div class="panel-title-container">
+                        <div class="icon icon-shape text-white rounded-circle shadow bg-primary">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <span class="h3 mb-0">Adquisición</span>
+                    </div>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-acquisition-wrapper *ngIf="extPanelIsOpen.panel2"></app-acquisition-wrapper>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel (opened)="panelChange('panel3',true)" (closed)="panelChange('panel3',false)">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div class="panel-title-container">
+                        <div class="icon icon-shape text-white rounded-circle shadow bg-purple">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <span class="h3 mb-0">Comportamiento</span>
+                    </div>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-behaviour-wrapper *ngIf="extPanelIsOpen.panel3"></app-behaviour-wrapper>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel (opened)="panelChange('panel4',true)" (closed)="panelChange('panel4',false)">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div class="panel-title-container">
+                        <div class="icon icon-shape text-white rounded-circle shadow bg-warning">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <span class="h3 mb-0">Conversión</span>
+                    </div>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-conversion-wrapper *ngIf="extPanelIsOpen.panel4"></app-conversion-wrapper>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

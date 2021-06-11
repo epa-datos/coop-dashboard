@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { CampaignInRetailService } from '../../services/campaign-in-retail.service';
+import { FiltersStateService } from '../../services/filters-state.service';
 
 @Component({
   selector: 'app-audiences-wrapper',
   templateUrl: './audiences-wrapper.component.html',
   styleUrls: ['./audiences-wrapper.component.scss']
 })
-export class AudiencesWrapperComponent implements OnInit {
+export class AudiencesWrapperComponent implements OnInit, OnDestroy {
 
   devicesByTraffic: any[] = [
     { id: 1, name: 'Desktop', value: 2500 },
@@ -1280,10 +1283,25 @@ export class AudiencesWrapperComponent implements OnInit {
     { date: '23:00', value1: 9, value2: 14 }
   ]
 
+  // *************************************************
 
-  constructor() { }
+  filtersSub: Subscription;
+
+  constructor(
+    private filtersStateService: FiltersStateService,
+    private campInRetailService: CampaignInRetailService
+  ) { }
 
   ngOnInit(): void {
+    this.getAllData();
+
+    this.filtersSub = this.filtersStateService.retailFiltersChange$.subscribe(() => {
+      this.getAllData();
+    });
+  }
+
+  getAllData() {
+    console.log('getAllData')
   }
 
   changeData(category, selectedTab) {
@@ -1319,5 +1337,9 @@ export class AudiencesWrapperComponent implements OnInit {
 
     }
     this.selectedTab1 = selectedTab;
+  }
+
+  ngOnDestroy() {
+    this.filtersSub?.unsubscribe();
   }
 }

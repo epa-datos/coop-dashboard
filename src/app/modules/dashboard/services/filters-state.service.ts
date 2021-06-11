@@ -7,6 +7,10 @@ import * as moment from 'moment';
 })
 export class FiltersStateService {
 
+  /**** GENERAL FILTERS
+  * Filters used in dashboard component
+  * ****/
+
   // selected countries
   private countriesSource = new Subject<any[]>();
   countries$ = this.countriesSource.asObservable();
@@ -59,6 +63,33 @@ export class FiltersStateService {
   private filtersSource = new Subject<boolean>();
   filtersChange$ = this.filtersSource.asObservable();
 
+
+  /**** RETAIL FILTERS
+  * Filters used in retailer component
+  * ****/
+
+  // source
+  private retailSourcesSource = new Subject<any[]>();
+  retailSources$ = this.retailSourcesSource.asObservable();
+  retailSources: any[];
+  retailSourcesQParams;
+
+  // medium
+  private retailMediumsSource = new Subject<any[]>();
+  retailMediums$ = this.retailMediumsSource.asObservable();
+  retailMediums: any[];
+  retailMediumsQParams;
+
+  // audiences
+  private retailAudiencesSource = new Subject<any[]>();
+  retailAudiences$ = this.retailAudiencesSource.asObservable();
+  retailAudiences: any[];
+  retailAudiencesQParams;
+
+  // filtersChange
+  private retailFiltersSource = new Subject<boolean>();
+  retailFiltersChange$ = this.retailFiltersSource.asObservable();
+
   constructor() { }
 
   selectCountries(countries: any[]) {
@@ -96,6 +127,21 @@ export class FiltersStateService {
     this.sources = sources;
   }
 
+  selectRetailSources(sources: any[]) {
+    this.retailSourcesSource.next(sources);
+    this.retailSources = sources;
+  }
+
+  selectRetailMediums(mediums: any[]) {
+    this.retailMediumsSource.next(mediums);
+    this.retailMediums = mediums;
+  }
+
+  selectRetailAudiences(audiences: any[]) {
+    this.retailAudiencesSource.next(audiences);
+    this.retailAudiences = audiences;
+  }
+
   convertFiltersToQueryParams() {
     this.periodQParams = { startDate: moment(this.period.startDate).format('YYYY-MM-DD'), endDate: moment(this.period.endDate).format('YYYY-MM-DD') };
     this.sectorsQParams = this.sectors && this.convertArrayToQueryParams(this.sectors, 'id');
@@ -104,6 +150,12 @@ export class FiltersStateService {
     this.retailersQParams = this.retailers && this.convertArrayToQueryParams(this.retailers, 'id');
     this.sourcesQParams = this.sources && this.convertArrayToQueryParams(this.sources, 'id');
     this.campaignsQParams = this.campaigns && this.convertArrayToQueryParams(this.campaigns, 'id');
+  }
+
+  convertRetailFiltersToQueryParams() {
+    this.retailSourcesQParams = this.retailSources && this.convertArrayToQueryParams(this.retailSources, 'id');
+    this.retailMediumsQParams = this.retailMediums && this.convertArrayToQueryParams(this.retailMediums, 'id');
+    this.retailAudiencesQParams = this.retailAudiences && this.convertArrayToQueryParams(this.retailAudiences, 'id');
   }
 
   convertArrayToQueryParams(array, param: string): string {
@@ -160,6 +212,11 @@ export class FiltersStateService {
   filtersChange(manualChange: boolean) {
     this.convertFiltersToQueryParams();
     this.filtersSource.next(manualChange);
+  }
+
+  retailFiltersChange() {
+    this.convertRetailFiltersToQueryParams();
+    this.retailFiltersSource.next();
   }
 }
 
