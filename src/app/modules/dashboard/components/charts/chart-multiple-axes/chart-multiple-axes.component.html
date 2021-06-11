@@ -3,7 +3,7 @@
     <app-chart-loader [hidden]="status > 1"></app-chart-loader>
 
     <!-- ready -->
-    <div [hidden]="status !== 2 || data?.length < 1" [id]="chartID" style="height: 100%"></div>
+    <div [ngClass]="{'chart-hidden': status !== 2 || data?.length < 1 }" [id]="chartID" style="height: 100%"></div>
 
     <!-- empty data -->
     <div [hidden]="status !== 2 || data?.length > 0" class="chart-error-container text-muted">

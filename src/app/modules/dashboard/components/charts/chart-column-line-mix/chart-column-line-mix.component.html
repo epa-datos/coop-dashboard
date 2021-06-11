@@ -3,15 +3,7 @@
     <app-chart-loader [hidden]="status > 1"></app-chart-loader>
 
     <!-- ready -->
-    <div [hidden]="status !== 2 || data?.length < 1" [id]="chartID" style="height: 100%"></div>
-
-    <!-- empty data -->
-    <div [hidden]="status !== 2 || data?.length > 0" class="chart-error-container text-muted">
-        <p class="text-center">
-            {{ 'general.withoutData' | translate }} <br>
-            {{ 'general.withoutData2' | translate }}
-        </p>
-    </div>
+    <div [hidden]="status !== 2" [id]="chartID" style="height: 100%"></div>
 
     <!-- error -->
     <div [hidden]="status !== 3" class="chart-error-container text-muted">
