@@ -53,7 +53,7 @@ export class CampaignInRetailService {
 
   getKpis() {
     if (!this.retailerID) {
-      return throwError('[campaign-in-retail.service]: not retailerID or countryID provided');
+      return throwError('[campaign-in-retail.service]: not retailerID provided');
     }
 
     let queryParams = this.concatedQueryParams();
@@ -64,12 +64,28 @@ export class CampaignInRetailService {
 
   getRoasBySector() {
     if (!this.retailerID) {
-      return throwError('[campaign-in-retail.service]: not retailerID or countryID provided');
+      return throwError('[campaign-in-retail.service]: not retailerID provided');
     }
 
     let queryParams = this.concatedQueryParams();
     let queryParamsR = this.concatedRetailerQueryParams();
 
     return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/in-retail/roas?${queryParams}&${queryParamsR}`);
+  }
+
+
+  /**** AUDIENCES SECTION
+  * audiences endpoints
+  * ****/
+
+  getAudiencesByMetric(metricType: string, subMetricType: string) {
+    if (!this.retailerID) {
+      return throwError('[campaign-in-retail.service]: not retailerID provided');
+    }
+
+    let queryParams = this.concatedQueryParams();
+    let queryParamsR = this.concatedRetailerQueryParams();
+
+    return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/in-retail/${metricType}/${subMetricType}?${queryParams}&${queryParamsR}`);
   }
 }

@@ -1,4 +1,4 @@
-<!-- TRÁFICO, CONVERSIONES, AUP & BR -->
+<!-- TRAFFIC AND CONVERSIONS - DEMOGRAPHICS -->
 <ng-container>
     <div class="row mt-4">
         <div class="col-12">
@@ -11,19 +11,19 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                            (click)="changeData('traffic', 1)">Tráfico</a>
+                            (click)="getDomographicsByMetric('traffic')">Tráfico</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                            (click)="changeData('conversions', 2)">Conversiones</a>
+                            (click)="getDomographicsByMetric('conversions')">Conversiones</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
-                            (click)="changeData('aup', 3)">AUP</a>
+                            (click)="getDomographicsByMetric('aup')">AUP</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 4}"
-                            (click)="changeData('br', 4)">BR</a>
+                            (click)="getDomographicsByMetric('bouncerate')">BR</a>
                     </li>
                 </ul>
             </div>
@@ -43,8 +43,8 @@
                         <span *ngSwitchCase="4" class="h4">BR por dispositivos</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-pictorial [data]="devices" name="devices" category="name" iconType="monitor"
-                            height="280px">
+                        <app-chart-pictorial name="aud-devices" [data]="demographics?.device"
+                            [status]="demoReqStatus[0].reqStatus" category="name" iconType="monitor" height="280px">
                         </app-chart-pictorial>
                     </div>
                 </div>
@@ -60,8 +60,8 @@
                         <span *ngSwitchCase="4" class="h4">BR por Género</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-pictorial [data]="gender" name="gender" category="name" iconType="man"
-                            height="280px">
+                        <app-chart-pictorial name="aud-gender" [data]="demographics?.gender"
+                            [status]="demoReqStatus[1].reqStatus" category="name" iconType="man" height="280px">
                         </app-chart-pictorial>
                     </div>
                 </div>
@@ -73,14 +73,12 @@
             <!-- devices -->
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
-                    <div class="card-header" [ngSwitch]="selectedTab1">
-                        <span *ngSwitchCase="1" class="h4">Tráfico por dispositivos</span>
-                        <span *ngSwitchCase="2" class="h4">Conversiones por dispositivos</span>
-                        <span *ngSwitchCase="3" class="h4">AUP por dispositivos</span>
-                        <span *ngSwitchCase="4" class="h4">BR por dispositivos</span>
+                    <div class="card-header">
+                        <span class="h4">AUP por dispositivos</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-bar [data]="devices" name="devices" valueFormat="USD" category="name" height="280px"
+                        <app-chart-bar name="aud-devices" [data]="demographics?.device"
+                            [status]="demoReqStatus[0].reqStatus" valueFormat="USD" category="name" height="280px"
                             [legendsByCategory]="true">
                         </app-chart-bar>
                     </div>
@@ -90,14 +88,12 @@
             <!-- gender -->
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
-                    <div class="card-header" [ngSwitch]="selectedTab1">
-                        <span *ngSwitchCase="1" class="h4">Tráfico por Género</span>
-                        <span *ngSwitchCase="2" class="h4">Conversiones por Género</span>
-                        <span *ngSwitchCase="3" class="h4">AUP por Género</span>
-                        <span *ngSwitchCase="4" class="h4">BR por Género</span>
+                    <div class="card-header">
+                        <span class="h4">AUP por Género</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-bar [data]="gender" name="gender" valueFormat="USD" category="name" height="280px"
+                        <app-chart-bar name="aud-gender" [data]="demographics?.gender"
+                            [status]="demoReqStatus[1].reqStatus" valueFormat="USD" category="name" height="280px"
                             [legendsByCategory]="true">
                         </app-chart-bar>
                     </div>
@@ -110,11 +106,8 @@
             <!-- devices -->
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
-                    <div class="card-header" [ngSwitch]="selectedTab1">
-                        <span *ngSwitchCase="1" class="h4">Tráfico por dispositivos</span>
-                        <span *ngSwitchCase="2" class="h4">Conversiones por dispositivos</span>
-                        <span *ngSwitchCase="3" class="h4">AUP por dispositivos</span>
-                        <span *ngSwitchCase="4" class="h4">BR por dispositivos</span>
+                    <div class="card-header">
+                        <span class="h4">BR por dispositivos</span>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -122,24 +115,26 @@
                                 <div class="chart-legend mt-0">
                                     <div class="legend-container">
                                         <div class="legend-square on color-1"></div>
-                                        <div class="legend-label">Desktop {{ desktopByBR[1].value }}%</div>
+                                        <div class="legend-label">Desktop {{ demographics?.deviceDesktop[1]?.value }}%
+                                        </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="desktopByBR" name="devices-desktop"
-                                    [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
-                                    height="280px">
+                                <app-chart-pictorial name="aud-devices-desktop" [data]="demographics?.deviceDesktop"
+                                    [status]="demoReqStatus[0].reqStatus" [uniqueDimensionConf]="{color: '#67B6DC'}"
+                                    category="name" iconType="monitor" height="280px">
                                 </app-chart-pictorial>
                             </div>
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend mt-0">
                                     <div class="legend-container">
                                         <div class="legend-square on color-2"></div>
-                                        <div class="legend-label">Mobile {{ mobileByBR[1].value }}%</div>
+                                        <div class="legend-label">Mobile {{ demographics?.deviceMobile[1]?.value }}%
+                                        </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="mobileByBR" name="devices-mobile"
-                                    [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
-                                    height="280px">
+                                <app-chart-pictorial name="aud-devices-mobile" [data]="demographics?.deviceMobile"
+                                    [status]="demoReqStatus[0].reqStatus" [uniqueDimensionConf]="{color: '#6794DC'}"
+                                    category="name" iconType="cellphone" height="280px">
                                 </app-chart-pictorial>
                             </div>
                         </div>
@@ -150,11 +145,8 @@
             <!-- gender -->
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
-                    <div class="card-header" [ngSwitch]="selectedTab1">
-                        <span *ngSwitchCase="1" class="h4">Tráfico por Género</span>
-                        <span *ngSwitchCase="2" class="h4">Conversiones por Género</span>
-                        <span *ngSwitchCase="3" class="h4">AUP por Género</span>
-                        <span *ngSwitchCase="4" class="h4">BR por Género</span>
+                    <div class="card-header">
+                        <span class="h4">BR por Género</span>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -162,12 +154,12 @@
                                 <div class="chart-legend mt-0">
                                     <div class="legend-container">
                                         <div class="legend-square on color-1"></div>
-                                        <div class="legend-label">Hombres {{ menByBR[1].value }}%</div>
+                                        <div class="legend-label">Hombres {{ demographics?.genderMan[0]?.value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="menByBR" name="gender-man"
-                                    [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man"
-                                    height="280px">
+                                <app-chart-pictorial name="aud-gender-man" [data]="demographics?.genderMan"
+                                    [status]="demoReqStatus[1].reqStatus" [uniqueDimensionConf]="{color: '#67B6DC'}"
+                                    category="name" iconType="man" height="280px">
                                 </app-chart-pictorial>
                             </div>
 
@@ -175,12 +167,13 @@
                                 <div class="chart-legend mt-0">
                                     <div class="legend-container">
                                         <div class="legend-square on color-2"></div>
-                                        <div class="legend-label">Mujeres {{ womenByBR[1].value }}%</div>
+                                        <div class="legend-label">Mujeres {{ demographics?.genderWoman[1]?.value }}%
+                                        </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="womenByBR" name="gender-woman"
-                                    [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman"
-                                    height="280px">
+                                <app-chart-pictorial name="aud-gender-woman" [data]="demographics?.genderWoman"
+                                    [status]="demoReqStatus[1].reqStatus" [uniqueDimensionConf]="{color: '#6794DC'}"
+                                    category="name" iconType="woman" height="280px">
                                 </app-chart-pictorial>
                             </div>
                         </div>
@@ -199,8 +192,10 @@
                     <span *ngSwitchCase="4" class="h4">BR por Edad</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-lollipop [data]="age" name="age" category="age"
-                        [valueFormat]="selectedTab1 !== 3 ? '%' : 'USD'" height="280px">
+                    <app-chart-lollipop name="aud-age" [data]="demographics?.age" category="age"
+                        [value]="selectedTab1 === 1 ? 'visits' : selectedTab1 === 2 ? 'sales' : selectedTab1 === 3 ? 'aup' : 'value'"
+                        [valueFormat]="selectedTab1 === 2 || selectedTab1 === 3 ? 'USD' :  selectedTab1 === 4 && '%'"
+                        height="280px" [status]="demoReqStatus[2].reqStatus">
                     </app-chart-lollipop>
                 </div>
             </div>
@@ -215,23 +210,39 @@
                     <span *ngSwitchCase="3" class="h4">AUP por Género y Edad</span>
                     <span *ngSwitchCase="4" class="h4">BR por Género y Edad</span>
                 </div>
-                <div class="card-body">
-                    <ng-container *ngIf="selectedTab1 !== 3">
-                        <app-chart-pyramid [data]="ageByGender" name="age-and-gender" valueFormat="%" height="280px">
-                        </app-chart-pyramid>
-                    </ng-container>
-                    <ng-container *ngIf="selectedTab1 === 3">
-                        <app-chart-pyramid [data]="ageByGender" name="age-and-gender-2" height="280px"
-                            valueFormat="USD">
-                        </app-chart-pyramid>
-                    </ng-container>
+                <div class="card-body" style="height: 328px">
+                    <!-- loader -->
+                    <app-chart-loader *ngIf="chartsInitLoad && demoReqStatus[3].reqStatus <= 1">
+                    </app-chart-loader>
+
+                    <!-- ready -->
+                    <app-chart-pyramid *ngIf="demographics?.genderByAge?.length > 0" name="aud-age-and-gender"
+                        [data]="demographics?.genderByAge" [status]="demoReqStatus[3].reqStatus"
+                        [valueFormat]="selectedTab1 === 2 || selectedTab1 === 3 ? 'USD' :  selectedTab1 === 4 && '%'"
+                        height="280px">
+                    </app-chart-pyramid>
+
+                    <!-- empty data -->
+                    <div *ngIf="demoReqStatus[3].reqStatus === 2 && demographics?.genderByAge?.length === 0"
+                        class="chart-error-container text-muted">
+                        <p class="text-center">
+                            {{ 'general.withoutData' | translate }} <br>
+                            {{ 'general.withoutData2' | translate }}
+                        </p>
+                    </div>
+
+                    <!-- error -->
+                    <div *ngIf="chartsInitLoad && demoReqStatus[3].reqStatus === 3"
+                        class="chart-error-container text-muted">
+                        <span> {{ 'general.errorData' | translate }}</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </ng-container>
 
-<!-- TRAFICO Y CONVERSIONES POR DIA Y HORA -->
+<!-- TRAFFIC AND CONVERSIONS - WEEKDAYS / HOURS -->
 <ng-container>
     <div class="row mt-5">
         <div class="col-12">
@@ -244,11 +255,11 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                            (click)="selectedTab2 = 1">Tráfico</a>
+                            (click)="getWeekdaysAndHoursByMetric('traffic')">Tráfico</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                            (click)="selectedTab2 = 2">Conversiones</a>
+                            (click)="getWeekdaysAndHoursByMetric('conversions')">Conversiones</a>
                     </li>
                 </ul>
             </div>
@@ -263,7 +274,8 @@
                         por día de la semana y hora del día</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-heat-map [data]="heatmapData" name="weekday-sesions" height="100%">
+                    <app-chart-heat-map name="aud-weekday-sesions" [data]="weekDaysAndHours?.weekdayAndHour"
+                        [status]="weekDaysAndHoursReqStatus[0].reqStatus" categoryX="weekdayName" height="100%">
                     </app-chart-heat-map>
                 </div>
             </div>
@@ -275,7 +287,8 @@
                         por día de la semana</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-bar-horizontal [data]="trafficByDay" name="traffic-day" category='weekday' value='value'
+                    <app-chart-bar-horizontal name="aud-traffic-day" [data]="weekDaysAndHours?.weekday"
+                        [status]="weekDaysAndHoursReqStatus[1].reqStatus" category='weekdayName' value='value'
                         height="250px">
                     </app-chart-bar-horizontal>
                 </div>
@@ -287,8 +300,8 @@
                         por hora del día</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-lollipop [data]="trafficByHour" name="traffic-hour" category="hour" value="visits"
-                        height="250px">
+                    <app-chart-lollipop name="aud-traffic-hour" [data]="weekDaysAndHours?.hour"
+                        [status]="weekDaysAndHoursReqStatus[2].reqStatus" category="hour" height="250px">
                     </app-chart-lollipop>
                 </div>
             </div>
@@ -303,12 +316,18 @@
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">Conversiones y tráfico por día</span>
+                    <span class="h4">Conversiones y tráfico por día de la semana</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-line-comparison [data]="conversionsTrafficPerDay" name="conv-tra-day"
-                        valueName1="Conversiones" valueName2="Tráfico">
-                    </app-chart-line-comparison>
+                    <!-- <app-chart-multiple-axes name="aud-conv-tra-day" category="weekday" value1="conversions" value2="visits"
+                    valueName1="Conversiones" valueName2="Tráfico"
+                    [data]="conversionsVsTraffic?.weekday" [status]="conversionsVsTrafficReqStatus[0].reqStatus">
+                    </app-chart-multiple-axes> -->
+
+                    <app-chart-column-line-mix name="aud-conv-tra-day" [data]="conversionsVsTraffic?.weekday"
+                        [status]="conversionsVsTrafficReqStatus[0].reqStatus" category="weekdayName"
+                        columnValue="visits" lineValue="conversions" columnName="Tráfico" lineName="Conversiones">
+                    </app-chart-column-line-mix>
                 </div>
             </div>
         </div>
@@ -318,44 +337,79 @@
                     <span class="h4">Conversiones y tráfico por hora del día</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-line-comparison [data]="conversionsTrafficPerHour" name="conv-tra-hour"
-                        valueName1="Conversiones" valueName2="Tráfico" inputDateFormat="HH:mm">
-                    </app-chart-line-comparison>
+                    <!-- <app-chart-multiple-axes name="aud-conv-tra-hour" category="hour" value1="conversions" value2="visits"
+                        valueName1="Conversiones" valueName2="Tráfico"
+                        [data]="conversionsVsTraffic?.hour" [status]="conversionsVsTrafficReqStatus[1].reqStatus" inputDateFormat="HH:mm">
+                    </app-chart-multiple-axes> -->
+
+                    <app-chart-column-line-mix name="aud-conv-tra-hour" [data]="conversionsVsTraffic?.hour"
+                        [status]="conversionsVsTrafficReqStatus[1].reqStatus" category="hour" columnValue="visits"
+                        lineValue="conversions" columnName="Tráfico" lineName="Conversiones" joinTextInTooltip="a las">
+                    </app-chart-column-line-mix>
                 </div>
             </div>
         </div>
     </div>
 </ng-container>
 
-<!-- AUDIENCIAS -->
-<ng-container>
-    <div class="row mt-5">
-        <div class="col-12">
-            <span class="h3">Audiencias - Afinidad y Mercado</span>
-        </div>
-        <div class="col-12 col-lg-6 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Categoría de afinidad (cobertura)</span>
-                </div>
-                <div class="card-body">
-                    <p class="text-center text-muted">
-                        Work in progress...
-                    </p>
+<!-- INTERESTS -->
+<div class="row mt-5">
+    <div class="col-12">
+        <span class="h3">Audiencias - Afinidad y Mercado</span>
+    </div>
+    <div class="col-12 col-xl-6 mt-4">
+        <div class="card height-fluid">
+            <div class="card-header header-info">
+                <span class="h4 mr-2 mb-0">Categoría de afinidad</span>
+                <div class="info-popover" ngbDropdown>
+                    <a ngbDropdownToggle>
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <div class="content" ngbDropdownMenu>
+                        <p>
+                            Las categorías de afinidad se utilizan para llegar a clientes potenciales, para que conozcan
+                            la marca o producto. Estos son usuarios que se encuentran más arriba en el embudo de compra,
+                            cerca del comienzo del proceso.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-12 col-lg-6 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Segmento de mercado</span>
-                </div>
-                <div class="card-body">
-                    <p class="text-center text-muted">
-                        Work in progress...
-                    </p>
-                </div>
+            <div class="card-body sm-chart-container">
+                <app-chart-bar-horizontal name="aud-interests-affinity-category" [data]="interests?.affinityCategory"
+                    [status]="interestsReqStatus[0].reqStatus" value="users" [singleColorBars]="true">
+                </app-chart-bar-horizontal>
+
+                <small class="text-muted mt-2 d-block d-sm-none">
+                    Para mejor visualización usar la versión de <strong>Escritorio</strong>
+                </small>
             </div>
         </div>
     </div>
-</ng-container>
+    <div class="col-12 col-xl-6 mt-4">
+        <div class="card height-fluid">
+            <div class="card-header header-info">
+                <span class="h4 mr-2 mb-0">Segmento de mercado</span>
+                <div class="info-popover" ngbDropdown>
+                    <a ngbDropdownToggle>
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <div class="content" ngbDropdownMenu>
+                        <p>
+                            Es más probable que los usuarios de estos segmentos estén listos para comprar productos o
+                            servicios en la categoría especificada. Estos son los usuarios que se encuentran más abajo
+                            en el embudo de compra, cerca del final del proceso.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body sm-chart-container">
+                <app-chart-bar-horizontal name="aud-interests-market-segment" [data]="interests?.marketSegment"
+                    [status]="interestsReqStatus[1].reqStatus" value="users" [singleColorBars]="true">
+                </app-chart-bar-horizontal>
+                <small class="text-muted mt-2 d-block d-sm-none">
+                    Para mejor visualización usar la versión de <strong>Escritorio</strong>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>

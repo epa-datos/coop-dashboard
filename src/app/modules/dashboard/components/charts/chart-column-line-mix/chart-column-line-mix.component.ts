@@ -13,7 +13,6 @@ import { AppStateService } from 'src/app/services/app-state.service';
 })
 export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input() data;
   @Input() category: string = 'category';
   @Input() columnValue: string = 'column_value';
   @Input() lineValue: string = 'line_value';
@@ -23,6 +22,8 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDes
   @Input() height: string = '350px' // height property value valid in css
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
+  @Input() joinTextInTooltip: string = 'en';
+  @Input() zebraBars: boolean;
 
   chartID;
 
@@ -35,6 +36,16 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDes
     this.chartID = `chart-column-line-mix-${this.name}`
   }
 
+  private _data;
+  get data() {
+    return this._data;
+  }
+  @Input() set data(value) {
+    this._data = value;
+    this.chart && this.loadChartData(this.chart);
+  }
+
+  chart;
   langSub: Subscription;
 
   constructor(
@@ -61,7 +72,8 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDes
 
     // Create chart instance
     var chart = am4core.create(this.chartID, am4charts.XYChart);
-    chart.data = this.data;
+    // chart.data = this.data;
+    this.loadChartData(chart);
     loadLanguage(chart, lang);
     // chart.exporting.menu = new am4core.ExportMenu();
 
@@ -81,7 +93,7 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDes
     columnSeries.dataFields.valueY = this.columnValue;
     columnSeries.dataFields.categoryX = this.category;
 
-    columnSeries.columns.template.tooltipText = `[#fff font-size: 15px]{name} en {categoryX}:\n[/][#fff font-size: 16px]{valueY}[/] [#fff]{additional} ${this.valueFormat ? this.valueFormat : ''}[/]`
+    columnSeries.columns.template.tooltipText = `[#fff font-size: 15px]{name} ${this.joinTextInTooltip} {categoryX}:\n[/][#fff font-size: 17px bold]{valueY}[/] [#fff]{additional} ${this.valueFormat ? this.valueFormat : ''}[/]`
     columnSeries.columns.template.propertyFields.fillOpacity = 'fillOpacity';
     columnSeries.columns.template.propertyFields.stroke = 'stroke';
     columnSeries.columns.template.propertyFields.strokeWidth = 'strokeWidth';
@@ -90,23 +102,26 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDes
     columnSeries.columns.template.column.cornerRadiusTopLeft = 10;
     columnSeries.columns.template.column.cornerRadiusTopRight = 10;
     columnSeries.columns.template.column.fillOpacity = 0.8;
-    columnSeries.columns.template.adapter.add('fill', function (fill, target) {
-      if (target.dataItem && target.dataItem._index % 2) {
-        return am4core.color('#85A8E3');
-      }
-      else {
-        return fill;
-      }
-    });
 
-    columnSeries.columns.template.adapter.add('stroke', (value, target, key) => {
-      if (target.dataItem && target.dataItem._index % 2) {
-        return am4core.color('#85A8E3');
-      }
-      else {
-        return value;
-      }
-    });
+    if (this.zebraBars) {
+      columnSeries.columns.template.adapter.add('fill', function (fill, target) {
+        if (target.dataItem && target.dataItem._index % 2) {
+          return am4core.color('#85A8E3');
+        }
+        else {
+          return fill;
+        }
+      });
+
+      columnSeries.columns.template.adapter.add('stroke', (value, target, key) => {
+        if (target.dataItem && target.dataItem._index % 2) {
+          return am4core.color('#85A8E3');
+        }
+        else {
+          return value;
+        }
+      });
+    }
 
     let lineSeries = chart.series.push(new am4charts.LineSeries());
     lineSeries.name = this.lineName ? this.lineName : this.lineValue;
@@ -120,14 +135,21 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDes
 
     let bullet = lineSeries.bullets.push(new am4charts.Bullet());
     bullet.fill = am4core.color('#fdd400'); // tooltips grab fill from parent by default
-    bullet.tooltipText = `[#fff font-size: 15px]{name} en {categoryX}:\n[/][#fff font-size: 16px]{valueY}[/] [#fff]{additional} ${this.valueFormat ? this.valueFormat : ''}[/]`
+    bullet.tooltipText = `[#fff font-size: 15px]{name} ${this.joinTextInTooltip} {categoryX}:\n[/][#fff font-size: 17px bold]{valueY}[/] [#fff]{additional} ${this.valueFormat ? this.valueFormat : ''}[/]`
     let circle = bullet.createChild(am4core.Circle);
     circle.radius = 4;
     circle.fill = am4core.color('#fff');
     circle.strokeWidth = 3;
 
     // chart.responsive.enabled = true;
+    chart.cursor = new am4charts.XYCursor();
   }
+
+  loadChartData(chart) {
+    chart.data = this.data;
+    this.chart = chart;
+  }
+
 
   ngOnDestroy() {
     this.langSub?.unsubscribe();
