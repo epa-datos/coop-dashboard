@@ -46,3 +46,40 @@
         }
     }
 }
+
+.card-header.header-info {
+    align-items: center;
+    display: flex;
+
+    .info-popover {
+        i {
+            color: #c7c7c7;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .content {
+            padding: 12px;
+           
+            p {
+                font-size: 12.5px;
+                line-height: 18px;
+                color: #000000;
+                margin: 0;
+
+                @media screen and (min-width: 600px) {
+                    width: 250px;
+                }
+            }
+        }
+    }
+}
+
+.sm-chart-container {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
