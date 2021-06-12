@@ -74,11 +74,14 @@ export class CampaignInRetailService {
   }
 
 
-  /**** AUDIENCES SECTION
-  * audiences endpoints
-  * ****/
-
-  getAudiencesByMetric(metricType: string, subMetricType: string) {
+  /**
+   *  GENERIC ENDPOINT
+   * For endponts with a metric and optional submetric
+   * @param metricType 
+   * @param [subMetricType] 
+   * @returns  
+   */
+  getDataByMetric(metricType: string, subMetricType?: string) {
     if (!this.retailerID) {
       return throwError('[campaign-in-retail.service]: not retailerID provided');
     }
@@ -86,6 +89,6 @@ export class CampaignInRetailService {
     let queryParams = this.concatedQueryParams();
     let queryParamsR = this.concatedRetailerQueryParams();
 
-    return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/in-retail/${metricType}/${subMetricType}?${queryParams}&${queryParamsR}`);
+    return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/in-retail/${metricType}${subMetricType ? `/${subMetricType}` : ''}?${queryParams}&${queryParamsR}`);
   }
 }
