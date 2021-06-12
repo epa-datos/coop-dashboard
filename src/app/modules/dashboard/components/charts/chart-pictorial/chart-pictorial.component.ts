@@ -116,7 +116,7 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit, OnDestroy
 
       series.tooltip.label.adapter.add('text', function (text, target) {
         if (target.dataItem._index === 0) return '';
-        const percent = Math.round(target.dataItem.values.value.value);
+        const percent = target.dataItem.values.value.value;
         return `${percent}%`;
       });
     }
