@@ -143,6 +143,7 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
       (resp: any[]) => {
 
         if (resp?.length < 1) {
+          this.kpisReqStatus = 2;
           return;
         }
 
@@ -172,6 +173,7 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
     this.campInRetailService.getRoasBySector().subscribe(
       (resp: any[]) => {
         if (resp?.length < 1) {
+          this.roasReqStatus = 2;
           return;
         }
 
