@@ -3,11 +3,13 @@
     <div class="col-12 mt-4 mb-5">
         <div class="card">
             <div class="card-header">
-                <span class="h4">Porcentaje de salidas, rebote y páginas vistas </span>
+                <span class="h4">Porcentaje de rebote y páginas vistas </span>
             </div>
             <div class="card-body">
-                <app-chart-line-series [series]="generalBehaviour" name="general-behaviour">
-                </app-chart-line-series>
+                <app-chart-multiple-axes name="bh-general-behavior" value1="page_views" valueName1="Páginas vistas"
+                    value2="bounce_rate" valueName2="Porcentaje de rebote" valueFormat2="%"
+                    [status]="brVsPagesViewedReqStatus" [data]="brVsPagesViewed">
+                </app-chart-multiple-axes>
             </div>
         </div>
     </div>
@@ -17,12 +19,13 @@
 <div class="row">
     <!-- sessions new vs returning visitor -->
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
-        <div class="card">
+        <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">Visitantes nuevos vs Visitantes recurrentes</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="sessionsVsRetVisitor" name="sessions-ret-visitor" legendPosition="bottom">
+                <app-chart-pie name="bh-sessions-ret-visitor" value="Value" [data]="behavior.newUsersVsCurrent"
+                    [status]="behaviorReqStatus[0].reqStatus" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -30,12 +33,12 @@
 
     <!-- sales new vs returning visitor -->
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
-        <div class="card">
+        <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">Ventas Visitantes nuevos vs Visitantes recurrentes</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="salesVsRetVisitor" name="sales-ret-visitor" legendPosition="bottom">
+                <app-chart-pie name="bh-sales-ret-visitor" [data]="salesVsRetVisitor" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -43,12 +46,13 @@
 
     <!-- sales by conversion source -->
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
-        <div class="card">
+        <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">Ventas por Fuente de conversión</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="salesByConversionSource" name="sales-by-conv-sorce" legendPosition="bottom">
+                <app-chart-pie name="bh-sales-by-conv-sorce" value="Value" [data]="behavior.salesBySource"
+                    [status]="behaviorReqStatus[1].reqStatus" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -56,12 +60,13 @@
 
     <!-- sales by sector -->
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
-        <div class="card">
+        <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">Ventas por Sector</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="salesBySector" name="sales-by-sorce" legendPosition="bottom">
+                <app-chart-pie name="bh-sales-by-sorce" value="Value" [data]="behavior.salesBySector"
+                    [status]="behaviorReqStatus[2].reqStatus" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -76,12 +81,13 @@
 
     <!-- sessions by audience type -->
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
-        <div class="card">
+        <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">Sesiones por tipo de audiencia</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="sessionsByAudience" name="sessions-by-audience" legendPosition="bottom">
+                <app-chart-pie name="bh-sessions-by-audience" value="Value" [data]="behavior.sessionsByAudience"
+                    [status]="behaviorReqStatus[3].reqStatus" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -89,12 +95,12 @@
 
     <!-- new users by audience type -->
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
-        <div class="card">
+        <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">Usuarios nuevos por tipo de audiencia</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="sessionsByAudience" name="users-by-audience" legendPosition="bottom">
+                <app-chart-pie name="bh-users-by-audience" [data]="sessionsByAudience" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -102,12 +108,12 @@
 
     <!-- quantity by audience type -->
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
-        <div class="card">
+        <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">Cantidad por tipo de audiencia</span>
             </div>
             <div class="card-body">
-                <app-chart-bar [data]="quantityByAudience" name="quantity-by-audience" legendPosition="bottom">
+                <app-chart-bar name="bh-quantity-by-audience" [data]="quantityByAudience" legendPosition="bottom">
                 </app-chart-bar>
             </div>
         </div>
@@ -120,7 +126,7 @@
                 <span class="h4">Revenue y AUP por tipo de audiencia</span>
             </div>
             <div class="card-body">
-                <app-chart-column-line-mix [data]="revenueVsAupAudience" name="revenue-aup-audience"
+                <app-chart-column-line-mix name="bh-revenue-aup-audience" [data]="revenueVsAupAudience"
                     columnValue="revenue" columnName="Revenue" lineValue="aup" lineName="AUP" valueFormat="USD">
                 </app-chart-column-line-mix>
             </div>
