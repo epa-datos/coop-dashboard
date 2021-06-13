@@ -1,147 +1,54 @@
-<div class="conversion-wrapper">
-    <div class="row mt-4 mb-5">
-        <div class="col-12 col-md-4" *ngFor="let stat of stats">
-            <app-card-stat [stat]="stat" [height]="auto"></app-card-stat>
+<!-- KPIS PERFOMANCE -->
+<div class="row mt-4">
+    <div class="col-12 col-md-4" *ngFor="let kpi of kpis">
+        <app-card-stat [stat]="kpi" [height]="auto"></app-card-stat>
+    </div>
+    <div class="col-12 mt--3 mt-xl-2" [hidden]="kpisReqStatus !== 3">
+        <p class="text-center text-muted mb-0">
+            Error al consultar datos
+        </p>
+    </div>
+</div>
+
+<!-- PRODUCTS TABLE -->
+<div class="row mt-5">
+    <div class="col-12">
+        <app-generic-table [displayedColumns]="productsTableColumns" [tableData]="products"
+            [tableDataChange]="products.data">
+        </app-generic-table>
+    </div>
+</div>
+
+<!-- USERS VS TRANSACCIONS / CANTIDAD VS AUP -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="pills-container">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab === 1}"
+                        (click)="getDataByMetric('conversions-vs-users')">Usuarios - Transacciones</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab === 2}"
+                        (click)="getDataByMetric('quantity-vs-aup')">Cantidad - AUP</a>
+                </li>
+            </ul>
         </div>
     </div>
-
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="adaptable-container">
-                <table mat-table [dataSource]="dataSource">
-                    <!-- category column -->
-                    <ng-container matColumnDef="category">
-                        <th mat-header-cell *matHeaderCellDef> Categoría </th>
-                        <td mat-cell *matCellDef="let element"> {{element.category}} </td>
-                    </ng-container>
-
-                    <!-- product column -->
-                    <ng-container matColumnDef="product">
-                        <th mat-header-cell *matHeaderCellDef [style.width.%]="30"> Producto </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div class="lg-container">
-                                <span #tooltip="matTooltip" md-raised-button [matTooltip]="element.product"
-                                    matTooltipPosition="right" matTooltipClass="custom-tooltip">
-                                    {{element.product}}
-                                </span>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <!-- amount -->
-                    <ng-container matColumnDef="amount">
-                        <th mat-header-cell *matHeaderCellDef> Cantidad</th>
-                        <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
-                    </ng-container>
-
-                    <!-- yoy_amount -->
-                    <ng-container matColumnDef="yoy_amount">
-                        <th mat-header-cell *matHeaderCellDef> %YoY</th>
-                        <td mat-cell *matCellDef="let element">
-                            <div class="value-container">
-                                <span>{{element.yoy_amount}}%</span>
-                                <i class="fas fa-arrow-up text-success"
-                                    *ngIf="element.yoy_amount > element.yoy_amount_before"></i>
-                                <i class="fas fa-equals text-warning"
-                                    *ngIf="element.yoy_amount === element.yoy_amount_before"></i>
-                                <i class="fas fa-arrow-down text-danger"
-                                    *ngIf="element.yoy_amount < element.yoy_amount_before"></i>
-                            </div>
-                        </td>
-
-                    </ng-container>
-
-                    <!-- product_revenue -->
-                    <ng-container matColumnDef="product_revenue">
-                        <th mat-header-cell *matHeaderCellDef> Revenue del producto</th>
-                        <td mat-cell *matCellDef="let element"> {{element.product_revenue}} </td>
-                    </ng-container>
-
-                    <!-- yoy_product_revenue -->
-                    <ng-container matColumnDef="yoy_product_revenue">
-                        <th mat-header-cell *matHeaderCellDef> %YoY</th>
-                        <td mat-cell *matCellDef="let element">
-                            <div class="value-container">
-                                <span>{{element.yoy_product_revenue}}% </span>
-                                <i class="fas fa-arrow-up text-success"
-                                    *ngIf="element.yoy_product_revenue > element.yoy_product_revenue_before"></i>
-                                <i class="fas fa-equals text-warning"
-                                    *ngIf="element.yoy_product_revenue === element.yoy_product_revenue_before"></i>
-                                <i class="fas fa-arrow-down text-danger"
-                                    *ngIf="element.yoy_product_revenue < element.yoy_product_revenue_before"></i>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <!-- aup -->
-                    <ng-container matColumnDef="aup">
-                        <th mat-header-cell *matHeaderCellDef> AUP</th>
-                        <td mat-cell *matCellDef="let element"> {{element.aup}} </td>
-                    </ng-container>
-
-                    <!-- yoy_aup -->
-                    <ng-container matColumnDef="yoy_aup">
-                        <th mat-header-cell *matHeaderCellDef> %YoY</th>
-                        <td mat-cell *matCellDef="let element">
-                            <div class="value-container">
-                                <span>{{element.yoy_aup}}%</span>
-                                <i class="fas fa-arrow-up text-success"
-                                    *ngIf="element.yoy_aup > element.yoy_aup_before"></i>
-                                <i class="fas fa-equals text-warning"
-                                    *ngIf="element.yoy_aup === element.yoy_aup_before"></i>
-                                <i class="fas fa-arrow-down text-danger"
-                                    *ngIf="element.yoy_aup < element.yoy_aup_before"></i>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <!-- disclaimer column -->
-                    <ng-container matColumnDef="disclaimer">
-                        <td mat-footer-cell *matFooterCellDef colspan="3">
-                            <div class="text-danger text-center" *ngIf="getReqStatus === 3">
-                                Ocurrió un error al consultar los usuarios
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
-                        [hidden]="getReqStatus !== 3"></tr>
-                </table>
+    <div class="col-12 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4" [hidden]="selectedTab === 2">Usuarios vs Transacciones</span>
+                <span class="h4" [hidden]="selectedTab === 1">Cantidad vs AUP</span>
             </div>
-            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-        </div>
-    </div>
-
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="pills-container">
-                <ul class="nav nav-pills nav-fill">
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab === 1}"
-                            (click)="changeData('users', 1)">Usuarios - Transacciones</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab === 2}"
-                            (click)="changeData('amount_aup', 2)">Cantidad - AUP</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-12 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4" [hidden]="selectedTab === 2">Usuarios vs Transacciones</span>
-                    <span class="h4" [hidden]="selectedTab === 1">Cantidad vs AUP</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-line-comparison [data]="data" name="users-vs-transaccions"
-                        [valueName1]="selectedTab === 1 ? 'Usuarios' : 'Cantidad'"
-                        [valueName2]="selectedTab === 1 ? 'Transacciones' : 'AUP'"
-                        [valueFormat2]="selectedTab === 2 && 'USD'" height="250px">
-                    </app-chart-line-comparison>
-                </div>
+            <div class="card-body">
+                <app-chart-multiple-axes name="conv-users-amount" [value1]="selectedTab === 1 ? 'users' : 'quantity'"
+                    [valueName1]="selectedTab === 1 ? 'Usuarios' : 'Cantidad'"
+                    [value2]="selectedTab === 1 ? 'transactions' : 'aup'"
+                    [valueName2]="selectedTab === 1 ? 'Transacciones' : 'AUP'"
+                    [valueFormat2]="selectedTab === 2 && 'USD'" [data]="usersAndAmount"
+                    [status]="usersAndAmountReqStatus">
+                </app-chart-multiple-axes>
             </div>
         </div>
     </div>

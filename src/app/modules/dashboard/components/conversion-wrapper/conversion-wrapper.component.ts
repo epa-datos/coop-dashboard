@@ -1,111 +1,192 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
+import { Subscription } from 'rxjs';
+import { CampaignInRetailService } from '../../services/campaign-in-retail.service';
+import { FiltersStateService } from '../../services/filters-state.service';
+import { TableItem } from '../generic-table/generic-table.component';
 
 @Component({
   selector: 'app-conversion-wrapper',
   templateUrl: './conversion-wrapper.component.html',
   styleUrls: ['./conversion-wrapper.component.scss']
 })
-export class ConversionWrapperComponent implements OnInit, AfterViewInit {
+export class ConversionWrapperComponent implements OnInit {
 
-  stats: any[] = [
+  // kpis
+  kpis: any[] = [
     {
-      metricTitle: 'Cantidad',
-      metricValue: '000',
+      metricTitle: 'cantidad',
+      metricName: 'quantity',
+      metricValue: 0,
+      metricFormat: 'integer',
       icon: 'fas fa-chart-line',
       iconBg: '#172b4d'
     },
     {
-      metricTitle: 'Revenue',
-      metricValue: '0000',
+      metricTitle: 'revenue',
+      metricName: 'revenue',
+      metricValue: 0,
+      metricFormat: 'currency',
       icon: 'fas fa-hand-holding-usd',
       iconBg: '#2f9998'
-
     },
     {
-      metricTitle: 'AUP',
-      metricValue: '0%',
+      metricTitle: 'aup',
+      metricName: 'aup',
+      metricValue: 0,
+      metricFormat: 'currency',
       icon: 'fas fa-file-invoice-dollar',
       iconBg: '#a77dcc'
     }
   ];
+  kpisReqStatus: number = 0;
 
-  displayedColumns: string[] = ['category', 'product', 'amount', 'yoy_amount', 'product_revenue', 'yoy_product_revenue', 'aup', 'yoy_aup'];
-  private categories = [
-    { category: 'Category 1', product: 'Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1 Product 1', amount: 12, yoy_amount: 12, yoy_amount_before: 10, product_revenue: 50000, yoy_product_revenue: 15, yoy_product_revenue_before: 17, aup: 820, yoy_aup: 8, yoy_aup_before: 8 },
-    { category: 'Category 2', product: 'Product 2', amount: 8, yoy_amount: 4, yoy_amount_before: 6, product_revenue: 20000, yoy_product_revenue: 7, yoy_product_revenue_before: 17, aup: 650, yoy_aup: 4, yoy_aup_before: 6 },
-    { category: 'Category 3', product: 'Product 3', amount: 4, yoy_amount: -4, yoy_amount_before: -2, product_revenue: 10000, yoy_product_revenue: -2, yoy_product_revenue_before: -2, aup: 350, yoy_aup: -1, yoy_aup_before: -2 }
-  ]
-  dataSource = new MatTableDataSource<any>(this.categories);
+  // products
+  productsTableColumns: TableItem[] = [
+    {
+      name: 'category',
+      title: 'Categoría'
+    },
+    {
+      name: 'product',
+      title: 'Producto',
+      tooltip: true,
+      maxWidthTdPercentage: 25,
+      maxWidthSpan: '400px',
+    },
+    {
+      name: 'amount',
+      title: 'Cantidad',
+      textAlign: 'center',
+      formatValue: 'integer'
+    },
+    {
+      name: 'yoy_amount',
+      title: '%YoY',
+      textAlign: 'center',
+      // formatValue: 'percentage'
+    },
+    {
+      name: 'product_revenue',
+      title: 'Revenue del producto',
+      textAlign: 'center',
+      formatValue: 'currency'
+    },
+    {
+      name: 'yoy_product_revenue',
+      title: '%YoY',
+      textAlign: 'center',
+      // formatValue: 'percentage'
+    },
+    {
+      name: 'aup',
+      title: 'AUP',
+      textAlign: 'center',
+      formatValue: 'currency'
+    },
+    {
+      name: 'yoy_aup',
+      title: '%YoY',
+      textAlign: 'center',
+      // formatValue: 'percentage'
+    }
+  ];
+  products = {
+    data: [],
+    reqStatus: 0
+  };
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  usersVsTransacctions = [
-    { date: moment(new Date(2021, 3, 15)).format('MMM DD'), value1: 1200, value2: 200 },
-    { date: moment(new Date(2021, 3, 16)).format('MMM DD'), value1: 1600, value2: 230 },
-    { date: moment(new Date(2021, 3, 17)).format('MMM DD'), value1: 1400, value2: 180 },
-    { date: moment(new Date(2021, 3, 18)).format('MMM DD'), value1: 1250, value2: 80 },
-    { date: moment(new Date(2021, 3, 19)).format('MMM DD'), value1: 800, value2: 60 },
-    { date: moment(new Date(2021, 3, 20)).format('MMM DD'), value1: 1000, value2: 110 },
-    { date: moment(new Date(2021, 3, 21)).format('MMM DD'), value1: 1100, value2: 120 }
-  ]
-
-  amountVsAUP = [
-    { date: moment(new Date(2021, 3, 15)).format('MMM DD'), value1: 1200, value2: 400 },
-    { date: moment(new Date(2021, 3, 16)).format('MMM DD'), value1: 1600, value2: 810 },
-    { date: moment(new Date(2021, 3, 17)).format('MMM DD'), value1: 1400, value2: 320 },
-    { date: moment(new Date(2021, 3, 18)).format('MMM DD'), value1: 1250, value2: 120 },
-    { date: moment(new Date(2021, 3, 19)).format('MMM DD'), value1: 800, value2: 345 },
-    { date: moment(new Date(2021, 3, 20)).format('MMM DD'), value1: 1000, value2: 850 },
-    { date: moment(new Date(2021, 3, 21)).format('MMM DD'), value1: 1100, value2: 900 }
-  ]
-
-  data: any[] = this.usersVsTransacctions;
-
+  // users vs transactions & amount vs aup
+  usersAndAmount: any[] = [];
+  usersAndAmountReqStatus: number = 0;
   selectedTab: number = 1;
 
-  constructor() { }
+  generalFiltersSub: Subscription;
+  retailFiltersSub: Subscription;
+
+  constructor(
+    private filtersStateService: FiltersStateService,
+    private campInRetailService: CampaignInRetailService
+  ) { }
 
   ngOnInit(): void {
+    this.getAllData();
+
+    this.generalFiltersSub = this.filtersStateService.filtersChange$.subscribe(() => {
+      this.getAllData();
+    })
+
+    this.retailFiltersSub = this.filtersStateService.retailFiltersChange$.subscribe(() => {
+      this.getAllData();
+    });
   }
 
-  ngAfterViewInit() {
-    this.loadPaginator();
+  getAllData() {
+    this.getKpis();
+    this.getProducts();
+    this.getDataByMetric(this.selectedTab === 1 ? 'conversions-vs-users' : 'quantity-vs-aup');
   }
 
-  loadPaginator() {
-    // paginator setup
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Registros por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
-    this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
-      if (length == 0 || pageSize == 0) { return `0 de ${length}`; }
+  getKpis() {
+    this.kpisReqStatus = 1;
+    this.campInRetailService.getDataByMetric('conversions', 'performance').subscribe(
+      (resp: any[]) => {
+        if (resp?.length < 1) {
+          this.kpisReqStatus = 2;
+          return;
+        }
 
-      length = Math.max(length, 0);
+        for (let i = 0; i < this.kpis.length; i++) {
+          const baseObj = resp.find(item => item.name === this.kpis[i].metricName);
+          this.kpis[i].metricValue = baseObj.value;
+        }
 
-      const startIndex = page * pageSize;
-
-      // If the start index exceeds the list length, do not try and fix the end index to the end.
-      const endIndex = startIndex < length ?
-        Math.min(startIndex + pageSize, length) :
-        startIndex + pageSize;
-
-      return `${startIndex + 1} - ${endIndex} de ${length}`;
-    }
+        this.kpisReqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[conversion-wrapper.component]: ${errorMsg}`);
+        this.kpisReqStatus = 3;
+      });
   }
 
+  getProducts() {
+    this.products.reqStatus = 1;
+    this.campInRetailService.getDataByMetric('conversions', 'products').subscribe(
+      (products: any[]) => {
+        // provisional until data exists
+        this.products.data = products.map(item => {
+          return { ...item, yoy_amount: '-', yoy_product_revenue: '-', yoy_aup: '-' };
+        });
 
-  changeData(category, selectedTab) {
-    if (category === 'users') {
-      this.data = this.usersVsTransacctions
-    } else if (category === 'amount_aup') {
-      this.data = this.amountVsAUP;
-    }
-
-    this.selectedTab = selectedTab;
+        this.products.reqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[conversion-wrapper.component]: ${errorMsg}`);
+        this.products.reqStatus = 3;
+      });
   }
 
+  getDataByMetric(metricType: string) {
+    this.usersAndAmountReqStatus = 1;
+    this.campInRetailService.getDataByMetric(metricType).subscribe(
+      (resp: any[]) => {
+        this.usersAndAmount = resp;
+
+        this.usersAndAmountReqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[conversion-wrapper.component]: ${errorMsg}`);
+        this.usersAndAmountReqStatus = 3;
+      });
+
+    this.selectedTab = metricType === 'conversions-vs-users' ? 1 : 2
+  }
+
+  ngOnDestroy() {
+    this.generalFiltersSub?.unsubscribe();
+    this.retailFiltersSub?.unsubscribe();
+  }
 }
