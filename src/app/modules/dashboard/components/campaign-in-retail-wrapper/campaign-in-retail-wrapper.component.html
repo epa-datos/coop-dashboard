@@ -25,7 +25,7 @@
     <div *ngFor="let sector of roasBySector" class="col-12 col-sm-4 mb-4">
         <app-card-stat [stat]="sector" [loader]="roasReqStatus <= 1" height="76px"></app-card-stat>
     </div>
-    <div class="col-12 mt--4" [hidden]="roasReqStatus !== 3">
+    <div class="col-12 mt--3 mt-xl-2" [hidden]="roasReqStatus !== 3">
         <p class="text-center text-muted mb-0">
             Error al consultar datos
         </p>
