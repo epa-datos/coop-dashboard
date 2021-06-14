@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.userRoleName = this.userService.user.role_name;
-    console.log('userRoleName', this.userRoleName)
   }
 
 }

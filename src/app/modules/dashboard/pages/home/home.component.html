@@ -5,10 +5,11 @@
             <h1>Programa COOP</h1>
         </div>
         <div class="media-container">
-            <video class="media" autoplay loop *ngIf="userRoleName !== 'retailer'">
+            <video class="media" autoplay loop *ngIf="userRoleName === 'admin' || userRoleName === 'hp'">
                 <source src="assets/video/map-retailers.mp4" type="video/mp4">
             </video>
-            <img class="media" *ngIf="userRoleName === 'retailer'" src="assets/video/map-lights.gif">
+            <img class="media" *ngIf="userRoleName === 'country' || userRoleName === 'retailer'"
+                src="assets/video/map-lights.gif">
         </div>
     </div>
 </div>
