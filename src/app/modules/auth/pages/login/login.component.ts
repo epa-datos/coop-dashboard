@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { UserService } from 'src/app/services/user.service';
 import { EmailValidator } from 'src/app/tools/validators/email.validator';
@@ -25,7 +26,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private router: Router,
   ) {
     const islogged = this.userService.isLoggedIn();
 
@@ -77,9 +79,13 @@ export class LoginComponent implements OnInit {
           } else {
             this.userService.deleteUserCookieIfExists();
           }
-          this.userService.redirectToDefaultPage().then(() => {
-            this.reqStatus = 2;
-          });
+
+          this.router.navigate(['/dashboard/home']);
+
+          // default redirection deprecated
+          // this.userService.redirectToDefaultPage().then(() => {
+          //   this.reqStatus = 2;
+          // });
         },
         error => {
           this.errorMsg = error?.error?.message ? error.error.message : error?.message;

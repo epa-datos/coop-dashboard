@@ -35,22 +35,7 @@ export class SessionInterceptor {
               const savedUser = this.cookieService.get('coop_user') && JSON.parse(this.cookieService.get('coop_user'));
               const currentUsermail = localStorage.getItem('usermail');
 
-              // console.log('savedUser', savedUser)
-              // console.log('currentUser', currentUsermail)
               if (savedUser.email === currentUsermail) {
-                // const currentUrl = this.router.url
-                // const defaultUrl = this.userService.defaultRedirect.url;
-                // let defaultQueryParams = this.userService.defaultRedirect.queryParams[Object.keys(this.userService.defaultRedirect.queryParams)[0]]
-                // let areEquals = currentUrl.includes(defaultUrl) && this.router.url.includes(defaultQueryParams);
-                // authToken = localStorage.getItem('auth_token');
-
-                // // how to avoid multiple calls to generatePersistSession?
-                // if (!authToken) {
-                //   if (!areEquals) {
-                //     this.generatePersistSession(user.email, user.anonymous_id);
-                //   }
-                // }
-
                 this.generatePersistSession(savedUser.email, savedUser.anonymous_id);
               } else {
                 this.userService.logout();
@@ -64,14 +49,15 @@ export class SessionInterceptor {
   generatePersistSession(email: string, password: string) {
     this.userService.login(email, password).subscribe(
       () => {
-        this.userService.redirectToDefaultPage();
-        // how to avoid multiple change in filtersChange observable?
-        // a possible solution could be check a component to indicate to user that its token expires
-        // so is necessary apply some filter or change again
-        // this.filtersStateService.filtersChange();
+
+        this.router.navigate(['/dashboard/home']);
+
+        // default redirection deprecated
+        // this.userService.redirectToDefaultPage();
       },
       error => {
         this.userService.logout();
+        this.router.navigate(['/login']);
         console.error(`[interceptor.service]: ${error?.error?.message ? error.error.message : error?.message}`);
       }
     )

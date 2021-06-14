@@ -10,6 +10,7 @@ import { UsersMngmtComponent } from 'src/app/modules/users-mngmt/users-mngmt.com
 import { UsersMngmtGuard } from 'src/app/modules/users-mngmt/users-mngmt.guard';
 import { DashboardComponent } from 'src/app/modules/dashboard/dashboard.component';
 import { InvestmentComponent } from 'src/app/pages/investment/investment.component';
+import { HomeComponent } from 'src/app/modules/dashboard/pages/home/home.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'chart-js', component: ChartJsComponent },
@@ -24,6 +25,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'mexico', component: ChartJsComponent },
     { path: 'panama', component: ChartJsComponent },
     { path: 'dashboard/investment', component: InvestmentComponent },
+    { path: 'dashboard/home', component: HomeComponent },
     {
         path: 'dashboard',
         component: DashboardComponent,

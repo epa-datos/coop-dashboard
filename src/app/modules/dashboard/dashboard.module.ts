@@ -66,6 +66,7 @@ import { ChartBarGroupComponent } from './components/charts/chart-bar-group/char
 import { StarRaitingComponent } from './components/star-raiting/star-raiting.component';
 import { PcSelectorWrapperComponent } from './components/pc-selector-wrapper/pc-selector-wrapper.component';
 import { ChartFunnelComponent } from './components/charts/chart-funnel/chart-funnel.component';
+import { HomeComponent } from './pages/home/home.component';
 
 
 @NgModule({
@@ -110,6 +111,7 @@ import { ChartFunnelComponent } from './components/charts/chart-funnel/chart-fun
     PcSelectorWrapperComponent,
     ChartFunnelComponent,
     CampaignInRetailWrapperComponent,
+    HomeComponent,
   ],
   imports: [
     CommonModule,

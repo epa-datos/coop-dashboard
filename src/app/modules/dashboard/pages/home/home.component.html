@@ -1,0 +1,15 @@
+<div class="home-container">
+    <div class="home-details">
+        <div class="title-container">
+            <h3 class="text-muted">Bienvenido</h3>
+            <h1>Programa COOP</h1>
+        </div>
+        <div class="media-container">
+            <video class="media" autoplay loop *ngIf="userRoleName === 'admin' || userRoleName === 'hp'">
+                <source src="assets/video/map-retailers.mp4" type="video/mp4">
+            </video>
+            <img class="media" *ngIf="userRoleName === 'country' || userRoleName === 'retailer'"
+                src="assets/video/map-lights.gif">
+        </div>
+    </div>
+</div>
