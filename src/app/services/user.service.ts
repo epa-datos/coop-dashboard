@@ -157,8 +157,6 @@ export class UserService {
         const { url, queryParams } = route;
         this.router.navigate([url], { queryParams });
         resolve();
-
-        console.log('route', route);
       });
     });
   }
@@ -168,7 +166,7 @@ export class UserService {
       const role = this.user.role_name;
       let redirect: Route;
 
-      if ((role === 'admin' || role === 'hp') || (role === 'countries' && this.viewLevel === 'latam')) {
+      if ((role === 'admin' || role === 'hp') || (role === 'country' && this.viewLevel === 'latam')) {
         // For users who have enable LATAM view
         redirect = {
           url: '/dashboard/main-region',
