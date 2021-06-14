@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { LocaleService } from 'src/app/services/locale.service';
 
 @Component({
   selector: 'app-navbar',
@@ -45,13 +46,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private appStateService: AppStateService,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private localService: LocaleService
   ) {
     this.location = location;
 
+    const selectedLang = localStorage.getItem('lang') || 'es';
+
     translate.setDefaultLang('es');
-    translate.use(localStorage.getItem('lang') || 'es');
-    this.appStateService.selectLang(localStorage.getItem('lang') || 'es');
+    translate.use(selectedLang);
+
+    this.appStateService.selectLang(selectedLang);
   }
 
   ngOnInit() {
@@ -180,8 +185,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   changeLang(lang) {
     this.lang = lang;
     localStorage.setItem('lang', lang);
-    this.translate.use(localStorage.getItem('lang') || 'es');
+    const selectedLang = localStorage.getItem('lang') || 'es';
+
+    this.translate.use(selectedLang);
     this.appStateService.selectLang(lang);
+
+    this.localService.registerCulture(selectedLang);
+    window.location.reload();
   }
 
   ngOnDestroy() {

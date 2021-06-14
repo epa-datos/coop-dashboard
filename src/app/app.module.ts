@@ -23,12 +23,18 @@ import { ConfigurationProvider } from './app.constants';
 import { SharedModule } from './modules/shared/shared.module';
 import { AppStateService } from './services/app-state.service';
 
-import localeEsAr from '@angular/common/locales/es-AR';
 import { registerLocaleData } from '@angular/common';
+import localeEsAr from '@angular/common/locales/es-AR';
+import localeEn from '@angular/common/locales/en-US-POSIX';
+import localeEsMX from '@angular/common/locales/es-MX';
+
 registerLocaleData(localeEsAr);
+registerLocaleData(localeEn);
+registerLocaleData(localeEsMX);
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { LocaleService } from './services/locale.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -73,7 +79,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     },
     HttpClient,
     ConfigurationProvider,
-    { provide: LOCALE_ID, useValue: 'es-Ar' },
+    {
+      provide: LOCALE_ID,
+      deps: [LocaleService],
+      useFactory: (LocaleService: { locale: string; }) => LocaleService.locale
+    },
   ],
   bootstrap: [AppComponent]
 })

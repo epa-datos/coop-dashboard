@@ -107,7 +107,8 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     {
       name: 'amount',
       title: 'Cantidad',
-      textAlign: 'center'
+      textAlign: 'center',
+      formatValue: 'integer'
     }
   ];
 
