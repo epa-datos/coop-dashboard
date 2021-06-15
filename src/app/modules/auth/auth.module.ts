@@ -9,6 +9,8 @@ import { SetPswComponent } from './components/set-psw/set-psw.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthRoutes } from './auth.routing';
+import { SharedModule } from '../shared/shared.module';
+import { MatSelectModule } from '@angular/material/select';
 
 
 
@@ -26,6 +28,8 @@ import { AuthRoutes } from './auth.routing';
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(AuthRoutes),
+    SharedModule,
+    MatSelectModule
   ]
 })
 export class AuthModule { }
