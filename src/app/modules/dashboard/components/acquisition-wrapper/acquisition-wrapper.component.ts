@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { strTimeFormat } from 'src/app/tools/functions/time-format';
 import { CampaignInRetailService } from '../../services/campaign-in-retail.service';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { TableItem } from '../generic-table/generic-table.component';
@@ -40,7 +41,7 @@ export class AcquisitionWrapperComponent implements OnInit, OnDestroy {
       formatValue: 'integer'
     },
     {
-      name: 'newUsers',
+      name: 'new_users',
       title: 'Nuevos usuarios',
       textAlign: 'center',
       formatValue: 'integer'
@@ -52,19 +53,21 @@ export class AcquisitionWrapperComponent implements OnInit, OnDestroy {
       formatValue: 'integer'
     },
     {
-      name: 'pagesBySession',
+      name: 'pages_by_session',
       title: 'Páginas por sesión',
-      textAlign: 'center'
+      textAlign: 'center',
+      formatValue: 'decimal'
     },
     {
-      name: 'bounceRate',
+      name: 'bounce_rate',
       title: 'Porcentaje de rebote',
       textAlign: 'center',
       formatValue: 'percentage',
-      comparativeName: 'bounceRateComparison'
+      comparativeName: 'bounce_rate_comparison',
+      comparativeLowIsBetter: true
     },
     {
-      name: 'sessionDuration',
+      name: 'session_duration',
       title: 'Duración media de la sesión',
       textAlign: 'center',
     },
@@ -141,6 +144,7 @@ export class AcquisitionWrapperComponent implements OnInit, OnDestroy {
       (campaigns: any[]) => {
         // provisional until data exists
         this.campaigns.data = campaigns.map(item => {
+          item.session_duration = strTimeFormat(item.session_duration);
           return { ...item, yoy: '-' };
         });
         this.campaigns.reqStatus = 2;
