@@ -18,16 +18,18 @@ export class RetailerComponent implements OnInit, OnDestroy {
   activeTabView: number = 1;
 
   retailerID: number;
+  countryID: number;
 
   filtersSub: Subscription;
   retailerSub: Subscription;
+  countrySub: Subscription;
 
   private requestInfoSource = new Subject<boolean>();
   requestInfoChange$ = this.requestInfoSource.asObservable();
 
   constructor(
     private appStateService: AppStateService,
-    private filtersStateService: FiltersStateService,
+    private filtersStateService: FiltersStateService
   ) { }
 
   ngOnInit(): void {
@@ -40,6 +42,10 @@ export class RetailerComponent implements OnInit, OnDestroy {
 
     this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
       this.requestInfoSource.next(manualChange);
+    });
+
+    this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
+      this.countryID = country?.id
     });
 
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
@@ -62,6 +68,7 @@ export class RetailerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.retailerSub?.unsubscribe();
+    this.countrySub?.unsubscribe();
     this.filtersSub?.unsubscribe();
   }
 }
