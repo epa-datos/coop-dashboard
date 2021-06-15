@@ -113,6 +113,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   loadCustomTitles(currentUrl: string) {
+    if (currentUrl.includes('home')) {
+      this.customTitle = 'Bienvenido - Programa COOP';
+      this.customSubtitle && delete this.customSubtitle;
+      return;
+    }
+
     const newMenuItem = this.listTitles.find(title => title.path === currentUrl);
 
     if (newMenuItem) {
