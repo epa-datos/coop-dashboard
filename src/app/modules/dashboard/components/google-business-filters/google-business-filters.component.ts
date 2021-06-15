@@ -60,6 +60,7 @@ export class GoogleBusinessFiltersComponent implements OnInit {
   }
 
   getProvinces() {
+    this.provincesReqStatus = 1;
     return this.googleBusinessServ.getProvinces()
       .toPromise()
       .then((res: any[]) => {
@@ -69,16 +70,19 @@ export class GoogleBusinessFiltersComponent implements OnInit {
         this.provinces.patchValue([...this.provinceList.map(item => item), 0]);
 
         this.provincesErrorMsg && delete this.provincesErrorMsg;
+        this.provincesReqStatus = 2;
 
       })
       .catch(error => {
         this.provinceList = [];
         this.provincesErrorMsg = 'Error al consultar Provincias';
         console.error(`[google-business.component]: ${error}`);
+        this.provincesReqStatus = 3;
       })
   }
 
   getCities() {
+    this.citiesReqStatus = 1;
     return this.googleBusinessServ.getCities()
       .toPromise()
       .then((res: any[]) => {
@@ -88,13 +92,14 @@ export class GoogleBusinessFiltersComponent implements OnInit {
         this.cities.patchValue([...this.cityList.map(item => item), 0]);
 
         this.citiesErrorMsg && delete this.citiesErrorMsg;
+        this.citiesReqStatus = 2;
 
       })
       .catch(error => {
         this.cityList = [];
         this.citiesErrorMsg = 'Error al consultar Ciudades';
         console.error(`[google-business.component]: ${error}`);
-
+        this.citiesReqStatus = 3;
       })
   }
 
