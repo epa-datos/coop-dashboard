@@ -26,7 +26,8 @@ export class ConversionWrapperComponent implements OnInit {
       metricTitle: 'revenue',
       metricName: 'revenue',
       metricValue: 0,
-      metricFormat: 'currency',
+      metricFormat: 'decimals',
+      metricSymbol: 'USD',
       icon: 'fas fa-hand-holding-usd',
       iconBg: '#2f9998'
     },
@@ -34,7 +35,8 @@ export class ConversionWrapperComponent implements OnInit {
       metricTitle: 'aup',
       metricName: 'aup',
       metricValue: 0,
-      metricFormat: 'currency',
+      metricFormat: 'decimals',
+      metricSymbol: 'USD',
       icon: 'fas fa-file-invoice-dollar',
       iconBg: '#a77dcc'
     }

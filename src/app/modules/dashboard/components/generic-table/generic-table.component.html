@@ -41,12 +41,27 @@
                         </div>
 
                         <ng-container *ngIf="column.comparativeName">
-                            <i class="fas fa-arrow-up text-success"
-                                *ngIf="element[column.name] > element[column.comparativeName]"></i>
-                            <i class="fas fa-equals text-warning"
-                                *ngIf="element[column.name] === element[column.comparativeName]"></i>
-                            <i class="fas fa-arrow-down text-danger"
-                                *ngIf="element[column.name] < element[column.comparativeName]"></i>
+                            <ng-container *ngIf="column.comparativeOrder !== 'comparativeOverOriginal'">
+                                <i class="fas fa-arrow-up"
+                                    [ngClass]="{'text-success': !column.comparativeLowIsBetter, 'text-danger': column.comparativeLowIsBetter}"
+                                    *ngIf="element[column.name] > element[column.comparativeName]"></i>
+                                <i class="fas fa-equals text-warning"
+                                    *ngIf="element[column.name] === element[column.comparativeName]"></i>
+                                <i class="fas fa-arrow-down"
+                                    [ngClass]="{'text-danger': !column.comparativeLowIsBetter, 'text-success': column.comparativeLowIsBetter}"
+                                    *ngIf="element[column.name] < element[column.comparativeName]"></i>
+                            </ng-container>
+
+                            <ng-container *ngIf="column.comparativeOrder === 'comparativeOverOriginal'">
+                                <i class="fas fa-arrow-up"
+                                    [ngClass]="{'text-success': !column.comparativeLowIsBetter, 'text-danger': column.comparativeLowIsBetter}"
+                                    *ngIf="element[column.comparativeName] > element[column.name]"></i>
+                                <i class="fas fa-equals text-warning"
+                                    *ngIf="element[column.comparativeName] === element[column.name]"></i>
+                                <i class="fas fa-arrow-down"
+                                    [ngClass]="{'text-danger': !column.comparativeLowIsBetter, 'text-success': column.comparativeLowIsBetter}"
+                                    *ngIf="element[column.comparativeName] < element[column.name]"></i>
+                            </ng-container>
                         </ng-container>
                     </div>
 
@@ -73,12 +88,27 @@
                         </div>
 
                         <ng-container *ngIf="column.comparativeName">
-                            <i class="fas fa-arrow-up text-success"
-                                *ngIf="element[column.name] > element[column.comparativeName]"></i>
-                            <i class="fas fa-equals text-warning"
-                                *ngIf="element[column.name] === element[column.comparativeName]"></i>
-                            <i class="fas fa-arrow-down text-danger"
-                                *ngIf="element[column.name] < element[column.comparativeName]"></i>
+                            <ng-container *ngIf="column.comparativeOrder !== 'comparativeOverOriginal'">
+                                <i class="fas fa-arrow-up"
+                                    [ngClass]="{'text-success': !column.comparativeLowIsBetter, 'text-danger': column.comparativeLowIsBetter}"
+                                    *ngIf="element[column.name] > element[column.comparativeName]"></i>
+                                <i class="fas fa-equals text-warning"
+                                    *ngIf="element[column.name] === element[column.comparativeName]"></i>
+                                <i class="fas fa-arrow-down"
+                                    [ngClass]="{'text-danger': !column.comparativeLowIsBetter, 'text-success': column.comparativeLowIsBetter}"
+                                    *ngIf="element[column.name] < element[column.comparativeName]"></i>
+                            </ng-container>
+
+                            <ng-container *ngIf="column.comparativeOrder === 'comparativeOverOriginal'">
+                                <i class="fas fa-arrow-up"
+                                    [ngClass]="{'text-success': !column.comparativeLowIsBetter, 'text-danger': column.comparativeLowIsBetter}"
+                                    *ngIf="element[column.comparativeName] > element[column.name]"></i>
+                                <i class="fas fa-equals text-warning"
+                                    *ngIf="element[column.comparativeName] === element[column.name]"></i>
+                                <i class="fas fa-arrow-down"
+                                    [ngClass]="{'text-danger': !column.comparativeLowIsBetter, 'text-success': column.comparativeLowIsBetter}"
+                                    *ngIf="element[column.comparativeName] < element[column.name]"></i>
+                            </ng-container>
                         </ng-container>
                     </div>
                 </td>

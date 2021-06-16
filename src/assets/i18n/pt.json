@@ -1,4 +1,15 @@
 {
+    "login": {
+        "loginTitle": "Fazer Login",
+        "emailPh": "E-mail",
+        "emailError": "Digite um endereço de e-mail válido.",
+        "passwordPh": "Senha",
+        "passwordError": "Digite uma senha válida.",
+        "rememberMe": "Salvar Senha",
+        "loginError": "Falha ao fazer login. Por favor tente mais tarde.",
+        "loginButton": "Acessar",
+        "forgotPassword": "Esqueceu a sua senha?"
+    },
     "navbar": {
         "logout": "Sair",
         "english": "Inglês",

@@ -1,4 +1,15 @@
 {
+    "login": {
+        "loginTitle": "Iniciar sesión",
+        "emailPh": "Correo electrónico",
+        "emailError": "Ingresa un correo electrónico válido.",
+        "passwordPh": "Contraseña",
+        "passwordError": "Ingresa una contraseña válida.",
+        "rememberMe": "Recuérdame",
+        "loginError": "Error al iniciar sesión. Intenta más tarde.",
+        "loginButton": "Acceder",
+        "forgotPassword": "¿Has olvidado tu contraseña?"
+    },
     "navbar": {
         "logout": "Cerrar sesión",
         "english": "Inglés",

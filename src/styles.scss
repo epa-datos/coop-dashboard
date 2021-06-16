@@ -78,6 +78,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   border-radius: 0.375rem;
   box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
   border: 0;
+  min-height: 41px;
   transition: box-shadow 0.15s ease;
   padding: 0.625rem 0.75rem;
   white-space: nowrap;

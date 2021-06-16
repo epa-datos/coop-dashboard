@@ -103,6 +103,8 @@ export interface TableItem {
   textAlign?: string, // valid css property (left, right, center)
   formatValue?: string, // currency | integer | decimal | percentage to applie pipes
   comparativeName?: string, // to compare "name" object property and show arrows with colors
+  comparativeOrder?: string, // originalOverComparative | comparativeOverOriginal
+  comparativeLowIsBetter?: boolean // to show arrow up or down
   maxWidthTdPercentage?: number, //max-width in % property for column (td)
   maxWidthSpan?: string, // valid css max-width property for text inside column (td > span)
   tooltip?: boolean, // to show tooltip in hover

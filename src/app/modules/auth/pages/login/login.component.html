@@ -4,13 +4,13 @@
       <div class="card shadow border-0">
         <div class="card-body px-lg-5 py-lg-5">
 
-          <p class="text-center text-lg mb-4"><b>Programa HP COOP</b></p>
+          <p class="text-center text-lg mb-4"><b>{{ 'general.coop' | translate }}</b></p>
 
           <div class="logo-container text-center">
             <img src="assets/img/brand/hp-logo.png">
           </div>
 
-          <p class="text-center bold my-4"><b>Iniciar sesión</b></p>
+          <p class="text-center bold my-4"><b>{{ 'login.loginTitle' | translate }}</b></p>
 
           <form role="form" [formGroup]="form" (ngSubmit)="login(email.value, password.value)">
             <div class="form-group mb-3">
@@ -19,10 +19,11 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                 </div>
-                <input [formControl]="email" class="form-control" placeholder="Correo electrónico" type="email">
+                <input [formControl]="email" class="form-control" [placeholder]="'login.emailPh' | translate"
+                  type="email">
               </div>
               <small class="text-danger" *ngIf="!email.valid && email.touched || !email.valid && email.touched">
-                Ingresa un correo electrónico válido.
+                {{ 'login.emailError' | translate }}
               </small>
             </div>
             <div class="form-group">
@@ -34,39 +35,60 @@
                     <i class="ni ni-lock-circle-open"></i>
                   </span>
                 </div>
-                <input [formControl]="password" class="form-control" placeholder="Contraseña"
+                <input [formControl]="password" class="form-control" [placeholder]="'login.passwordPh' | translate"
                   [attr.type]="pwdModeOn ? 'text' : 'password'">
               </div>
               <small class="text-danger"
                 *ngIf="!password.valid && password.touched || !password.valid && password.touched">
-                Ingresa una contraseña válida.
+                {{ 'login.passwordError' | translate }}
               </small>
             </div>
             <div class="custom-control custom-control-alternative custom-checkbox">
               <input [formControl]="remember_password" class="custom-control-input" id="customCheckLogin"
                 type="checkbox">
               <label class="custom-control-label" for="customCheckLogin">
-                <span class="text-muted">Recuérdame</span>
+                <span class="text-muted">{{ 'login.rememberMe' | translate }}</span>
               </label>
             </div>
 
             <!-- error message -->
             <div class="text-center mt-4">
               <small class="text-danger" *ngIf="reqStatus === 3">
-                {{ errorMsg }}
+                {{ 'login.loginError' | translate }}
               </small>
+            </div>
+
+
+            <div class="select-lang-container">
+              <div class="select-lang">
+                <mat-select disableOptionCentering [(value)]="selectedLang">
+                  <mat-select-trigger>
+                    <div class="lang-details">
+                      <img class="mr-2" [src]="'assets/img/icons/flags/'+selectedLang+'.png'" style="height: 24px;">
+                      <span>{{ selectedLang | uppercase }}</span>
+                    </div>
+                  </mat-select-trigger>
+                  <mat-option class="mat-option-container" *ngFor="let lang of languages" [value]="lang"
+                    (click)="langChange()">
+                    <div class="lang-details">
+                      <img class="mr-2" [src]="'assets/img/icons/flags/'+lang+'.png'" style="height: 24px;">
+                      <span>{{ lang | uppercase }}</span>
+                    </div>
+                  </mat-option>
+                </mat-select>
+              </div>
             </div>
 
             <div class="text-center">
               <button type="submit" class="btn btn-primary my-4" [disabled]="!form.valid || reqStatus === 1">
-                Acceder
+                {{ 'login.loginButton' | translate }}
               </button>
             </div>
           </form>
           <div class="row mt-3">
             <div class="col-12">
               <a href="javascript:void(0)" routerLink="/forgot-password">
-                <small>¿Has olvidado tu contraseña?</small>
+                <small>{{ 'login.forgotPassword' | translate }}</small>
               </a>
             </div>
           </div>

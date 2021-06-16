@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   countryInit: boolean = true;
   retailerInit: boolean = true;
 
-  lang;
+  selectedLang;
 
   constructor(
     location: Location,
@@ -51,16 +51,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ) {
     this.location = location;
 
-    const selectedLang = localStorage.getItem('lang') || 'es';
-
+    this.selectedLang = localStorage.getItem('lang') || this.appStateService.selectedLang || 'es';
     translate.setDefaultLang('es');
-    translate.use(selectedLang);
+    translate.use(this.selectedLang);
 
-    this.appStateService.selectLang(selectedLang);
+    this.appStateService.selectLang(this.selectedLang);
   }
 
   ngOnInit() {
-    this.lang = localStorage.getItem('lang') || 'es';
+    this.selectedLang = localStorage.getItem('lang') || 'es';
     this.user = this.userService.user;
 
     this.newRetailer = this.appStateService.selectedRetailer;
@@ -189,7 +188,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   changeLang(lang) {
-    this.lang = lang;
+    this.selectedLang = lang;
     localStorage.setItem('lang', lang);
     const selectedLang = localStorage.getItem('lang') || 'es';
 

@@ -11,11 +11,12 @@ import { AppStateService } from 'src/app/services/app-state.service';
 })
 export class PcSelectorWrapperComponent implements OnInit {
 
+  // kpis
   kpis: any[] = [
     {
       metricTitle: 'usuarios',
       metricName: 'users',
-      metricValue: 85,
+      metricValue: 128,
       metricFormat: 'integer',
       icon: 'fas fa-users',
       iconBg: '#172b4d'
@@ -23,7 +24,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     {
       metricTitle: 'usuarios nuevos',
       metricName: 'new_users',
-      metricValue: 81,
+      metricValue: 127,
       metricFormat: 'integer',
       icon: 'fas fa-user-plus',
       iconBg: '#2f9998'
@@ -31,7 +32,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     {
       metricTitle: 'duración media de la sesión',
       metricName: 'avg_sessions_duration',
-      metricValue: '00:05:28',
+      metricValue: '00:01:05',
       icon: 'fas fa-user-clock',
       iconBg: '#a77dcc'
     },
@@ -62,37 +63,103 @@ export class PcSelectorWrapperComponent implements OnInit {
     }
   ];
 
+  // Usuarios vs Conversiones
   usersVsConversions = [{
-    date: '2021-06-10',
+    date: '2021-06-02',
     traffic: 8,
     conversions: 0,
   }, {
-    date: '2021-06-11',
-    traffic: 7,
+    date: '2021-06-03',
+    traffic: 12,
     conversions: 1,
   }, {
-    date: '2021-06-12',
+    date: '2021-06-04',
     traffic: 15,
     conversions: 0,
   }, {
-    date: '2021-06-13',
-    traffic: 4,
+    date: '2021-06-05',
+    traffic: 11,
     conversions: 0,
   }, {
-    date: '2021-06-14',
+    date: '2021-06-06',
     traffic: 16,
     conversions: 0,
   }, {
-    date: '2021-06-15',
+    date: '2021-06-07',
     traffic: 21,
     conversions: 1,
   }, {
-    date: '2021-06-16',
+    date: '2021-06-08',
     traffic: 19,
+    conversions: 0,
+  }, {
+    date: '2021-06-09',
+    traffic: 18,
+    conversions: 0,
+  }, {
+    date: '2021-06-10',
+    traffic: 17,
+    conversions: 1,
+  }, {
+    date: '2021-06-11',
+    traffic: 15,
+    conversions: 0,
+  }, {
+    date: '2021-06-12',
+    traffic: 4,
+    conversions: 0,
+  }, {
+    date: '2021-06-13',
+    traffic: 16,
+    conversions: 0,
+  }, {
+    date: '2021-06-14',
+    traffic: 21,
+    conversions: 1,
+  }, {
+    date: '2021-06-15',
+    traffic: 19,
+    conversions: 0,
+  }, {
+    date: '2021-06-16',
+    traffic: 15,
     conversions: 0,
   }];
 
+  // Revenue vs AUP
   aupVsRevenue = [{
+    date: '2021-06-02',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-03',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-04',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-05',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-06',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-07',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-08',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-09',
+    traffic: 0,
+    conversions: 0,
+  }, {
     date: '2021-06-10',
     revenue: 0,
     aup: 0,
@@ -122,6 +189,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     aup: 0,
   }];
 
+  // Tráfico por país
   trafficByCountry = [
     { country: 'Panama', chats: 0 },
     { country: 'Honduras', chats: 0 },
@@ -133,9 +201,10 @@ export class PcSelectorWrapperComponent implements OnInit {
     { country: 'Argentina', chats: 0 },
     { country: 'Peru', chats: 0 },
     { country: 'Chile', chats: 0 },
-    { country: 'Mexico', chats: 85 }
+    { country: 'Mexico', chats: 128 }
   ];
 
+  // Conversiones por país
   conversionsByCountry = [
     { country: 'Panama', chats: 0 },
     { country: 'Honduras', chats: 0 },
@@ -150,6 +219,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     { country: 'Mexico', chats: 2 },
   ];
 
+  // Tráfico por retailer
   trafficByRetailer = [
     {
       "retailer": "SV - Office Depot",
@@ -301,10 +371,41 @@ export class PcSelectorWrapperComponent implements OnInit {
     },
     {
       "retailer": "MX - Pedidos",
-      "chats": 85
+      "chats": 128
     },
   ]
 
+  // Tasa de Abandono al inicio del proceso
+  churnRateInInit = [
+    { category: 'Abandona', value: 1 },
+    { category: 'No abandona', value: 99 }
+  ];
+
+  // Tasa de Uso de Asistente Virtual
+  useRateVirtualAssistant = [
+    { category: 'Utiliza', value: 10 },
+    { category: 'No utiliza', value: 118 }
+  ];
+
+  // Tasa de Abandono por pregunta
+  churnRateByQuestion = [{
+    'name': 'Pregunta 2',
+    'value': 14
+  }, {
+    'name': 'Pregunta 3',
+    'value': 14
+  }, {
+    'name': 'Pregunta 5',
+    'value': 12
+  }, {
+    'name': 'Pregunta 9',
+    'value': 11
+  }, {
+    'name': 'Termina el proceso',
+    'value': 9
+  }];
+
+  // Conversiones por retailer
   conversionsByRetailer = [
     {
       "retailer": "SV - Office Depot",
@@ -460,6 +561,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     },
   ];
 
+  // Conversiones por producto
   conversionsByProduct = [
     { product: 'LAPTOP HP 15 EF1007LA AMD RYZEN 3 12 GB SSD 256 GB', transactions: 0 },
     { product: 'LAPTOP HP 240 G7 INTEL CORE I3 RAM 4 GB DD 500 GB WINDOWS 10 HOME', transactions: 0 },
@@ -475,6 +577,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     { product: 'LAPTOP HP 240 G7 INTEL CELERON N4020 4 GB 500 GB', transactions: 2 },
   ]
 
+  // Usuarios, Conversiones y Tasa de conversión por fecha
   usersTransactionsConversion: any = {
     'Mar 21': {
       'users': 0,
@@ -498,6 +601,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     }
   }
 
+  // Tráfico - Demográficos
   trafficDemographic = {
     desktop: [
       { name: 'empty', value: 12.5 },
@@ -628,6 +732,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     ]
   }
 
+  // Conversiones - Demográficos
   conversionsDemographic = {
     desktop: [
       { name: 'empty', value: 70 },
@@ -758,6 +863,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     ]
   }
 
+  // Tráfico por día de la semana y hora del día
   trafficHeatmapData = [
     {
       "hour": "12pm",
@@ -1601,7 +1707,18 @@ export class PcSelectorWrapperComponent implements OnInit {
     }
   ];
 
+  // Tráfico por día de la semana
+  trafficByDay = [
+    { weekday: 'Dom', value: 21 },
+    { weekday: 'Sab', value: 32 },
+    { weekday: 'Vier', value: 32 },
+    { weekday: 'Jue', value: 27 },
+    { weekday: 'Mier', value: 39 },
+    { weekday: 'Mar', value: 25 },
+    { weekday: 'Lun', value: 18 },
+  ];
 
+  // Tráfico por hora del día
   trafficByHour = [
     { hour: '12 AM', visits: 11 },
     { hour: '3 AM', visits: 8 },
@@ -1613,16 +1730,7 @@ export class PcSelectorWrapperComponent implements OnInit {
     { hour: '9 PM', visits: 21 }
   ]
 
-  trafficByDay = [
-    { weekday: 'Dom', value: 21 },
-    { weekday: 'Sab', value: 32 },
-    { weekday: 'Vier', value: 32 },
-    { weekday: 'Jue', value: 27 },
-    { weekday: 'Mier', value: 39 },
-    { weekday: 'Mar', value: 25 },
-    { weekday: 'Lun', value: 18 },
-  ];
-
+  // Conversiones por día de la semana
   conversionsByDay = [
     { weekday: 'Dom', value: 0 },
     { weekday: 'Sab', value: 0 },
@@ -1632,33 +1740,6 @@ export class PcSelectorWrapperComponent implements OnInit {
     { weekday: 'Mar', value: 0 },
     { weekday: 'Lun', value: 1 },
   ];
-
-  churnRateInInit = [
-    { category: 'Abandona', value: 0 },
-    { category: 'No abandona', value: 100 }
-  ];
-
-  useRateVirtualAssistant = [
-    { category: 'Utiliza', value: 56 },
-    { category: 'No utiliza', value: 44 }
-  ];
-
-  churnRateByQuestion = [{
-    'name': 'Pregunta 2',
-    'value': 85
-  }, {
-    'name': 'Pregunta 3',
-    'value': 0
-  }, {
-    'name': 'Pregunta 5',
-    'value': 0
-  }, {
-    'name': 'Pregunta 9',
-    'value': 0
-  }, {
-    'name': 'Termina el proceso',
-    'value': 0
-  }];
 
   kpisReqStatus = 2;
 

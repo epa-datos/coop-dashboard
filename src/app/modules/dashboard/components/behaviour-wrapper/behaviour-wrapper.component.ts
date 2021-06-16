@@ -10,35 +10,19 @@ import { FiltersStateService } from '../../services/filters-state.service';
 })
 export class BehaviourWrapperComponent implements OnInit, OnDestroy {
 
-  salesVsRetVisitor = [
-    { category: 'Visitantes nuevos', value: 130 },
-    { category: 'Visitante recurrentes', value: 240 }
-  ];
-
-  sessionsByAudience = [
-    { category: 'Prospecting', value: 49500 },
-    { category: 'Remarketing', value: 15400 },
-  ];
-
-  quantityByAudience = [
-    { category: 'Prospecting', value: 357 },
-    { category: 'Remarketing', value: 18 },
-  ];
-
-  revenueVsAupAudience = [
-    { category: 'Prospecting', revenue: 1200, aup: 400 },
-    { category: 'Remarketing', revenue: 1600, aup: 810 }
-  ];
-
   brVsPagesViewed: any[] = [];
   brVsPagesViewedReqStatus: number = 0;
 
   behavior = {};
   behaviorReqStatus = [
     { name: 'newUsersVsCurrent', reqStatus: 0 },
+    { name: 'salesNewUsersVsCurrent', reqStatus: 0 },
     { name: 'salesBySource', reqStatus: 0 },
     { name: 'salesBySector', reqStatus: 0 },
     { name: 'sessionsByAudience', reqStatus: 0 },
+    { name: 'newUsersByAudience', reqStatus: 0 },
+    { name: 'quantityByAudience', reqStatus: 0 },
+    { name: 'revenueAupByAudience', reqStatus: 0 },
   ]
 
   generalFiltersSub: Subscription;
@@ -84,9 +68,13 @@ export class BehaviourWrapperComponent implements OnInit, OnDestroy {
   getBehaviorMetrics() {
     const requiredData = [
       { subMetricType: 'new-users-vs-current', name: 'newUsersVsCurrent' },
+      { subMetricType: 'sales-new-users-vs-current', name: 'salesNewUsersVsCurrent' },
       { subMetricType: 'sales-by-source', name: 'salesBySource' },
       { subMetricType: 'sales-by-sector', name: 'salesBySector' },
       { subMetricType: 'sessions-by-audience', name: 'sessionsByAudience' },
+      { subMetricType: 'new-users-by-audience', name: 'newUsersByAudience' },
+      { subMetricType: 'quantity-by-audience', name: 'quantityByAudience' },
+      { subMetricType: 'revenue-aup-by-audience', name: 'revenueAupByAudience' },
     ];
 
     for (let subMetric of requiredData) {

@@ -126,7 +126,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     // Other routes
     const menuItem1 = {
       title: this.translate.instant('dashboard.campaignComparator'),
-      path: '/dashboard/campaign-comparator',
+      path: '/campaign-comparator',
     }
     this.menuItems.push(menuItem1);
 
@@ -169,12 +169,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
           paramName: 'main-region',
           param: 'latam'
         },
-        {
-          title: 'Análisis de sentimientos OmniChat',
-          path: '/dashboard/omnichat',
-          paramName: 'main-region',
-          param: 'latam'
-        }
+        // {
+        //   title: 'Análisis de sentimientos OmniChat',
+        //   path: '/dashboard/omnichat',
+        //   paramName: 'main-region',
+        //   param: 'latam'
+        // }
       ],
       submenuOpen: false
     }

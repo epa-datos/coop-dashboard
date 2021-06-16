@@ -9,12 +9,57 @@ import { TableItem } from '../generic-table/generic-table.component';
 export class IndexedWrapperComponent implements OnInit {
 
   selectedTab1: number = 1;
+  kpisReqStatus = 2;
+  trafficDemoStatus = [
+    { name: 'device', reqStatus: 2 },
+    { name: 'gender', reqStatus: 2 },
+    { name: 'age', reqStatus: 2 },
+    { name: 'gender-and-age', reqStatus: 2 }
+  ];
 
+  mostVistitedProductsColumns: TableItem[] = [
+    {
+      name: 'ranking',
+      title: 'Ranking'
+    },
+    {
+      name: 'product',
+      title: 'Producto',
+      tooltip: true,
+    },
+    {
+      name: 'users',
+      title: 'Usuarios',
+      textAlign: 'center',
+      formatValue: 'integer',
+    }
+  ];
+
+  mostVisitedCategoriesColumns: TableItem[] = [
+    {
+      name: 'ranking',
+      title: 'Ranking'
+    },
+    {
+      name: 'category',
+      title: 'Categoría',
+    },
+    {
+      name: 'users',
+      title: 'Usuarios',
+      textAlign: 'center',
+      formatValue: 'integer',
+    }
+  ];
+
+  ////////////////////////////////////
+
+  // kpis
   kpis: any[] = [
     {
       metricTitle: 'usuarios',
       metricName: 'users',
-      metricValue: 0,
+      metricValue: 255322,
       metricFormat: 'integer',
       icon: 'fas fa-users',
       iconBg: '#172b4d'
@@ -22,7 +67,7 @@ export class IndexedWrapperComponent implements OnInit {
     {
       metricTitle: 'usuarios nuevos',
       metricName: 'new_useres',
-      metricValue: 0,
+      metricValue: 204740,
       metricFormat: 'integer',
       icon: 'fas fa-user-plus',
       iconBg: '#2f9998'
@@ -31,7 +76,7 @@ export class IndexedWrapperComponent implements OnInit {
     {
       metricTitle: 'sesiones',
       metricName: 'sessions',
-      metricValue: 0,
+      metricValue: 414962,
       metricFormat: 'integer',
       icon: 'fas fa-eye',
       iconBg: '#a77dcc'
@@ -39,7 +84,7 @@ export class IndexedWrapperComponent implements OnInit {
     {
       metricTitle: 'porcentaje de rebote',
       metricName: 'bounce_rate',
-      metricValue: 0,
+      metricValue: 3.87,
       metricFormat: 'integer',
       icon: 'fas fa-low-vision',
       iconBg: '#f89934'
@@ -47,7 +92,7 @@ export class IndexedWrapperComponent implements OnInit {
     {
       metricTitle: 'páginas/sesión',
       metricName: 'pages_per_session',
-      metricValue: 0,
+      metricValue: 1.35,
       metricFormat: 'decimals',
       icon: 'fas fa-file',
       iconBg: '#fbc001'
@@ -55,156 +100,166 @@ export class IndexedWrapperComponent implements OnInit {
     {
       metricTitle: 'duración media de la sesión',
       metricName: 'avg_sessions_duration',
-      metricValue: '00:03:25',
+      metricValue: '00:01:14',
       icon: 'fas fa-user-clock',
       iconBg: '#2B96D5'
     }
   ];
 
-  kpisReqStatus = 2;
+  // Top sesiones por retailers
+  topSessionsByRetailer = [
+    {
+      name: 'Chile',
+      serie: [
+        { date: '2021-06-02', value: 103873 },
+        { date: '2021-06-03', value: 98735 },
+        { date: '2021-06-04', value: 96293 },
+        { date: '2021-06-05', value: 102847 },
+        { date: '2021-06-06', value: 103173 },
+        { date: '2021-06-07', value: 103183 },
+        { date: '2021-06-08', value: 102847 },
+        { date: '2021-06-09', value: 103482 },
+        { date: '2021-06-10', value: 104726 },
+        { date: '2021-06-11', value: 99372 },
+        { date: '2021-06-12', value: 100783 },
+        { date: '2021-06-13', value: 102837 },
+        { date: '2021-06-14', value: 103746 },
+        { date: '2021-06-15', value: 103482 },
+        { date: '2021-06-16', value: 102784 }
+      ]
+    },
+    {
+      name: 'Perú',
+      serie: [
+        { date: '2021-06-02', value: 80362 },
+        { date: '2021-06-03', value: 78213 },
+        { date: '2021-06-04', value: 78234 },
+        { date: '2021-06-05', value: 80123 },
+        { date: '2021-06-06', value: 80632 },
+        { date: '2021-06-07', value: 80473 },
+        { date: '2021-06-08', value: 80153 },
+        { date: '2021-06-09', value: 80852 },
+        { date: '2021-06-10', value: 79675 },
+        { date: '2021-06-11', value: 78500 },
+        { date: '2021-06-12', value: 80412 },
+        { date: '2021-06-13', value: 81250 },
+        { date: '2021-06-14', value: 80375 },
+        { date: '2021-06-15', value: 80480 },
+        { date: '2021-06-16', value: 80760 }
+      ],
+    },
+    {
+      name: 'Mexico',
+      serie: [
+        { date: '2021-06-02', value: 60400 },
+        { date: '2021-06-03', value: 59340 },
+        { date: '2021-06-04', value: 58600 },
+        { date: '2021-06-05', value: 60700 },
+        { date: '2021-06-06', value: 60300 },
+        { date: '2021-06-07', value: 60800 },
+        { date: '2021-06-08', value: 60400 },
+        { date: '2021-06-09', value: 60405 },
+        { date: '2021-06-10', value: 58751 },
+        { date: '2021-06-11', value: 58875 },
+        { date: '2021-06-12', value: 60957 },
+        { date: '2021-06-13', value: 61354 },
+        { date: '2021-06-14', value: 60785 },
+        { date: '2021-06-15', value: 60845 },
+        { date: '2021-06-16', value: 60975 }
+      ]
+    },
+    {
+      name: 'HP Store',
+      serie: [
+        { date: '2021-06-02', value: 44600 },
+        { date: '2021-06-03', value: 42440 },
+        { date: '2021-06-04', value: 42600 },
+        { date: '2021-06-05', value: 44700 },
+        { date: '2021-06-06', value: 44300 },
+        { date: '2021-06-07', value: 44500 },
+        { date: '2021-06-08', value: 44100 },
+        { date: '2021-06-09', value: 44405 },
+        { date: '2021-06-10', value: 43751 },
+        { date: '2021-06-11', value: 43975 },
+        { date: '2021-06-12', value: 44957 },
+        { date: '2021-06-13', value: 45454 },
+        { date: '2021-06-14', value: 44685 },
+        { date: '2021-06-15', value: 44145 },
+        { date: '2021-06-16', value: 44475 }
+      ]
+    }
+  ]
 
+  // Demográficos
   trafficDemographics = {
-    device: [
-      {
-        "name": "Desktop",
-        "value": 13000
-      },
-      {
-        "name": "Mobile",
-        "value": 10000
-      }
+    desktop: [
+      { name: 'empty', value: 59 },
+      { id: 1, name: 'Desktop', value: 41 },
     ],
-    gender: [
-      {
-        "name": "Hombre",
-        "value": 5500
-      },
-      {
-        "name": "Mujer",
-        "value": 7500
-      }
+    mobile: [
+      { name: 'empty', value: 59 },
+      { id: 1, name: 'Mobile', value: 41 },
+    ],
+    women: [
+      { name: 'empty', value: 46 },
+      { id: 1, name: 'woman', value: 54 },
+    ],
+    men: [
+      { name: 'empty', value: 54 },
+      { id: 1, name: 'men', value: 46 },
     ],
     age: [
       {
-        "age": "15-19",
-        "visits": 3
+        "age": "18-24",
+        "visits": 24729
       }, {
-        "age": "20-24",
-        "visits": 12
+        "age": "25-34",
+        "visits": 33906
       }, {
-        "age": "25-29",
-        "visits": 60
+        "age": "35-44",
+        "visits": 25503
       }, {
-        "age": "30-34",
-        "visits": 22
+        "age": "34-54",
+        "visits": 20085
       }, {
-        "age": "35-39",
-        "visits": 45
+        "age": "54-64",
+        "visits": 13817
       }, {
-        "age": "40-44",
-        "visits": 3
-      }, {
-        "age": "45-49",
-        "visits": 3
-      }, {
-        "age": "50-54",
-        "visits": 2
-      }, {
-        "age": "55-59",
-        "visits": 1
-      }, {
-        "age": "60-64",
-        "visits": 1
-      }, {
-        "age": "65-69",
-        "visits": 1
-      }, {
-        "age": "70-74",
-        "visits": 1
-      }, {
-        "age": "75-79",
-        "visits": 0
-      }, {
-        "age": "80-54",
-        "visits": 0
-      }, {
-        "age": "85+",
-        "visits": 0
+        "age": "65+",
+        "visits": 9903
       }
     ],
     genderByAge: [
       {
-        "age": "85+",
+        "age": "65+",
         "male": -0.1,
         "female": 0.3
       }, {
-        "age": "80-54",
+        "age": "55-64",
         "male": -0.2,
         "female": 0.3
       }, {
-        "age": "75-79",
+        "age": "45-54",
         "male": -0.3,
         "female": 0.6
       }, {
-        "age": "70-74",
+        "age": "35-44",
         "male": -0.5,
         "female": 0.8
       }, {
-        "age": "65-69",
+        "age": "25-34",
         "male": -0.8,
         "female": 1.0
       }, {
-        "age": "60-64",
+        "age": "18-24",
         "male": -1.1,
         "female": 1.3
-      }, {
-        "age": "55-59",
-        "male": -1.7,
-        "female": 1.9
-      }, {
-        "age": "50-54",
-        "male": -2.2,
-        "female": 2.5
-      }, {
-        "age": "45-49",
-        "male": -2.8,
-        "female": 3.0
-      }, {
-        "age": "40-44",
-        "male": -3.4,
-        "female": 3.6
-      }, {
-        "age": "35-39",
-        "male": -4.2,
-        "female": 4.1
-      }, {
-        "age": "30-34",
-        "male": -5.2,
-        "female": 4.8
-      }, {
-        "age": "25-29",
-        "male": -5.6,
-        "female": 5.1
-      }, {
-        "age": "20-24",
-        "male": -5.1,
-        "female": 5.1
-      }, {
-        "age": "15-19",
-        "male": -3.8,
-        "female": 3.8
       }
     ]
   }
 
-  trafficDemoStatus = [
-    { name: 'device', reqStatus: 2 },
-    { name: 'gender', reqStatus: 2 },
-    { name: 'age', reqStatus: 2 },
-    { name: 'gender-and-age', reqStatus: 2 }
-  ];
-
-  heatmapData = [
+  // Tráfico por día de la semana y hora del día
+  trafficWeekdaysAndHours = [
     {
       "hour": "12pm",
       "weekday": "Lun",
@@ -1047,73 +1102,124 @@ export class IndexedWrapperComponent implements OnInit {
     }
   ];
 
+  // Tráfico por día de la semana
   trafficByDay = [
-    { weekday: 'Dom', value: 180 },
-    { weekday: 'Sab', value: 166 },
-    { weekday: 'Vier', value: 166 },
-    { weekday: 'Jue', value: 267 },
-    { weekday: 'Mier', value: 277 },
-    { weekday: 'Mar', value: 270 },
-    { weekday: 'Lun', value: 230 },
+    { weekday: 'Dom', value: 32578 },
+    { weekday: 'Sab', value: 32458 },
+    { weekday: 'Vier', value: 38716 },
+    { weekday: 'Jue', value: 41245 },
+    { weekday: 'Mier', value: 39429 },
+    { weekday: 'Mar', value: 48081 },
+    { weekday: 'Lun', value: 59340 },
   ]
 
+  // Tráfico por hora del día
   trafficByHour = [
-    { hour: '12 AM', visits: 5 },
-    { hour: '3 AM', visits: 1 },
-    { hour: '6 AM', visits: 9 },
-    { hour: '9 AM', visits: 67 },
-    { hour: '12 PM', visits: 101 },
-    { hour: '3 PM', visits: 81 },
-    { hour: '6 PM', visits: 105 },
-    { hour: '9 PM', visits: 100 }
+    { hour: '12 AM', visits: 150 },
+    { hour: '3 AM', visits: 30 },
+    { hour: '6 AM', visits: 270 },
+    { hour: '9 AM', visits: 1870 },
+    { hour: '12 PM', visits: 3010 },
+    { hour: '3 PM', visits: 2410 },
+    { hour: '6 PM', visits: 3050 },
+    { hour: '9 PM', visits: 3000 }
   ]
 
+  // Visitantes nuevos vs Visitantes recurrentes
+  sessionsVsRetVisitor = [
+    { category: 'Visitantes nuevos', value: 3200 },
+    { category: 'Visitante recurrentes', value: 800 }
+  ]
+
+  // Porcentaje de salidas, rebote y páginas vistas
   brAndPagesView = [
     {
       name: 'Porcentaje de salidas',
       serie: [
-        { date: '2021-03-15', value: 10 },
-        { date: '2021-03-16', value: 12 },
-        { date: '2021-03-17', value: 18 },
-        { date: '2021-03-18', value: 35 },
-        { date: '2021-03-19', value: 41 },
-        { date: '2021-03-20', value: 25 },
-        { date: '2021-03-21', value: 44 }
+        { date: '2021-06-02', value: 75 },
+        { date: '2021-06-03', value: 87 },
+        { date: '2021-06-04', value: 70 },
+        { date: '2021-06-05', value: 86 },
+        { date: '2021-06-06', value: 70 },
+        { date: '2021-06-07', value: 75 },
+        { date: '2021-06-08', value: 82 },
+        { date: '2021-06-09', value: 70 },
+        { date: '2021-06-10', value: 75 },
+        { date: '2021-06-11', value: 78 },
+        { date: '2021-06-12', value: 80 },
+        { date: '2021-06-13', value: 83 },
+        { date: '2021-06-14', value: 70 },
+        { date: '2021-06-15', value: 76 },
+        { date: '2021-06-16', value: 74 }
       ],
       valueFormat: '%'
     },
     {
       name: 'Porcentaje de rebote',
       serie: [
-        { date: '2021-03-15', value: 30 },
-        { date: '2021-03-16', value: 15 },
-        { date: '2021-03-17', value: 18 },
-        { date: '2021-03-18', value: 25 },
-        { date: '2021-03-19', value: 12 },
-        { date: '2021-03-20', value: 8 },
-        { date: '2021-03-21', value: 45 }
+        { date: '2021-06-02', value: 5 },
+        { date: '2021-06-03', value: 7 },
+        { date: '2021-06-04', value: 1 },
+        { date: '2021-06-05', value: 6 },
+        { date: '2021-06-06', value: 1 },
+        { date: '2021-06-07', value: 5 },
+        { date: '2021-06-08', value: 2 },
+        { date: '2021-06-09', value: 3 },
+        { date: '2021-06-10', value: 0 },
+        { date: '2021-06-11', value: 5 },
+        { date: '2021-06-12', value: 8 },
+        { date: '2021-06-13', value: 5 },
+        { date: '2021-06-14', value: 1 },
+        { date: '2021-06-15', value: 8 },
+        { date: '2021-06-16', value: 2 }
       ],
       valueFormat: '%'
     },
     {
       name: 'Número de páginas vistas',
       serie: [
-        { date: '2021-03-15', value: 7 },
-        { date: '2021-03-16', value: 6 },
-        { date: '2021-03-17', value: 5 },
-        { date: '2021-03-18', value: 2 },
-        { date: '2021-03-19', value: 3 },
-        { date: '2021-03-20', value: 1 },
-        { date: '2021-03-21', value: 6 }
+        { date: '2021-06-02', value: 7 },
+        { date: '2021-06-03', value: 5 },
+        { date: '2021-06-04', value: 4 },
+        { date: '2021-06-05', value: 2 },
+        { date: '2021-06-06', value: 3 },
+        { date: '2021-06-07', value: 5 },
+        { date: '2021-06-08', value: 4 },
+        { date: '2021-06-09', value: 3 },
+        { date: '2021-06-10', value: 7 },
+        { date: '2021-06-11', value: 6 },
+        { date: '2021-06-12', value: 5 },
+        { date: '2021-06-13', value: 2 },
+        { date: '2021-06-14', value: 3 },
+        { date: '2021-06-15', value: 1 },
+        { date: '2021-06-16', value: 6 }
       ]
     }
   ]
 
-  sessionsVsRetVisitor = [
-    { category: 'Visitantes nuevos', value: 3200 },
-    { category: 'Visitante recurrentes', value: 2800 }
-  ]
+  // Modelos más visitados
+  mostVisitedModels = {
+    data: [
+      { ranking: 1, product: '606b308e36453f07c0fc4a8d', users: 24569 },
+      { ranking: 2, product: '60492a0ea4c03706c127f4f7', users: 23547 },
+      { ranking: 3, product: '5fc11217a750564a98dba601', users: 22475 },
+      { ranking: 4, product: '606c8837298cad022546e222', users: 14685 },
+      { ranking: 5, product: '5ecc01da00a599d5640c38c4', users: 14145 }
+    ],
+    reqStatus: 2
+  }
 
+  // Categorías más visitadas
+  mostVisitedCategories = {
+    data: [
+      { ranking: 1, category: 'Suplies', users: 22475 },
+      { ranking: 2, category: 'HW Print', users: 14685 },
+      { ranking: 3, category: 'Supplies', users: 14145 }
+    ],
+    reqStatus: 2
+  }
+
+  // Categoría de afinidad
   categoryCoverage = [
     { category: 'Beauty & Wellness/Frequently Visits Salons', users: 1600 },
     { category: 'Lifestyles & Hobbies/Family-Focused', users: 2000 },
@@ -1127,6 +1233,7 @@ export class IndexedWrapperComponent implements OnInit {
     { category: 'Shoppers/Value Shoppers', users: 4731 },
   ];
 
+  // Segmento de mercado
   marketSegment = [
     { category: 'Autos & Vehicles/Motor Vehicles/Motor Vehicles (Used)', users: 1200 },
     { category: 'Autos & Vehicles/Motor Vehicles/Motor Vehicles/Motor Vehicles (New)', users: 1400 },
@@ -1138,67 +1245,8 @@ export class IndexedWrapperComponent implements OnInit {
     { category: 'Financial Services/Credit & Lending/Credit Cards', users: 3100 },
     { category: 'Consumer Electronics/Mobile Phones', users: 3200 },
     { category: 'Financial Services/Banking Services', users: 4731 },
-  ]
-
-  mostVistitedColumns: TableItem[] = [
-    {
-      name: 'ranking',
-      title: 'Ranking'
-    },
-    {
-      name: 'product',
-      title: 'Producto',
-      tooltip: true,
-    },
-    {
-      name: 'users',
-      title: 'Usuarios',
-      textAlign: 'center',
-      formatValue: 'integer',
-    }
   ];
 
-  mostVisitedModels = {
-    data: [
-      { ranking: 1, product: 'Impresora Multifuncional HP Ink', users: 24569 },
-      { ranking: 2, product: 'Impresora Multifuncional HP Ink 2', users: 23547 },
-      { ranking: 3, product: 'Cartucho HP 662 preto Original', users: 22475 },
-      { ranking: 4, product: 'Cartucho HP 664 preto Original', users: 14685 },
-      { ranking: 5, product: 'Cartucho tinta HP 122 preto Original', users: 14145 }
-    ],
-    reqStatus: 2
-  }
-
-  mostVisitedCategories = {
-    data: [
-      { ranking: 1, product: 'Cartucho HP 662 preto Original', users: 22475 },
-      { ranking: 2, product: 'Cartucho HP 664 preto Original', users: 14685 },
-      { ranking: 3, product: 'Cartucho tinta HP 122 preto Original', users: 14145 },
-      { ranking: 4, product: 'Impresora Multifuncional HP Ink', users: 24569 },
-      { ranking: 5, product: 'Impresora Multifuncional HP Ink 2', users: 23547 },
-    ],
-    reqStatus: 2
-  }
-
-  desktopTraffic: any[] = [
-    { name: 'empty', value: 70 },
-    { id: 1, name: 'Desktop', value: 30 },
-  ];
-
-  mobileTraffic: any[] = [
-    { name: 'empty', value: 30 },
-    { id: 1, name: 'Mobile', value: 70 },
-  ];
-
-  womenTraffic: any[] = [
-    { name: 'empty', value: 55 },
-    { id: 1, name: 'woman', value: 45 },
-  ]
-
-  menTraffic: any[] = [
-    { name: 'empty', value: 45 },
-    { id: 1, name: 'men', value: 55 },
-  ];
 
   constructor() { }
 

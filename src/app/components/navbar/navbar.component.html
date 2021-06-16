@@ -40,17 +40,17 @@
         <a class="nav-link pr-0" role="button" ngbDropdownToggle>
           <div class="media align-items-center">
             <i class="fas fa-globe"></i>
-            <span class="ml-2">{{ lang | uppercase }}</span>
+            <span class="ml-2">{{ selectedLang | uppercase }}</span>
           </div>
         </a>
         <div class="dropdown-menu-arrow dropdown-menu-right" ngbDropdownMenu>
-          <a class="dropdown-item" (click)="changeLang('en')" [hidden]="lang === 'en'">
+          <a class="dropdown-item" (click)="changeLang('en')" [hidden]="selectedLang === 'en'">
             <span>{{ 'navbar.english' | translate }}</span>
           </a>
-          <a class="dropdown-item" (click)="changeLang('pt')" [hidden]="lang === 'pt'">
+          <a class="dropdown-item" (click)="changeLang('pt')" [hidden]="selectedLang === 'pt'">
             <span>{{ 'navbar.portuguese' | translate }}</span>
           </a>
-          <a class="dropdown-item" (click)="changeLang('es')" [hidden]="lang === 'es'">
+          <a class="dropdown-item" (click)="changeLang('es')" [hidden]="selectedLang === 'es'">
             <span>{{ 'navbar.spanish' | translate }}</span>
           </a>
         </div>

@@ -3,7 +3,8 @@
     <!-- province -->
     <div class="col-12 col-sm-6 col-lg-3 mb-4">
         <small class="h4 mb-1">Provincia</small>
-        <mat-select [formControl]="provinces" multiple placeholder="Selecciona una Provincia" disableOptionCentering>
+        <mat-select [formControl]="provinces" multiple placeholder="Selecciona una Provincia" disableOptionCentering
+            [disabled]="provinceList.length < 1">
             <div class="input-group input-group-alternative mb-1">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -58,7 +59,8 @@
     <!-- city -->
     <div class="col-12 col-sm-6 col-lg-3 mb-4">
         <small class="h4 mb-1">Ciudad</small>
-        <mat-select [formControl]="cities" multiple placeholder="Selecciona una Ciudad" disableOptionCentering>
+        <mat-select [formControl]="cities" multiple placeholder="Selecciona una Ciudad" disableOptionCentering
+            [disabled]="cityList.length < 1">
             <div class="input-group input-group-alternative mb-1">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -114,5 +116,20 @@
                 Filtrar
             </button>
         </div>
+    </div>
+
+    <!-- shared errors -->
+    <div class="col-12 text-muted">
+        <small *ngIf="provinceList.length < 1 && cityList.length > 0 && provincesReqStatus > 1 && citiesReqStatus > 1">
+            No se encontraron Provincias para este retailer
+        </small>
+
+        <small *ngIf="provinceList.length > 0 && cityList.length < 1 && provincesReqStatus > 1 && citiesReqStatus > 1">
+            No se encontraron Ciudades para este retailer
+        </small>
+
+        <small *ngIf="provinceList.length < 1 && cityList.length < 1 && provincesReqStatus > 1 && citiesReqStatus > 1">
+            No se encontraron Provincias ni Ciudades para este retailer
+        </small>
     </div>
 </div>

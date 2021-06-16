@@ -90,7 +90,10 @@ export class UserService {
 
     // Delete last session info if token expired and user doesn't logout.
     if (window.localStorage.getItem("usermail") !== email) {
+      const savedLang = localStorage.getItem('lang') || 'es';
       window.localStorage.clear();
+
+      localStorage.setItem('lang', savedLang);
     }
 
     // const password = this.hashPsw(psw);
@@ -228,7 +231,11 @@ export class UserService {
     this._loggedIn = false;
     this._user = new User();
     this.router.navigate(["/"]);
+
+    const savedLang = localStorage.getItem('lang') || 'es';
     window.localStorage.clear();
+
+    localStorage.setItem('lang', savedLang);
   }
 
   hashPsw(password: string): string | Int32Array {

@@ -5,3 +5,18 @@
 .logo-container img {
     width: 80px;
 }
+
+.select-lang-container {
+    display: flex;
+    justify-content: flex-end;
+
+    .select-lang {
+        width: 100px;
+
+        .lang-details {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+    }
+}

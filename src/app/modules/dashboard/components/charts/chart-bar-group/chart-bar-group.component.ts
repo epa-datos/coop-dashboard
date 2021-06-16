@@ -224,13 +224,15 @@ export class ChartBarGroupComponent implements OnInit, AfterViewInit, OnDestroy 
     this.chart = chart;
     loadLanguage(chart, lang);
 
-    // last tick
-    let range = categoryAxis.axisRanges.create();
-    range.category = chart.data[chart.data.length - 1].category;
-    range.label.disabled = true;
-    range.tick.strokeOpacity = 0.4;
-    range.tick.location = 1;
-    range.grid.location = 1;
+    if (chart.data.length > 0) {
+      // last tick
+      let range = categoryAxis.axisRanges.create();
+      range.category = chart.data[chart.data.length - 1].category;
+      range.label.disabled = true;
+      range.tick.strokeOpacity = 0.4;
+      range.tick.location = 1;
+      range.grid.location = 1;
+    }
   }
 
   ngOnDestroy() {

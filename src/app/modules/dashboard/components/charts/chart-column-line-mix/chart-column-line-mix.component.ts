@@ -24,6 +24,7 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDes
   @Input() errorLegend: string;
   @Input() joinTextInTooltip: string = 'en';
   @Input() zebraBars: boolean;
+  @Input() XYCursor: boolean;
 
   chartID;
 
@@ -142,7 +143,9 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDes
     circle.strokeWidth = 3;
 
     // chart.responsive.enabled = true;
-    chart.cursor = new am4charts.XYCursor();
+    if (this.XYCursor) {
+      chart.cursor = new am4charts.XYCursor();
+    }
   }
 
   loadChartData(chart) {

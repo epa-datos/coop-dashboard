@@ -13,7 +13,6 @@ import { AppStateService } from 'src/app/services/app-state.service';
 })
 export class ChartBarComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input() data;
   @Input() category: string = 'category';
   @Input() value: string = 'value';
   @Input() valueFormat: string; // USD MXN Copy shown in tooltip
@@ -33,6 +32,18 @@ export class ChartBarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.chartID = `chart-bar-${this.name}`
   }
 
+  private _data;
+  get data() {
+    return this._data;
+  }
+  @Input() set data(value) {
+    this._data = value;
+    if (this.chart) {
+      this.loadChartData(this.chart);
+    }
+  }
+
+  chart;
   langSub: Subscription;
 
   constructor(
@@ -60,7 +71,7 @@ export class ChartBarComponent implements OnInit, AfterViewInit, OnDestroy {
     let chart = am4core.create(this.chartID, am4charts.XYChart);
     // chart.scrollbarX = new am4core.Scrollbar();
 
-    chart.data = this.data;
+    this.loadChartData(chart);
     loadLanguage(chart, lang);
 
     // Create axes
@@ -129,6 +140,11 @@ export class ChartBarComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // chart.responsive.enabled = true;
+  }
+
+  loadChartData(chart) {
+    chart.data = this.data;
+    this.chart = chart;
   }
 
   ngOnDestroy() {

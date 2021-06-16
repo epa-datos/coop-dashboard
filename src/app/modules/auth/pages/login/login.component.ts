@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
+import { AppStateService } from 'src/app/services/app-state.service';
+import { LocaleService } from 'src/app/services/locale.service';
 import { UserService } from 'src/app/services/user.service';
 import { EmailValidator } from 'src/app/tools/validators/email.validator';
 
@@ -21,17 +24,31 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   pwdModeOn: boolean;
   reqStatus: number = 0;
-  errorMsg: string;
+
+  languages = ['es', 'pt', 'en'];
+  defaultLang: string;
+  selectedLang: string;
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private cookieService: CookieService,
     private router: Router,
+    private translate: TranslateService,
+    private appStateService: AppStateService,
+    private localService: LocaleService
   ) {
     const islogged = this.userService.isLoggedIn();
 
-    islogged && this.userService.redirectToDefaultPage();
+    islogged && this.router.navigate(['/dashboard/home']);
+
+    if (!localStorage.getItem('lang')) {
+      localStorage.setItem('lang', 'es');
+    }
+
+    this.defaultLang = localStorage.getItem('lang');
+    translate.setDefaultLang(this.defaultLang);
+    this.selectedLang = this.defaultLang;
   }
 
   ngOnInit() {
@@ -73,7 +90,6 @@ export class LoginComponent implements OnInit {
     if (this.form.valid) {
       this.userService.login(email, password).subscribe(
         () => {
-          delete this.errorMsg;
           if (this.remember_password.value) {
             this.rememberPsw();
           } else {
@@ -81,15 +97,20 @@ export class LoginComponent implements OnInit {
           }
 
           this.router.navigate(['/dashboard/home']);
-
           // default redirection deprecated
           // this.userService.redirectToDefaultPage().then(() => {
           //   this.reqStatus = 2;
           // });
+
+          // in order to load app module again and use selected lang in setup
+          if ((this.defaultLang == 'es' || this.defaultLang == 'pt') && this.selectedLang == 'en' ||
+            (this.defaultLang == 'en' && this.selectedLang !== 'en')) {
+            window.location.reload();
+          }
         },
         error => {
-          this.errorMsg = error?.error?.message ? error.error.message : error?.message;
-          console.error(`[login.component]: ${this.errorMsg}`);
+          const errorMsg = error?.error?.message ? error.error.message : error?.message;
+          console.error(`[login.component]: ${errorMsg}`);
           this.reqStatus = 3;
         }
       )
@@ -103,5 +124,14 @@ export class LoginComponent implements OnInit {
       anonymous_id: this.password.value
     }
     this.cookieService.set('coop_user', JSON.stringify(user), 365);
+  }
+
+  langChange() {
+    localStorage.setItem('lang', this.selectedLang);
+
+    this.translate.use(this.selectedLang);
+    this.appStateService.selectLang(this.selectedLang);
+
+    this.localService.registerCulture(this.selectedLang);
   }
 }

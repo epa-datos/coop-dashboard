@@ -1,4 +1,15 @@
 {
+    "login": {
+        "loginTitle": "Log In",
+        "emailPh": "Email",
+        "emailError": "Enter a valid email.",
+        "passwordPh": "Password",
+        "passwordError": "Enter a valid password.",
+        "rememberMe": "Keep me signed in",
+        "loginError": "Failed to login. Please try later.",
+        "loginButton": "Log in",
+        "forgotPassword": "Forgot password?"
+    },
     "navbar": {
         "logout": "Log out",
         "english": "English",
