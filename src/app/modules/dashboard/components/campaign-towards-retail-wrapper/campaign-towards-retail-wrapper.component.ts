@@ -22,13 +22,13 @@ export class CampaignTowardsRetailWrapperComponent implements OnInit, OnDestroy 
       reqStatus: 0
     },
     {
-      source: 'programmatic',
+      source: 'display',
       name: 'Programmatic',
       data: [],
       reqStatus: 0
     },
     {
-      source: 'facebook',
+      source: 'social',
       name: 'Social Media',
       data: [],
       reqStatus: 0
