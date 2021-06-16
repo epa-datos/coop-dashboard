@@ -9,6 +9,20 @@
     </div>
 </div>
 
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card height-fluid">
+            <div class="card-header">
+                <span class="h4">Top sesiones por retailers</span>
+            </div>
+            <div class="card-body">
+                <app-chart-line-series [series]="topSessionsByRetailer" name="indexed-sessions-by-retailer">
+                </app-chart-line-series>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- DEMOGRAPHICS CHARTS -->
 <div class="row mt-1">
     <!-- <div class="col-12">
@@ -38,10 +52,10 @@
                         <div class="chart-legend legend-center mt-0">
                             <div class="legend-container">
                                 <div class="legend-square on color-1"></div>
-                                <div class="legend-label">Desktop {{ desktopTraffic[1].value }}%</div>
+                                <div class="legend-label">Desktop {{ trafficDemographics.desktop[1].value }}%</div>
                             </div>
                         </div>
-                        <app-chart-pictorial [data]="desktopTraffic" name="indexed-devices-desktop"
+                        <app-chart-pictorial [data]="trafficDemographics.desktop" name="indexed-devices-desktop"
                             [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
                             height="280px">
                         </app-chart-pictorial>
@@ -50,10 +64,10 @@
                         <div class="chart-legend legend-center mt-0">
                             <div class="legend-container">
                                 <div class="legend-square on color-2"></div>
-                                <div class="legend-label">Mobile {{ mobileTraffic[1].value }}%</div>
+                                <div class="legend-label">Mobile {{ trafficDemographics.mobile[1].value }}%</div>
                             </div>
                         </div>
-                        <app-chart-pictorial [data]="mobileTraffic" name="indexed-devices-mobile"
+                        <app-chart-pictorial [data]="trafficDemographics.mobile" name="indexed-devices-mobile"
                             [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
                             height="280px">
                         </app-chart-pictorial>
@@ -75,10 +89,10 @@
                         <div class="chart-legend legend-center mt-0">
                             <div class="legend-container">
                                 <div class="legend-square on color-1"></div>
-                                <div class="legend-label">Hombres {{ menTraffic[1].value }}%</div>
+                                <div class="legend-label">Hombres {{ trafficDemographics.men[1].value }}%</div>
                             </div>
                         </div>
-                        <app-chart-pictorial [data]="menTraffic" name="indexed-gender-man"
+                        <app-chart-pictorial [data]="trafficDemographics.men" name="indexed-gender-man"
                             [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man" height="280px">
                         </app-chart-pictorial>
                     </div>
@@ -87,10 +101,10 @@
                         <div class="chart-legend legend-center mt-0">
                             <div class="legend-container">
                                 <div class="legend-square on color-2"></div>
-                                <div class="legend-label">Mujeres {{ womenTraffic[1].value }}%</div>
+                                <div class="legend-label">Mujeres {{ trafficDemographics.women[1].value }}%</div>
                             </div>
                         </div>
-                        <app-chart-pictorial [data]="womenTraffic" name="indexed-gender-woman"
+                        <app-chart-pictorial [data]="trafficDemographics.women" name="indexed-gender-woman"
                             [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman" height="280px">
                         </app-chart-pictorial>
                     </div>
@@ -156,7 +170,7 @@
                 <span class="h4">Tráfico por día de la semana y hora del día</span>
             </div>
             <div class="card-body">
-                <app-chart-heat-map [data]="heatmapData" name="indexed-weekday-sesions" height="100%">
+                <app-chart-heat-map [data]="trafficWeekdaysAndHours" name="indexed-weekday-sesions" height="100%">
                 </app-chart-heat-map>
             </div>
         </div>
@@ -184,6 +198,63 @@
                 <app-chart-lollipop [data]="trafficByHour" name="indexed-traffic-hour" category="hour" value="visits"
                     height="250px">
                 </app-chart-lollipop>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NEW VISITORS & BR CHARTS -->
+<div class="row">
+    <div class="col-12 col-md-6 col-lg-4 mt-4">
+        <div class="card height-fluid">
+            <div class="card-header">
+                <span class="h4">Visitantes nuevos vs Visitantes recurrentes</span>
+            </div>
+            <div class="card-body">
+                <app-chart-pie [data]="sessionsVsRetVisitor" name="indexed-sessions-ret-visitor"
+                    legendPosition="bottom">
+                </app-chart-pie>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-8 mt-4">
+        <div class="card height-fluid">
+            <div class="card-header">
+                <span class="h4">Porcentaje de salidas, rebote y páginas vistas </span>
+            </div>
+            <div class="card-body">
+                <app-chart-line-series [series]="brAndPagesView" name="indexed-br-pages-view">
+                </app-chart-line-series>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODELS AND CATEGORIES TABLES -->
+<div class="row mt-5">
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="h4">Modelos más visitados</span>
+            </div>
+            <div class="card-body">
+                <app-generic-table [displayedColumns]="mostVistitedProductsColumns" [tableData]="mostVisitedModels"
+                    [tableDataChange]="mostVisitedModels.data" errorMsg="Error al consultar modelos"
+                    emptyDataMsg="No se encontraron modelos">
+                </app-generic-table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 mt-4">
+        <div class="card height-fluid">
+            <div class="card-header">
+                <span class="h4">Categorías más visitadas</span>
+            </div>
+            <div class="card-body">
+                <app-generic-table [displayedColumns]="mostVisitedCategoriesColumns" [tableData]="mostVisitedCategories"
+                    [tableDataChange]="mostVisitedCategories.data" errorMsg="Error al consultar categorías"
+                    emptyDataMsg="No se encontraron categorías">
+                </app-generic-table>
             </div>
         </div>
     </div>
@@ -246,63 +317,6 @@
                 <small class="text-muted mt-2 d-block d-sm-none">
                     Para mejor visualización usar la versión de <strong>Escritorio</strong>
                 </small>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- NEW VISITORS & BR CHARTS -->
-<div class="row">
-    <div class="col-12 col-md-6 col-lg-4 mt-4">
-        <div class="card height-fluid">
-            <div class="card-header">
-                <span class="h4">Visitantes nuevos vs Visitantes recurrentes</span>
-            </div>
-            <div class="card-body">
-                <app-chart-pie [data]="sessionsVsRetVisitor" name="indexed-sessions-ret-visitor"
-                    legendPosition="bottom">
-                </app-chart-pie>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6 col-lg-8 mt-4">
-        <div class="card height-fluid">
-            <div class="card-header">
-                <span class="h4">Porcentaje de salidas, rebote y páginas vistas </span>
-            </div>
-            <div class="card-body">
-                <app-chart-line-series [series]="brAndPagesView" name="indexed-br-pages-view">
-                </app-chart-line-series>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODELS AND CATEGORIES TABLES -->
-<div class="row mt-5">
-    <div class="col-12 col-md-6 mt-4">
-        <div class="card">
-            <div class="card-header">
-                <span class="h4">Modelos más visitados</span>
-            </div>
-            <div class="card-body">
-                <app-generic-table [displayedColumns]="mostVistitedColumns" [tableData]="mostVisitedModels"
-                    [tableDataChange]="mostVisitedModels.data" errorMsg="Error al consultar modelos"
-                    emptyDataMsg="No se encontraron modelos">
-                </app-generic-table>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6 mt-4">
-        <div class="card">
-            <div class="card-header">
-                <span class="h4">Categorías más visitadas</span>
-            </div>
-            <div class="card-body">
-                <app-generic-table [displayedColumns]="mostVistitedColumns" [tableData]="mostVisitedCategories"
-                    [tableDataChange]="mostVisitedCategories.data" errorMsg="Error al consultar categorías"
-                    emptyDataMsg="No se encontraron categorías">
-                </app-generic-table>
             </div>
         </div>
     </div>
