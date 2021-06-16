@@ -2,10 +2,13 @@
 <div class="row mt-5">
     <div class="col-12">
         <div class="stats-container">
-            <app-card-stat *ngFor="let stat of kpis" [stat]="stat" [loader]="kpisReqStatus <= 1" [smallHeader]="true"
-                height="100px">
+            <app-card-stat *ngFor="let stat of staticData.kpis" [stat]="stat"
+                [loader]="staticDataReqStatus[0].reqStatus <= 1" [smallHeader]="true" height="100px">
             </app-card-stat>
         </div>
+        <p class="text-center text-muted mt-3 mb-0" [hidden]="staticDataReqStatus[0].reqStatus !== 3">
+            Error al consultar datos
+        </p>
     </div>
 </div>
 
@@ -16,11 +19,11 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                        (click)="getDataByUsersAndRevenue('users');">Usuarios - Conversiones</a>
+                        (click)="getUsersAndRevenue('conversions-vs-users');">Usuarios - Conversiones</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                        (click)="getDataByUsersAndRevenue('revenue')">Revenue - AUP</a>
+                        (click)="getUsersAndRevenue('aup-vs-revenue')">Revenue - AUP</a>
                 </li>
             </ul>
         </div>
@@ -32,12 +35,13 @@
                 <span class="h4">{{ selectedTab1 === 1 ? 'Usuarios vs Conversiones' : 'Revenue vs AUP '}} </span>
             </div>
             <div class="card-body">
-                <app-chart-multiple-axes [data]="dataByUsersAndRevenue"
-                    [value1]="selectedTab1 === 1 ? 'conversions' : 'revenue'"
-                    [value2]="selectedTab1 === 1 ? 'traffic' : 'aup'"
+                <app-chart-multiple-axes [data]="usersAndRevenue"
+                    [value1]="selectedTab1 === 1 ? 'transactions' : 'quantity'"
+                    [value2]="selectedTab1 === 1 ? 'users' : 'aup'"
                     [valueName1]="selectedTab1 === 1 ? 'Conversiones' : 'Revenue'"
                     [valueName2]="selectedTab1 === 1 ? 'Usuarios' : 'AUP'" [valueFormat1]="selectedTab1 === 2 && 'USD'"
-                    [valueFormat2]="selectedTab1 === 2 && 'USD'" name="omnichat-traffic-vs-conversions">
+                    [valueFormat2]="selectedTab1 === 2 && 'USD'" name="omnichat-traffic-vs-conversions"
+                    [status]="usersAndRevenueReqStatus">
                 </app-chart-multiple-axes>
             </div>
         </div>
@@ -52,71 +56,75 @@
             <span class="h3">Tráfico y Conversiones</span>
         </div>
     </div>
-    <div class="col-12" *ngIf="!retailerView">
+    <div class="col-12" *ngIf="!selectedLevelPage.retailer">
         <div class="pills-container">
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                        (click)="selectedTab2 = 1">Tráfico</a>
+                        (click)="getDataByLevel('traffic')">Tráfico</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                        (click)="selectedTab2 = 2">Conversiones</a>
+                        (click)="getDataByLevel('sales')">Conversiones</a>
                 </li>
             </ul>
         </div>
     </div>
 
-    <div class="col-12 col-lg-4 mt-4" *ngIf="latamView">
+    <div class="col-12 col-lg-4 mt-4" *ngIf="selectedLevelPage.latam">
         <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por país</span>
             </div>
             <div class="card-body">
-                <app-chart-bar-horizontal [data]="countries" name="omnichat-chats-by-country" category="country"
-                    value="chats" [singleColorBars]="true" [status]="chartsReqStatus.countries">
+                <app-chart-bar-horizontal [data]="dataByLevel.country" name="omnichat-chats-by-country"
+                    category="country" value="chats" [singleColorBars]="true"
+                    [status]="dataByLevelReqStatus[0].reqStatus">
                 </app-chart-bar-horizontal>
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-4 mt-4" *ngIf="latamView || countryView" [ngClass]="{'col-lg-6' : !latamView}">
+    <div class="col-12 col-lg-4 mt-4" *ngIf="selectedLevelPage.latam || selectedLevelPage.country"
+        [ngClass]="{'col-lg-6' : !selectedLevelPage.latam}">
         <div class="card height-fluid superimposed">
             <div class="card-header">
                 <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por retailer</span>
             </div>
             <div class="card-body retailers-chart-container">
                 <div class="superimposed">
-                    <app-chart-bar-horizontal [data]="chatsByRetailer" name="omnichat-chats-by-retailer"
+                    <app-chart-bar-horizontal [data]="dataByLevel.retailer" name="omnichat-chats-by-retailer"
                         category="retailer" value="chats" [truncateLabels]="true" [singleColorBars]="true"
-                        height="600px">
+                        height="600px" [status]="dataByLevelReqStatus[1].reqStatus">
                     </app-chart-bar-horizontal>
                 </div>
 
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-4 mt-4" [ngClass]="{'col-lg-6' : !latamView}">
+    <div class="col-12 col-lg-4 mt-4" [ngClass]="{'col-lg-6' : !selectedLevelPage.latam}">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4" *ngIf="!retailerView">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por
+                <span class="h4" *ngIf="!selectedLevelPage.retailer">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'
+                    }} por
                     categoría</span>
-                <span class="h4" *ngIf="retailerView">Tráfico por categoría</span>
+                <span class="h4" *ngIf="selectedLevelPage.retailer">Tráfico por categoría</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="categories" [status]="chartsReqStatus.categories"
+                <app-chart-pie [data]="dataByLevel.category1" [status]="dataByLevelReqStatus[2].reqStatus"
                     name="omnichat-chats-by-category-1" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
     </div>
 
-    <div class="col-12 col-lg-6 mt-4" *ngIf="retailerView">
+    <div class="col-12 col-lg-6 mt-4" *ngIf="selectedLevelPage.retailer">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4" *ngIf="retailerView">Conversiones por categoría</span>
+                <span class="h4" *ngIf="selectedLevelPage.retailer">Conversiones por categoría</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="chatsByCategories" name="omnichat-chats-by-category-2" legendPosition="bottom">
+                <app-chart-pie [data]="dataByLevel.category2" [status]="dataByLevelReqStatus[3].reqStatus"
+                    name="omnichat-chats-by-category-2" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -130,25 +138,24 @@
         <span class="h3">Análisis de conversión por categoría</span>
         <p class="h4 mt-3">Tasas de conversión</p>
         <div class="row">
-            <div *ngFor="let stat of conversionByCategories" class="col-lg-4 mb-2">
+            <div *ngFor="let stat of staticData.conversionRate" class="col-lg-4 mb-2">
                 <app-card-stat [stat]="stat" [loader]="false" [smallHeader]="true" height="auto"></app-card-stat>
+            </div>
+            <div class="col-12 mt--3 mt-xl-2" [hidden]="staticDataReqStatus[1].reqStatus !== 3">
+                <p class="text-center text-muted mb-0">
+                    Error al consultar datos
+                </p>
             </div>
         </div>
     </div>
     <div class="col-12 mt-3">
-        <div class="pills-container">
+        <div class="pills-container" *ngIf="selectedCategories.length > 1">
             <ul class="nav nav-pills nav-fill">
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
-                        (click)="getDataByCategory(1)">PS</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}" (click)="getDataByCategory(2)">HW
-                        Print</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 3}"
-                        (click)="getDataByCategory(3)">Supplies</a>
+                <li class="nav-item" *ngFor="let category of selectedCategories">
+                    <a class="nav-link p-2" [ngClass]="{'active': category.id === selectedTab3}"
+                        (click)="getSalesByProduct(category); getUsersSalesAndCR(category)">
+                        {{ category.name }}
+                    </a>
                 </li>
             </ul>
         </div>
@@ -159,8 +166,9 @@
                         <span class="h4">Conversiones por producto</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-bar-horizontal [data]="transactionsByProduct" name="omnichat-transactions-by-product"
-                            category="product" value="transactions" [singleColorBars]="true">
+                        <app-chart-bar-horizontal [data]="salesByProduct" name="omnichat-transactions-by-product"
+                            category="product" value="quantity" [singleColorBars]="true"
+                            [status]="salesByProductReqStatus">
                         </app-chart-bar-horizontal>
                         <small class="text-muted mt-2 d-block d-sm-none">
                             Para mejor visualización usar la versión de <strong>Escritorio</strong>
@@ -188,10 +196,10 @@
                                 <div class="legend-label">Tasa de conversión</div>
                             </div>
                         </div>
-                        <app-chart-bar-group [data]="usersTransactionsConversion"
-                            name="omnichat-users-transactions-rate" height="325px" valueBar1="users"
-                            valueBar2="transactions" valueLine1="conversion_rate" valueNameBar1="Usuarios"
-                            valueNameBar2="Conversiones" valueFormatLine1="%">
+                        <app-chart-bar-group [data]="usersSalesAndBr" name="omnichat-users-transactions-rate"
+                            height="325px" valueBar1="users" valueBar2="transactions" valueLine1="conversion_rate"
+                            valueNameBar1="Usuarios" valueNameBar2="Conversiones" valueFormatLine1="%"
+                            [status]="usersSalesAndBrReqStatus">
                         </app-chart-bar-group>
                     </div>
                 </div>

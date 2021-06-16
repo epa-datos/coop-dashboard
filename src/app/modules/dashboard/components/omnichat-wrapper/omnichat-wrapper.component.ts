@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { NavigationEnd, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { AppStateService } from 'src/app/services/app-state.service';
+import { Observable, Subscription } from 'rxjs';
+import { convertMonthToString } from 'src/app/tools/functions/data-convert';
+import { FiltersStateService } from '../../services/filters-state.service';
 import { OmnichatService } from '../../services/omnichat.service';
 import { TableItem } from '../generic-table/generic-table.component';
 
@@ -14,77 +13,8 @@ import { TableItem } from '../generic-table/generic-table.component';
 })
 export class OmnichatWrapperComponent implements OnInit, OnDestroy {
 
-  kpis: any[] = [
-    {
-      metricTitle: 'total chats',
-      metricName: 'total_chats',
-      metricValue: 380.092,
-      metricFormat: 'decimals'
-    },
-    {
-      metricTitle: 'promedio de chats por día',
-      metricName: 'chats_day_avg',
-      metricValue: 998,
-      metricFormat: 'integer'
-
-    },
-    {
-      metricTitle: '% dedicado al cliente',
-      metricName: 'chats_client',
-      metricValue: 41,
-      metricFormat: 'percentage'
-    },
-    {
-      metricTitle: 'mediana de duración',
-      metricName: 'median_duration',
-      metricValue: '00:05:34',
-      subMetricTitle: 'Esperado',
-      subMetricName: 'cr',
-      subMetricValue: '< 10 Min'
-    },
-    {
-      metricTitle: 'mediana de retardo',
-      metricName: 'median_delay',
-      metricValue: '00:00:11',
-      subMetricTitle: 'Benchmark',
-      subMetricName: 'roas',
-      subMetricValue: '< 48 Seg'
-    },
-    {
-      metricTitle: 'calificación del chat',
-      metricName: 'chat_score',
-      metricValue: 91.1,
-      metricFormat: 'score',
-      subMetricTitle: 'resultado',
-      subMetricName: 'chat_score',
-      subMetricValue: '4.56/5'
-    },
-    {
-      metricTitle: 'usuarios',
-      metricName: 'users',
-      metricValue: '4500',
-      metricFormat: 'integer'
-    },
-    {
-      metricTitle: 'conversiones',
-      metricName: 'transactions',
-      metricValue: 0,
-      metricFormat: 'integer',
-    },
-    {
-      metricTitle: 'conversion rate',
-      metricName: 'conversion_rate',
-      metricValue: 0,
-      metricFormat: 'percentage',
-    },
-    {
-      metricTitle: 'revenue',
-      metricName: 'revenue',
-      metricValue: 0,
-      metricFormat: 'decimals',
-      metricSymbol: 'USD'
-    }
-  ];
+  @Input() selectedLevelPage: any;
+  @Input() requestInfoChange: Observable<boolean>;
 
   kpisReqStatus = 2;
 
@@ -1198,26 +1128,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     conversions: 66,
   }];
 
-  conversionByCategories = [
-    {
-      metricTitle: 'ps',
-      metricName: 'ps',
-      metricValue: 2.6,
-      metricFormat: 'percentage'
-    },
-    {
-      metricTitle: 'hw Print',
-      metricName: 'hw_print',
-      metricValue: 7.6,
-      metricFormat: 'percentage'
-    },
-    {
-      metricTitle: 'Supplies',
-      metricName: 'supplies',
-      metricValue: 16.2,
-      metricFormat: 'percentage',
-    }
-  ]
+
 
   transactionsByProduct = [
     { product: 'Impresora Multifunción HP In 2', transactions: 7 },
@@ -1321,10 +1232,6 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   selectedTab3 = 1;
   selectedTab4 = 1;
   selectedTab5 = 1;
-
-  countrySub: Subscription;
-  retailerSub: Subscription;
-  routeSub: Subscription;
 
   countryID: number;
   retailerID: number;
@@ -1430,46 +1337,287 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   categoryAndUsersSource = new MatTableDataSource<any>(this.categoryAndUsers);
   categoryAndUsersReqStatus = 2;
 
-  constructor(
-    private router: Router,
-    private appStateService: AppStateService,
-    private omnichatService: OmnichatService
+  //////////////////////////////////////////
 
+  staticData = {
+    kpis: [
+      {
+        metricTitle: 'total chats',
+        metricName: 'total_chats',
+        metricValue: 0,
+        metricFormat: 'integer'
+      },
+      {
+        metricTitle: 'promedio de chats por día',
+        metricName: 'chats_day_avg',
+        metricValue: 0,
+        metricFormat: 'percentage'
+
+      },
+      {
+        metricTitle: '% dedicado al cliente',
+        metricName: 'chats_client',
+        metricValue: 0,
+        metricFormat: 'percentage'
+      },
+      {
+        metricTitle: 'mediana de duración',
+        metricName: 'median_duration',
+        metricValue: '00:00:00',
+        subMetricTitle: 'Esperado',
+        subMetricName: 'cr',
+        subMetricValue: ''
+      },
+      {
+        metricTitle: 'mediana de retardo',
+        metricName: 'median_delay',
+        metricValue: '00:00:00',
+        subMetricTitle: 'Benchmark',
+        subMetricName: 'roas',
+        subMetricValue: ''
+      },
+      {
+        metricTitle: 'calificación del chat',
+        metricName: 'chat_score',
+        metricValue: 0,
+        metricFormat: 'score',
+        subMetricTitle: 'resultado',
+        subMetricName: 'chat_score',
+        subMetricValue: '0/5'
+      },
+      {
+        metricTitle: 'usuarios',
+        metricName: 'users',
+        metricValue: 0,
+        metricFormat: 'integer'
+      },
+      {
+        metricTitle: 'conversiones',
+        metricName: 'transactions',
+        metricValue: 0,
+        metricFormat: 'integer',
+      },
+      {
+        metricTitle: 'conversion rate',
+        metricName: 'conversion_rate',
+        metricValue: 0,
+        metricFormat: 'percentage',
+      },
+      {
+        metricTitle: 'revenue',
+        metricName: 'revenue',
+        metricValue: 0,
+        metricFormat: 'decimals',
+        metricSymbol: 'USD'
+      }
+    ],
+    conversionRate: [
+      {
+        metricTitle: 'ps',
+        metricName: 'PS',
+        metricValue: 0,
+        metricFormat: 'percentage'
+      },
+      {
+        metricTitle: 'hw Print',
+        metricName: 'HW Print',
+        metricValue: 0,
+        metricFormat: 'percentage'
+      },
+      {
+        metricTitle: 'Supplies',
+        metricName: 'Supplies',
+        metricValue: 0,
+        metricFormat: 'percentage',
+      }
+    ]
+  };
+  staticDataReqStatus = [
+    { name: 'kpis', reqStatus: 0 },
+    { name: 'conversionRate', reqStatus: 0 },
+  ];
+
+  usersAndRevenue: any[] = [];
+  usersAndRevenueReqStatus: number = 1;
+
+
+  dataByLevel = {};
+  dataByLevelReqStatus = [
+    { name: 'country', reqStatus: 0 },
+    { name: 'retailer', reqStatus: 0 },
+    { name: 'category1', reqStatus: 0 },
+    { name: 'category2', reqStatus: 0 },
+  ];
+
+  salesByProduct: any[] = [];
+  salesByProductReqStatus: number = 0;
+
+  usersSalesAndBr = {};
+  usersSalesAndBrReqStatus: number = 0;
+
+  requestInfoSub: Subscription;
+
+  // available tabs
+  selectedCategories: any[] = []; // for salesByProduct
+  selectedCategoryTab3: any;
+
+  constructor(
+    private omnichatService: OmnichatService,
+    private filtersStateService: FiltersStateService
   ) { }
 
   ngOnInit(): void {
-    this.countryID = this.appStateService.selectedCountry?.id;
-    this.retailerID = this.appStateService.selectedRetailer?.id;
-    this.latamView = this.router.url.includes('latam') ? true : false;
+    this.getAllData();
 
-    if (this.countryID || this.retailerID || this.latamView) {
-      this.getActiveView();
-      // this.getAllData();
-    }
-
-    this.routeSub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    )
-      .subscribe(event => {
-        if (event instanceof NavigationEnd)
-          this.latamView = this.router.url.includes('latam') ? true : false;
-        this.getActiveView();
-      });
-
-    this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
-      this.retailerID = retailer?.id;
-      this.getActiveView();
-    });
-
-    this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
-      this.countryID = country?.id;
-      this.getActiveView();
+    this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
+      this.getAllData();
     });
   }
 
   getAllData() {
-    this.getCountries('traffic');
-    this.getCategories('traffic');
+    this.selectedCategories = this.filtersStateService.categories;
+    const previousCategory = this.selectedCategories.find(category => category.id === this.selectedCategoryTab3?.id);
+    const selectedCategory = previousCategory ? previousCategory : this.selectedCategories[0];
+
+    let selectedMetricForTab1 = this.selectedTab1 === 1 ? 'conversions-vs-users' : 'aup-vs-revenue';
+    let selectedMetricForTab2 = this.selectedTab2 === 1 ? 'traffic' : 'sales';
+
+    this.getStaticDataByMetric();
+    this.getUsersAndRevenue(selectedMetricForTab1);
+    this.getDataByLevel(selectedMetricForTab2);
+    this.getSalesByProduct(selectedCategory);
+    this.getUsersSalesAndCR(selectedCategory);
+  }
+
+  getStaticDataByMetric() {
+    const requiredData = [
+      { metricType: 'kpis', name: 'kpis' },
+      { metricType: 'conversion-rate', subMtricType: 'category', name: 'conversionRate' }
+    ]
+
+    for (let metric of requiredData) {
+      const reqStatusObj = this.staticDataReqStatus.find(item => item.name === metric.name);
+      reqStatusObj.reqStatus = 1;
+
+      this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, metric.metricType, metric.subMtricType).subscribe(
+        (resp: any[]) => {
+          if (resp?.length < 1) {
+            reqStatusObj.reqStatus = 2;
+            return;
+          }
+
+          if (metric.name === 'conversionRate') {
+            for (let i = 0; i < this.staticData.conversionRate.length; i++) {
+              const baseObj = resp.find(item => item.name === this.staticData.conversionRate[i].metricName);
+              this.staticData.conversionRate[i].metricValue = baseObj.value;
+            }
+          }
+          reqStatusObj.reqStatus = 2;
+        },
+        error => {
+          const errorMsg = error?.error?.message ? error.error.message : error?.message;
+          console.error(`[omnichat.component]: ${errorMsg}`);
+          reqStatusObj.reqStatus = 3;
+        });
+    }
+  }
+
+  getUsersAndRevenue(metricType: string) {
+    this.usersAndRevenueReqStatus = 1;
+    this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, metricType).subscribe(
+      (resp: any[]) => {
+        this.usersAndRevenue = resp;
+        this.usersAndRevenueReqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[omnichat.component]: ${errorMsg}`);
+        this.usersAndRevenueReqStatus = 3;
+      });
+
+    this.selectedTab1 = metricType === 'conversions-vs-users' ? 1 : 2;
+  }
+
+  getDataByLevel(metricType: string) {
+    let requiredData: any[];
+
+    if (this.selectedLevelPage.latam) {
+      requiredData = [
+        { metricType, subMetricType: 'country', name: 'country' },
+        { metricType, subMetricType: 'retailer', name: 'retailer' },
+        { metricType, subMetricType: 'category', name: 'category1' }
+      ]
+    } else if (this.selectedLevelPage.country) {
+      requiredData = [
+        { metricType, subMetricType: 'retailer', name: 'retailer' },
+        { metricType, subMetricType: 'category', name: 'category1' },
+      ]
+    } else if (this.selectedLevelPage.retailer) {
+      requiredData = [
+        { metricType: 'traffic', subMetricType: 'category', name: 'category1' },
+        { metricType: 'sales', subMetricType: 'category', name: 'category2' }
+      ];
+    }
+
+    for (let metric of requiredData) {
+      const reqStatusObj = this.dataByLevelReqStatus.find(item => item.name === metric.name);
+      reqStatusObj.reqStatus = 1;
+
+      this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, metric.metricType, metric.subMetricType).subscribe(
+        (resp: any[]) => {
+          this.dataByLevel[metric.name] = resp;
+          reqStatusObj.reqStatus = 2;
+        },
+        error => {
+          const errorMsg = error?.error?.message ? error.error.message : error?.message;
+          console.error(`[omnichat.component]: ${errorMsg}`);
+          reqStatusObj.reqStatus = 3;
+        });
+    }
+
+    this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
+  }
+
+  getSalesByProduct(selectedCategory?: any) {
+    this.salesByProductReqStatus = 1;
+    this.selectedCategoryTab3 = selectedCategory;
+    this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, 'conversions', 'products', selectedCategory.id).subscribe(
+      (resp: any[]) => {
+        this.salesByProduct = resp.sort((a, b) => (a.quantity < b.quantity ? -1 : 1));
+        this.salesByProductReqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[overview-latam.component]: ${errorMsg}`);
+        this.salesByProductReqStatus = 3;
+      }
+    )
+
+    this.selectedTab3 = selectedCategory.id;
+  }
+
+  getUsersSalesAndCR(selectedCategory?: any) {
+    this.usersSalesAndBrReqStatus = 1;
+    this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, 'conversion-rate', 'month', selectedCategory.id).subscribe(
+      (months: any) => {
+        const newMonthsObj = {};
+        for (let item in months) {
+          const date = item.split('-');
+          const dateStrFormat = `${convertMonthToString(date[1])} ${date[0]}`;
+
+          const obj = months[item];
+          newMonthsObj[dateStrFormat] = obj;
+        }
+
+        this.usersSalesAndBr = newMonthsObj;
+        this.usersSalesAndBrReqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[overview-latam.component]: ${errorMsg}`);
+        this.usersSalesAndBrReqStatus = 3;
+      }
+    )
   }
 
 
@@ -1576,84 +1724,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  getActiveView() {
-    if (this.retailerID) {
-      this.retailerView = true;
-      this.countryView = false;
-      this.latamView = false;
-    } else if (this.countryID) {
-      this.countryView = true;
-      this.retailerView = false;
-      this.latamView = false;
-    } else if (this.latamView) {
-      this.countryView = false;
-      this.retailerView = false;
-    }
-  }
-
-  // solo para latam
-  getCountries(metricType: string) {
-    this.chartsReqStatus.countries = 1;
-
-    this.omnichatService.getCountries(metricType).subscribe(
-      (resp: any[]) => {
-        console.log('countries', resp)
-        this.countries = resp;
-        this.chartsReqStatus.countries = 2;
-      },
-      error => {
-        const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[omnichat.component]: ${errorMsg}`);
-        this.chartsReqStatus.countries = 3;
-      }
-    )
-
-    this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
-  }
-
-  // solo para latam y country
-  getRetailers(metricType: string) {
-    this.chartsReqStatus.retailers = 1;
-
-    this.omnichatService.getRetailers(this.latamView, metricType).subscribe(
-      (resp: any[]) => {
-        console.log('retailer', resp)
-        this.retailers = resp;
-        this.chartsReqStatus.retailers = 2;
-      },
-      error => {
-        const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[omnichat.component]: ${errorMsg}`);
-        this.chartsReqStatus.retailers = 3;
-      }
-    )
-
-    this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
-  }
-
-  getCategories(metricType: string) {
-    this.chartsReqStatus.categories = 1;
-
-    this.omnichatService.getCategories(this.latamView, metricType).subscribe(
-      (resp: any[]) => {
-        console.log('categories', resp)
-        this.categories = resp;
-        this.chartsReqStatus.categories = 2;
-      },
-      error => {
-        const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[omnichat.component]: ${errorMsg}`);
-        this.chartsReqStatus.categories = 3;
-      }
-    )
-
-    this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
-  }
-
-
   ngOnDestroy() {
-    this.routeSub?.unsubscribe();
-    this.countrySub?.unsubscribe();
-    this.retailerSub?.unsubscribe();
+    this.requestInfoSub?.unsubscribe();
   }
 }
