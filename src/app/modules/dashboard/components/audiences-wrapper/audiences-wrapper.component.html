@@ -326,7 +326,8 @@
 
                     <app-chart-column-line-mix name="aud-conv-tra-day" [data]="conversionsVsTraffic?.weekday"
                         [status]="conversionsVsTrafficReqStatus[0].reqStatus" category="weekdayName"
-                        columnValue="visits" lineValue="conversions" columnName="Tráfico" lineName="Conversiones">
+                        columnValue="visits" lineValue="conversions" columnName="Tráfico" lineName="Conversiones"
+                        [XYCursor]="true">
                     </app-chart-column-line-mix>
                 </div>
             </div>
@@ -344,7 +345,8 @@
 
                     <app-chart-column-line-mix name="aud-conv-tra-hour" [data]="conversionsVsTraffic?.hour"
                         [status]="conversionsVsTrafficReqStatus[1].reqStatus" category="hour" columnValue="visits"
-                        lineValue="conversions" columnName="Tráfico" lineName="Conversiones" joinTextInTooltip="a las">
+                        lineValue="conversions" columnName="Tráfico" lineName="Conversiones" joinTextInTooltip="a las"
+                        [XYCursor]="true">
                     </app-chart-column-line-mix>
                 </div>
             </div>
