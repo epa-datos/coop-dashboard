@@ -75,7 +75,7 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDes
     let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = this.category;
     categoryAxis.renderer.grid.template.location = 0;
-    categoryAxis.renderer.minGridDistance = 5;
+    categoryAxis.renderer.minGridDistance = 8;
     categoryAxis.renderer.labels.template.horizontalCenter = 'middle';
     categoryAxis.renderer.labels.template.verticalCenter = 'middle';
     categoryAxis.tooltip.disabled = true;
@@ -128,7 +128,7 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDes
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
-    chart.responsive.enabled = true;
+    // chart.responsive.enabled = true;
   }
 
   loadChartData(chart) {
