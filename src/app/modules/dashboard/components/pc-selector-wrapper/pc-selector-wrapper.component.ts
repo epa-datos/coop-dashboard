@@ -63,36 +63,100 @@ export class PcSelectorWrapperComponent implements OnInit {
   ];
 
   usersVsConversions = [{
-    date: '2021-06-10',
+    date: '2021-06-02',
     traffic: 8,
     conversions: 0,
   }, {
-    date: '2021-06-11',
+    date: '2021-06-03',
     traffic: 7,
     conversions: 1,
   }, {
-    date: '2021-06-12',
+    date: '2021-06-04',
     traffic: 15,
     conversions: 0,
   }, {
-    date: '2021-06-13',
+    date: '2021-06-05',
     traffic: 4,
     conversions: 0,
   }, {
-    date: '2021-06-14',
+    date: '2021-06-06',
     traffic: 16,
     conversions: 0,
   }, {
-    date: '2021-06-15',
+    date: '2021-06-07',
     traffic: 21,
     conversions: 1,
   }, {
-    date: '2021-06-16',
+    date: '2021-06-08',
     traffic: 19,
+    conversions: 0,
+  }, {
+    date: '2021-06-09',
+    traffic: 8,
+    conversions: 0,
+  }, {
+    date: '2021-06-10',
+    traffic: 7,
+    conversions: 1,
+  }, {
+    date: '2021-06-11',
+    traffic: 15,
+    conversions: 0,
+  }, {
+    date: '2021-06-12',
+    traffic: 4,
+    conversions: 0,
+  }, {
+    date: '2021-06-13',
+    traffic: 16,
+    conversions: 0,
+  }, {
+    date: '2021-06-14',
+    traffic: 21,
+    conversions: 1,
+  }, {
+    date: '2021-06-15',
+    traffic: 19,
+    conversions: 0,
+  }, {
+    date: '2021-06-16',
+    traffic: 15,
     conversions: 0,
   }];
 
   aupVsRevenue = [{
+    date: '2021-06-02',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-03',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-04',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-05',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-06',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-07',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-08',
+    traffic: 0,
+    conversions: 0,
+  }, {
+    date: '2021-06-09',
+    traffic: 0,
+    conversions: 0,
+  }, {
     date: '2021-06-10',
     revenue: 0,
     aup: 0,
