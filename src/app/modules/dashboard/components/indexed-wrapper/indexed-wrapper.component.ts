@@ -105,6 +105,89 @@ export class IndexedWrapperComponent implements OnInit {
     }
   ];
 
+  topSessionsByRetailer = [
+    {
+      name: 'AR - Fravega',
+      serie: [
+        { date: '2021-06-02', value: 2000 },
+        { date: '2021-06-03', value: 2500 },
+        { date: '2021-06-04', value: 3400 },
+        { date: '2021-06-05', value: 3600 },
+        { date: '2021-06-06', value: 3700 },
+        { date: '2021-06-07', value: 4800 },
+        { date: '2021-06-08', value: 5200 },
+        { date: '2021-06-09', value: 6400 },
+        { date: '2021-06-10', value: 6300 },
+        { date: '2021-06-11', value: 5300 },
+        { date: '2021-06-12', value: 4300 },
+        { date: '2021-06-13', value: 2800 },
+        { date: '2021-06-14', value: 3600 },
+        { date: '2021-06-15', value: 4900 },
+        { date: '2021-06-16', value: 5600 }
+      ]
+    },
+    {
+      name: 'AR - Garbarino',
+      serie: [
+        { date: '2021-06-02', value: 1300 },
+        { date: '2021-06-03', value: 1400 },
+        { date: '2021-06-04', value: 2600 },
+        { date: '2021-06-05', value: 1582 },
+        { date: '2021-06-06', value: 1687 },
+        { date: '2021-06-07', value: 1438 },
+        { date: '2021-06-08', value: 1650 },
+        { date: '2021-06-09', value: 1852 },
+        { date: '2021-06-10', value: 1675 },
+        { date: '2021-06-11', value: 1500 },
+        { date: '2021-06-12', value: 1412 },
+        { date: '2021-06-13', value: 1250 },
+        { date: '2021-06-14', value: 1375 },
+        { date: '2021-06-15', value: 1480 },
+        { date: '2021-06-16', value: 1760 }
+      ],
+    },
+    {
+      name: 'MX - Pedidos',
+      serie: [
+        { date: '2021-06-02', value: 2400 },
+        { date: '2021-06-03', value: 2340 },
+        { date: '2021-06-04', value: 2600 },
+        { date: '2021-06-05', value: 2700 },
+        { date: '2021-06-06', value: 2300 },
+        { date: '2021-06-07', value: 2800 },
+        { date: '2021-06-08', value: 2400 },
+        { date: '2021-06-09', value: 3405 },
+        { date: '2021-06-10', value: 1751 },
+        { date: '2021-06-11', value: 1875 },
+        { date: '2021-06-12', value: 1957 },
+        { date: '2021-06-13', value: 1354 },
+        { date: '2021-06-14', value: 1785 },
+        { date: '2021-06-15', value: 1845 },
+        { date: '2021-06-16', value: 1975 }
+      ]
+    },
+    {
+      name: 'MX - Office Depot',
+      serie: [
+        { date: '2021-06-02', value: 2600 },
+        { date: '2021-06-03', value: 2440 },
+        { date: '2021-06-04', value: 1600 },
+        { date: '2021-06-05', value: 1700 },
+        { date: '2021-06-06', value: 1300 },
+        { date: '2021-06-07', value: 2500 },
+        { date: '2021-06-08', value: 2100 },
+        { date: '2021-06-09', value: 1405 },
+        { date: '2021-06-10', value: 2751 },
+        { date: '2021-06-11', value: 1975 },
+        { date: '2021-06-12', value: 2957 },
+        { date: '2021-06-13', value: 1454 },
+        { date: '2021-06-14', value: 1685 },
+        { date: '2021-06-15', value: 2145 },
+        { date: '2021-06-16', value: 2475 }
+      ]
+    }
+  ]
+
   trafficDemographics = {
     desktop: [
       { name: 'empty', value: 70 },
@@ -1108,39 +1191,63 @@ export class IndexedWrapperComponent implements OnInit {
     {
       name: 'Porcentaje de salidas',
       serie: [
-        { date: '2021-03-15', value: 10 },
-        { date: '2021-03-16', value: 12 },
-        { date: '2021-03-17', value: 18 },
-        { date: '2021-03-18', value: 35 },
-        { date: '2021-03-19', value: 41 },
-        { date: '2021-03-20', value: 25 },
-        { date: '2021-03-21', value: 44 }
+        { date: '2021-06-02', value: 45 },
+        { date: '2021-06-03', value: 37 },
+        { date: '2021-06-04', value: 40 },
+        { date: '2021-06-05', value: 56 },
+        { date: '2021-06-06', value: 50 },
+        { date: '2021-06-07', value: 45 },
+        { date: '2021-06-08', value: 32 },
+        { date: '2021-06-09', value: 50 },
+        { date: '2021-06-10', value: 65 },
+        { date: '2021-06-11', value: 68 },
+        { date: '2021-06-12', value: 50 },
+        { date: '2021-06-13', value: 43 },
+        { date: '2021-06-14', value: 40 },
+        { date: '2021-06-15', value: 36 },
+        { date: '2021-06-16', value: 44 }
       ],
       valueFormat: '%'
     },
     {
       name: 'Porcentaje de rebote',
       serie: [
-        { date: '2021-03-15', value: 30 },
-        { date: '2021-03-16', value: 15 },
-        { date: '2021-03-17', value: 18 },
-        { date: '2021-03-18', value: 25 },
-        { date: '2021-03-19', value: 12 },
-        { date: '2021-03-20', value: 8 },
-        { date: '2021-03-21', value: 45 }
+        { date: '2021-06-02', value: 45 },
+        { date: '2021-06-03', value: 37 },
+        { date: '2021-06-04', value: 41 },
+        { date: '2021-06-05', value: 36 },
+        { date: '2021-06-06', value: 21 },
+        { date: '2021-06-07', value: 45 },
+        { date: '2021-06-08', value: 52 },
+        { date: '2021-06-09', value: 43 },
+        { date: '2021-06-10', value: 30 },
+        { date: '2021-06-11', value: 25 },
+        { date: '2021-06-12', value: 38 },
+        { date: '2021-06-13', value: 35 },
+        { date: '2021-06-14', value: 21 },
+        { date: '2021-06-15', value: 28 },
+        { date: '2021-06-16', value: 32 }
       ],
       valueFormat: '%'
     },
     {
       name: 'Número de páginas vistas',
       serie: [
-        { date: '2021-03-15', value: 7 },
-        { date: '2021-03-16', value: 6 },
-        { date: '2021-03-17', value: 5 },
-        { date: '2021-03-18', value: 2 },
-        { date: '2021-03-19', value: 3 },
-        { date: '2021-03-20', value: 1 },
-        { date: '2021-03-21', value: 6 }
+        { date: '2021-06-02', value: 7 },
+        { date: '2021-06-03', value: 5 },
+        { date: '2021-06-04', value: 4 },
+        { date: '2021-06-05', value: 2 },
+        { date: '2021-06-06', value: 3 },
+        { date: '2021-06-07', value: 5 },
+        { date: '2021-06-08', value: 4 },
+        { date: '2021-06-09', value: 3 },
+        { date: '2021-06-10', value: 7 },
+        { date: '2021-06-11', value: 6 },
+        { date: '2021-06-12', value: 5 },
+        { date: '2021-06-13', value: 2 },
+        { date: '2021-06-14', value: 3 },
+        { date: '2021-06-15', value: 1 },
+        { date: '2021-06-16', value: 6 }
       ]
     }
   ]

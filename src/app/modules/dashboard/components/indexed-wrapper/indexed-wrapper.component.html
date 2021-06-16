@@ -9,6 +9,20 @@
     </div>
 </div>
 
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card height-fluid">
+            <div class="card-header">
+                <span class="h4">Top sesiones por retailers</span>
+            </div>
+            <div class="card-body">
+                <app-chart-line-series [series]="topSessionsByRetailer" name="indexed-sessions-by-retailer">
+                </app-chart-line-series>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- DEMOGRAPHICS CHARTS -->
 <div class="row mt-1">
     <!-- <div class="col-12">
