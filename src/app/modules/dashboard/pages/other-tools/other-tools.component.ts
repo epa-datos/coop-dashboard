@@ -53,25 +53,30 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
 
     // catch if its LATAM view
     this.routeSub = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
-      if (event instanceof NavigationEnd)
+      if (event instanceof NavigationEnd) {
+        this.filtersStateService.restoreFilters();
+
         this.selectedLevelPage.latam = this.router.url.includes('latam') ? true : false;
-      this.getActiveView();
+        this.getActiveView();
+      }
     });
 
     // catch if its country  view
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
-      this.countryID = country?.id;
-      this.getActiveView();
-
-      this.activeTabView = 1;
+      if (country?.id !== this.countryID) {
+        this.countryID = country?.id;
+        this.getActiveView();
+        this.activeTabView = 1;
+      }
     });
 
     // catch if its retailer view
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
-      this.retailerID = retailer?.id;
-      this.getActiveView();
-
-      this.activeTabView = 1;
+      if (retailer?.id !== this.retailerID) {
+        this.retailerID = retailer?.id;
+        this.getActiveView();
+        this.activeTabView = 1;
+      }
     });
 
     // catch a change in general filters
