@@ -22,7 +22,8 @@
     </ng-container>
 
     <ng-container *ngIf="activeTabView === 2">
-        <app-omnichat-wrapper></app-omnichat-wrapper>
+        <app-omnichat-wrapper [requestInfoChange]="requestInfoChange$" [selectedLevelPage]="selectedLevelPage">
+        </app-omnichat-wrapper>
     </ng-container>
 
     <ng-container *ngIf="activeTabView === 3">
