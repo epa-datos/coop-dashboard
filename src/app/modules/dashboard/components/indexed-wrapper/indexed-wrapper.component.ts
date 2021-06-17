@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { AppStateService } from 'src/app/services/app-state.service';
 import { TableItem } from '../generic-table/generic-table.component';
 
 @Component({
@@ -444,6 +448,134 @@ export class IndexedWrapperComponent implements OnInit {
         { date: '2021-06-14', value: 1933 },
         { date: '2021-06-15', value: 1967 },
         { date: '2021-06-16', value: 820 }
+      ]
+    }
+  ]
+  sessionsByRetailerArg = [
+    {
+      name: 'AR - Carrefour',
+      serie: [
+        { date: '2021-06-01', value: 19749 },
+        { date: '2021-06-02', value: 16859 },
+        { date: '2021-06-03', value: 7344 },
+        { date: '2021-06-04', value: 5424 },
+        { date: '2021-06-05', value: 4909 },
+        { date: '2021-06-06', value: 4874 },
+        { date: '2021-06-07', value: 5544 },
+        { date: '2021-06-08', value: 5494 },
+        { date: '2021-06-09', value: 5990 },
+        { date: '2021-06-10', value: 6335 },
+        { date: '2021-06-11', value: 6012 },
+        { date: '2021-06-12', value: 5450 },
+        { date: '2021-06-13', value: 5537 },
+        { date: '2021-06-14', value: 6207 },
+        { date: '2021-06-15', value: 5912 },
+        { date: '2021-06-16', value: 2477 }
+      ]
+    },
+    {
+      name: 'AR - Compumundo',
+      serie: [
+        { date: '2021-06-01', value: 27038 },
+        { date: '2021-06-02', value: 25341 },
+        { date: '2021-06-03', value: 6189 },
+        { date: '2021-06-04', value: 4249 },
+        { date: '2021-06-05', value: 3939 },
+        { date: '2021-06-06', value: 3958 },
+        { date: '2021-06-07', value: 4048 },
+        { date: '2021-06-08', value: 3660 },
+        { date: '2021-06-09', value: 3486 },
+        { date: '2021-06-10', value: 3424 },
+        { date: '2021-06-11', value: 2662 },
+        { date: '2021-06-12', value: 3264 },
+        { date: '2021-06-13', value: 3442 },
+        { date: '2021-06-14', value: 3958 },
+        { date: '2021-06-15', value: 3615 },
+        { date: '2021-06-16', value: 1310 }
+      ],
+    },
+    {
+      name: 'AR - Fravega',
+      serie: [
+        { date: '2021-06-01', value: 2772 },
+        { date: '2021-06-02', value: 2614 },
+        { date: '2021-06-03', value: 2837 },
+        { date: '2021-06-04', value: 3416 },
+        { date: '2021-06-05', value: 2880 },
+        { date: '2021-06-06', value: 1639 },
+        { date: '2021-06-07', value: 2229 },
+        { date: '2021-06-08', value: 2334 },
+        { date: '2021-06-09', value: 2583 },
+        { date: '2021-06-10', value: 4305 },
+        { date: '2021-06-11', value: 4119 },
+        { date: '2021-06-12', value: 3939 },
+        { date: '2021-06-13', value: 4592 },
+        { date: '2021-06-14', value: 5467 },
+        { date: '2021-06-15', value: 4918 },
+        { date: '2021-06-16', value: 1821 }
+      ]
+    },
+    {
+      name: 'AR - Garbarino',
+      serie: [
+        { date: '2021-06-01', value: 2893 },
+        { date: '2021-06-02', value: 2667 },
+        { date: '2021-06-03', value: 2044 },
+        { date: '2021-06-04', value: 2380 },
+        { date: '2021-06-05', value: 1654 },
+        { date: '2021-06-06', value: 1707 },
+        { date: '2021-06-07', value: 3318 },
+        { date: '2021-06-08', value: 3421 },
+        { date: '2021-06-09', value: 3395 },
+        { date: '2021-06-10', value: 3164 },
+        { date: '2021-06-11', value: 2667 },
+        { date: '2021-06-12', value: 1721 },
+        { date: '2021-06-13', value: 1817 },
+        { date: '2021-06-14', value: 3079 },
+        { date: '2021-06-15', value: 3214 },
+        { date: '2021-06-16', value: 1816 }
+      ]
+    },
+    {
+      name: 'AR - Musimundo',
+      serie: [
+        { date: '2021-06-01', value: 2344 },
+        { date: '2021-06-02', value: 3185 },
+        { date: '2021-06-03', value: 2906 },
+        { date: '2021-06-04', value: 1996 },
+        { date: '2021-06-05', value: 1872 },
+        { date: '2021-06-06', value: 1881 },
+        { date: '2021-06-07', value: 1832 },
+        { date: '2021-06-08', value: 1600 },
+        { date: '2021-06-09', value: 1733 },
+        { date: '2021-06-10', value: 1671 },
+        { date: '2021-06-11', value: 1644 },
+        { date: '2021-06-12', value: 1465 },
+        { date: '2021-06-13', value: 1666 },
+        { date: '2021-06-14', value: 1676 },
+        { date: '2021-06-15', value: 1521 },
+        { date: '2021-06-16', value: 742 }
+      ]
+    },
+    {
+      name: 'AR - Walmart',
+      serie: [
+        { date: '2021-06-01', value: 2866 },
+        { date: '2021-06-02', value: 2462 },
+        { date: '2021-06-03', value: 2408 },
+        { date: '2021-06-04', value: 2165 },
+        { date: '2021-06-05', value: 1636 },
+        { date: '2021-06-06', value: 1474 },
+        { date: '2021-06-07', value: 2171 },
+        { date: '2021-06-08', value: 2222 },
+        { date: '2021-06-09', value: 2291 },
+        { date: '2021-06-10', value: 2143 },
+        { date: '2021-06-11', value: 1990 },
+        { date: '2021-06-12', value: 1534 },
+        { date: '2021-06-13', value: 1458 },
+        { date: '2021-06-14', value: 2868 },
+        { date: '2021-06-15', value: 2667 },
+        { date: '2021-06-16', value: 1487 }
       ]
     }
   ]
@@ -1508,9 +1640,71 @@ export class IndexedWrapperComponent implements OnInit {
 
   sessions = this.sessionsByCountry;
 
-  constructor() { }
+  countryID;
+  retailerID;
+
+  retailerView;
+  countryView;
+  latamView;
+
+  routeSub: Subscription;
+  retailerSub: Subscription;
+  countrySub: Subscription;
+
+  constructor(
+    private appStateService: AppStateService,
+    private router: Router) { }
 
   ngOnInit(): void {
+    this.countryID = this.appStateService.selectedCountry?.id;
+    this.retailerID = this.appStateService.selectedRetailer?.id;
+    this.latamView = this.router.url.includes('latam') ? true : false;
+
+    if (this.countryID || this.retailerID || this.latamView) {
+      this.getActiveView();
+      // this.getAllData();
+    }
+
+    this.routeSub = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    )
+      .subscribe(event => {
+        if (event instanceof NavigationEnd)
+          this.latamView = this.router.url.includes('latam') ? true : false;
+        this.getActiveView();
+      });
+
+    this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
+      this.retailerID = retailer?.id;
+      this.getActiveView();
+    });
+
+    this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
+      this.countryID = country?.id;
+      if (this.countryID) {
+        this.sessionsByRetailer = this.sessionsByRetailerArg;
+      }
+      this.getActiveView();
+    });
+  }
+
+  getActiveView() {
+    if (this.retailerID) {
+      this.retailerView = true;
+      this.countryView = false;
+      this.latamView = false;
+    } else if (this.countryID) {
+      this.countryView = true;
+      this.retailerView = false;
+      this.latamView = false;
+    } else if (this.latamView) {
+      this.countryView = false;
+      this.retailerView = false;
+    }
+
+    if (this.countryView) {
+      this.sessionsByRetailer = this.sessionsByRetailerArg;
+    }
   }
 
   getSessions(metric: string) {
