@@ -155,7 +155,7 @@ export class IndexedWrapperComponent implements OnInit {
       ],
     },
     {
-      name: 'CAC',
+      name: 'CACE',
       serie: [
         { date: '2021-06-01', value: 1698 },
         { date: '2021-06-02', value: 1653 },
@@ -215,27 +215,6 @@ export class IndexedWrapperComponent implements OnInit {
         { date: '2021-06-14', value: 1589 },
         { date: '2021-06-15', value: 1827 },
         { date: '2021-06-16', value: 833 }
-      ]
-    },
-    {
-      name: 'Ecuador',
-      serie: [
-        { date: '2021-06-01', value: 195 },
-        { date: '2021-06-02', value: 232 },
-        { date: '2021-06-03', value: 274 },
-        { date: '2021-06-04', value: 219 },
-        { date: '2021-06-05', value: 235 },
-        { date: '2021-06-06', value: 180 },
-        { date: '2021-06-07', value: 239 },
-        { date: '2021-06-08', value: 230 },
-        { date: '2021-06-09', value: 240 },
-        { date: '2021-06-10', value: 214 },
-        { date: '2021-06-11', value: 196 },
-        { date: '2021-06-12', value: 133 },
-        { date: '2021-06-13', value: 116 },
-        { date: '2021-06-14', value: 174 },
-        { date: '2021-06-15', value: 174 },
-        { date: '2021-06-16', value: 87 }
       ]
     },
     {
