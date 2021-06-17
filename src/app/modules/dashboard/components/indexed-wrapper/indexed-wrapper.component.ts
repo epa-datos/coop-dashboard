@@ -585,19 +585,19 @@ export class IndexedWrapperComponent implements OnInit {
   trafficDemographics = {
     desktop: [
       { name: 'empty', value: 59 },
-      { id: 1, name: 'Desktop', value: 41 },
+      { id: 1, name: 'Desktop', value: 41, rawValue: 3800 },
     ],
     mobile: [
-      { name: 'empty', value: 59 },
-      { id: 1, name: 'Mobile', value: 41 },
+      { name: 'empty', value: 41 },
+      { id: 1, name: 'Mobile', value: 59, rawValue: 4200 },
     ],
     women: [
       { name: 'empty', value: 46 },
-      { id: 1, name: 'woman', value: 54 },
+      { id: 1, name: 'woman', value: 54, rawValue: 3300 },
     ],
     men: [
       { name: 'empty', value: 54 },
-      { id: 1, name: 'men', value: 46 },
+      { id: 1, name: 'men', value: 46, rawValue: 2500 },
     ],
     age: [
       {
