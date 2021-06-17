@@ -89,93 +89,189 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   ];
 
   trafficVsConversions = [{
-    date: '2021-03-15',
+    date: '2021-06-02',
+    traffic: 434,
+    conversions: 15,
+  }, {
+    date: '2021-06-03',
+    traffic: 634,
+    conversions: 25,
+  }, {
+    date: '2021-06-04',
+    traffic: 574,
+    conversions: 20,
+  }, {
+    date: '2021-06-05',
+    traffic: 615,
+    conversions: 16,
+  }, {
+    date: '2021-06-06',
+    traffic: 732,
+    conversions: 5,
+  }, {
+    date: '2021-06-07',
+    traffic: 1412,
+    conversions: 32,
+  }, {
+    date: '2021-06-08',
+    traffic: 716,
+    conversions: 11,
+  }, {
+    date: '2021-06-09',
+    traffic: 3710,
+    conversions: 22,
+  }, {
+    date: '2021-06-10',
     traffic: 1298,
     conversions: 66,
   }, {
-    date: '2021-03-16',
+    date: '2021-06-11',
     traffic: 816,
     conversions: 39,
   }, {
-    date: '2021-03-17',
+    date: '2021-06-12',
     traffic: 1963,
     conversions: 43,
   }, {
-    date: '2021-03-18',
+    date: '2021-06-13',
     traffic: 1809,
     conversions: 29,
   }, {
-    date: '2021-03-19',
+    date: '2021-06-14',
     traffic: 1434,
     conversions: 36,
   }, {
-    date: '2021-03-20',
+    date: '2021-06-15',
     traffic: 2359,
     conversions: 16,
   }, {
-    date: '2021-03-21',
+    date: '2021-06-16',
     traffic: 2114,
     conversions: 66,
   }];
 
   investmentVsRevenue = [
     {
-      date: '2021-03-15',
+      date: '2021-06-02',
+      investment: 4516.232,
+      revenue: 34977,
+    }, {
+      date: '2021-06-03',
+      investment: 3816.232,
+      revenue: 15977,
+    }, {
+      date: '2021-06-04',
+      investment: 3717.643,
+      revenue: 12677,
+    }, {
+      date: '2021-06-05',
+      investment: 4723.765,
+      revenue: 24141,
+    }, {
+      date: '2021-06-06',
+      investment: 4205.837,
+      revenue: 24172,
+    }, {
+      date: '2021-06-07',
+      investment: 4326.599,
+      revenue: 11498,
+    }, {
+      date: '2021-06-08',
+      investment: 2485.788,
+      revenue: 43770,
+    }, {
+      date: '2021-06-09',
+      investment: 3710.785,
+      revenue: 20874,
+    }, {
+      date: '2021-06-10',
       investment: 2816.232,
       revenue: 25977.84,
     }, {
-      date: '2021-03-16',
+      date: '2021-06-11',
       investment: 3517.643,
       revenue: 1375.64,
     }, {
-      date: '2021-03-17',
+      date: '2021-06-12',
       investment: 4923.765,
       revenue: 35541.75,
     }, {
-      date: '2021-03-18',
+      date: '2021-06-13',
       investment: 7205.837,
       revenue: 58172.32,
     }, {
-      date: '2021-03-19',
+      date: '2021-06-14',
       investment: 2121.599,
       revenue: 23498.33,
     }, {
-      date: '2021-03-20',
+      date: '2021-06-15',
       investment: 3585.788,
       revenue: 13770.55,
     }, {
-      date: '2021-03-21',
+      date: '2021-06-16',
       investment: 3850.785,
       revenue: 40874.56,
     }
   ]
 
   aupVsRevenue = [{
-    date: '2021-03-15',
-    revenue: 2816.232,
+    date: '2021-06-02',
+    revenue: 4816.232,
     aup: 35977,
   }, {
-    date: '2021-03-16',
+    date: '2021-06-03',
+    revenue: 3816.232,
+    aup: 35977,
+  }, {
+    date: '2021-06-04',
+    revenue: 3717.643,
+    aup: 22677,
+  }, {
+    date: '2021-06-05',
+    revenue: 4723.765,
+    aup: 25541,
+  }, {
+    date: '2021-06-06',
+    revenue: 4205.837,
+    aup: 28172,
+  }, {
+    date: '2021-06-07',
+    revenue: 4326.599,
+    aup: 26498,
+  }, {
+    date: '2021-06-08',
+    revenue: 2585.788,
+    aup: 43770,
+  }, {
+    date: '2021-06-09',
+    revenue: 4710.785,
+    aup: 40874,
+  }, {
+    date: '2021-06-10',
+    revenue: 2116.232,
+    aup: 35977,
+  }, {
+    date: '2021-06-11',
     revenue: 3517.643,
     aup: 22677,
   }, {
-    date: '2021-03-17',
+    date: '2021-06-12',
     revenue: 8923.765,
     aup: 25541,
   }, {
-    date: '2021-03-18',
+    date: '2021-06-13',
     revenue: 6205.837,
     aup: 28172,
   }, {
-    date: '2021-03-19',
+    date: '2021-06-14',
     revenue: 2326.599,
     aup: 26498,
   }, {
-    date: '2021-03-20',
+    date: '2021-06-15',
     revenue: 3585.788,
     aup: 43770,
   }, {
-    date: '2021-03-21',
+    date: '2021-06-16',
     revenue: 4850.785,
     aup: 40874,
   }];
