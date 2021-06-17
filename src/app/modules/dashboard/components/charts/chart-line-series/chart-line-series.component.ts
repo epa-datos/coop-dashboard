@@ -18,6 +18,7 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestro
   @Input() valueFormat; // USD MXN Copy shown in tooltip
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
+  //@Input() yTitle: string;
 
   chartID;
   private _name: string;
@@ -27,6 +28,16 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestro
   @Input() set name(value) {
     this._name = value;
     this.chartID = `chart-line-series-${this.name}`
+  }
+
+
+  private _yTitle: string;
+  get yTitle() {
+    return this._yTitle;
+  }
+  @Input() set yTitle(value) {
+    this._yTitle = value;
+    this.axis && this.loadYTitle(this.axis)
   }
 
   private _series;
@@ -74,8 +85,10 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestro
 
     dateAxis.renderer.minGridDistance = 50;
     // dateAxis.renderer.labels.template.rotation = -90;
+    this.axis = {valueAxis}
 
     this.loadChartData(chart);
+    this.loadYTitle(this.axis)
     loadLanguage(chart, lang);
 
     chart.legend = new am4charts.Legend();
@@ -174,10 +187,15 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
+  loadYTitle(axis){
+      axis.valueAxis.title.text = this._yTitle;
+  }
+
   ngOnDestroy() {
     this.langSub?.unsubscribe();
   }
 }
+
 
 function processOver(chart, hoveredSeries) {
   hoveredSeries.toFront();

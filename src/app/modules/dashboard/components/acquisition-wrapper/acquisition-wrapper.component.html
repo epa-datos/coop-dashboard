@@ -20,7 +20,7 @@
                 <span class="h4">Usuarios por {{ selectedTab1 === 1 ? 'Sector' : 'Fuente '}}</span>
             </div>
             <div class="card-body">
-                <app-chart-line-series name="acq-users-sector" [series]="users" [status]="usersReqStatus">
+                <app-chart-line-series name="acq-users-sector" [series]="users" yTitle="Usuarios" [status]="usersReqStatus">
                 </app-chart-line-series>
             </div>
         </div>

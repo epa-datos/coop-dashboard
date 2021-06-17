@@ -280,7 +280,9 @@
                         </div> -->
 
                         <app-chart-line-series [series]="usersAndSalesByMetric"
-                            [valueName]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'" name="latam-sales-users-by-sector"
+                            [valueName]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'"
+                            [yTitle]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'" 
+                            name="latam-sales-users-by-sector"
                             [status]="usersAndSalesReqStatus">
                         </app-chart-line-series>
                     </div>

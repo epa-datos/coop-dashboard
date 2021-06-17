@@ -175,6 +175,7 @@
                 <div class="card-body">
                     <app-chart-line-series [series]="usersAndSalesBySector"
                         [valueName]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'"
+                        [yTitle]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'" 
                         [name]="selectedType + 'sales-users-by-sector'" [status]="usersAndSalesReqStatus">
                     </app-chart-line-series>
                 </div>
