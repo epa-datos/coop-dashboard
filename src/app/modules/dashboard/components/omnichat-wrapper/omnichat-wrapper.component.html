@@ -16,15 +16,15 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                        (click)="getPerformanceData('users');">Usuarios - Conversiones</a>
+                        (click)="getPerformanceData('users');">Usuarios vs Conversiones</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                        (click)="getPerformanceData('investment')">Inversión - Revenue</a>
+                        (click)="getPerformanceData('investment')">Inversión vs Revenue</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
-                        (click)="getPerformanceData('revenue')">Revenue - AUP</a>
+                        (click)="getPerformanceData('revenue')">Revenue vs AUP</a>
                 </li>
             </ul>
         </div>
@@ -33,7 +33,11 @@
     <div class="col-12 mt-4">
         <div class="card">
             <div class="card-header">
-                <span class="h4">{{ selectedTab1 === 1 ? 'Usuarios vs Conversiones' : 'Revenue vs AUP '}} </span>
+                <ng-container [ngSwitch]="selectedTab1">
+                    <span class="h4" *ngSwitchCase="1">Usuarios vs Conversiones</span>
+                    <span class="h4" *ngSwitchCase="2">Inversión vs Revenue</span>
+                    <span class="h4" *ngSwitchCase="3">Revenue vs AUP</span>
+                </ng-container>
             </div>
             <div class="card-body">
                 <app-chart-multiple-axes [data]="performanceData"
