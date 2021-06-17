@@ -49,10 +49,10 @@ export class GeneralFiltersComponent implements OnInit {
   campaignList: any[];
   sourceList: any[] = [
     { id: 'google', name: 'Google' },
-    { id: 'facebook', name: 'Facebook' },
-    { id: 'programmatic', name: 'Programmatic' },
-    { id: 'institucional', name: 'Institucional' },
-    { id: 'otros', name: 'Otros' }
+    { id: 'social', name: 'Social' },
+    { id: 'email', name: 'Email' },
+    { id: 'display', name: 'Display' },
+    { id: 'others', name: 'Otros' }
   ];
 
   filteredCountryList: any[];
