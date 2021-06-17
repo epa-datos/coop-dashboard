@@ -263,12 +263,13 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       reqStatusObj.reqStatus = 1;
       this.overviewService.getTrafficAndSales(metricType, subMetricType).subscribe(
         (resp: any[]) => {
-          if (subMetricType === 'gender-and-age') {
+          if (subMetricType === 'device' || subMetricType === 'gender') {
+            this.disaggregateMetric(subMetricType, resp);
+          } else if (subMetricType === 'gender-and-age') {
             this.trafficAndSales['genderByAge'] = resp;
           } else {
             this.trafficAndSales[subMetricType] = resp;
           }
-
           reqStatusObj.reqStatus = 2;
 
         },
@@ -313,6 +314,70 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       }
     )
   }
+
+  disaggregateMetric(subMetric: string, dataRaw: any[]) {
+    switch (subMetric) {
+      case 'device':
+        const desktop = dataRaw.find(item => item.name === 'Desktop');
+        const mobile = dataRaw.find(item => item.name === 'Mobile');
+
+        let devicePerc = this.getPercentages(desktop?.value, mobile?.value);
+
+        if (desktop) {
+          this.trafficAndSales['deviceDesktop'] = [
+            { name: 'empty', value: devicePerc.perc1 ? 100 - (+devicePerc.perc1) : 100 },
+            { name: 'Desktop', value: devicePerc.perc1 ? devicePerc.perc1 : 0, rawValue: desktop.value },
+          ];
+        } else {
+          this.trafficAndSales['deviceDesktop'] = [];
+        }
+
+        if (mobile) {
+          this.trafficAndSales['deviceMobile'] = [
+            { name: 'empty', value: devicePerc.perc2 ? 100 - (+devicePerc.perc2) : 100 },
+            { name: 'Mobile', value: devicePerc.perc2 ? devicePerc.perc2 : 0, rawValue: mobile.value },
+          ];
+        } else {
+          this.trafficAndSales['deviceMobile'] = [];
+        }
+
+        break;
+
+      case 'gender':
+        const man = dataRaw.find(item => item.name === 'Hombre');
+        const woman = dataRaw.find(item => item.name === 'Mujer');
+
+        let genderPerc = this.getPercentages(man?.value, woman?.value);
+
+        if (man) {
+          this.trafficAndSales['genderMan'] = [
+            { name: 'empty', value: genderPerc.perc1 ? 100 - (+genderPerc.perc1) : 100 },
+            { name: 'Hombre', value: genderPerc.perc1 ? genderPerc.perc1 : 0, rawValue: man.value },
+          ];
+        } else {
+          this.trafficAndSales['genderMan'] = [];
+        }
+
+        if (woman) {
+          this.trafficAndSales['genderWoman'] = [
+            { name: 'empty', value: genderPerc.perc2 ? 100 - (+genderPerc.perc2) : 100 },
+            { name: 'Mujer', value: genderPerc.perc2 ? genderPerc.perc2 : 0, rawValue: woman.value },
+          ];
+        } else {
+          this.trafficAndSales['genderWoman'] = [];
+        }
+
+        break;
+    }
+  }
+
+  getPercentages(value1: any, value2: any) {
+    let total = value1 + value2;
+    let perc1 = ((value1 * 100) / total).toFixed(2);
+    let perc2 = ((value2 * 100) / total).toFixed(2);
+    return { perc1, perc2 };
+  }
+
 
   ngOnDestroy() {
     this.requestInfoSub?.unsubscribe();

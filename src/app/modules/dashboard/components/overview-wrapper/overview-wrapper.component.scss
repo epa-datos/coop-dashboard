@@ -42,7 +42,15 @@
     justify-content: flex-end;
     padding: 0 15px;
 
-    .legend-container {
+    &.legend-right {
+        justify-content: flex-end;
+    }
+
+    &.legend-center {
+        justify-content: center;
+    }
+
+    .legend-container-hp {
         align-items: center;
         display: flex;
        
@@ -58,6 +66,31 @@
 
             &.off {
                 background-color: #e9e9e9;
+            }
+        }
+
+        .legend-label {
+            color: #000000;
+            font-size: 12px;
+        }
+    }
+
+    .legend-container {
+        align-items: center;
+        display: flex;
+
+        .legend-square {
+            border-radius: 4px;
+            height: 16px;
+            margin-right: 4px;
+            width: 16px;
+
+            &.color-1 {
+                background-color: #67B6DC;
+            }
+
+            &.color-2 {
+                background-color: #6794DC;
             }
         }
 
