@@ -56,6 +56,56 @@
         </div>
     </div>
 
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="pills-container">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
+                            (click)="getDataByUsersAndSales('users')">Usuarios vs Ventas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
+                            (click)="getDataByUsersAndSales('sales')">Inversión vs AUP</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 3}"
+                            (click)="getDataByUsersAndSales('sales'); selectedTab3 = 3">Revenue vs AUP</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <ng-container [ngSwitch]="selectedTab3">
+                        <span *ngSwitchCase="1" class="h4">{{ 'general.usersVsSales' | translate }}</span>
+                        <span *ngSwitchCase="2" class="h4">{{ 'general.investmentVsRevenue' | translate }}</span>
+                        <span *ngSwitchCase="3" class="h4">{{ 'general.revenueVsAup' | translate }}</span>
+                    </ng-container>
+                    <!-- <span class="h4" [hidden]="selectedTab3 === 2">Usuarios por Sector</span>
+                    <span class="h4" [hidden]="selectedTab3 === 1">Ventas por Sector</span> -->
+                </div>
+                <div class="card-body">
+                    <app-chart-line-series *ngIf="selectedTab3 === 1" [series]="usersAndSalesBySector"
+                        [valueName]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'"
+                        [yTitle]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'"
+                        [name]="selectedType + 'sales-users-by-sector'" [status]="usersAndSalesReqStatus">
+                    </app-chart-line-series>
+
+                    <app-chart-multiple-axes *ngIf="selectedTab3 === 2" [data]="investmentVsRevenue"
+                        valueName1="Inversión" valueName2="Revenue" value1="investment" value2="revenue"
+                        [name]="selectedType + 'investment-vs-revenue'" [status]="invVsRevenueReqStatus">
+                    </app-chart-multiple-axes>
+
+                    <app-chart-multiple-axes *ngIf="selectedTab3 === 3" [data]="aupVsRevenueM" valueName1="Revenue"
+                        valueName2="AUP" value1="revenue" value2="aup" [name]="selectedType + 'investment-vs-aup'">
+                    </app-chart-multiple-axes>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row mt-5" *ngIf="showTrafficAndSalesSection">
         <div class="col-12">
             <div class="pills-container">
@@ -146,54 +196,6 @@
                         class="chart-error-container text-muted">
                         <span>Error al consultar datos</span>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="pills-container">
-                <ul class="nav nav-pills nav-fill">
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
-                            (click)="getDataByUsersAndSales('users')">Usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
-                            (click)="getDataByUsersAndSales('sales')">Ventas</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-12 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4" [hidden]="selectedTab3 === 2">Usuarios por Sector</span>
-                    <span class="h4" [hidden]="selectedTab3 === 1">Ventas por Sector</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-line-series [series]="usersAndSalesBySector"
-                        [valueName]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'"
-                        [yTitle]="selectedTab3 === 1 ? 'Usuarios' : 'Ventas'" 
-                        [name]="selectedType + 'sales-users-by-sector'" [status]="usersAndSalesReqStatus">
-                    </app-chart-line-series>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Inversión vs Revenue</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-multiple-axes [data]="investmentVsRevenue" valueName1="Inversión" valueName2="Revenue"
-                        value1="investment" value2="revenue" [name]="selectedType + 'investment-vs-revenue'"
-                        [status]="invVsRevenueReqStatus">
-                    </app-chart-multiple-axes>
                 </div>
             </div>
         </div>

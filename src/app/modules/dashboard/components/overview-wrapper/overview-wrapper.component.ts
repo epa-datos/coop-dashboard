@@ -105,6 +105,69 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
   requestInfoSub: Subscription;
   chartsInitLoad: boolean = true;
 
+  /// DATA MOCK
+  aupVsRevenueM = [{
+    date: '2021-06-02',
+    revenue: 4816.232,
+    aup: 35977,
+  }, {
+    date: '2021-06-03',
+    revenue: 3816.232,
+    aup: 35977,
+  }, {
+    date: '2021-06-04',
+    revenue: 3717.643,
+    aup: 22677,
+  }, {
+    date: '2021-06-05',
+    revenue: 4723.765,
+    aup: 25541,
+  }, {
+    date: '2021-06-06',
+    revenue: 4205.837,
+    aup: 28172,
+  }, {
+    date: '2021-06-07',
+    revenue: 4326.599,
+    aup: 26498,
+  }, {
+    date: '2021-06-08',
+    revenue: 2585.788,
+    aup: 43770,
+  }, {
+    date: '2021-06-09',
+    revenue: 4710.785,
+    aup: 40874,
+  }, {
+    date: '2021-06-10',
+    revenue: 2116.232,
+    aup: 35977,
+  }, {
+    date: '2021-06-11',
+    revenue: 3517.643,
+    aup: 22677,
+  }, {
+    date: '2021-06-12',
+    revenue: 8923.765,
+    aup: 25541,
+  }, {
+    date: '2021-06-13',
+    revenue: 6205.837,
+    aup: 28172,
+  }, {
+    date: '2021-06-14',
+    revenue: 2326.599,
+    aup: 26498,
+  }, {
+    date: '2021-06-15',
+    revenue: 3585.788,
+    aup: 43770,
+  }, {
+    date: '2021-06-16',
+    revenue: 4850.785,
+    aup: 40874,
+  }];
+
   constructor(
     private filtersStateService: FiltersStateService,
     private overviewService: OverviewService
