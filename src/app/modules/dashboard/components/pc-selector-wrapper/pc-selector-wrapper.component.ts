@@ -605,11 +605,11 @@ export class PcSelectorWrapperComponent implements OnInit {
   trafficDemographic = {
     desktop: [
       { name: 'empty', value: 12.5 },
-      { name: 'Desktop', value: 87.5 },
+      { name: 'Desktop', value: 87.5, rawValue: 36 },
     ],
     mobile: [
       { name: 'empty', value: 87.5 },
-      { name: 'Mobile', value: 12.5 },
+      { name: 'Mobile', value: 12.5, rawValue: 92 },
     ],
     women: [
       { name: 'empty', value: 55 },
@@ -735,12 +735,12 @@ export class PcSelectorWrapperComponent implements OnInit {
   // Conversiones - Demográficos
   conversionsDemographic = {
     desktop: [
-      { name: 'empty', value: 70 },
-      { name: 'Desktop', value: 30 },
+      { name: 'empty', value: 50 },
+      { name: 'Desktop', value: 50, rawValue: 1 },
     ],
     mobile: [
-      { name: 'empty', value: 30 },
-      { name: 'Mobile', value: 70 },
+      { name: 'empty', value: 50 },
+      { name: 'Mobile', value: 50, rawValue: 1 },
     ],
     women: [],
     men: [],
