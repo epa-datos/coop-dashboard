@@ -1591,11 +1591,11 @@ export class IndexedWrapperComponent implements OnInit {
   // Modelos más visitados
   mostVisitedModels = {
     data: [
-      { ranking: 1, product: '606b308e36453f07c0fc4a8d', users: 24569 },
-      { ranking: 2, product: '60492a0ea4c03706c127f4f7', users: 23547 },
-      { ranking: 3, product: '5fc11217a750564a98dba601', users: 22475 },
-      { ranking: 4, product: '606c8837298cad022546e222', users: 14685 },
-      { ranking: 5, product: '5ecc01da00a599d5640c38c4', users: 14145 }
+      { ranking: 1, product: 'LAPTOP HP 15 EF1007LA AMD RYZEN 3 12 GB SSD 256 GB', users: 24569 },
+      { ranking: 2, product: 'LAPTOP HP 240 G7-151F5LT PROCESADOR INTEL CORE I5 RAM 8 GB DD 1 TB WINDOWS 10 HOME', users: 23547 },
+      { ranking: 3, product: 'NOTEBOOK 250 G7 PROCESADOR INTEL CORE I3 RAM 8 GB DD 1 TB', users: 22475 },
+      { ranking: 4, product: '240 G7 INTEL CELERON N4020 4 GB 500 GB', users: 14685 },
+      { ranking: 5, product: ' CHROMEBOOK 11A G8 EE APU AMD A4 RAM 4 GB DD 32 GB EMMC', users: 14145 }
     ],
     reqStatus: 2
   }
