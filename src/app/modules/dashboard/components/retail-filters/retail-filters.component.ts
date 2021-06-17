@@ -15,7 +15,7 @@ export class RetailFiltersComponent implements OnInit {
     { id: 'social', name: 'social' },
     { id: 'email', name: 'email' },
     { id: 'display', name: 'display' },
-    { id: 'otros', name: 'otros' },
+    { id: 'others', name: 'otros' },
   ];
 
   mediumList: any[] = [
