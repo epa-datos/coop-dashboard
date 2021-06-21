@@ -59,7 +59,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       iconBg: '#a77dcc'
     },
     {
-      metricTitle: 'transacciones',
+      metricTitle: 'conversiones',
       metricName: 'transactions',
       metricValue: 0,
       metricFormat: 'integer',

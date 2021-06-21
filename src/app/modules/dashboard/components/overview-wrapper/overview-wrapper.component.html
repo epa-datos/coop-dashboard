@@ -232,7 +232,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                            (click)="getDataByTrafficAndSales('sales'); chartsInitLoad = chartsInitLoad && false;">Ventas</a>
+                            (click)="getDataByTrafficAndSales('sales'); chartsInitLoad = chartsInitLoad && false;">Conversiones</a>
                     </li>
                 </ul>
             </div>
@@ -334,7 +334,7 @@
         <div class="col-12 col-md-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por Edad</span>
+                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}} por Edad</span>
                 </div>
                 <div class="card-body">
                     <app-chart-lollipop [data]="trafficAndSales['age']" [name]="selectedType + 'age'" category="age"
@@ -349,7 +349,7 @@
         <div class="col-12 col-md-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Ventas'}} por Género y Edad</span>
+                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}} por Género y Edad</span>
                 </div>
                 <div class="card-body" style="height: 328px">
                     <!-- loader -->
