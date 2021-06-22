@@ -57,19 +57,19 @@
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
-                                (click)="getDataByUsersAndSales('users')">
+                                (click)="getDataByUsersInvOrAup('users-vs-conversions')">
                                 {{ 'general.usersVsSales' | translate }}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
-                                (click)="getDataByUsersAndSales('sales')">
+                                (click)="getDataByUsersInvOrAup('investment-vs-revenue')">
                                 {{ 'general.investmentVsRevenue' | translate }}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 3}"
-                                (click)="getDataByUsersAndSales('sales'); selectedTab3 = 3">
+                                (click)="getDataByUsersInvOrAup('aup-vs-revenue')">
                                 {{ 'general.revenueVsAup' | translate }}
                             </a>
                         </li>
@@ -90,9 +90,9 @@
                         <div class="row">
                             <div class="col-12 mb-4">
                                 <ul class="nav nav-tabs">
-                                    <li class="nav-item" *ngFor="let metric of usersAndSalesMetrics; let i = index">
+                                    <li class="nav-item" *ngFor="let metric of usersInvOrAupMetrics; let i = index">
                                         <a class="nav-link" [ngClass]="{'active bg-light' : selectedTab4 === i + 1}"
-                                            (click)="selectedTab4 = i + 1; selectedTab5 = 1; getDataByUsersAndSales(selectedTab3 === 1 ? 'users' : 'sales')">
+                                            (click)="selectedTab4 = i + 1; selectedTab5 = 1; getDataByUsersInvOrAup()">
                                             <span>{{ metric | titlecase }}</span>
                                         </a>
                                     </li>
@@ -105,14 +105,14 @@
                                         *ngIf="selectedTab4 === 1 && selectedSectors?.length > 1">
                                         <li class="nav-item mb-2">
                                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab5 === 1}"
-                                                (click)="selectedTab5 = 1; getDataByUsersAndSales(selectedTab3 === 1 ? 'users' : 'sales'); clearUsersAndSalesTabs()">
+                                                (click)="selectedTab5 = 1; getDataByUsersInvOrAup(); clearUsersAndSalesTabs()">
                                                 {{ 'others.all' | translate | titlecase }}
                                             </a>
                                         </li>
                                         <li class="nav-item mb-2" *ngFor="let sector of selectedSectors">
                                             <a class="nav-link p-2"
                                                 [ngClass]="{'active': sector.id + 2 === selectedTab5}"
-                                                (click)="selectedTab5 = sector.id + 2; getDataByUsersAndSales(selectedTab3 === 1 ? 'users' : 'sales', sector)">
+                                                (click)="selectedTab5 = sector.id + 2; getDataByUsersInvOrAup(null, sector)">
                                                 {{ sector.name }}
                                             </a>
                                         </li>
@@ -123,14 +123,14 @@
                                         *ngIf="selectedTab4 === 2 && selectedCategories?.length > 1">
                                         <li class="nav-item mb-2">
                                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab5 === 1}"
-                                                (click)="selectedTab5 = 1; getDataByUsersAndSales(selectedTab3 === 1 ? 'users' : 'sales')">
+                                                (click)="selectedTab5 = 1; getDataByUsersInvOrAup()">
                                                 {{ 'others.all' | translate | titlecase }}
                                             </a>
                                         </li>
                                         <li class="nav-item mb-2" *ngFor="let category of selectedCategories">
                                             <a class="nav-link p-2"
                                                 [ngClass]="{'active': category.id + 2 === selectedTab5}"
-                                                (click)="selectedTab5 = category.id + 2; getDataByUsersAndSales(selectedTab3 === 1 ? 'users' : 'sales', null, category)">
+                                                (click)="selectedTab5 = category.id + 2; getDataByUsersInvOrAup(null, null, category)">
                                                 {{ category.name }}
                                             </a>
                                         </li>
@@ -141,14 +141,14 @@
                                         *ngIf="selectedTab4 === 3 && selectedSources?.length > 1">
                                         <li class="nav-item mb-2">
                                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab5 === 1}"
-                                                (click)="selectedTab5 = 1; getDataByUsersAndSales(selectedTab3 === 1 ? 'users' : 'sales')">
+                                                (click)="selectedTab5 = 1; getDataByUsersInvOrAup()">
                                                 {{ 'others.all' | translate | titlecase }}
                                             </a>
                                         </li>
                                         <li class="nav-item mb-2" *ngFor="let source of selectedSources">
                                             <a class="nav-link p-2"
                                                 [ngClass]="{'active': source.id + 2 === selectedTab5}"
-                                                (click)="selectedTab5 = source.id + 2; getDataByUsersAndSales(selectedTab3 === 1 ? 'users' : 'sales', null, null, source)">
+                                                (click)="selectedTab5 = source.id + 2; getDataByUsersInvOrAup(null, null, null, source)">
                                                 {{ source.name }}
                                             </a>
                                         </li>
@@ -157,14 +157,13 @@
                             </div>
                         </div>
 
-                        <app-chart-multiple-axes
-                            [data]="selectedTab3 === 1 ? trafficVsConversionsM : selectedTab3 === 2 ? investmentVsRevenueM : aupVsRevenueM"
-                            [value1]="selectedTab3 === 1 ? 'conversions' : selectedTab3 === 2 ? 'revenue' : 'revenue'"
-                            [value2]="selectedTab3 === 1 ? 'traffic' : selectedTab3 === 2 ? 'investment': 'aup'"
+                        <app-chart-multiple-axes [data]="usersInvOrAup"
+                            [value1]="selectedTab3 === 1 ? 'transactions' : selectedTab3 === 2 ? 'revenue' : 'revenue'"
+                            [value2]="selectedTab3 === 1 ? 'users' : selectedTab3 === 2 ? 'investment': 'aup'"
                             [valueName1]="selectedTab3 === 1 ? 'Conversiones' : selectedTab3 === 2 ? 'Revenue' :'Revenue'"
                             [valueName2]="selectedTab3 === 1 ? 'Usuarios' : selectedTab3 === 2 ? 'Inversión' : 'AUP'"
                             [valueFormat1]="selectedTab3 > 1 && 'USD'" [valueFormat2]="selectedTab3 > 1 && 'USD'"
-                            name="latam-metric-comparison">
+                            [status]="usersInvOrAupReqStatus" name="latam-metric-comparison">
                         </app-chart-multiple-axes>
                     </div>
                 </div>
@@ -177,13 +176,13 @@
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                                (click)="getDataByTrafficAndSales('traffic'); chartsInitLoad = chartsInitLoad && false">
+                                (click)="getDemographics('traffic'); chartsInitLoad = chartsInitLoad && false">
                                 {{ 'general.traffic' | translate }}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                                (click)="getDataByTrafficAndSales('sales'); chartsInitLoad = chartsInitLoad && false">
+                                (click)="getDemographics('sales'); chartsInitLoad = chartsInitLoad && false">
                                 {{ 'general.sales' | translate }}
                             </a>
                         </li>
@@ -204,28 +203,28 @@
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="trafficAndSales?.desktop?.length > 0">
+                                    <div class="legend-container" *ngIf="demographics?.desktop?.length > 0">
                                         <div class="legend-square on color-1"></div>
-                                        <div class="legend-label">Desktop {{ trafficAndSales.desktop[1].value }}%
+                                        <div class="legend-label">Desktop {{ demographics.desktop[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="trafficAndSales?.desktop" name="latam-devices-desktop"
+                                <app-chart-pictorial [data]="demographics?.desktop" name="latam-devices-desktop"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
-                                    [status]="trafficSalesReqStatus[0].reqStatus" height="280px">
+                                    [status]="demographicsReqStatus[0].reqStatus" height="280px">
                                 </app-chart-pictorial>
                             </div>
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="trafficAndSales?.mobile?.length > 0">
+                                    <div class="legend-container" *ngIf="demographics?.mobile?.length > 0">
                                         <div class="legend-square on color-2"></div>
-                                        <div class="legend-label">Mobile {{ trafficAndSales.mobile[1].value }}%
+                                        <div class="legend-label">Mobile {{ demographics.mobile[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="trafficAndSales?.mobile" name="latam-devices-mobile"
+                                <app-chart-pictorial [data]="demographics?.mobile" name="latam-devices-mobile"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
-                                    height="280px" [status]="trafficSalesReqStatus[0].reqStatus">
+                                    height="280px" [status]="demographicsReqStatus[0].reqStatus">
                                 </app-chart-pictorial>
                             </div>
                         </div>
@@ -246,32 +245,32 @@
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="trafficAndSales?.men?.length > 0">
+                                    <div class="legend-container" *ngIf="demographics?.men?.length > 0">
                                         <div class="legend-square on color-1"></div>
                                         <div class="legend-label">
                                             {{ ('others.men'| translate) + ' '}}
-                                            {{ trafficAndSales.men[1].value }}%
+                                            {{ demographics.men[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="trafficAndSales?.men" name="latam-gender-man"
+                                <app-chart-pictorial [data]="demographics?.men" name="latam-gender-man"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man"
-                                    [status]="trafficSalesReqStatus[1].reqStatus" height="280px">
+                                    [status]="demographicsReqStatus[1].reqStatus" height="280px">
                                 </app-chart-pictorial>
                             </div>
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="trafficAndSales?.women?.length > 0">
+                                    <div class="legend-container" *ngIf="demographics?.women?.length > 0">
                                         <div class="legend-square on color-2"></div>
                                         <div class="legend-label">
                                             {{ ('others.women'| translate) + ' '}}
-                                            {{ trafficAndSales.women[1].value }}%
+                                            {{ demographics.women[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="trafficAndSales?.women" name="latam-gender-woman"
+                                <app-chart-pictorial [data]="demographics?.women" name="latam-gender-woman"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman"
-                                    height="280px" [status]="trafficSalesReqStatus[1].reqStatus">
+                                    height="280px" [status]="demographicsReqStatus[1].reqStatus">
                                 </app-chart-pictorial>
                             </div>
                         </div>
@@ -289,9 +288,9 @@
                         </span>
                     </div>
                     <div class="card-body">
-                        <app-chart-lollipop [data]="trafficAndSales['age']" name="latam-age" category="age"
+                        <app-chart-lollipop [data]="demographics['age']" name="latam-age" category="age"
                             [value]="selectedTab2 === 1 ? 'visits' : 'sales'" height="280px"
-                            [status]="trafficSalesReqStatus[2].reqStatus">
+                            [status]="demographicsReqStatus[2].reqStatus">
                         </app-chart-lollipop>
                     </div>
                 </div>
@@ -308,17 +307,17 @@
                     </div>
                     <div class="card-body" style="height: 328px">
                         <!-- loader -->
-                        <app-chart-loader *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus <= 1">
+                        <app-chart-loader *ngIf="chartsInitLoad && demographicsReqStatus[3].reqStatus <= 1">
                         </app-chart-loader>
 
                         <!-- ready -->
-                        <app-chart-pyramid *ngIf="trafficAndSales['genderByAge']?.length > 0"
-                            [data]="trafficAndSales['genderByAge']" name="latam-age-and-gender"
-                            [status]="trafficSalesReqStatus[3].reqStatus" height="280px">
+                        <app-chart-pyramid *ngIf="demographics['genderByAge']?.length > 0"
+                            [data]="demographics['genderByAge']" name="latam-age-and-gender"
+                            [status]="demographicsReqStatus[3].reqStatus" height="280px">
                         </app-chart-pyramid>
 
                         <!-- empty data -->
-                        <div *ngIf="trafficSalesReqStatus[3].reqStatus === 2 && trafficAndSales['genderByAge']?.length === 0"
+                        <div *ngIf="demographicsReqStatus[3].reqStatus === 2 && demographics['genderByAge']?.length === 0"
                             class="chart-error-container text-muted">
                             <p class="text-center">
                                 {{ 'general.withoutData' | translate }} <br>
@@ -327,7 +326,7 @@
                         </div>
 
                         <!-- error -->
-                        <div *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus === 3"
+                        <div *ngIf="chartsInitLoad && demographicsReqStatus[3].reqStatus === 3"
                             class="chart-error-container text-muted">
                             <span> {{ 'general.errorData' | translate }}</span>
                         </div>
