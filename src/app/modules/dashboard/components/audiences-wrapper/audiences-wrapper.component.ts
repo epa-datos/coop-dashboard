@@ -89,8 +89,8 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
           } else if (subMetricType === 'gender' && metricType !== 'aup') {
             const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp, metricType === 'bouncerate' ? false : true);
 
-            hombre[1].name = this.translate.instant('others.men');
-            mujer[1].name = this.translate.instant('others.women');
+            hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
+            mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
 
             this.demographics = { ...this.demographics, men: hombre, women: mujer };
 
