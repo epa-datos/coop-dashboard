@@ -343,7 +343,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       this.kpis[0].metricTitle = this.translate.instant('kpis.investment');
       this.kpis[2].subMetricTitle = this.translate.instant('general.users');
       this.kpis[3].metricTitle = this.translate.instant('kpis.transactions');
-      this.kpis[3].metricTitle = this.translate.instant('kpis.transactions');
 
       this.topProductsColumns[0].title = this.translate.instant('general.ranking');
       this.topProductsColumns[1].title = this.translate.instant('general.product');
@@ -353,13 +352,13 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       this.usersAndSalesMetrics[1] = this.translate.instant('general.category').toLowerCase();
       this.usersAndSalesMetrics[2] = this.translate.instant('general.source').toLowerCase();
 
-      this.trafficAndSales['gender'] = this.trafficAndSales['gender']?.map(item => {
-        if (item.id === 1) {
-          return { ...item, name: this.translate.instant('others.women') }
-        } else if (item.id === 2) {
-          return { ...item, name: this.translate.instant('others.men') }
-        }
-      });
+      if (this.trafficAndSales['men']?.length > 0) {
+        this.trafficAndSales['men'][1].name = this.translate.instant('others.men');
+      }
+
+      if (this.trafficAndSales['women']?.length > 0) {
+        this.trafficAndSales['women'][1].name = this.translate.instant('others.women');
+      }
     });
   }
 
@@ -465,19 +464,15 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
           } else if (subMetricType === 'gender') {
             const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp);
-            this.trafficAndSales = { ...this.trafficAndSales, man: hombre, woman: mujer };
+
+            hombre[1].name = this.translate.instant('others.men');
+            mujer[1].name = this.translate.instant('others.women');
+
+            this.trafficAndSales = { ...this.trafficAndSales, men: hombre, women: mujer };
 
           } else if (subMetricType === 'gender-and-age') {
             this.trafficAndSales['genderByAge'] = resp;
 
-            // } else if (subMetricType === 'gender') {
-            //   this.trafficAndSales['gender'] = resp.map(item => {
-            //     if (item.name.toLowerCase() == 'mujer') {
-            //       return { id: 1, name: this.translate.instant('others.women'), value: item.value }
-            //     } else if (item.name.toLowerCase() == 'hombre') {
-            //       return { id: 2, name: this.translate.instant('others.men'), value: item.value }
-            //     }
-            //   });
           } else {
             this.trafficAndSales[subMetricType] = resp;
           }

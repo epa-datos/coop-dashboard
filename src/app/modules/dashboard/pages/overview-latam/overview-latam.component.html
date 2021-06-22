@@ -246,30 +246,30 @@
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="trafficAndSales?.man?.length > 0">
+                                    <div class="legend-container" *ngIf="trafficAndSales?.men?.length > 0">
                                         <div class="legend-square on color-1"></div>
                                         <div class="legend-label">
                                             {{ ('others.men'| translate) + ' '}}
-                                            {{ trafficAndSales.man[1].value }}%
+                                            {{ trafficAndSales.men[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="trafficAndSales?.man" name="latam-gender-man"
+                                <app-chart-pictorial [data]="trafficAndSales?.men" name="latam-gender-man"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man"
                                     [status]="trafficSalesReqStatus[1].reqStatus" height="280px">
                                 </app-chart-pictorial>
                             </div>
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="trafficAndSales?.woman?.length > 0">
+                                    <div class="legend-container" *ngIf="trafficAndSales?.women?.length > 0">
                                         <div class="legend-square on color-2"></div>
                                         <div class="legend-label">
                                             {{ ('others.women'| translate) + ' '}}
-                                            {{ trafficAndSales.woman[1].value }}%
+                                            {{ trafficAndSales.women[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="trafficAndSales?.woman" name="latam-gender-woman"
+                                <app-chart-pictorial [data]="trafficAndSales?.women" name="latam-gender-woman"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman"
                                     height="280px" [status]="trafficSalesReqStatus[1].reqStatus">
                                 </app-chart-pictorial>
