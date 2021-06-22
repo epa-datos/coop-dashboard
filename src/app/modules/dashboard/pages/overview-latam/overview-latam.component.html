@@ -288,7 +288,7 @@
                         </span>
                     </div>
                     <div class="card-body">
-                        <app-chart-lollipop [data]="demographics['age']" name="latam-age" category="age"
+                        <app-chart-lollipop [data]="demographics?.age" name="latam-age" category="age"
                             [value]="selectedTab2 === 1 ? 'visits' : 'sales'" height="280px"
                             [status]="demographicsReqStatus[2].reqStatus">
                         </app-chart-lollipop>
@@ -311,13 +311,13 @@
                         </app-chart-loader>
 
                         <!-- ready -->
-                        <app-chart-pyramid *ngIf="demographics['genderByAge']?.length > 0"
-                            [data]="demographics['genderByAge']" name="latam-age-and-gender"
+                        <app-chart-pyramid *ngIf="demographics?.genderByAge?.length > 0"
+                            [data]="demographics?.genderByAge" name="latam-age-and-gender"
                             [status]="demographicsReqStatus[3].reqStatus" height="280px">
                         </app-chart-pyramid>
 
                         <!-- empty data -->
-                        <div *ngIf="demographicsReqStatus[3].reqStatus === 2 && demographics['genderByAge']?.length === 0"
+                        <div *ngIf="demographicsReqStatus[3].reqStatus === 2 && demographics?.genderByAge?.length === 0"
                             class="chart-error-container text-muted">
                             <p class="text-center">
                                 {{ 'general.withoutData' | translate }} <br>

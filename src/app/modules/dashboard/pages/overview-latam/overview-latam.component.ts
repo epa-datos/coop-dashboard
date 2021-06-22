@@ -230,13 +230,13 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
     const selectedSector = previousSector ? previousSector : null;
     const selectedCategory = previousCategory ? previousCategory : null;
-    const selectedSources = previousSource ? previousSource : null;
+    const selectedSource = previousSource ? previousSource : null;
     const selectedCategory2 = previousCategory2 ? previousCategory2 : this.selectedCategories[0];
 
     this.getKpis();
     this.getSectorsAndCategories(sectorsOrCategoriesMetric);
     this.getDemographics(demohraphicMetric);
-    this.getDataByUsersInvOrAup(null, selectedSector, selectedCategory, selectedSources);
+    this.getDataByUsersInvOrAup(null, selectedSector, selectedCategory, selectedSource);
     this.getTopProducts(selectedCategory2);
 
     this.chartsInitLoad = true;
@@ -336,7 +336,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       metricType = this.selectedTab3 === 1 ? 'users-vs-conversions' : this.selectedTab3 === 2 ? 'investment-vs-revenue' : 'aup-vs-revenue';
     }
 
-    this.overviewService.getUsersAndSalesLatam(metricType, sector?.id, category?.id, source?.id).subscribe(
+    this.overviewService.getUsersInvOrAupLatam(metricType, sector?.id, category?.id, source?.id).subscribe(
       (resp: any[]) => {
         this.usersInvOrAup = resp;
         this.usersInvOrAupReqStatus = 2;
