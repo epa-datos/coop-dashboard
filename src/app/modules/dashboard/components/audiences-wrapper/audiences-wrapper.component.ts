@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
 import { convertWeekdayToString } from 'src/app/tools/functions/data-convert';
 import { CampaignInRetailService } from '../../services/campaign-in-retail.service';
 import { FiltersStateService } from '../../services/filters-state.service';
@@ -47,7 +49,8 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
 
   constructor(
     private filtersStateService: FiltersStateService,
-    private campInRetailService: CampaignInRetailService
+    private campInRetailService: CampaignInRetailService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -79,18 +82,30 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
       reqStatusObj.reqStatus = 1;
       this.campInRetailService.getDataByMetric(metricType, subMetricType).subscribe(
         (resp: any[]) => {
-          if (subMetricType === 'gender-and-age') {
+          if (subMetricType === 'device' && metricType !== 'aup') {
+            const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp, metricType === 'bouncerate' ? false : true);
+            this.demographics = { ...this.demographics, desktop, mobile };
+
+          } else if (subMetricType === 'gender' && metricType !== 'aup') {
+            const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp, metricType === 'bouncerate' ? false : true);
+
+            hombre[1].name = this.translate.instant('others.men');
+            mujer[1].name = this.translate.instant('others.women');
+
+            this.demographics = { ...this.demographics, men: hombre, women: mujer };
+
+          } else if (subMetricType === 'gender-and-age') {
             this.demographics['genderByAge'] = resp;
           } else {
             this.demographics[subMetricType] = resp;
           }
 
+          console.log('demographics', this.demographics)
+
           reqStatusObj.reqStatus = 2;
 
           // process bounce rate data;
-          if (metricType === 'bouncerate' && (subMetricType === 'device' || subMetricType === 'gender')) {
-            this.addDemographicDataBr(subMetricType, resp);
-          };
+          // this.addDemographicDataBr(subMetricType, resp);
         },
         error => {
           const errorMsg = error?.error?.message ? error.error.message : error?.message;
@@ -188,39 +203,39 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  addDemographicDataBr(subMetric: string, dataRaw: any[]) {
-    switch (subMetric) {
-      case 'device':
-        const desktop = dataRaw.find(item => item.name === 'Desktop');
-        const mobile = dataRaw.find(item => item.name === 'Mobile');
+  // addDemographicDataBr(subMetric: string, dataRaw: any[]) {
+  //   switch (subMetric) {
+  //     case 'device':
+  //       const desktop = dataRaw.find(item => item.name === 'Desktop');
+  //       const mobile = dataRaw.find(item => item.name === 'Mobile');
 
-        this.demographics['deviceDesktop'] = [
-          { name: 'empty', value: desktop ? 100 - desktop.value.toFixed(2) : 100 },
-          { name: 'Desktop', value: desktop ? desktop.value.toFixed(2) : 0 },
-        ];
+  //       this.demographics['deviceDesktop'] = [
+  //         { name: 'empty', value: desktop ? 100 - desktop.value.toFixed(2) : 100 },
+  //         { name: 'Desktop', value: desktop ? desktop.value.toFixed(2) : 0 },
+  //       ];
 
-        this.demographics['deviceMobile'] = [
-          { name: 'empty', value: mobile ? 100 - mobile.value.toFixed(2) : 100 },
-          { name: 'Mobile', value: mobile ? mobile.value.toFixed(2) : 0 },
-        ];
-        break;
+  //       this.demographics['deviceMobile'] = [
+  //         { name: 'empty', value: mobile ? 100 - mobile.value.toFixed(2) : 100 },
+  //         { name: 'Mobile', value: mobile ? mobile.value.toFixed(2) : 0 },
+  //       ];
+  //       break;
 
-      case 'gender':
-        const man = dataRaw.find(item => item.name === 'Hombre');
-        const woman = dataRaw.find(item => item.name === 'Mujer');
+  //     case 'gender':
+  //       const man = dataRaw.find(item => item.name === 'Hombre');
+  //       const woman = dataRaw.find(item => item.name === 'Mujer');
 
-        this.demographics['genderMan'] = [
-          { name: 'empty', value: man ? 100 - man.value.toFixed(2) : 100 },
-          { name: 'Hombre', value: man ? man.value.toFixed(2) : 0 },
-        ];
+  //       this.demographics['genderMan'] = [
+  //         { name: 'empty', value: man ? 100 - man.value.toFixed(2) : 100 },
+  //         { name: 'Hombre', value: man ? man.value.toFixed(2) : 0 },
+  //       ];
 
-        this.demographics['genderWoman'] = [
-          { name: 'empty', value: woman ? 100 - woman.value.toFixed(2) : 100 },
-          { name: 'Mujer', value: woman ? woman.value.toFixed(2) : 0 },
-        ];
-        break;
-    }
-  }
+  //       this.demographics['genderWoman'] = [
+  //         { name: 'empty', value: woman ? 100 - woman.value.toFixed(2) : 100 },
+  //         { name: 'Mujer', value: woman ? woman.value.toFixed(2) : 0 },
+  //       ];
+  //       break;
+  //   }
+  // }
 
   getSelectedMetricForDemo(metricType: string, selectedTab: number) {
     if (metricType) {
