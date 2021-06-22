@@ -11,14 +11,15 @@ import { OverviewService } from '../../services/overview.service';
   styleUrls: ['./overview-wrapper.component.scss']
 })
 export class OverviewWrapperComponent implements OnInit, OnDestroy {
-
   @Input() selectedType: string; // country or retailer
   @Input() requestInfoChange: Observable<boolean>;
   @Input() showTrafficAndSalesSection: boolean = true;
 
-  selectedTab1: number = 1;
-  selectedTab2: number = 1;
-  selectedTab3: number = 1;
+  selectedTab1: number = 1; // sector (1) or category (2) selection -> chart-heat-map
+  selectedTab2: number = 2; // traffic (1) or conversions (2) selection -> demographics
+  selectedTab3: number = 1; // users vs conversions (1) or investment vs revenue (2) or aup vs revenue (3) selection -> chart-multiple-axes
+  selectedTab4: number = 1; // sector (1) or category (2) or source (3) selection ->  chart-multiple-axes
+  selectedTab5: number = 1; // subtab (sector, category or source) selection ->  chart-multiple-axes
 
   kpisLegends1 = ['investment', 'clicks', 'bounce_rate', 'transactions', 'revenue']
   kpisLegends2 = ['ctr', 'users', 'cr', 'roas']
@@ -84,232 +85,41 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     }
   ];
 
-  selectedSectors: any[] = [];
-  selectedSectorTab: any;
-  categoriesBySector: any[] = [];
-  trafficAndSales = {};
 
-  usersAndSalesBySector: any[] = [];
-  investmentVsRevenue: any[] = [];
+  categoriesBySector: any[] = [];
+
+  demographics = {};
+
+  usersInvOrAupMetrics: string[] = ['sector', 'categoría', 'medio'];
+  usersInvOrAup: any[] = [];
 
   // requests status
   kpisReqStatus: number = 0;
   categoriesReqStatus: number = 0;
-  usersAndSalesReqStatus: number = 0;
+  usersInvOrAupReqStatus: number = 0;
   invVsRevenueReqStatus: number = 0;
-  trafficSalesReqStatus = [
+  demographicsReqStatus = [
     { name: 'device', reqStatus: 0 },
     { name: 'gender', reqStatus: 0 },
     { name: 'age', reqStatus: 0 },
     { name: 'gender-and-age', reqStatus: 0 }
   ];
 
+  // available tabs for usersInvOrAup
+  selectedCategories: any[] = [];
+  selectedSectors: any[] = [];
+  selectedSources: any[] = [];
+
+  // for usersInvOrAup selected tab
+  selectedSectorTab: any;
+  selectedCategoryTab: any
+  selectedSourceTab: any;
+
+  // for categoriesBySector (heatmap) selected tab
+  selectedSectorTabHM: any;
+
   requestInfoSub: Subscription;
   chartsInitLoad: boolean = true;
-
-  /// DATA MOCK
-  /// DATA MOCK
-  trafficVsConversionsM = [{
-    date: '2021-06-02',
-    traffic: 434,
-    conversions: 15,
-  }, {
-    date: '2021-06-03',
-    traffic: 634,
-    conversions: 25,
-  }, {
-    date: '2021-06-04',
-    traffic: 574,
-    conversions: 20,
-  }, {
-    date: '2021-06-05',
-    traffic: 615,
-    conversions: 16,
-  }, {
-    date: '2021-06-06',
-    traffic: 732,
-    conversions: 5,
-  }, {
-    date: '2021-06-07',
-    traffic: 1412,
-    conversions: 32,
-  }, {
-    date: '2021-06-08',
-    traffic: 716,
-    conversions: 11,
-  }, {
-    date: '2021-06-09',
-    traffic: 3710,
-    conversions: 22,
-  }, {
-    date: '2021-06-10',
-    traffic: 1298,
-    conversions: 66,
-  }, {
-    date: '2021-06-11',
-    traffic: 816,
-    conversions: 39,
-  }, {
-    date: '2021-06-12',
-    traffic: 1963,
-    conversions: 43,
-  }, {
-    date: '2021-06-13',
-    traffic: 1809,
-    conversions: 29,
-  }, {
-    date: '2021-06-14',
-    traffic: 1434,
-    conversions: 36,
-  }, {
-    date: '2021-06-15',
-    traffic: 2359,
-    conversions: 16,
-  }, {
-    date: '2021-06-16',
-    traffic: 2114,
-    conversions: 66,
-  }];
-
-  investmentVsRevenueM = [
-    {
-      date: '2021-06-02',
-      investment: 4516.232,
-      revenue: 34977,
-    }, {
-      date: '2021-06-03',
-      investment: 3816.232,
-      revenue: 15977,
-    }, {
-      date: '2021-06-04',
-      investment: 3717.643,
-      revenue: 12677,
-    }, {
-      date: '2021-06-05',
-      investment: 4723.765,
-      revenue: 24141,
-    }, {
-      date: '2021-06-06',
-      investment: 4205.837,
-      revenue: 24172,
-    }, {
-      date: '2021-06-07',
-      investment: 4326.599,
-      revenue: 11498,
-    }, {
-      date: '2021-06-08',
-      investment: 2485.788,
-      revenue: 43770,
-    }, {
-      date: '2021-06-09',
-      investment: 3710.785,
-      revenue: 20874,
-    }, {
-      date: '2021-06-10',
-      investment: 2816.232,
-      revenue: 25977.84,
-    }, {
-      date: '2021-06-11',
-      investment: 3517.643,
-      revenue: 1375.64,
-    }, {
-      date: '2021-06-12',
-      investment: 4923.765,
-      revenue: 35541.75,
-    }, {
-      date: '2021-06-13',
-      investment: 7205.837,
-      revenue: 58172.32,
-    }, {
-      date: '2021-06-14',
-      investment: 2121.599,
-      revenue: 23498.33,
-    }, {
-      date: '2021-06-15',
-      investment: 3585.788,
-      revenue: 13770.55,
-    }, {
-      date: '2021-06-16',
-      investment: 3850.785,
-      revenue: 40874.56,
-    }
-  ]
-
-  aupVsRevenueM = [{
-    date: '2021-06-02',
-    revenue: 4816.232,
-    aup: 35977,
-  }, {
-    date: '2021-06-03',
-    revenue: 3816.232,
-    aup: 35977,
-  }, {
-    date: '2021-06-04',
-    revenue: 3717.643,
-    aup: 22677,
-  }, {
-    date: '2021-06-05',
-    revenue: 4723.765,
-    aup: 25541,
-  }, {
-    date: '2021-06-06',
-    revenue: 4205.837,
-    aup: 28172,
-  }, {
-    date: '2021-06-07',
-    revenue: 4326.599,
-    aup: 26498,
-  }, {
-    date: '2021-06-08',
-    revenue: 2585.788,
-    aup: 43770,
-  }, {
-    date: '2021-06-09',
-    revenue: 4710.785,
-    aup: 40874,
-  }, {
-    date: '2021-06-10',
-    revenue: 2116.232,
-    aup: 35977,
-  }, {
-    date: '2021-06-11',
-    revenue: 3517.643,
-    aup: 22677,
-  }, {
-    date: '2021-06-12',
-    revenue: 8923.765,
-    aup: 25541,
-  }, {
-    date: '2021-06-13',
-    revenue: 6205.837,
-    aup: 28172,
-  }, {
-    date: '2021-06-14',
-    revenue: 2326.599,
-    aup: 26498,
-  }, {
-    date: '2021-06-15',
-    revenue: 3585.788,
-    aup: 43770,
-  }, {
-    date: '2021-06-16',
-    revenue: 4850.785,
-    aup: 40874,
-  }];
-
-  usersAndSalesMetrics: string[] = ['sector', 'categoría', 'medio'];
-  // available tabs
-  selectedCategories: any[] = []; // for topProducts and usersAndSalesByMetric
-  selectedSources: any[] = []; // for usersAndSalesByMetric
-  selectedCategoryTab1;
-  selectedSourceTab;
-
-  selectedTab4;
-  selectedTab5;
-
-  // selectedSectorsTab = ['Todo', 'Sarach', 'Mrketing', 'Ventas'];
-  // this.selectedCategories = ['Todo', 'PS', 'HW Print', 'Supplies'];
-  // this.selectedSources = ['Google', 'Social', 'Email', 'Display']
 
   constructor(
     private filtersStateService: FiltersStateService,
@@ -333,41 +143,75 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     this.selectedSectors = this.filtersStateService.sectors;
     this.selectedCategories = this.filtersStateService.categories;
     this.selectedSources = [
-      { id: 1, name: 'Google' },
-      { id: 2, name: 'Social' },
-      { id: 3, name: 'Email' },
-      { id: 4, name: 'Display' }
+      { id: 'google', name: 'Google' },
+      { id: 'social', name: 'Social' },
+      { id: 'email', name: 'Email' },
+      { id: 'display', name: 'Display' },
+      { id: 'others', name: 'Otros' }
     ]
+
+    let selectedSectorHM;
+    let demographicMetric;
+
     let selectedSector;
-    let trafficOrSales;
-    let usersOrSales;
-
-    selectedSector = this.selectedSectors[0];
-    trafficOrSales = 'traffic';
-    usersOrSales = 'users';
-
-    this.selectedTab4 = 1;
-    this.selectedTab5 = 1;
-
+    let selectedCategory;
+    let selectedSource;
 
     if (!preserveSelectedTabs) {
-      selectedSector = this.selectedSectors[0];
-      trafficOrSales = 'traffic';
-      usersOrSales = 'users';
+      selectedSectorHM = this.selectedSectors[0];
+      demographicMetric = 'traffic';
+
+      // tabs for users vs conversions | investment vs revenue | revenue vs aup (chart-multiple-axes)
+      this.selectedTab3 = 1;
+      this.selectedTab4 = 1;
+      this.selectedTab5 = 1;
+      selectedSector = null;
+      selectedCategory = null;
+      selectedSource = null;
+
     } else {
-      const previousSector = this.selectedSectors.find(sector => sector.id === this.selectedSectorTab.id);
-      const previousCategory = this.selectedCategories.find(category => category.id === this.selectedCategoryTab1?.id);
-      const previousSource = this.selectedSources.find(source => source.id === this.selectedSourceTab?.id);
-      selectedSector = previousSector ? previousSector : this.selectedSectors[0];
-      trafficOrSales = this.selectedTab2 === 1 ? 'traffic' : 'sales';
-      usersOrSales = this.selectedTab3 === 1 ? 'users' : 'sales';
+      // PRESERVE PREVIOUS SELECTION (TABS)
+
+      // sectors heatmap
+      const previousSectorHM = this.selectedSectors.find(sector => sector.id === this.selectedSectorTabHM.id);
+      selectedSectorHM = previousSectorHM ? previousSectorHM : this.selectedSectors[0];
+
+      // demograhics
+      demographicMetric = this.selectedTab2 === 1 ? 'traffic' : 'sales';
+
+      // users vs conversions | investment vs revenue | revenue vs aup (chart-multiple-axes)
+      let previousSector;
+      let previousCategory;
+      let previousSource;
+
+      if (this.selectedTab5 !== 1) {
+        switch (this.selectedTab4) {
+          case 1:
+            // there's a previous selected sector
+            previousSector = this.selectedSectors.find(sector => sector.id === this.selectedSectorTab?.id);
+            break;
+
+          case 2:
+            // there's a previous selected category
+            previousCategory = this.selectedCategories.find(category => category.id === this.selectedCategoryTab?.id);
+            break;
+
+          case 3:
+            // there's a previous selected source
+            previousSource = this.selectedSources.find(source => source.id === this.selectedSourceTab?.id);
+            break;
+        }
+      }
+
+      selectedSector = previousSector ? previousSector : null;
+      selectedCategory = previousCategory ? previousCategory : null;
+      selectedSource = previousSource ? previousSource : null;
     }
 
     this.getKpis();
-    this.getCategoriesBySector(selectedSector);
-    this.getDataByTrafficAndSales(trafficOrSales);
-    this.getDataByUsersAndSales(usersOrSales);
-    this.getInvestmentVsRevenue();
+    this.getCategoriesBySector(selectedSectorHM);
+    this.getDemographics(demographicMetric);
+    this.getDataByUsersInvOrAup(null, selectedSector, selectedCategory, selectedSource);
 
     this.chartsInitLoad = true;
   }
@@ -399,7 +243,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
   getCategoriesBySector(selectedSector: any) {
     this.categoriesReqStatus = 1;
-    this.selectedSectorTab = selectedSector;
+    this.selectedSectorTabHM = selectedSector;
     this.overviewService.getCategoriesBySector(selectedSector?.name).subscribe(
       (resp: any[]) => {
         this.categoriesBySector = resp;
@@ -415,30 +259,30 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     this.selectedTab1 = selectedSector.id;
   }
 
-  getDataByTrafficAndSales(metricType: string) {
+  getDemographics(metricType: string) {
     const requiredData = ['device', 'gender', 'age', 'gender-and-age']
 
     for (let subMetricType of requiredData) {
-      const reqStatusObj = this.trafficSalesReqStatus.find(item => item.name === subMetricType);
+      const reqStatusObj = this.demographicsReqStatus.find(item => item.name === subMetricType);
       reqStatusObj.reqStatus = 1;
-      this.overviewService.getTrafficAndSales(metricType, subMetricType).subscribe(
+      this.overviewService.getDemographics(metricType, subMetricType).subscribe(
         (resp: any[]) => {
           if (subMetricType === 'device') {
             const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp);
-            this.trafficAndSales = { ...this.trafficAndSales, desktop, mobile };
+            this.demographics = { ...this.demographics, desktop, mobile };
 
           } else if (subMetricType === 'gender') {
             const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp);
 
-            hombre[1].name = this.translate.instant('others.men');
-            mujer[1].name = this.translate.instant('others.women');
+            hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
+            mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
 
-            this.trafficAndSales = { ...this.trafficAndSales, men: hombre, women: mujer };
+            this.demographics = { ...this.demographics, men: hombre, women: mujer };
 
           } else if (subMetricType === 'gender-and-age') {
-            this.trafficAndSales['genderByAge'] = resp;
+            this.demographics['genderByAge'] = resp;
           } else {
-            this.trafficAndSales[subMetricType] = resp;
+            this.demographics[subMetricType] = resp;
           }
           reqStatusObj.reqStatus = 2;
 
@@ -453,41 +297,44 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDataByUsersAndSales(metricType: string) {
-    this.usersAndSalesReqStatus = 1;
-    this.overviewService.getUsersAndSales(metricType).subscribe(
+  getDataByUsersInvOrAup(metricType?: string, sector?: any, category?: any, source?: any) {
+    this.usersInvOrAupReqStatus = 1;
+
+    if (metricType) {
+      // for main tabs interactions
+      // use current selection (metricType value) to define selectedTab3
+      this.selectedTab3 = metricType === 'users-vs-conversions' ? 1 : metricType === 'investment-vs-revenue' ? 2 : 3;
+    } else {
+      // for init, filtersChange event or sub tabs interactions
+      // use current selection (selectTab3 value) to define metricType
+      metricType = this.selectedTab3 === 1 ? 'users-vs-conversions' : this.selectedTab3 === 2 ? 'investment-vs-revenue' : 'aup-vs-revenue';
+    }
+
+    this.overviewService.getUsersInvOrAup(metricType, sector?.id, category?.id, source?.id).subscribe(
       (resp: any[]) => {
-        this.usersAndSalesBySector = resp;
-        this.usersAndSalesReqStatus = 2;
+        this.usersInvOrAup = resp;
+        this.usersInvOrAupReqStatus = 2;
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[overview-wrapper.component]: ${errorMsg}`);
-        this.usersAndSalesReqStatus = 3;
+        this.usersInvOrAupReqStatus = 3;
       }
     )
 
-    this.selectedTab3 = metricType === 'users' ? 1 : 2;
-  }
-
-  getInvestmentVsRevenue() {
-    this.invVsRevenueReqStatus = 1;
-    this.overviewService.getInvestmentVsRevenue().subscribe(
-      (resp: any[]) => {
-        this.investmentVsRevenue = resp;
-        this.invVsRevenueReqStatus = 2;
-      },
-      error => {
-        const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[overview-wrapper.component]: ${errorMsg}`);
-        this.invVsRevenueReqStatus = 3;
-      }
-    )
+    if (!sector && !category && !source) {
+      this.selectedSectorTab = this.selectedSectors[0];
+      this.selectedTab5 = 1
+    } else {
+      this.selectedSectorTab = sector;
+      this.selectedCategoryTab = category;
+      this.selectedSourceTab = source;
+    }
   }
 
   clearUsersAndSalesTabs() {
     this.selectedSectorTab && delete this.selectedSectorTab;
-    this.selectedCategoryTab1 && delete this.selectedCategoryTab1;
+    this.selectedCategoryTab && delete this.selectedCategoryTab;
     this.selectedSourceTab && delete this.selectedSourceTab;
   }
 
