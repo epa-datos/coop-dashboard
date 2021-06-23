@@ -16,15 +16,21 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                        (click)="getPerformanceData('users');">{{ 'general.usersVsSales1' | translate }}</a>
+                        (click)="getPerformanceData('users');">
+                        {{ 'general.usersVsSales' | translate }}
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                        (click)="getPerformanceData('investment')">{{ 'general.investmentVsRevenue1' | translate }}</a>
+                        (click)="getPerformanceData('investment')">
+                        {{ 'general.investmentVsRevenue' | translate }}
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
-                        (click)="getPerformanceData('revenue')">{{ 'general.revenueVsAup1' |translate }}</a>
+                        (click)="getPerformanceData('revenue')">
+                        {{ 'general.revenueVsAup' |translate }}
+                    </a>
                 </li>
             </ul>
         </div>
@@ -34,9 +40,9 @@
         <div class="card">
             <div class="card-header">
                 <ng-container [ngSwitch]="selectedTab1">
-                    <span class="h4" *ngSwitchCase="1">Usuarios vs Conversiones</span>
-                    <span class="h4" *ngSwitchCase="2">Inversión vs Revenue</span>
-                    <span class="h4" *ngSwitchCase="3">Revenue vs AUP</span>
+                    <span class="h4" *ngSwitchCase="1">{{ 'general.usersVsSales' | translate }}</span>
+                    <span class="h4" *ngSwitchCase="2">{{ 'general.investmentVsRevenue' | translate }}</span>
+                    <span class="h4" *ngSwitchCase="3">{{ 'general.revenueVsAup' |translate }}</span>
                 </ng-container>
             </div>
             <div class="card-body">
@@ -46,7 +52,7 @@
                     [valueName1]="selectedTab1 === 1 ? 'Conversiones' : selectedTab1 === 2 ? 'Revenue' :'Revenue'"
                     [valueName2]="selectedTab1 === 1 ? 'Usuarios' : selectedTab1 === 2 ? 'Inversión' : 'AUP'"
                     [valueFormat1]="selectedTab1 > 1 && 'USD'" [valueFormat2]="selectedTab1 > 1 && 'USD'"
-                    name="omnichat-traffic-vs-conversions">
+                    name="omnichat-metric-comparison">
                 </app-chart-multiple-axes>
             </div>
         </div>

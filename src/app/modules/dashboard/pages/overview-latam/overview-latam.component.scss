@@ -51,46 +51,6 @@
     }
 }
 
-.period-popover {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 11px;
-
-    i {
-        color: #c7c7c7;
-        cursor: pointer;
-        font-size: 18px;
-    }
-
-    .content {
-        padding: 12px;
-
-        .period {
-            align-items: center;
-            display: flex;
-            justify-content: space-between;
-           
-            .line {
-                width: 25px;
-                height: 2px;
-        
-                &.first {
-                    background-color: #67B6DC;
-                }
-        
-                &.second {
-                    background-color: #A367DC;
-                }
-        
-                &.third {
-                    background-color: #DC67CE;
-                }
-            }
-        }
-    }
-}
-
-
 .chart-legend {
     display: flex;
     padding: 0 15px;

@@ -4,6 +4,7 @@ import { FiltersStateService } from '../../services/filters-state.service';
 import { OverviewService } from '../../services/overview.service';
 import { TableItem } from '../../components/generic-table/generic-table.component';
 import { TranslateService } from '@ngx-translate/core';
+import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
 
 @Component({
   selector: 'app-overview-latam',
@@ -11,15 +12,14 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./overview-latam.component.scss']
 })
 export class OverviewLatamComponent implements OnInit, OnDestroy {
-
   activeTabView = 1;
 
-  selectedTab1: number = 1;
-  selectedTab2: number = 2;
-  selectedTab3: number = 1;
-  selectedTab4: number = 1;
-  selectedTab5: number = 1;
-  selectedTab6: number = 1;
+  selectedTab1: number = 1; // sector (1) or category (2) selection -> chart-heat-map
+  selectedTab2: number = 2; // traffic (1) or conversions (2) selection -> demographics
+  selectedTab3: number = 1; // users vs conversions (1) or investment vs revenue (2) or aup vs revenue (3) selection -> chart-multiple-axes
+  selectedTab4: number = 1; // sector (1) or category (2) or source (3) selection ->  chart-multiple-axes
+  selectedTab5: number = 1; // subtab (sector, category or source) selection ->  chart-multiple-axes
+  selectedTab6: number = 1; // category selection -> generic-table (top products)
 
   kpisLegends1 = ['investment', 'clicks', 'bounce_rate', 'transactions', 'revenue']
   kpisLegends2 = ['ctr', 'users', 'cr', 'roas']
@@ -59,7 +59,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       iconBg: '#a77dcc'
     },
     {
-      metricTitle: 'transacciones',
+      metricTitle: 'conversiones',
       metricName: 'transactions',
       metricValue: 0,
       metricFormat: 'integer',
@@ -86,11 +86,11 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   ];
 
   categoriesBySector: any[] = [];
-  trafficAndSales = {};
 
-  usersAndSalesMetrics: string[] = ['sector', 'categoría', 'medio'];
-  usersAndSalesByMetric: any[] = [];
-  investmentVsRevenue: any[] = [];
+  demographics = {};
+
+  usersInvOrAupMetrics: string[] = ['sector', 'categoría', 'medio'];
+  usersInvOrAup: any[] = [];
 
   // top products
   topProductsColumns: TableItem[] = [
@@ -111,7 +111,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       formatValue: 'integer'
     }
   ];
-
   topProducts = {
     data: [],
     reqStatus: 0
@@ -120,9 +119,9 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   // requests status
   kpisReqStatus: number = 0;
   categoriesReqStatus: number = 0;
-  usersAndSalesReqStatus: number = 0;
+  usersInvOrAupReqStatus: number = 0;
   invVsRevenueReqStatus: number = 0;
-  trafficSalesReqStatus = [
+  demographicsReqStatus = [
     { name: 'device', reqStatus: 0 },
     { name: 'gender', reqStatus: 0 },
     { name: 'age', reqStatus: 0 },
@@ -130,11 +129,11 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   ];
 
   // available tabs
-  selectedCategories: any[] = []; // for topProducts and usersAndSalesByMetric
-  selectedSectors: any[] = []; // for usersAndSalesByMetric
-  selectedSources: any[] = []; // for usersAndSalesByMetric
+  selectedCategories: any[] = []; // for topProducts and usersInvOrAup
+  selectedSectors: any[] = []; // for usersInvOrAup
+  selectedSources: any[] = []; // for usersInvOrAup
 
-  selectedCategoryTab1: any // for usersAndSalesByMetric selected tab
+  selectedCategoryTab1: any // for usersInvOrAup selected tab
   selectedCategoryTab2: any; // for topProducts selected tab
   selectedSectorTab: any;
   selectedSourceTab: any;
@@ -142,195 +141,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   filtersSub: Subscription;
   translateSub: Subscription;
   chartsInitLoad: boolean = true;
-
-  /// DATA MOCK
-  trafficVsConversionsM = [{
-    date: '2021-06-02',
-    traffic: 434,
-    conversions: 15,
-  }, {
-    date: '2021-06-03',
-    traffic: 634,
-    conversions: 25,
-  }, {
-    date: '2021-06-04',
-    traffic: 574,
-    conversions: 20,
-  }, {
-    date: '2021-06-05',
-    traffic: 615,
-    conversions: 16,
-  }, {
-    date: '2021-06-06',
-    traffic: 732,
-    conversions: 5,
-  }, {
-    date: '2021-06-07',
-    traffic: 1412,
-    conversions: 32,
-  }, {
-    date: '2021-06-08',
-    traffic: 716,
-    conversions: 11,
-  }, {
-    date: '2021-06-09',
-    traffic: 3710,
-    conversions: 22,
-  }, {
-    date: '2021-06-10',
-    traffic: 1298,
-    conversions: 66,
-  }, {
-    date: '2021-06-11',
-    traffic: 816,
-    conversions: 39,
-  }, {
-    date: '2021-06-12',
-    traffic: 1963,
-    conversions: 43,
-  }, {
-    date: '2021-06-13',
-    traffic: 1809,
-    conversions: 29,
-  }, {
-    date: '2021-06-14',
-    traffic: 1434,
-    conversions: 36,
-  }, {
-    date: '2021-06-15',
-    traffic: 2359,
-    conversions: 16,
-  }, {
-    date: '2021-06-16',
-    traffic: 2114,
-    conversions: 66,
-  }];
-
-  investmentVsRevenueM = [
-    {
-      date: '2021-06-02',
-      investment: 4516.232,
-      revenue: 34977,
-    }, {
-      date: '2021-06-03',
-      investment: 3816.232,
-      revenue: 15977,
-    }, {
-      date: '2021-06-04',
-      investment: 3717.643,
-      revenue: 12677,
-    }, {
-      date: '2021-06-05',
-      investment: 4723.765,
-      revenue: 24141,
-    }, {
-      date: '2021-06-06',
-      investment: 4205.837,
-      revenue: 24172,
-    }, {
-      date: '2021-06-07',
-      investment: 4326.599,
-      revenue: 11498,
-    }, {
-      date: '2021-06-08',
-      investment: 2485.788,
-      revenue: 43770,
-    }, {
-      date: '2021-06-09',
-      investment: 3710.785,
-      revenue: 20874,
-    }, {
-      date: '2021-06-10',
-      investment: 2816.232,
-      revenue: 25977.84,
-    }, {
-      date: '2021-06-11',
-      investment: 3517.643,
-      revenue: 1375.64,
-    }, {
-      date: '2021-06-12',
-      investment: 4923.765,
-      revenue: 35541.75,
-    }, {
-      date: '2021-06-13',
-      investment: 7205.837,
-      revenue: 58172.32,
-    }, {
-      date: '2021-06-14',
-      investment: 2121.599,
-      revenue: 23498.33,
-    }, {
-      date: '2021-06-15',
-      investment: 3585.788,
-      revenue: 13770.55,
-    }, {
-      date: '2021-06-16',
-      investment: 3850.785,
-      revenue: 40874.56,
-    }
-  ]
-
-  aupVsRevenueM = [{
-    date: '2021-06-02',
-    revenue: 4816.232,
-    aup: 35977,
-  }, {
-    date: '2021-06-03',
-    revenue: 3816.232,
-    aup: 35977,
-  }, {
-    date: '2021-06-04',
-    revenue: 3717.643,
-    aup: 22677,
-  }, {
-    date: '2021-06-05',
-    revenue: 4723.765,
-    aup: 25541,
-  }, {
-    date: '2021-06-06',
-    revenue: 4205.837,
-    aup: 28172,
-  }, {
-    date: '2021-06-07',
-    revenue: 4326.599,
-    aup: 26498,
-  }, {
-    date: '2021-06-08',
-    revenue: 2585.788,
-    aup: 43770,
-  }, {
-    date: '2021-06-09',
-    revenue: 4710.785,
-    aup: 40874,
-  }, {
-    date: '2021-06-10',
-    revenue: 2116.232,
-    aup: 35977,
-  }, {
-    date: '2021-06-11',
-    revenue: 3517.643,
-    aup: 22677,
-  }, {
-    date: '2021-06-12',
-    revenue: 8923.765,
-    aup: 25541,
-  }, {
-    date: '2021-06-13',
-    revenue: 6205.837,
-    aup: 28172,
-  }, {
-    date: '2021-06-14',
-    revenue: 2326.599,
-    aup: 26498,
-  }, {
-    date: '2021-06-15',
-    revenue: 3585.788,
-    aup: 43770,
-  }, {
-    date: '2021-06-16',
-    revenue: 4850.785,
-    aup: 40874,
-  }];
 
   constructor(
     private filtersStateService: FiltersStateService,
@@ -342,23 +152,22 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       this.kpis[0].metricTitle = this.translate.instant('kpis.investment');
       this.kpis[2].subMetricTitle = this.translate.instant('general.users');
       this.kpis[3].metricTitle = this.translate.instant('kpis.transactions');
-      this.kpis[3].metricTitle = this.translate.instant('kpis.transactions');
 
       this.topProductsColumns[0].title = this.translate.instant('general.ranking');
       this.topProductsColumns[1].title = this.translate.instant('general.product');
       this.topProductsColumns[2].title = this.translate.instant('general.amount');
 
-      this.usersAndSalesMetrics[0] = this.translate.instant('general.sector').toLowerCase();
-      this.usersAndSalesMetrics[1] = this.translate.instant('general.category').toLowerCase();
-      this.usersAndSalesMetrics[2] = this.translate.instant('general.source').toLowerCase();
+      this.usersInvOrAupMetrics[0] = this.translate.instant('general.sector').toLowerCase();
+      this.usersInvOrAupMetrics[1] = this.translate.instant('general.category').toLowerCase();
+      this.usersInvOrAupMetrics[2] = this.translate.instant('general.source').toLowerCase();
 
-      this.trafficAndSales['gender'] = this.trafficAndSales['gender']?.map(item => {
-        if (item.id === 1) {
-          return { ...item, name: this.translate.instant('others.women') }
-        } else if (item.id === 2) {
-          return { ...item, name: this.translate.instant('others.men') }
-        }
-      });
+      if (this.demographics['men']?.length > 0) {
+        this.demographics['men'][1].name = this.translate.instant('others.men');
+      }
+
+      if (this.demographics['women']?.length > 0) {
+        this.demographics['women'][1].name = this.translate.instant('others.women');
+      }
     });
   }
 
@@ -384,26 +193,50 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     this.selectedCategories = this.filtersStateService.categories;
     this.selectedSources = this.filtersStateService.sources;
 
-    const sectorOrCategory = this.selectedTab1 === 1 ? 'sectors' : 'categories';
-    const trafficOrSales = this.selectedTab2 === 1 ? 'traffic' : 'sales';
-    const usersOrSales = this.selectedTab3 === 1 ? 'users' : 'sales';
+    // PRESERVE PREVIOUS SELECTION (TABS)
 
-    const previousSector = this.selectedSectors.find(sector => sector.id === this.selectedSectorTab?.id);
-    const previousCategory = this.selectedCategories.find(category => category.id === this.selectedCategoryTab1?.id);
-    const previousSource = this.selectedSources.find(source => source.id === this.selectedSourceTab?.id);
+    // sectors and categories (chart-heat-map)
+    const sectorsOrCategoriesMetric = this.selectedTab1 === 1 ? 'sectors' : 'categories';
+
+    // demograhics
+    const demohraphicMetric = this.selectedTab2 === 1 ? 'traffic' : 'sales';
+
+    // top products
     const previousCategory2 = this.selectedCategories.find(category => category.id === this.selectedCategoryTab2?.id);
+
+    // users vs conversions | investment vs revenue | revenue vs aup (chart-multiple-axes)
+    let previousSector;
+    let previousCategory;
+    let previousSource;
+
+    if (this.selectedTab5 !== 1) {
+      switch (this.selectedTab4) {
+        case 1:
+          // there's a previous selected sector
+          previousSector = this.selectedSectors.find(sector => sector.id === this.selectedSectorTab?.id);
+          break;
+
+        case 2:
+          // there's a previous selected category
+          previousCategory = this.selectedCategories.find(category => category.id === this.selectedCategoryTab1?.id);
+          break;
+
+        case 3:
+          // there's a previous selected source
+          previousSource = this.selectedSources.find(source => source.id === this.selectedSourceTab?.id);
+          break;
+      }
+    }
 
     const selectedSector = previousSector ? previousSector : null;
     const selectedCategory = previousCategory ? previousCategory : null;
-    const selectedSources = previousSource ? previousSource : null;
+    const selectedSource = previousSource ? previousSource : null;
     const selectedCategory2 = previousCategory2 ? previousCategory2 : this.selectedCategories[0];
 
     this.getKpis();
-    this.getSectorsAndCategories(sectorOrCategory);
-    this.getDataByTrafficAndSales(trafficOrSales);
-    this.getDataByUsersAndSales(usersOrSales, selectedSector, selectedCategory, selectedSources);
-
-    this.getInvestmentVsRevenue();
+    this.getSectorsAndCategories(sectorsOrCategoriesMetric);
+    this.getDemographics(demohraphicMetric);
+    this.getDataByUsersInvOrAup(null, selectedSector, selectedCategory, selectedSource);
     this.getTopProducts(selectedCategory2);
 
     this.chartsInitLoad = true;
@@ -450,29 +283,31 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     this.selectedTab1 = metricType === 'sectors' ? 1 : 2;
   }
 
-  getDataByTrafficAndSales(metricType: string) {
+  getDemographics(metricType: string) {
     const requiredData = ['device', 'gender', 'age', 'gender-and-age']
 
     for (let subMetricType of requiredData) {
-      const reqStatusObj = this.trafficSalesReqStatus.find(item => item.name === subMetricType);
+      const reqStatusObj = this.demographicsReqStatus.find(item => item.name === subMetricType);
       reqStatusObj.reqStatus = 1;
-      this.overviewService.getTrafficAndSalesLatam(metricType, subMetricType).subscribe(
+      this.overviewService.getDemographicsLatam(metricType, subMetricType).subscribe(
         (resp: any[]) => {
-          if (subMetricType === 'device' || subMetricType === 'gender') {
-            this.disaggregateMetric(subMetricType, resp);
-          } else if (subMetricType === 'gender-and-age') {
-            this.trafficAndSales['genderByAge'] = resp;
+          if (subMetricType === 'device') {
+            const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp);
+            this.demographics = { ...this.demographics, desktop, mobile };
 
           } else if (subMetricType === 'gender') {
-            this.trafficAndSales['gender'] = resp.map(item => {
-              if (item.name.toLowerCase() == 'mujer') {
-                return { id: 1, name: this.translate.instant('others.women'), value: item.value }
-              } else if (item.name.toLowerCase() == 'hombre') {
-                return { id: 2, name: this.translate.instant('others.men'), value: item.value }
-              }
-            });
+            const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp);
+
+            hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
+            mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
+
+            this.demographics = { ...this.demographics, men: hombre, women: mujer };
+
+          } else if (subMetricType === 'gender-and-age') {
+            this.demographics['genderByAge'] = resp;
+
           } else {
-            this.trafficAndSales[subMetricType] = resp;
+            this.demographics[subMetricType] = resp;
           }
 
           reqStatusObj.reqStatus = 2;
@@ -488,22 +323,30 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDataByUsersAndSales(metricType: string, sector?: any, category?: any, source?: any) {
-    this.usersAndSalesReqStatus = 1;
+  getDataByUsersInvOrAup(metricType?: string, sector?: any, category?: any, source?: any) {
+    this.usersInvOrAupReqStatus = 1;
 
-    this.overviewService.getUsersAndSalesLatam(metricType, sector?.id, category?.id, source?.id).subscribe(
+    if (metricType) {
+      // for main tabs interactions
+      // use current selection (metricType value) to define selectedTab3
+      this.selectedTab3 = metricType === 'users-vs-conversions' ? 1 : metricType === 'investment-vs-revenue' ? 2 : 3;
+    } else {
+      // for init, filtersChange event or sub tabs interactions
+      // use current selection (selectTab3 value) to define metricType
+      metricType = this.selectedTab3 === 1 ? 'users-vs-conversions' : this.selectedTab3 === 2 ? 'investment-vs-revenue' : 'aup-vs-revenue';
+    }
+
+    this.overviewService.getUsersInvOrAupLatam(metricType, sector?.id, category?.id, source?.id).subscribe(
       (resp: any[]) => {
-        // this.usersAndSalesByMetric = resp;
-        this.usersAndSalesByMetric = resp.filter(serie => +serie.name >= 2021);
-        this.usersAndSalesReqStatus = 2;
+        this.usersInvOrAup = resp;
+        this.usersInvOrAupReqStatus = 2;
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[overview-latam.component]: ${errorMsg}`);
-        this.usersAndSalesReqStatus = 3;
+        this.usersInvOrAupReqStatus = 3;
       }
-    )
-    this.selectedTab3 = metricType === 'users' ? 1 : 2;
+    );
 
     if (!sector && !category && !source) {
       this.selectedSectorTab = this.selectedSectors[0];
@@ -513,21 +356,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       this.selectedCategoryTab1 = category;
       this.selectedSourceTab = source;
     }
-  }
-
-  getInvestmentVsRevenue() {
-    this.invVsRevenueReqStatus = 1;
-    this.overviewService.getInvestmentVsRevenueLatam().subscribe(
-      (resp: any[]) => {
-        this.investmentVsRevenue = resp;
-        this.invVsRevenueReqStatus = 2;
-      },
-      error => {
-        const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[overview-latam.component]: ${errorMsg}`);
-        this.invVsRevenueReqStatus = 3;
-      }
-    )
   }
 
   getTopProducts(selectedCategory?: any) {
@@ -553,70 +381,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     this.selectedCategoryTab1 && delete this.selectedCategoryTab1;
     this.selectedSourceTab && delete this.selectedSourceTab;
   }
-
-  disaggregateMetric(subMetric: string, dataRaw: any[]) {
-    switch (subMetric) {
-      case 'device':
-        const desktop = dataRaw.find(item => item.name === 'Desktop');
-        const mobile = dataRaw.find(item => item.name === 'Mobile');
-
-        let devicePerc = this.getPercentages(desktop?.value, mobile?.value);
-
-        if (desktop) {
-          this.trafficAndSales['deviceDesktop'] = [
-            { name: 'empty', value: devicePerc.perc1 ? 100 - (+devicePerc.perc1) : 100 },
-            { name: 'Desktop', value: devicePerc.perc1 ? devicePerc.perc1 : 0, rawValue: desktop.value },
-          ];
-        } else {
-          this.trafficAndSales['deviceDesktop'] = [];
-        }
-
-        if (mobile) {
-          this.trafficAndSales['deviceMobile'] = [
-            { name: 'empty', value: devicePerc.perc2 ? 100 - (+devicePerc.perc2) : 100 },
-            { name: 'Mobile', value: devicePerc.perc2 ? devicePerc.perc2 : 0, rawValue: mobile.value },
-          ];
-        } else {
-          this.trafficAndSales['deviceMobile'] = [];
-        }
-
-        break;
-
-      case 'gender':
-        const man = dataRaw.find(item => item.name === 'Hombre');
-        const woman = dataRaw.find(item => item.name === 'Mujer');
-
-        let genderPerc = this.getPercentages(man?.value, woman?.value);
-
-        if (man) {
-          this.trafficAndSales['genderMan'] = [
-            { name: 'empty', value: genderPerc.perc1 ? 100 - (+genderPerc.perc1) : 100 },
-            { name: 'Hombre', value: genderPerc.perc1 ? genderPerc.perc1 : 0, rawValue: man.value },
-          ];
-        } else {
-          this.trafficAndSales['genderMan'] = [];
-        }
-
-        if (woman) {
-          this.trafficAndSales['genderWoman'] = [
-            { name: 'empty', value: genderPerc.perc2 ? 100 - (+genderPerc.perc2) : 100 },
-            { name: 'Mujer', value: genderPerc.perc2 ? genderPerc.perc2 : 0, rawValue: woman.value },
-          ];
-        } else {
-          this.trafficAndSales['genderWoman'] = [];
-        }
-
-        break;
-    }
-  }
-
-  getPercentages(value1: any, value2: any) {
-    let total = value1 + value2;
-    let perc1 = ((value1 * 100) / total).toFixed(2);
-    let perc2 = ((value2 * 100) / total).toFixed(2);
-    return { perc1, perc2 };
-  }
-
 
   ngOnDestroy() {
     this.filtersSub?.unsubscribe();

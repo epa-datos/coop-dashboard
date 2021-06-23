@@ -32,10 +32,10 @@
 
     <div class="row">
         <!-- devices and gender in Traffic and Conversions -->
-        <ng-container *ngIf="selectedTab1 <= 2">
+        <ng-container *ngIf="selectedTab1 !== 3">
             <!-- devices -->
             <div class="col-12 col-md-6 mt-4">
-                <div class="card">
+                <div class="card height-fluid">
                     <div class="card-header" [ngSwitch]="selectedTab1">
                         <span *ngSwitchCase="1" class="h4">Tráfico por dispositivos</span>
                         <span *ngSwitchCase="2" class="h4">Conversiones por dispositivos</span>
@@ -43,16 +43,41 @@
                         <span *ngSwitchCase="4" class="h4">BR por dispositivos</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-pictorial name="aud-devices" [data]="demographics?.device"
-                            [status]="demoReqStatus[0].reqStatus" category="name" iconType="monitor" height="280px">
-                        </app-chart-pictorial>
+                        <div class="row">
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend legend-center mt-0">
+                                    <div class="legend-container" *ngIf="demographics?.desktop?.length > 0">
+                                        <div class="legend-square on color-1"></div>
+                                        <div class="legend-label">Desktop {{ demographics.desktop[1].value }}%
+                                        </div>
+                                    </div>
+                                </div>
+                                <app-chart-pictorial [data]="demographics?.desktop" name="aud-devices-desktop"
+                                    [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
+                                    [status]="demoReqStatus[0].reqStatus" height="280px">
+                                </app-chart-pictorial>
+                            </div>
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend legend-center mt-0">
+                                    <div class="legend-container" *ngIf="demographics?.mobile?.length > 0">
+                                        <div class="legend-square on color-2"></div>
+                                        <div class="legend-label">Mobile {{ demographics.mobile[1].value }}%
+                                        </div>
+                                    </div>
+                                </div>
+                                <app-chart-pictorial [data]="demographics?.mobile" name="aud-devices-mobile"
+                                    [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
+                                    height="280px" [status]="demoReqStatus[0].reqStatus">
+                                </app-chart-pictorial>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- gender -->
             <div class="col-12 col-md-6 mt-4">
-                <div class="card">
+                <div class="card height-fluid">
                     <div class="card-header" [ngSwitch]="selectedTab1">
                         <span *ngSwitchCase="1" class="h4">Tráfico por Género</span>
                         <span *ngSwitchCase="2" class="h4">Conversiones por Género</span>
@@ -60,9 +85,38 @@
                         <span *ngSwitchCase="4" class="h4">BR por Género</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-pictorial name="aud-gender" [data]="demographics?.gender"
-                            [status]="demoReqStatus[1].reqStatus" category="name" iconType="man" height="280px">
-                        </app-chart-pictorial>
+                        <div class="row">
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend legend-center mt-0">
+                                    <div class="legend-container" *ngIf="demographics?.men?.length > 0">
+                                        <div class="legend-square on color-1"></div>
+                                        <div class="legend-label">
+                                            {{ ('others.men'| translate) + ' '}}
+                                            {{ demographics.men[1].value }}%
+                                        </div>
+                                    </div>
+                                </div>
+                                <app-chart-pictorial [data]="demographics?.men" name="aud-gender-man"
+                                    [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man"
+                                    [status]="demoReqStatus[1].reqStatus" height="280px">
+                                </app-chart-pictorial>
+                            </div>
+                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
+                                <div class="chart-legend legend-center mt-0">
+                                    <div class="legend-container" *ngIf="demographics?.women?.length > 0">
+                                        <div class="legend-square on color-2"></div>
+                                        <div class="legend-label">
+                                            {{ ('others.women'| translate) + ' '}}
+                                            {{ demographics.women[1].value }}%
+                                        </div>
+                                    </div>
+                                </div>
+                                <app-chart-pictorial [data]="demographics?.women" name="aud-gender-woman"
+                                    [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman"
+                                    height="280px" [status]="demoReqStatus[1].reqStatus">
+                                </app-chart-pictorial>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,87 +150,6 @@
                             [status]="demoReqStatus[1].reqStatus" valueFormat="USD" category="name" height="280px"
                             [legendsByCategory]="true">
                         </app-chart-bar>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-
-        <!-- devices and gender in BR -->
-        <ng-container *ngIf="selectedTab1 === 4">
-            <!-- devices -->
-            <div class="col-12 col-md-6 mt-4">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="h4">BR por dispositivos</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
-                                <div class="chart-legend mt-0">
-                                    <div class="legend-container">
-                                        <div class="legend-square on color-1"></div>
-                                        <div class="legend-label">Desktop {{ demographics?.deviceDesktop[1]?.value }}%
-                                        </div>
-                                    </div>
-                                </div>
-                                <app-chart-pictorial name="aud-devices-desktop" [data]="demographics?.deviceDesktop"
-                                    [status]="demoReqStatus[0].reqStatus" [uniqueDimensionConf]="{color: '#67B6DC'}"
-                                    category="name" iconType="monitor" height="280px">
-                                </app-chart-pictorial>
-                            </div>
-                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
-                                <div class="chart-legend mt-0">
-                                    <div class="legend-container">
-                                        <div class="legend-square on color-2"></div>
-                                        <div class="legend-label">Mobile {{ demographics?.deviceMobile[1]?.value }}%
-                                        </div>
-                                    </div>
-                                </div>
-                                <app-chart-pictorial name="aud-devices-mobile" [data]="demographics?.deviceMobile"
-                                    [status]="demoReqStatus[0].reqStatus" [uniqueDimensionConf]="{color: '#6794DC'}"
-                                    category="name" iconType="cellphone" height="280px">
-                                </app-chart-pictorial>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- gender -->
-            <div class="col-12 col-md-6 mt-4">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="h4">BR por Género</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
-                                <div class="chart-legend mt-0">
-                                    <div class="legend-container">
-                                        <div class="legend-square on color-1"></div>
-                                        <div class="legend-label">Hombres {{ demographics?.genderMan[0]?.value }}%</div>
-                                    </div>
-                                </div>
-                                <app-chart-pictorial name="aud-gender-man" [data]="demographics?.genderMan"
-                                    [status]="demoReqStatus[1].reqStatus" [uniqueDimensionConf]="{color: '#67B6DC'}"
-                                    category="name" iconType="man" height="280px">
-                                </app-chart-pictorial>
-                            </div>
-
-                            <div class="col-12 col-xl-6 mt-5 mt-xl-0">
-                                <div class="chart-legend mt-0">
-                                    <div class="legend-container">
-                                        <div class="legend-square on color-2"></div>
-                                        <div class="legend-label">Mujeres {{ demographics?.genderWoman[1]?.value }}%
-                                        </div>
-                                    </div>
-                                </div>
-                                <app-chart-pictorial name="aud-gender-woman" [data]="demographics?.genderWoman"
-                                    [status]="demoReqStatus[1].reqStatus" [uniqueDimensionConf]="{color: '#6794DC'}"
-                                    category="name" iconType="woman" height="280px">
-                                </app-chart-pictorial>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -311,7 +284,7 @@
     <!-- CONVERSIONES VS TRÁFICO -->
     <div class="row mt-5">
         <div class="col-12">
-            <span class="h3">Conversiones vs Tráfico</span>
+            <span class="h3">Conversiones - Tráfico</span>
         </div>
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">

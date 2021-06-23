@@ -67,14 +67,14 @@
         "chart3CardTitle1": " por Gênero",
         "chart4CardTitle1": " por Idade",
         "chart5CardTitle1": " por Gênero e Idade",
-        "chart7CardTitle1": "Investimento vs Revenue",
+        "chart7CardTitle1": "Investimento - Revenue",
         "chart7ValueName1": "Investimento",
         "chart7ValueName2": "Revenue",
         "table1CardTitle1": "Top Produtos"
     },
     "kpis": {
         "investment": "investimento",
-        "transactions": "transações"
+        "transactions": "conversões"
     },
     "paginator": {
         "itemsPerPage": "Itens por página",
@@ -90,17 +90,16 @@
         "category": "Categoria",
         "source": "Fonte",
         "traffic": "Tráfego",
-        "sales": "Vendas",
+        "sales": "Conversões",
         "users": "Usuários",
         "ranking": "Ranking",
         "product": "Produtos",
         "amount": "Quantidade",
         "institutional": "Institucional",
         "others": "Outros",
-        "usersVsSales": "Usuários vs Vendas",
-        "usersVsSales1": "Usuários - Vendas",
-        "investmentVsRevenue": "Investimento vs Revenue",
-        "revenueVsAup": "Revenue vs AUP",
+        "usersVsSales": "Usuários - Conversões",
+        "investmentVsRevenue": "Investimento - Revenue",
+        "revenueVsAup": "Revenue - AUP",
         "errorData": "Erro ao consultar dados",
         "withoutData": "Nenhum dado disponível",
         "withoutData2": "Amostra insuficiente",
@@ -116,7 +115,7 @@
         "otherPluralM": "outros",
         "otherPluralF": "outras",
         "only": "somente",
-        "men": "Hombres",
-        "women": "Mulheres"
+        "men": "Masculino",
+        "women": "Feminino"
     }
 }

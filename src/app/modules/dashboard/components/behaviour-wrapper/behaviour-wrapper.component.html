@@ -21,7 +21,7 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Visitantes nuevos vs Visitantes recurrentes</span>
+                <span class="h4">Visitantes nuevos - Visitantes recurrentes</span>
             </div>
             <div class="card-body">
                 <app-chart-pie name="bh-sessions-ret-visitor" [data]="behavior.newUsersVsCurrent"
@@ -35,7 +35,7 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Ventas Visitantes nuevos vs Visitantes recurrentes</span>
+                <span class="h4">Conversiones Visitantes nuevos - Visitantes recurrentes</span>
             </div>
             <div class="card-body">
                 <app-chart-pie name="bh-sales-ret-visitor" [data]="behavior.salesNewUsersVsCurrent"
@@ -49,7 +49,7 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Ventas por Fuente de conversión</span>
+                <span class="h4">Conversiones por Fuente de conversión</span>
             </div>
             <div class="card-body">
                 <app-chart-pie name="bh-sales-by-conv-sorce" [data]="behavior.salesBySource"
@@ -63,7 +63,7 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Ventas por Sector</span>
+                <span class="h4">Conversiones por Sector</span>
             </div>
             <div class="card-body">
                 <app-chart-pie name="bh-sales-by-sorce" [data]="behavior.salesBySector"

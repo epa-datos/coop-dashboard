@@ -26,7 +26,7 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab === 1}"
-                        (click)="getDataByMetric('conversions-vs-users')">Usuarios - Transacciones</a>
+                        (click)="getDataByMetric('conversions-vs-users')">Usuarios - Conversiones</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab === 2}"
@@ -38,14 +38,14 @@
     <div class="col-12 mt-4">
         <div class="card">
             <div class="card-header">
-                <span class="h4" [hidden]="selectedTab === 2">Usuarios vs Transacciones</span>
-                <span class="h4" [hidden]="selectedTab === 1">Cantidad vs AUP</span>
+                <span class="h4" [hidden]="selectedTab === 2">Usuarios - Conversiones</span>
+                <span class="h4" [hidden]="selectedTab === 1">Cantidad - AUP</span>
             </div>
             <div class="card-body">
                 <app-chart-multiple-axes name="conv-users-amount" [value1]="selectedTab === 1 ? 'users' : 'quantity'"
                     [valueName1]="selectedTab === 1 ? 'Usuarios' : 'Cantidad'"
                     [value2]="selectedTab === 1 ? 'transactions' : 'aup'"
-                    [valueName2]="selectedTab === 1 ? 'Transacciones' : 'AUP'"
+                    [valueName2]="selectedTab === 1 ? 'Conversiones' : 'AUP'"
                     [valueFormat2]="selectedTab === 2 && 'USD'" [data]="usersAndAmount"
                     [status]="usersAndAmountReqStatus">
                 </app-chart-multiple-axes>
