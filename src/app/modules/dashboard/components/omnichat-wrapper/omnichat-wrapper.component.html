@@ -32,7 +32,11 @@
     <div class="col-12 mt-4">
         <div class="card">
             <div class="card-header">
-                <span class="h4">{{ selectedTab1 === 1 ? 'Usuarios vs Conversiones' : 'Revenue vs AUP '}} </span>
+                <ng-container [ngSwitch]="selectedTab1">
+                    <span class="h4" *ngSwitchCase="1">{{ 'general.usersVsSales' | translate }}</span>
+                    <span class="h4" *ngSwitchCase="2">{{ 'general.investmentVsRevenue' | translate }}</span>
+                    <span class="h4" *ngSwitchCase="3">{{ 'general.revenueVsAup' |translate }}</span>
+                </ng-container>
             </div>
             <div class="card-body">
                 <app-chart-multiple-axes [data]="usersAndRevenue"

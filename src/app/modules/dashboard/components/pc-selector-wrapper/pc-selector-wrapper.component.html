@@ -31,7 +31,7 @@
     <div class="col-12 mt-4">
         <div class="card">
             <div class="card-header">
-                <span class="h4">{{ selectedTab1 === 1 ? 'Usuarios vs Conversiones' : 'Revenue vs AUP '}} </span>
+                <span class="h4">{{ selectedTab1 === 1 ? 'Usuarios - Conversiones' : 'Revenue - AUP '}} </span>
             </div>
             <div class="card-body">
                 <app-chart-multiple-axes [data]="dataByUsersAndRevenue"
@@ -91,7 +91,8 @@
             </div>
             <div class="card-body retailers-chart-container">
                 <app-chart-bar-horizontal [data]="retailers" name="pc-selector-chats-by-retailer" category="retailer"
-                    value="chats" [truncateLabels]="true" [singleColorBars]="true" height="900px">
+                    value="chats" [truncateLabels]="true" [singleColorBars]="true"
+                    [height]="latamView ? '900px' : '300px'">
                 </app-chart-bar-horizontal>
             </div>
         </div>
@@ -221,7 +222,7 @@
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container">
+                                    <div class="legend-container" *ngIf="demographics?.desktop?.length > 0">
                                         <div class="legend-square on color-4"></div>
                                         <div class="legend-label">Desktop {{ demographics.desktop[1].value }}%
                                         </div>
@@ -234,7 +235,7 @@
                             </div>
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container">
+                                    <div class="legend-container" *ngIf="demographics?.mobile?.length > 0">
                                         <div class="legend-square on color-5"></div>
                                         <div class="legend-label">Mobile {{ demographics.mobile[1].value }}%</div>
                                     </div>
@@ -259,7 +260,7 @@
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container">
+                                    <div class="legend-container" *ngIf="demographics?.men?.length > 0">
                                         <div class="legend-square on color-4"></div>
                                         <div class="legend-label">Hombres {{ demographics.men[1].value }}%</div>
                                     </div>
@@ -272,7 +273,7 @@
 
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container">
+                                    <div class="legend-container" *ngIf="demographics?.women?.length > 0">
                                         <div class="legend-square on color-5"></div>
                                         <div class="legend-label">Mujeres {{ demographics.women[1].value }}%</div>
                                     </div>

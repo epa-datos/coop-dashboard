@@ -169,12 +169,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
           paramName: 'main-region',
           param: 'latam'
         },
-        // {
-        //   title: 'Análisis de sentimientos OmniChat',
-        //   path: '/dashboard/omnichat',
-        //   paramName: 'main-region',
-        //   param: 'latam'
-        // }
+        {
+          title: 'Análisis de sentimientos OmniChat',
+          path: '/dashboard/omnichat',
+          paramName: 'main-region',
+          param: 'latam'
+        }
       ],
       submenuOpen: false
     }

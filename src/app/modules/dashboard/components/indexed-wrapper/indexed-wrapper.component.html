@@ -9,17 +9,17 @@
     </div>
 </div>
 
-<div class="row mt-5">
-    <div class="col-12">
+<div class="row mt-5" *ngIf="!retailerView">
+    <div class="col-12" *ngIf="latamView">
         <div class="pills-container">
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                        (click)="getSessions('country');">Sesiones por Países</a>
+                        (click)="getSessions('country');">Tráfico por Países</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                        (click)="getSessions('retailer')">Sesiones por Retailers</a>
+                        (click)="getSessions('retailer')">Tráfico por Retailers</a>
                 </li>
             </ul>
         </div>
@@ -27,10 +27,12 @@
     <div class="col-12 mt-4">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Sesiones por {{ selectedTab1 === 1 ? 'Países' : 'Retailers' }}</span>
+                <span class="h4" *ngIf="latamView">Tráfico por {{ selectedTab1 === 1 ? 'Países' : 'Retailers' }}</span>
+                <span class="h4" *ngIf="countryView">Tráfico por retailer</span>
             </div>
             <div class="card-body">
-                <app-chart-line-series [series]="sessions" name="indexed-sessions-by-retailer" yTitle="Sesiones">
+                <app-chart-line-series [series]="latamView ? sessions : sessionsByRetailer"
+                    name="indexed-sessions-by-retailer" yTitle="Tráfico">
                 </app-chart-line-series>
             </div>
         </div>
@@ -222,7 +224,7 @@
     <div class="col-12 col-md-6 col-lg-4 mt-4">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Visitantes nuevos vs Visitantes recurrentes</span>
+                <span class="h4">Visitantes nuevos - Visitantes recurrentes</span>
             </div>
             <div class="card-body">
                 <app-chart-pie [data]="sessionsVsRetVisitor" name="indexed-sessions-ret-visitor"

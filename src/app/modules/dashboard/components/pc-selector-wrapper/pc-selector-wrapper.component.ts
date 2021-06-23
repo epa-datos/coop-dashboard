@@ -605,11 +605,11 @@ export class PcSelectorWrapperComponent implements OnInit {
   trafficDemographic = {
     desktop: [
       { name: 'empty', value: 12.5 },
-      { name: 'Desktop', value: 87.5 },
+      { name: 'Desktop', value: 87.5, rawValue: 36 },
     ],
     mobile: [
       { name: 'empty', value: 87.5 },
-      { name: 'Mobile', value: 12.5 },
+      { name: 'Mobile', value: 12.5, rawValue: 92 },
     ],
     women: [
       { name: 'empty', value: 55 },
@@ -735,132 +735,17 @@ export class PcSelectorWrapperComponent implements OnInit {
   // Conversiones - Demográficos
   conversionsDemographic = {
     desktop: [
-      { name: 'empty', value: 70 },
-      { name: 'Desktop', value: 30 },
+      { name: 'empty', value: 50 },
+      { name: 'Desktop', value: 50, rawValue: 1 },
     ],
     mobile: [
-      { name: 'empty', value: 30 },
-      { name: 'Mobile', value: 70 },
+      { name: 'empty', value: 50 },
+      { name: 'Mobile', value: 50, rawValue: 1 },
     ],
-    women: [
-      { name: 'empty', value: 100 },
-      { name: 'woman', value: 0 },
-    ],
-    men: [
-      { name: 'empty', value: 100 },
-      { name: 'men', value: 0 },
-    ],
-    age: [
-      {
-        "age": "15-19",
-        "sales": 0
-      }, {
-        "age": "20-24",
-        "sales": 0
-      }, {
-        "age": "25-29",
-        "sales": 0
-      }, {
-        "age": "30-34",
-        "sales": 0
-      }, {
-        "age": "35-39",
-        "sales": 0
-      }, {
-        "age": "40-44",
-        "sales": 0
-      }, {
-        "age": "45-49",
-        "sales": 0
-      }, {
-        "age": "50-54",
-        "sales": 0
-      }, {
-        "age": "55-59",
-        "sales": 0
-      }, {
-        "age": "60-64",
-        "sales": 0
-      }, {
-        "age": "65-69",
-        "sales": 0
-      }, {
-        "age": "70-74",
-        "sales": 0
-      }, {
-        "age": "75-79",
-        "sales": 0
-      }, {
-        "age": "80-54",
-        "sales": 0
-      }, {
-        "age": "85+",
-        "sales": 0
-      }
-    ],
-    genderByAge: [
-      {
-        "age": "85+",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "80-54",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "75-79",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "70-74",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "65-69",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "60-64",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "55-59",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "50-54",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "45-49",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "40-44",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "35-39",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "30-34",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "25-29",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "20-24",
-        "male": 0,
-        "female": 0
-      }, {
-        "age": "15-19",
-        "male": 0,
-        "female": 0
-      }
-    ]
+    women: [],
+    men: [],
+    age: [],
+    genderByAge: []
   }
 
   // Tráfico por día de la semana y hora del día
@@ -1791,7 +1676,6 @@ export class PcSelectorWrapperComponent implements OnInit {
 
     if (this.countryID || this.retailerID || this.latamView) {
       this.getActiveView();
-      // this.getAllData();
     }
 
     this.routeSub = this.router.events.pipe(
@@ -1805,12 +1689,10 @@ export class PcSelectorWrapperComponent implements OnInit {
 
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       this.retailerID = retailer?.id;
-      this.getActiveView();
     });
 
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
       this.countryID = country?.id;
-      this.getActiveView();
     });
   }
 
@@ -1826,6 +1708,12 @@ export class PcSelectorWrapperComponent implements OnInit {
     } else if (this.latamView) {
       this.countryView = false;
       this.retailerView = false;
+    }
+
+    if (this.countryView) {
+      this.retailers = this.retailers.filter(item => item.retailer.includes('MX'));
+    } else {
+      this.retailers = this.trafficByRetailer;
     }
   }
 
@@ -1848,6 +1736,12 @@ export class PcSelectorWrapperComponent implements OnInit {
     } else if (metricType === 'conversions') {
       this.countries = this.conversionsByCountry;
       this.retailers = this.conversionsByRetailer;
+    }
+
+    console.log('retailers', this.retailers)
+
+    if (this.countryView) {
+      this.retailers = this.retailers.filter(item => item.retailer.includes('MX'));
     }
   }
 

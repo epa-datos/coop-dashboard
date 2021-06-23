@@ -67,14 +67,14 @@
         "chart3CardTitle1": " by Gender",
         "chart4CardTitle1": " by Age",
         "chart5CardTitle1": " by Gender and Age",
-        "chart7CardTitle1": "Investment vs Revenue",
+        "chart7CardTitle1": "Investment - Revenue",
         "chart7ValueName1": "Investment",
         "chart7ValueName2": "Revenue",
         "table1CardTitle1": "Top Products"
     },
     "kpis": {
         "investment": "investment",
-        "transactions": "transactions"
+        "transactions": "conversions"
     },
     "paginator": {
         "itemsPerPage": "Items per page",
@@ -90,13 +90,16 @@
         "category": "Category",
         "source": "Source",
         "traffic": "Traffic",
-        "sales": "Sales",
+        "sales": "Conversions",
         "users": "Users",
         "ranking": "Ranking",
         "product": "Product",
         "amount": "Amount",
         "institutional": "Institutional",
         "others": "Others",
+        "usersVsSales": "Users - Conversions",
+        "investmentVsRevenue": "Investment - Revenue",
+        "revenueVsAup": "Revenue - AUP",
         "errorData": "Error getting data",
         "withoutData": "No data available",
         "withoutData2": "Insufficient sample",

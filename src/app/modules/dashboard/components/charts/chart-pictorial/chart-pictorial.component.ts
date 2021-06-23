@@ -5,16 +5,19 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
 import { Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/services/app-state.service';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-chart-pictorial',
   templateUrl: './chart-pictorial.component.html',
-  styleUrls: ['./chart-pictorial.component.scss']
+  styleUrls: ['./chart-pictorial.component.scss'],
+  providers: [DecimalPipe]
 })
 export class ChartPictorialComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input() value: string = 'value';
   @Input() category: string = 'category';
+  @Input() value: string = 'value';
+  @Input() valueFormat: string;
   @Input() iconPath: string; // an svg icon path. If isnt't provide is necessary to use "iconType" input
   @Input() iconType: string;
   @Input() height: string = '350px'; // height property value valid in css
@@ -49,7 +52,8 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit, OnDestroy
   langSub: Subscription;
 
   constructor(
-    private appStateService: AppStateService
+    private appStateService: AppStateService,
+    private decimalPipe: DecimalPipe
   ) { }
 
   ngOnInit(): void {
@@ -114,10 +118,16 @@ export class ChartPictorialComponent implements OnInit, AfterViewInit, OnDestroy
         am4core.color(this.uniqueDimensionConf.color),
       ];
 
-      series.tooltip.label.adapter.add('text', function (text, target) {
+      const valueFormat = this.valueFormat;
+      const decimalPipe = this.decimalPipe;
+
+      series.tooltip.label.adapter.add('text', (text, target) => {
         if (target.dataItem._index === 0) return '';
-        const percent = target.dataItem.values.value.value;
-        return `${percent}%`;
+        const percentage = `${decimalPipe.transform(target.dataItem.values.value.value)}%`;
+        const value = `${chart.data[1]?.rawValue ? ` (${decimalPipe.transform(chart.data[1].rawValue)})` : ''}`
+
+        const result = `${percentage} ${value} ${valueFormat ? valueFormat : ''}`;
+        return result;
       });
     }
 

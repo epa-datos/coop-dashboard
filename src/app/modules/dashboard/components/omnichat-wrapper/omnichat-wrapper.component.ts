@@ -11,11 +11,8 @@ import { TableItem } from '../generic-table/generic-table.component';
   styleUrls: ['./omnichat-wrapper.component.scss']
 })
 export class OmnichatWrapperComponent implements OnInit, OnDestroy {
-
   @Input() selectedLevelPage: any;
   @Input() requestInfoChange: Observable<boolean>;
-
-  //////////////////////////////////////////
 
   staticData = {
     kpis: [

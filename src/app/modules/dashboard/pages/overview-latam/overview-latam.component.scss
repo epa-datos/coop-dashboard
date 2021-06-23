@@ -51,41 +51,40 @@
     }
 }
 
-.period-popover {
+.chart-legend {
     display: flex;
-    justify-content: flex-end;
-    padding-right: 11px;
+    padding: 0 15px;
 
-    i {
-        color: #c7c7c7;
-        cursor: pointer;
-        font-size: 18px;
+    &.legend-right {
+        justify-content: flex-end;
     }
 
-    .content {
-        padding: 12px;
+    &.legend-center {
+        justify-content: center;
+    }
 
-        .period {
-            align-items: center;
-            display: flex;
-            justify-content: space-between;
-           
-            .line {
-                width: 25px;
-                height: 2px;
-        
-                &.first {
-                    background-color: #67B6DC;
-                }
-        
-                &.second {
-                    background-color: #A367DC;
-                }
-        
-                &.third {
-                    background-color: #DC67CE;
-                }
+    .legend-container {
+        align-items: center;
+        display: flex;
+
+        .legend-square {
+            border-radius: 4px;
+            height: 16px;
+            margin-right: 4px;
+            width: 16px;
+
+            &.color-1 {
+                background-color: #67B6DC;
             }
+
+            &.color-2 {
+                background-color: #6794DC;
+            }
+        }
+
+        .legend-label {
+            color: #000000;
+            font-size: 12px;
         }
     }
 }

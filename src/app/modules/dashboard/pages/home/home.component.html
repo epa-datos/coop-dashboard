@@ -1,31 +1,38 @@
-<!-- <div class="home-container">
-    <div class="home-details">
-        <div class="title-container">
-            <h3 class="text-muted">Bienvenido</h3>
-            <h1>Programa COOP</h1>
-        </div>
-        <div class="media-container">
-            <video class="media" autoplay loop *ngIf="userRoleName === 'admin' || userRoleName === 'hp'">
-                <source src="assets/video/map-retailers.mp4" type="video/mp4">
-            </video>
-            <img class="media" *ngIf="userRoleName === 'country' || userRoleName === 'retailer'"
-                src="assets/video/map-lights.gif">
-        </div>
+<div class="media-container mb--6">
+    <!-- LANDSCAPE LARGE VIEW -->
+
+    <!-- admin & hp roles -->
+    <video *ngIf="userRoleName === 'admin' || userRoleName === 'hp'" class="media landscape md" autoplay loop>
+        <source src="assets/video/map-retailers-landscape.mp4" type="video/mp4">
+    </video>
+
+    <!-- country & retailer roles -->
+    <div *ngIf="userRoleName === 'country' || userRoleName === 'retailer'">
+        <img class="media landscape md" src="assets/video/map-lights-landscape.gif">
     </div>
-</div> -->
 
-<div class="media-container">
-    <video class="media landscape md" autoplay loop>
-        <source src="assets/video/Mapa_Coop_ajuste_medidas.mp4" type="video/mp4">
+
+    <!-- LANDSCAPE LARGE VIEW -->
+
+    <!-- admin & hp roles -->
+    <video *ngIf="userRoleName === 'admin' || userRoleName === 'hp'" class="media landscape lg" autoplay loop>
+        <source src="assets/video/map-retailers-landscape-lg.mp4" type="video/mp4">
     </video>
+    <!-- country & retailer roles -->
+    <div *ngIf="userRoleName === 'country' || userRoleName === 'retailer'">
+        <img class="media landscape lg" src="assets/video/map-lights-landscape-lg.gif">
+    </div>
 
 
-    <video class="media landscape lg" autoplay loop>
-        <source src="assets/video/map-retailers-landscape-1620x1080px.mp4" type="video/mp4">
-    </video>
+    <!-- PORTRAIT VIEW -->
 
-
-    <video class="media portrait" autoplay loop>
+    <!-- admin & hp roles -->
+    <video *ngIf="userRoleName === 'admin' || userRoleName === 'hp'" class="media portrait" autoplay loop>
         <source src="assets/video/map-retailers-portrait.mp4" type="video/mp4">
     </video>
+
+    <!-- country & retailer roles -->
+    <div *ngIf="userRoleName === 'country' || userRoleName === 'retailer'">
+        <img class="media portrait" src="assets/video/map-lights-portrait.gif">
+    </div>
 </div>

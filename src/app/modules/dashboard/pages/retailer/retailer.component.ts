@@ -20,6 +20,8 @@ export class RetailerComponent implements OnInit, OnDestroy {
   retailerID: number;
   countryID: number;
 
+  googleMyBusiness: boolean;
+
   filtersSub: Subscription;
   retailerSub: Subscription;
   countrySub: Subscription;
@@ -35,6 +37,7 @@ export class RetailerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const selectedRetailer = this.appStateService.selectedRetailer;
     this.retailerID = selectedRetailer?.id;
+    this.getGoogleBusinessAccess();
 
     if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
       this.filtersStateService.restoreFilters();
@@ -59,11 +62,20 @@ export class RetailerComponent implements OnInit, OnDestroy {
             if (this.activeTabView === 1) {
               this.requestInfoSource.next();
             }
+
             this.activeTabView = 1;
+            this.getGoogleBusinessAccess();
           }
         }
       }
     });
+  }
+
+  getGoogleBusinessAccess() {
+    const retailerIDsWithAccess = [7, 8, 9, 25, 26, 27, 28, 22];
+
+    const retailerHasAccess = retailerIDsWithAccess.find(retailerID => retailerID === this.retailerID);
+    this.googleMyBusiness = retailerHasAccess && true;
   }
 
   ngOnDestroy() {

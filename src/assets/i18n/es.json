@@ -18,8 +18,8 @@
     },
     "dashboard": {
         "overview": "Visión general",
-        "overviewCountry": "Visión general del país",
-        "overviewRetailer": "Visión general del retailer",
+        "overviewCountry": "Visión general del País",
+        "overviewRetailer": "Visión general del Retailer",
         "otherTools": "Otras herramientas",
         "feelingsAnalysis": "Análisis de sentimientos Omnichat",
         "campaignComparator": "Comparador de campaña",
@@ -67,14 +67,14 @@
         "chart3CardTitle1": " por Género",
         "chart4CardTitle1": " por Edad",
         "chart5CardTitle1": " por Género y Edad",
-        "chart7CardTitle1": "Inversión vs Revenue",
+        "chart7CardTitle1": "Inversión - Revenue",
         "chart7ValueName1": "Inversión",
         "chart7ValueName2": "Revenue",
         "table1CardTitle1": "Top Productos"
     },
     "kpis": {
         "investment": "inversión",
-        "transactions": "transacciones"
+        "transactions": "conversiones"
     },
     "paginator": {
         "itemsPerPage": "Registros por página",
@@ -91,13 +91,16 @@
         "source": "Fuente",
         "campaign": "Campaña",
         "traffic": "Tráfico",
-        "sales": "Ventas",
+        "sales": "Conversiones",
         "users": "Usuarios",
         "ranking": "Ranking",
         "product": "Producto",
         "amount": "Catindad",
         "institutional": "Institucional",
         "others": "Otros",
+        "usersVsSales": "Usuarios - Conversiones",
+        "investmentVsRevenue": "Inversión - Revenue",
+        "revenueVsAup": "Revenue - AUP",
         "errorData": "Error al consultar datos",
         "withoutData": "Sin datos disponibles",
         "withoutData2": "Muestra insuficiente",

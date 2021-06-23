@@ -106,8 +106,8 @@ export class OverviewService {
     }
   }
 
-  // *** traffic and sales ***
-  getTrafficAndSales(metricType: string, subMetricType: string) {
+  // *** demographics ***
+  getDemographics(metricType: string, subMetricType: string) {
     if (!metricType) {
       return throwError('[overview.service]: not metricType provided');
     }
@@ -126,13 +126,13 @@ export class OverviewService {
     }
   }
 
-  // *** users and sales ***
-  getUsersAndSales(metricType: string) {
+  // *** users vs conversions / investment vs revenue / revenue vs aup ***
+  getUsersInvOrAup(metricType: string, sectorID?: number, categoryID?: number, sourceID?: number) {
     if (!metricType) {
       return throwError('[overview.service]: not metricType provided');
     }
 
-    let queryParams = this.concatedQueryParams();
+    let queryParams = this.concatedQueryParams(false, sectorID, categoryID, sourceID);
 
     if (this.retailerID) {
       return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/${metricType}?${queryParams}`);
@@ -142,20 +142,6 @@ export class OverviewService {
       return throwError('[overview.service]: not retailerID or countryID provided');
     }
   }
-
-  // *** investment vs revenue ***
-  getInvestmentVsRevenue() {
-    let queryParams = this.concatedQueryParams();
-
-    if (this.retailerID) {
-      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/investment-vs-revenue?${queryParams}`);
-    } else if (this.countryID) {
-      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/investment-vs-revenue?${queryParams}`);
-    } else {
-      return throwError('[overview.service]: not retailerID or countryID provided');
-    }
-  }
-
 
   /**** LATAM
   * Overview endpoints for LATAM
@@ -177,8 +163,8 @@ export class OverviewService {
     return this.http.get(`${this.baseUrl}/latam/countries/${metricType}/segments?${queryParams}`);
   }
 
-  // *** traffic and sales ***
-  getTrafficAndSalesLatam(metricType: string, subMetricType: string) {
+  // *** demographics ***
+  getDemographicsLatam(metricType: string, subMetricType: string) {
     if (!metricType) {
       return throwError('[overview.service]: not metricType provided');
     }
@@ -190,20 +176,14 @@ export class OverviewService {
     return this.http.get(`${this.baseUrl}/latam/${metricType}/${subMetricType}?${queryParams}`);
   }
 
-  // *** users and sales ***
-  getUsersAndSalesLatam(metricType: string, sectorID?: number, categoryID?: number, sourceID?: number) {
+  // *** users vs conversions / investment vs revenue / revenue vs aup ***
+  getUsersInvOrAupLatam(metricType: string, sectorID?: number, categoryID?: number, sourceID?: number) {
     if (!metricType) {
       return throwError('[overview.service]: not metricType provided');
     }
 
     let queryParams = this.concatedQueryParams(true, sectorID, categoryID, sourceID);
     return this.http.get(`${this.baseUrl}/latam/${metricType}?${queryParams}`);
-  }
-
-  // *** investment vs revenue ***
-  getInvestmentVsRevenueLatam() {
-    let queryParams = this.concatedQueryParams(true);
-    return this.http.get(`${this.baseUrl}/latam/investment-vs-revenue?${queryParams}`);
   }
 
   // *** top products ***
