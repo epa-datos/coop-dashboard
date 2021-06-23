@@ -39,20 +39,17 @@ export class OmnichatService {
     });
   }
 
-  concatedQueryParams(isLatam?: boolean, uniqueSectorID?: number, uniqueCategoryID?: number, uniqueSourceID?: number, omitSectors?: boolean): string {
+  concatedQueryParams(isLatam?: boolean, uniqueCategoryID?: number): string {
     let startDate = this.filtersStateService.periodQParams.startDate;
     let endDate = this.filtersStateService.periodQParams.endDate;
-    let sectors = !uniqueSectorID ? this.filtersStateService.sectorsQParams : uniqueSectorID;
     let categories = !uniqueCategoryID ? this.filtersStateService.categoriesQParams : uniqueCategoryID;
-    let campaigns = this.filtersStateService.campaignsQParams;
 
-    const baseQParams = `start_date=${startDate}&end_date=${endDate}${!omitSectors ? `&sectors=${sectors}` : ''}&categories=${categories}`;
+    const baseQParams = `start_date=${startDate}&end_date=${endDate}&categories=${categories}`;
     if (!isLatam) {
-      return `${baseQParams}${campaigns ? `&campaigns=${campaigns}` : ''}`;
+      return baseQParams;
     } else {
       let retailers = this.filtersStateService.retailersQParams;
-      let sources = !uniqueSourceID ? this.filtersStateService.sourcesQParams : uniqueSourceID;
-      return `retailers=${retailers}&sources=${sources}&${baseQParams}`;
+      return `retailers=${retailers}&${baseQParams}`;
     }
   }
 
@@ -65,7 +62,7 @@ export class OmnichatService {
  * @returns  
  */
   getDataByMetric(isLatam: boolean, metricType: string, subMetricType?: string, uniqueCategoryID?: number) {
-    let queryParams = this.concatedQueryParams(isLatam, null, uniqueCategoryID);
+    let queryParams = this.concatedQueryParams(isLatam, uniqueCategoryID);
     let baseEndpoint: string;
 
     if (this.retailerID) {
