@@ -2,10 +2,13 @@
 <div class="row mt-5">
     <div class="col-12">
         <div class="stats-container">
-            <app-card-stat *ngFor="let stat of kpis" [stat]="stat" [loader]="kpisReqStatus <= 1" [smallHeader]="true"
-                height="100px">
+            <app-card-stat *ngFor="let stat of staticData.kpis" [stat]="stat"
+                [loader]="staticDataReqStatus[0].reqStatus <= 1" [smallHeader]="true" height="100px">
             </app-card-stat>
         </div>
+        <p class="text-center text-muted mt-3 mb-0" [hidden]="staticDataReqStatus[0].reqStatus !== 3">
+            Error al consultar datos
+        </p>
     </div>
 </div>
 
@@ -16,20 +19,20 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                        (click)="getPerformanceData('users');">
+                        (click)="getUsersInvOrAup('conversions-vs-users');">
                         {{ 'general.usersVsSales' | translate }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                        (click)="getPerformanceData('investment')">
+                        (click)="getUsersInvOrAup('investment-vs-revenue');">
                         {{ 'general.investmentVsRevenue' | translate }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
-                        (click)="getPerformanceData('revenue')">
-                        {{ 'general.revenueVsAup' |translate }}
+                        (click)="getUsersInvOrAup('aup-vs-revenue')">
+                        {{ 'general.revenueVsAup' | translate }}
                     </a>
                 </li>
             </ul>
@@ -46,13 +49,13 @@
                 </ng-container>
             </div>
             <div class="card-body">
-                <app-chart-multiple-axes [data]="performanceData"
-                    [value1]="selectedTab1 === 1 ? 'conversions' : selectedTab1 === 2 ? 'revenue' : 'revenue'"
-                    [value2]="selectedTab1 === 1 ? 'traffic' : selectedTab1 === 2 ? 'investment': 'aup'"
+                <app-chart-multiple-axes [data]="usersAndRevenue"
+                    [value1]="selectedTab1 === 1 ? 'transactions' : selectedTab1 === 2 ? 'revenue' : 'revenue'"
+                    [value2]="selectedTab1 === 1 ? 'users' : selectedTab1 === 2 ? 'investment': 'aup'"
                     [valueName1]="selectedTab1 === 1 ? 'Conversiones' : selectedTab1 === 2 ? 'Revenue' :'Revenue'"
                     [valueName2]="selectedTab1 === 1 ? 'Usuarios' : selectedTab1 === 2 ? 'Inversión' : 'AUP'"
                     [valueFormat1]="selectedTab1 > 1 && 'USD'" [valueFormat2]="selectedTab1 > 1 && 'USD'"
-                    name="omnichat-metric-comparison">
+                    name="omnichat-traffic-vs-conversions" [status]="usersAndRevenueReqStatus">
                 </app-chart-multiple-axes>
             </div>
         </div>
@@ -67,71 +70,75 @@
             <span class="h3">Tráfico y Conversiones</span>
         </div>
     </div>
-    <div class="col-12" *ngIf="!retailerView">
+    <div class="col-12" *ngIf="!selectedLevelPage.retailer">
         <div class="pills-container">
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                        (click)="getCountriesRetAndCat('traffic')">Tráfico</a>
+                        (click)="getDataByLevel('traffic')">Tráfico</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                        (click)="getCountriesRetAndCat('sales')">Conversiones</a>
+                        (click)="getDataByLevel('sales')">Conversiones</a>
                 </li>
             </ul>
         </div>
     </div>
 
-    <div class="col-12 col-lg-4 mt-4" *ngIf="latamView">
+    <div class="col-12 col-lg-4 mt-4" *ngIf="selectedLevelPage.latam">
         <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por país</span>
             </div>
             <div class="card-body">
-                <app-chart-bar-horizontal [data]="countries" name="omnichat-chats-by-country" category="country"
-                    value="chats" [singleColorBars]="true" [status]="chartsReqStatus.countries">
+                <app-chart-bar-horizontal [data]="dataByLevel.country" name="omnichat-chats-by-country"
+                    category="country" value="chats" [singleColorBars]="true"
+                    [status]="dataByLevelReqStatus[0].reqStatus">
                 </app-chart-bar-horizontal>
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-4 mt-4" *ngIf="latamView || countryView" [ngClass]="{'col-lg-6' : !latamView}">
+    <div class="col-12 col-lg-4 mt-4" *ngIf="selectedLevelPage.latam || selectedLevelPage.country"
+        [ngClass]="{'col-lg-6' : !selectedLevelPage.latam}">
         <div class="card height-fluid superimposed">
             <div class="card-header">
                 <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por retailer</span>
             </div>
             <div class="card-body retailers-chart-container">
                 <div class="superimposed">
-                    <app-chart-bar-horizontal [data]="retailers" name="omnichat-chats-by-retailer" category="retailer"
-                        value="chats" [truncateLabels]="true" [singleColorBars]="true" height="600px">
+                    <app-chart-bar-horizontal [data]="dataByLevel.retailer" name="omnichat-chats-by-retailer"
+                        category="retailer" value="chats" [truncateLabels]="true" [singleColorBars]="true"
+                        height="600px" [status]="dataByLevelReqStatus[1].reqStatus">
                     </app-chart-bar-horizontal>
                 </div>
 
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-4 mt-4" [ngClass]="{'col-lg-6' : !latamView}">
+    <div class="col-12 col-lg-4 mt-4" [ngClass]="{'col-lg-6' : !selectedLevelPage.latam}">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4" *ngIf="!retailerView">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por
+                <span class="h4" *ngIf="!selectedLevelPage.retailer">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'
+                    }} por
                     categoría</span>
-                <span class="h4" *ngIf="retailerView">Tráfico por categoría</span>
+                <span class="h4" *ngIf="selectedLevelPage.retailer">Tráfico por categoría</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="categories" [status]="chartsReqStatus.categories"
+                <app-chart-pie [data]="dataByLevel.category1" [status]="dataByLevelReqStatus[2].reqStatus"
                     name="omnichat-chats-by-category-1" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
     </div>
 
-    <div class="col-12 col-lg-6 mt-4" *ngIf="retailerView">
+    <div class="col-12 col-lg-6 mt-4" *ngIf="selectedLevelPage.retailer">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4" *ngIf="retailerView">Conversiones por categoría</span>
+                <span class="h4" *ngIf="selectedLevelPage.retailer">Conversiones por categoría</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="conversionsByCategories" name="omnichat-chats-by-category-2"
-                    legendPosition="bottom">
+                <app-chart-pie [data]="dataByLevel.category2" [status]="dataByLevelReqStatus[3].reqStatus"
+                    name="omnichat-chats-by-category-2" legendPosition="bottom">
                 </app-chart-pie>
             </div>
         </div>
@@ -145,25 +152,24 @@
         <span class="h3">Análisis de conversión por categoría</span>
         <p class="h4 mt-3">Tasas de conversión</p>
         <div class="row">
-            <div *ngFor="let stat of conversionByCategories" class="col-lg-4 mb-2">
+            <div *ngFor="let stat of staticData.conversionRate" class="col-lg-4 mb-2">
                 <app-card-stat [stat]="stat" [loader]="false" [smallHeader]="true" height="auto"></app-card-stat>
+            </div>
+            <div class="col-12 mt--3 mt-xl-2" [hidden]="staticDataReqStatus[1].reqStatus !== 3">
+                <p class="text-center text-muted mb-0">
+                    Error al consultar datos
+                </p>
             </div>
         </div>
     </div>
     <div class="col-12 mt-3">
-        <div class="pills-container">
+        <div class="pills-container" *ngIf="selectedCategories?.length > 1">
             <ul class="nav nav-pills nav-fill">
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
-                        (click)="getDataByCategory(1)">PS</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}" (click)="getDataByCategory(2)">HW
-                        Print</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 3}"
-                        (click)="getDataByCategory(3)">Supplies</a>
+                <li class="nav-item" *ngFor="let category of selectedCategories">
+                    <a class="nav-link p-2" [ngClass]="{'active': category.id === selectedTab3}"
+                        (click)="getSalesByProduct(category); getUsersSalesAndCR(category)">
+                        {{ category.name }}
+                    </a>
                 </li>
             </ul>
         </div>
@@ -174,8 +180,9 @@
                         <span class="h4">Conversiones por producto</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-bar-horizontal [data]="products" name="omnichat-transactions-by-product"
-                            category="product" value="transactions" [singleColorBars]="true">
+                        <app-chart-bar-horizontal [data]="salesByProduct" name="omnichat-transactions-by-product"
+                            category="product" value="quantity" [singleColorBars]="true"
+                            [status]="salesByProductReqStatus">
                         </app-chart-bar-horizontal>
                         <small class="text-muted mt-2 d-block d-sm-none">
                             Para mejor visualización usar la versión de <strong>Escritorio</strong>
@@ -203,146 +210,21 @@
                                 <div class="legend-label">Tasa de conversión</div>
                             </div>
                         </div>
-                        <app-chart-bar-group [data]="usersTransactionsConversion"
-                            name="omnichat-users-transactions-rate" height="325px" valueBar1="users"
-                            valueBar2="transactions" valueLine1="conversion_rate" valueNameBar1="Usuarios"
-                            valueNameBar2="Conversiones" valueFormatLine1="%">
+                        <app-chart-bar-group [data]="usersSalesAndCR" name="omnichat-users-transactions-rate"
+                            height="325px" valueBar1="users" valueBar2="transactions" valueLine1="conversion_rate"
+                            valueNameBar1="Usuarios" valueNameBar2="Conversiones" valueFormatLine1="%"
+                            [status]="usersSalesAndCRReqStatus">
                         </app-chart-bar-group>
                     </div>
                 </div>
             </div>
 
-            <!-- <div class="col-12 mt-4">
-                <app-generic-table [displayedColumns]="categoriesAndUsersColumns" [tableData]="categoriesAndUsers2"
-                    [tableDataChange]="categoriesAndUsers2.data" errorMsg="Error al consultar datos"
+            <!-- PERFOMANCE BY CATEGORY -->
+            <div class="col-12 mt-4">
+                <app-generic-table [displayedColumns]="performanceByCategoryColumns" [tableData]="performanceByCategory"
+                    [tableDataChange]="performanceByCategory.data" errorMsg="Error al consultar datos"
                     emptyDataMsg="No se encontraron datos">
                 </app-generic-table>
-            </div> -->
-
-            <!-- CATEGORY AND USERS TABLE -->
-            <div class="col-12 mt-4">
-                <div class="adaptable-container" [ngClass]="{'auto': categoryAndUsersReqStatus === 3}">
-                    <div class="loading-shade" [hidden]="categoryAndUsersReqStatus > 1">
-                        <mat-spinner></mat-spinner>
-                    </div>
-
-                    <table mat-table [dataSource]="categoryAndUsersSource">
-                        <!-- category column -->
-                        <ng-container matColumnDef="category">
-                            <th mat-header-cell *matHeaderCellDef>Categoría</th>
-                            <td mat-cell *matCellDef="let element">
-                                {{ element.category }}
-                            </td>
-                        </ng-container>
-
-                        <!-- users column -->
-                        <ng-container matColumnDef="users">
-                            <th mat-header-cell *matHeaderCellDef>Usuarios</th>
-                            <td mat-cell *matCellDef="let element">
-                                <span>{{ element.users | number }}</span>
-                            </td>
-                        </ng-container>
-
-                        <!-- conversion_rate -->
-                        <ng-container matColumnDef="conversion_rate">
-                            <th mat-header-cell *matHeaderCellDef>Tasa de conversión</th>
-                            <td mat-cell *matCellDef="let element">
-                                {{ element.conversion_rate }}%
-                            </td>
-                        </ng-container>
-
-                        <!-- conversion_rate_yoy -->
-                        <ng-container matColumnDef="conversion_rate_yoy">
-                            <th mat-header-cell *matHeaderCellDef>%YoY</th>
-                            <td mat-cell *matCellDef="let element">
-                                <div class="value-container">
-                                    <span>{{ element.conversion_rate_yoy }}%</span>
-                                    <i class="fas fa-arrow-up text-success" *ngIf="element.conversion_rate_yoy > 0"></i>
-                                    <i class="fas fa-equals text-warning" *ngIf="element.conversion_rate_yoy === 0"></i>
-                                    <i class="fas fa-arrow-down text-danger"
-                                        *ngIf="element.conversion_rate_yoy < 0"></i>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- amount -->
-                        <ng-container matColumnDef="amount">
-                            <th mat-header-cell *matHeaderCellDef>Cantidad</th>
-                            <td mat-cell *matCellDef="let element">
-                                {{ element.amount | number }}
-                            </td>
-                        </ng-container>
-
-                        <!-- amount_yoy -->
-                        <ng-container matColumnDef="amount_yoy">
-                            <th mat-header-cell *matHeaderCellDef>%YoY</th>
-                            <td mat-cell *matCellDef="let element">
-                                <div class="value-container">
-                                    <span>{{ element.amount_yoy }}%</span>
-                                    <i class="fas fa-arrow-up text-success" *ngIf="element.amount_yoy > 0"></i>
-                                    <i class="fas fa-equals text-warning" *ngIf="element.amount_yoy === 0"></i>
-                                    <i class="fas fa-arrow-down text-danger" *ngIf="element.amount_yoy < 0"></i>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- revenue -->
-                        <ng-container matColumnDef="revenue">
-                            <th mat-header-cell *matHeaderCellDef>Revenue</th>
-                            <td mat-cell *matCellDef="let element">
-                                {{ element.revenue | number }}
-                            </td>
-                        </ng-container>
-
-                        <!-- revenue_yoy -->
-                        <ng-container matColumnDef="revenue_yoy">
-                            <th mat-header-cell *matHeaderCellDef>%YoY</th>
-                            <td mat-cell *matCellDef="let element">
-                                <div class="value-container">
-                                    <span>{{ element.revenue_yoy }}%</span>
-                                    <i class="fas fa-arrow-up text-success" *ngIf="element.revenue_yoy > 0"></i>
-                                    <i class="fas fa-equals text-warning" *ngIf="element.revenue_yoy === 0"></i>
-                                    <i class="fas fa-arrow-down text-danger" *ngIf="element.revenue_yoy < 0"></i>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- aup -->
-                        <ng-container matColumnDef="aup">
-                            <th mat-header-cell *matHeaderCellDef>AUP</th>
-                            <td mat-cell *matCellDef="let element">
-                                {{ element.aup | number }}
-                            </td>
-                        </ng-container>
-
-                        <!-- aup_yoy -->
-                        <ng-container matColumnDef="aup_yoy">
-                            <th mat-header-cell *matHeaderCellDef>%YoY</th>
-                            <td mat-cell *matCellDef="let element">
-                                <div class="value-container">
-                                    <span>{{ element.aup_yoy }}%</span>
-                                    <i class="fas fa-arrow-up text-success" *ngIf="element.aup_yoy > 0"></i>
-                                    <i class="fas fa-equals text-warning" *ngIf="element.aup_yoy === 0"></i>
-                                    <i class="fas fa-arrow-down text-danger" *ngIf="element.aup_yoy < 0"></i>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- ERROR COLUMN -->
-                        <ng-container matColumnDef="disclaimer">
-                            <td mat-footer-cell *matFooterCellDef colspan="3">
-                                <div class="text-danger text-center" [hidden]="categoryAndUsersReqStatus !== 3">
-                                    Ocurrió un error al consultar los productos
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="categoryAndUsersColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: categoryAndUsersColumns;"></tr>
-                        <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="example-second-footer-row"
-                            [hidden]="categoryAndUsersReqStatus !== 3"></tr>
-                    </table>
-                </div>
             </div>
         </div>
     </div>
@@ -360,12 +242,12 @@
                 <div class="pills-container">
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
-                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 1}"
-                                (click)="getAudiencesData('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
+                                (click)="getAudienceByMetric('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 2}"
-                                (click)="getAudiencesData('sales'); chartsInitLoad = chartsInitLoad && false;">Conversiones</a>
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
+                                (click)="getAudienceByMetric('sales'); chartsInitLoad = chartsInitLoad && false;">Conversiones</a>
                         </li>
                     </ul>
                 </div>
@@ -375,32 +257,32 @@
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">{{selectedTab4 === 1 ? 'Tráfico' : 'Conversiones'}} por dispositivos</span>
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por dispositivos</span>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container">
+                                    <div class="legend-container" *ngIf="audience?.desktop?.length > 0">
                                         <div class="legend-square on color-4"></div>
-                                        <div class="legend-label">Desktop {{ audiences?.desktop[1].value }}%</div>
+                                        <div class="legend-label">Desktop {{ audience.desktop[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="audiences?.desktop" name="omnichat-devices-desktop"
+                                <app-chart-pictorial [data]="audience?.desktop" name="omnichat-devices-desktop"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
-                                    height="280px">
+                                    [status]="audienceReqStatus[0].reqStatus" height="280px">
                                 </app-chart-pictorial>
                             </div>
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container">
+                                    <div class="legend-container" *ngIf="audience?.mobile?.length > 0">
                                         <div class="legend-square on color-5"></div>
-                                        <div class="legend-label">Mobile {{ audiences?.mobile[1].value }}%</div>
+                                        <div class="legend-label">Mobile {{ audience.mobile[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="audiences?.mobile" name="omnichat-devices-mobile"
+                                <app-chart-pictorial [data]="audience?.mobile" name="omnichat-devices-mobile"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
-                                    height="280px">
+                                    height="280px" [status]="audienceReqStatus[0].reqStatus">
                                 </app-chart-pictorial>
                             </div>
                         </div>
@@ -412,33 +294,33 @@
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">{{selectedTab4 === 1 ? 'Tráfico' : 'Conversiones'}} por Género</span>
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Género</span>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container">
+                                    <div class="legend-container" *ngIf="audience?.men?.length > 0">
                                         <div class="legend-square on color-4"></div>
-                                        <div class="legend-label">Hombres {{ audiences?.men[1].value }}%</div>
+                                        <div class="legend-label">Hombres {{ audience.men[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="audiences?.men" name="omnichat-gender-man"
+                                <app-chart-pictorial [data]="audience?.men" name="omnichat-gender-man"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man"
-                                    height="280px">
+                                    height="280px" [status]="audienceReqStatus[1].reqStatus">
                                 </app-chart-pictorial>
                             </div>
 
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container">
+                                    <div class="legend-container" *ngIf="audience?.women?.length > 0">
                                         <div class="legend-square on color-5"></div>
-                                        <div class="legend-label">Mujeres {{ audiences?.women[1].value }}%</div>
+                                        <div class="legend-label">Mujeres {{ audience.women[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="audiences?.women" name="omnichat-gender-woman"
+                                <app-chart-pictorial [data]="audience?.women" name="omnichat-gender-woman"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman"
-                                    height="280px">
+                                    height="280px" [status]="audienceReqStatus[1].reqStatus">
                                 </app-chart-pictorial>
                             </div>
                         </div>
@@ -450,11 +332,12 @@
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">{{selectedTab4 === 1 ? 'Tráfico' : 'Conversiones'}} por Edad</span>
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Edad</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-lollipop [data]="audiences?.age" name="omnichat-age" category="age"
-                            [value]="selectedTab4 === 1 ? 'visits' : 'sales'" height="280px">
+                        <app-chart-lollipop [data]="audience?.age" name="omnichat-age" category="age"
+                            [value]="selectedTab3 === 1 ? 'visits' : 'sales'" height="280px"
+                            [status]="audienceReqStatus[2].reqStatus">
                         </app-chart-lollipop>
                     </div>
                 </div>
@@ -464,20 +347,20 @@
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">{{selectedTab4 === 1 ? 'Tráfico' : 'Conversiones'}} por Género y Edad</span>
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Género y Edad</span>
                     </div>
                     <div class="card-body" style="height: 328px">
                         <!-- loader -->
-                        <app-chart-loader *ngIf="chartsInitLoad && audiencesReqStatus[3].reqStatus <= 1">
+                        <app-chart-loader *ngIf="chartsInitLoad && audienceReqStatus[3].reqStatus <= 1">
                         </app-chart-loader>
 
                         <!-- ready -->
-                        <app-chart-pyramid *ngIf="audiences?.genderByAge?.length > 0" [data]="audiences?.genderByAge"
-                            name="omnichat-age-and-gender" [status]="audiencesReqStatus[3].reqStatus" height="280px">
+                        <app-chart-pyramid *ngIf="audience?.genderAndAge?.length > 0" [data]="audience?.genderAndAge"
+                            name="omnichat-age-and-gender" [status]="audienceReqStatus[3].reqStatus" height="280px">
                         </app-chart-pyramid>
 
                         <!-- empty data -->
-                        <div *ngIf="audiencesReqStatus[3].reqStatus === 2 && audiences?.genderByAge?.length === 0"
+                        <div *ngIf="audienceReqStatus[3].reqStatus === 2 && audience?.genderAndAge?.length === 0"
                             class="chart-error-container text-muted">
                             <p class="text-center">
                                 Sin datos disponibles <br>
@@ -486,7 +369,7 @@
                         </div>
 
                         <!-- error -->
-                        <div *ngIf="chartsInitLoad && audiencesReqStatus[3].reqStatus === 3"
+                        <div *ngIf="chartsInitLoad && audienceReqStatus[3].reqStatus === 3"
                             class="chart-error-container text-muted">
                             <span>Error al consultar datos</span>
                         </div>
@@ -498,11 +381,12 @@
             <div class="col-12 col-lg-6 mt-4">
                 <div class="card" style="height: 100%;">
                     <div class="card-header">
-                        <span class="h4">{{selectedTab4 === 1 ? 'Tráfico' : 'Conversiones'}}
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}}
                             por día de la semana y hora del día</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-heat-map [data]="audiences?.sessions" name="omnichat-weekday-sesions" height="100%">
+                        <app-chart-heat-map [data]="audience?.weekdayAndHour" name="omnichat-weekday-sesions"
+                            height="100%" [status]="audienceReqStatus[5].reqStatus" categoryX="weekdayName">
                         </app-chart-heat-map>
                     </div>
                 </div>
@@ -512,12 +396,13 @@
                 <!-- weekday -->
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">{{selectedTab4 === 1 ? 'Tráfico' : 'Conversiones'}}
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}}
                             por día de la semana</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-bar-horizontal [data]="audiences?.weekday" name="omnichat-traffic-day"
-                            category='weekday' value='value' height="250px">
+                        <app-chart-bar-horizontal [data]="audience?.weekday" name="omnichat-traffic-day"
+                            category='weekdayName' [status]="audienceReqStatus[4].reqStatus" value='value'
+                            height="250px">
                         </app-chart-bar-horizontal>
                     </div>
                 </div>
@@ -525,12 +410,12 @@
                 <div class="card mt-4">
                     <!-- hour -->
                     <div class="card-header">
-                        <span class="h4">{{selectedTab4 === 1 ? 'Tráfico' : 'Conversiones'}}
+                        <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}}
                             por hora del día</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-lollipop [data]="audiences?.hour" name="omnichat-traffic-hour" category="hour"
-                            value="visits" height="250px">
+                        <app-chart-lollipop [data]="audience?.hour" name="omnichat-traffic-hour" category="hour"
+                            height="250px" [status]="audienceReqStatus[6].reqStatus">
                         </app-chart-lollipop>
                     </div>
                 </div>
