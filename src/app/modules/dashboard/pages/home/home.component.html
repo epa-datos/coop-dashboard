@@ -1,8 +1,9 @@
 <div class="media-container mb--6">
-    <!-- LANDSCAPE LARGE VIEW -->
+    <!-- LANDSCAPE VIEW -->
 
     <!-- admin & hp roles -->
-    <video *ngIf="userRoleName === 'admin' || userRoleName === 'hp'" class="media landscape md" autoplay loop>
+    <video *ngIf="userRoleName === 'admin' || userRoleName === 'hp'" class="media landscape md" autoplay loop
+        [muted]="true">
         <source src="assets/video/map-retailers-landscape.mp4" type="video/mp4">
     </video>
 
@@ -15,7 +16,8 @@
     <!-- LANDSCAPE LARGE VIEW -->
 
     <!-- admin & hp roles -->
-    <video *ngIf="userRoleName === 'admin' || userRoleName === 'hp'" class="media landscape lg" autoplay loop>
+    <video *ngIf="userRoleName === 'admin' || userRoleName === 'hp'" class="media landscape lg" autoplay loop
+        [muted]="true">
         <source src="assets/video/map-retailers-landscape-lg.mp4" type="video/mp4">
     </video>
     <!-- country & retailer roles -->
@@ -27,7 +29,8 @@
     <!-- PORTRAIT VIEW -->
 
     <!-- admin & hp roles -->
-    <video *ngIf="userRoleName === 'admin' || userRoleName === 'hp'" class="media portrait" autoplay loop>
+    <video *ngIf="userRoleName === 'admin' || userRoleName === 'hp'" class="media portrait" autoplay loop
+        [muted]="true">
         <source src="assets/video/map-retailers-portrait.mp4" type="video/mp4">
     </video>
 
