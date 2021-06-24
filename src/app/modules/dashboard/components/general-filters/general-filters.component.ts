@@ -767,11 +767,11 @@ export class GeneralFiltersComponent implements OnInit {
     this.filtersStateService.selectPeriod({ startDate: this.startDate.value._d, endDate: this.endDate.value._d });
     this.filtersStateService.selectSectors(this.sectors.value.filter(item => item.id));
     this.filtersStateService.selectCategories(this.categories.value.filter(item => item.id));
+    this.filtersStateService.selectSources(this.sources.value.filter(item => item.id));
 
     if (this.isLatamSelected) {
       this.filtersStateService.selectCountries(this.countries.value.filter(item => item.id));
       this.filtersStateService.selectRetailers(this.retailers.value.filter(item => item.id));
-      this.filtersStateService.selectSources(this.sources.value.filter(item => item.id));
     }
 
     const areAllCampsSelected = this.areAllCampaignsSelected();
