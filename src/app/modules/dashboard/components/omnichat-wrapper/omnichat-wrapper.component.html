@@ -88,10 +88,12 @@
     <div class="col-12 col-lg-4 mt-4" *ngIf="selectedLevelPage.latam">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por país</span>
+                <span class="h4">
+                    {{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por país
+                </span>
             </div>
             <div class="card-body">
-                <app-chart-bar-horizontal [data]="dataByLevel.country" name="omnichat-chats-by-country"
+                <app-chart-bar-horizontal [data]="dataByLevel.countries" name="omnichat-chats-by-country"
                     category="country" value="chats" [singleColorBars]="true"
                     [status]="dataByLevelReqStatus[0].reqStatus">
                 </app-chart-bar-horizontal>
@@ -102,13 +104,16 @@
         [ngClass]="{'col-lg-6' : !selectedLevelPage.latam}">
         <div class="card height-fluid superimposed">
             <div class="card-header">
-                <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por retailer</span>
+                <span class="h4">
+                    {{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por retailer
+                </span>
             </div>
-            <div class="card-body retailers-chart-container">
+            <div class="card-body" [ngClass]="{'overfow-container': dataByLevel?.retailers?.length > 10}">
                 <div class="superimposed">
-                    <app-chart-bar-horizontal [data]="dataByLevel.retailer" name="omnichat-chats-by-retailer"
+                    <app-chart-bar-horizontal [data]="dataByLevel.retailers" name="omnichat-chats-by-retailer"
                         category="retailer" value="chats" [truncateLabels]="true" [singleColorBars]="true"
-                        height="600px" [status]="dataByLevelReqStatus[1].reqStatus">
+                        [height]="dataByLevel?.retailers?.length > 10 ? '600px' : '350px'"
+                        [status]="dataByLevelReqStatus[1].reqStatus">
                     </app-chart-bar-horizontal>
                 </div>
 
@@ -118,9 +123,8 @@
     <div class="col-12 col-lg-4 mt-4" [ngClass]="{'col-lg-6' : !selectedLevelPage.latam}">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4" *ngIf="!selectedLevelPage.retailer">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'
-                    }} por
-                    categoría</span>
+                <span class="h4" *ngIf="!selectedLevelPage.retailer">
+                    {{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por categoría</span>
                 <span class="h4" *ngIf="selectedLevelPage.retailer">Tráfico por categoría</span>
             </div>
             <div class="card-body">
