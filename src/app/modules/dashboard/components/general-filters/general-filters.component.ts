@@ -158,6 +158,7 @@ export class GeneralFiltersComponent implements OnInit {
       .subscribe(event => {
         if (event instanceof NavigationEnd) {
           this.getCurrentPage();
+          this.restoreFilters();
 
           this.loadLatamContent().then(() => {
             this.isLatamSelected && this.applyFilters();
@@ -167,7 +168,6 @@ export class GeneralFiltersComponent implements OnInit {
 
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       this.retailerID = retailer?.id;
-      this.restoreFilters();
 
       if (this.retailerID) {
         this.getCampaigns();
@@ -177,7 +177,6 @@ export class GeneralFiltersComponent implements OnInit {
 
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
       this.countryID = country?.id;
-      this.restoreFilters();
     });
   }
 

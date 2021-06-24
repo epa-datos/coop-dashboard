@@ -1,3 +1,19 @@
+.container {
+    height: 100%;
+    min-height: 100vh;
+
+    @media screen and (max-height: 690px) {
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .justify-content-start {
+        align-items: center;
+        height: 100%;
+        min-height: 100vh;
+    }
+}
+
 .input-group-text {
     cursor: pointer;
 }

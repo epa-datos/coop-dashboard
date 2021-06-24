@@ -89,7 +89,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
   demographics = {};
 
-  usersInvOrAupMetrics: string[] = ['sector', 'categoría', 'medio'];
+  usersInvOrAupMetrics: string[] = ['sector', 'categoría', 'fuente'];
   usersInvOrAup: any[] = [];
 
   // top products

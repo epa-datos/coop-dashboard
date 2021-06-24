@@ -39,79 +39,42 @@ export class OmnichatService {
     });
   }
 
-  concatedQueryParams(isLatam?: boolean, uniqueSectorID?: number, uniqueCategoryID?: number, uniqueSourceID?: number, omitSectors?: boolean): string {
+  concatedQueryParams(isLatam?: boolean, uniqueCategoryID?: number): string {
     let startDate = this.filtersStateService.periodQParams.startDate;
     let endDate = this.filtersStateService.periodQParams.endDate;
-    let sectors = !uniqueSectorID ? this.filtersStateService.sectorsQParams : uniqueSectorID;
     let categories = !uniqueCategoryID ? this.filtersStateService.categoriesQParams : uniqueCategoryID;
-    let campaigns = this.filtersStateService.campaignsQParams;
 
-    const baseQParams = `start_date=${startDate}&end_date=${endDate}${!omitSectors ? `&sectors=${sectors}` : ''}&categories=${categories}`;
+    const baseQParams = `start_date=${startDate}&end_date=${endDate}&categories=${categories}`;
     if (!isLatam) {
-      return `${baseQParams}${campaigns ? `&campaigns=${campaigns}` : ''}`;
+      return baseQParams;
     } else {
       let retailers = this.filtersStateService.retailersQParams;
-      let sources = !uniqueSourceID ? this.filtersStateService.sourcesQParams : uniqueSourceID;
-      return `retailers=${retailers}&sources=${sources}&${baseQParams}`;
+      return `retailers=${retailers}&${baseQParams}`;
     }
   }
 
-  getKpis(isLatam: boolean) {
-    let queryParams = this.concatedQueryParams(isLatam);
+  /**
+ *  GENERIC ENDPOINT
+ * For endponts with a metric and optional submetric
+ * @param isLatam flag to refers latam endpoints 
+ * @param metricType 
+ * @param [subMetricType] 
+ * @returns  
+ */
+  getDataByMetric(isLatam: boolean, metricType: string, subMetricType?: string, uniqueCategoryID?: number) {
+    let queryParams = this.concatedQueryParams(isLatam, uniqueCategoryID);
+    let baseEndpoint: string;
 
-    if (isLatam) {
-      return this.http.get(`${this.baseUrl}/omnichat/latam/kpis?${queryParams}`);
-    } else if (this.retailerID) {
-      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/omnichat/kpis?${queryParams}`);
+    if (this.retailerID) {
+      baseEndpoint = `${this.baseUrl}/omnichat/retailers/${this.retailerID}`;
     } else if (this.countryID) {
-      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/omnichat/kpis?${queryParams}`);
+      baseEndpoint = `${this.baseUrl}/omnichat/countries/${this.countryID}`;
+    } else if (isLatam) {
+      baseEndpoint = `${this.baseUrl}/omnichat/latam`
     } else {
-      return throwError('[omnichat.service]: not retailerID or countryID provided');
+      return throwError('[omnichat.service]: not countryID or retailerID provided');
     }
-  }
 
-  getCountries(metricType: string) {  // only for latam
-    let queryParams = this.concatedQueryParams();
-    return this.http.get(`${this.baseUrl}/omnichat/latam/${metricType}/countries?${queryParams}`);
-  }
-
-  getRetailers(isLatam: boolean, metricType: string) {
-    let queryParams = this.concatedQueryParams(isLatam);
-
-    if (isLatam) {
-      return this.http.get(`${this.baseUrl}/omnichat/latam/${metricType}/retailers?${queryParams}`);
-    } else if (this.countryID) {
-      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/omnichat/${metricType}/retailers?${queryParams}`);
-    } else {
-      return throwError('[omnichat.service]: not countryID provided');
-    }
-  }
-
-  getCategories(isLatam: boolean, metricType: string) {
-    let queryParams = this.concatedQueryParams(isLatam);
-
-    if (isLatam) {
-      return this.http.get(`${this.baseUrl}/omnichat/latam/${metricType}/categories?${queryParams}`);
-    } else if (this.retailerID) {
-      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/omnichat/${metricType}/categories?${queryParams}`);
-    } else if (this.countryID) {
-      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/omnichat/${metricType}/categories?${queryParams}`);
-    } else {
-      return throwError('[omnichat.service]: not retailerID or countryID provided');
-    }
-  }
-
-  getHistory(isLatam: boolean) {
-    let queryParams = this.concatedQueryParams(isLatam);
-
-    if (isLatam) {
-      return this.http.get(`${this.baseUrl}/omnichat/latam/history?${queryParams}`);
-    } else if (this.retailerID) {
-      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/omnichat/history?${queryParams}`);
-    } else if (this.countryID) {
-      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/omnichat/history?${queryParams}`);
-    } else {
-      return throwError('[omnichat.service]: not retailerID or countryID provided');
-    }
+    return this.http.get(`${baseEndpoint}/${metricType}${subMetricType ? `/${subMetricType}` : ''}?${queryParams}`);
   }
 }
