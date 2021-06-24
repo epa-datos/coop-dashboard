@@ -39,8 +39,7 @@ export class CampaignTowardsRetailWrapperComponent implements OnInit, OnDestroy 
     {
       name: 'name',
       title: 'Nombre',
-      maxWidthTdPercentage: 40,
-      maxWidthSpan: '700px',
+      maxWidthColumn: 35,
       tooltip: true,
     },
     {
