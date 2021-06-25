@@ -7,7 +7,7 @@
         <ng-container *ngFor="let column of displayedColumns">
             <ng-container [matColumnDef]="column.name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    [style.text-align]="column.textAlign ? column.textAlign : 'left'">
+                    [ngClass]="column.textAlign ? column.textAlign + '-align' : 'left-align'">
                     {{ column.title }}
                 </th>
 
