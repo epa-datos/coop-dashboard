@@ -13,6 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
@@ -127,6 +128,7 @@ import { HomeComponent } from './pages/home/home.component';
     MatPaginatorModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
+    MatSortModule,
     NgbModule,
     SharedModule
   ],

@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-generic-table',
@@ -31,11 +32,13 @@ export class GenericTableComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() set tableData(value) {
     this._tableData = value;
     this.dataSource = new MatTableDataSource<any>(this.tableData?.data);
+    this.dataSource.sort = this.sort;
   }
 
   @Input() set tableDataChange(value) {
     this.tableData.data = value;
     this.dataSource = new MatTableDataSource<any>(this.tableData?.data);
+    this.dataSource.sort = this.sort;
     this.loadPaginator();
   }
 
@@ -44,6 +47,7 @@ export class GenericTableComponent implements OnInit, AfterViewInit, OnDestroy {
   langSub: Subscription;
 
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private translate: TranslateService
@@ -59,6 +63,7 @@ export class GenericTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.loadPaginator();
+    this.dataSource.sort = this.sort;
   }
 
   loadPaginator() {
