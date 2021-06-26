@@ -10,7 +10,7 @@
                 <span class="h2 py-2 ml-3 mr-3">OmniChat</span>
             </a>
         </li>
-        <li class="nav-item" *ngIf="selectedLevelPage.latam || (countryID === 9 && !retailerID) || retailerID === 29">
+        <li class="nav-item" *ngIf="levelPage.latam || (countryID === 9 && !retailerID) || retailerID === 29">
             <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 3}" (click)="activeTabView = 3">
                 <span class="h2 py-2 ml-3 mr-3">PC Selector</span>
             </a>
@@ -18,11 +18,13 @@
     </ul>
 
     <ng-container *ngIf="activeTabView === 1">
-        <app-indexed-wrapper></app-indexed-wrapper>
+        <app-indexed-wrapper [levelPage]="levelPage" [levelPageChange]="levelPageChange$"
+            [requestInfoChange]="requestInfoChange$">
+        </app-indexed-wrapper>
     </ng-container>
 
     <ng-container *ngIf="activeTabView === 2">
-        <app-omnichat-wrapper [requestInfoChange]="requestInfoChange$" [selectedLevelPage]="selectedLevelPage">
+        <app-omnichat-wrapper [levelPage]="levelPage" [requestInfoChange]="requestInfoChange$">
         </app-omnichat-wrapper>
     </ng-container>
 
