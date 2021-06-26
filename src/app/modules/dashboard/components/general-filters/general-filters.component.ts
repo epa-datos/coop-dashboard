@@ -152,24 +152,24 @@ export class GeneralFiltersComponent implements OnInit {
 
     this.getCurrentPage();
 
-    this.routeSub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    )
-      .subscribe(event => {
-        if (event instanceof NavigationEnd) {
-          this.getCurrentPage();
-          this.restoreFilters();
+    this.routeSub = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.getCurrentPage();
+        this.restoreFilters();
 
-          this.loadLatamContent().then(() => {
-            this.isLatamSelected && this.applyFilters();
-          });
-        }
-      });
+        this.loadLatamContent().then(() => {
+          // this.isLatamSelected && this.applyFilters();
+          if (this.isLatamSelected || this.currentPage === 'tools') {
+            this.applyFilters();
+          }
+        });
+      }
+    });
 
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       this.retailerID = retailer?.id;
 
-      if (this.retailerID) {
+      if (this.retailerID && this.currentPage === 'overview') {
         this.getCampaigns();
         this.campsGetByRetailerChange = true;
       }
@@ -269,17 +269,17 @@ export class GeneralFiltersComponent implements OnInit {
         if (this.sectors.value && this.categories.value && !this.campaigns.value && this.countryID) {
           // initial campaigns load
           // console.log('initial campaigns load')
-          this.getCampaigns();
+          this.currentPage === 'overview' && this.getCampaigns();
         } else if (this.sectors.value?.length > 0 && this.categories.value?.length > 0 && this.form.valid) {
           if (!equalsArrays(this.prevSectors, this.sectors.value)) {
             // change in sectors selection
             // console.log('diffrentent sectors')
-            this.getCampaigns();
+            this.currentPage === 'overview' && this.getCampaigns();
             this.prevSectors = this.sectors.value;
           } else if (!equalsArrays(this.prevCategories, this.categories.value)) {
             // change in categories selection
             // console.log('different categories')
-            this.getCampaigns();
+            this.currentPage === 'overview' && this.getCampaigns();
             this.prevCategories = this.categories.value;
           } else {
             // change in date selection
@@ -289,7 +289,7 @@ export class GeneralFiltersComponent implements OnInit {
 
             if (!equalsPeriodObjs) {
               // console.log('different date')
-              this.getCampaigns();
+              this.currentPage === 'overview' && this.getCampaigns();
               this.prevPeriod = { startDate: this.startDate.value._d, endDate: this.endDate.value._d }
             } else {
               // console.log('change in campaigns')
