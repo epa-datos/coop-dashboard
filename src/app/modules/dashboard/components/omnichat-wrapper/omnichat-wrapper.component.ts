@@ -216,7 +216,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     this.filtersAreReady() && this.getAllData();
 
     this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
-      this.getAllData();
+      this.filtersAreReady() && this.getAllData();
     });
   }
 
@@ -288,7 +288,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
           reqStatusObj.reqStatus = 2;
         },
         error => {
-          metric.name === 'kpis' ? this.cleanKpis() : this.cleanConversionsRate();
+          metric.name === 'kpis' ? this.clearKpis() : this.clearConversionsRate();
 
           const errorMsg = error?.error?.message ? error.error.message : error?.message;
           console.error(`[omnichat.component]: ${errorMsg}`);
@@ -340,10 +340,16 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
 
       this.omnichatService.getDataByMetric(this.levelPage.latam, metric.metricType, metric.subMetricType).subscribe(
         (resp: any[]) => {
-          this.dataByLevel[metric.name] = resp.sort((a, b) => (a?.chats < b?.chats ? -1 : 1));
+          if (metric.metricType === 'traffic') {
+            this.dataByLevel[metric.name] = resp.sort((a, b) => (a?.chats < b?.chats ? -1 : 1));
+          } else {
+            this.dataByLevel[metric.name] = resp.sort((a, b) => (a?.value < b?.value ? -1 : 1));
+          }
+
           reqStatusObj.reqStatus = 2;
         },
         error => {
+          this.dataByLevel[metric.name] = [];
           const errorMsg = error?.error?.message ? error.error.message : error?.message;
           console.error(`[omnichat.component]: ${errorMsg}`);
           reqStatusObj.reqStatus = 3;
@@ -488,7 +494,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  cleanKpis() {
+  clearKpis() {
     for (let kpi of this.staticData.kpis) {
       if (kpi.metricName.includes('median_chat')) {
         kpi.metricValue = '00:00:00';
@@ -501,7 +507,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  cleanConversionsRate() {
+  clearConversionsRate() {
     for (let kpi of this.staticData.conversionRate) {
       kpi.metricValue = 0;
     }
