@@ -88,7 +88,7 @@
             </div>
             <div class="card-body">
                 <app-chart-bar-horizontal [data]="dataByLevel.countries" name="omnichat-chats-by-country"
-                    category="country" value="chats" [singleColorBars]="true"
+                    category="country" [value]="selectedTab2 === 1 ? 'chats' : 'value'" [singleColorBars]="true"
                     [status]="dataByLevelReqStatus[0].reqStatus">
                 </app-chart-bar-horizontal>
             </div>
@@ -105,8 +105,8 @@
             <div class="card-body" [ngClass]="{'overfow-container': dataByLevel?.retailers?.length > 10}">
                 <div class="superimposed">
                     <app-chart-bar-horizontal [data]="dataByLevel.retailers" name="omnichat-chats-by-retailer"
-                        category="retailer" value="chats" [truncateLabels]="true" [singleColorBars]="true"
-                        [height]="dataByLevel?.retailers?.length > 10 ? '600px' : '350px'"
+                        category="retailer" [value]="selectedTab2 === 1 ? 'chats' : 'value'" [truncateLabels]="true"
+                        [singleColorBars]="true" [height]="dataByLevel?.retailers?.length > 10 ? '600px' : '350px'"
                         [status]="dataByLevelReqStatus[1].reqStatus">
                     </app-chart-bar-horizontal>
                 </div>

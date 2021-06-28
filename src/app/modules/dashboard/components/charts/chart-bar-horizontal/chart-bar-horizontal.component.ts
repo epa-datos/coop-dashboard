@@ -13,8 +13,6 @@ import { Subscription } from 'rxjs';
 })
 export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input() value: string = 'value';
-  @Input() category: string = 'category';
   @Input() height: string = '350px'; // height property value valid in css
   @Input() truncateLabels: boolean = false; // for reduced spaces with labels too long
   @Input() showCategoryInToolip: boolean; // for show category name (object property value) in tooltip
@@ -37,13 +35,30 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDes
   }
   @Input() set data(value) {
     this._data = value;
-    if (this.chart) {
-      this.loadChartData(this.chart);
-    }
+    this.chart && this.loadChartData(this.chart);
+  }
+
+  private _value = 'value';
+  get value() {
+    return this._value;
+  }
+  @Input() set value(value) {
+    this._value = value;
+    this.series && this.loadSeriesNames(this.series);
+  }
+
+  private _category = 'category';
+  get category() {
+    return this._category;
+  }
+  @Input() set category(value) {
+    this._category = value;
+    this.series && this.loadSeriesNames(this.series);
   }
 
   chartID;
   chart;
+  series;
 
   langSub: Subscription;
 
@@ -126,6 +141,8 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDes
       });
     }
 
+    this.loadSeriesNames(series);
+
     // Cursor
     chart.cursor = new am4charts.XYCursor();
     // chart.responsive.enabled = true;
@@ -135,6 +152,14 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDes
     chart.data = this.data;
     this.chart = chart;
   }
+
+  loadSeriesNames(series) {
+    this.series = series;
+
+    this.series.dataFields.valueX = this.value;
+    this.series.dataFields.categoryY = this.category;
+  }
+
 
   ngOnDestroy() {
     this.langSub?.unsubscribe();
