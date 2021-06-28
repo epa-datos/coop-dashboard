@@ -239,7 +239,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[indexed.component]: ${error}`);
 
-        this.cleanKpis();
+        this.clearKpis();
         this.kpisReqStatus = 3;
       });
   }
@@ -386,7 +386,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  cleanKpis() {
+  clearKpis() {
     for (let kpi of this.kpis) {
       if (kpi.metricName === 'avg_session_duration') {
         kpi.metricValue = '00:00:00';
