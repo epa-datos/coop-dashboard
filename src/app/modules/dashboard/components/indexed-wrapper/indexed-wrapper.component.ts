@@ -46,7 +46,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     },
     {
       metricTitle: 'páginas/sesión',
-      metricName: 'pages_by_session',
+      metricName: 'page_views_per_session',
       metricValue: 0,
       metricFormat: 'decimals',
       icon: 'fas fa-file',
@@ -54,7 +54,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     },
     {
       metricTitle: 'duración media de la sesión',
-      metricName: 'average_session_duration',
+      metricName: 'avg_session_duration',
       metricValue: '00:00:00',
       icon: 'fas fa-user-clock',
       iconBg: '#2B96D5'
@@ -195,7 +195,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     this.filtersAreReady() && this.getAllData();
 
     this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
-      this.getAllData();
+      this.filtersAreReady() && this.getAllData();
     });
 
     this.levelPageSub = this.levelPageChange.subscribe((levelChange: object) => {
@@ -226,7 +226,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
             break;
           }
 
-          if (this.kpis[i].metricName === 'average_session_duration') {
+          if (this.kpis[i].metricName === 'avg_session_duration') {
             this.kpis[i].metricValue = strTimeFormat(baseObj.value);
           } else {
             this.kpis[i].metricValue = baseObj.value;
@@ -237,9 +237,9 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[indexed.component]: ${errorMsg}`);
+        console.error(`[indexed.component]: ${error}`);
 
-        this.cleanKpis();
+        this.clearKpis();
         this.kpisReqStatus = 3;
       });
   }
@@ -299,12 +299,12 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
             this.traffic = { ...this.traffic, men: hombre, women: mujer };
 
           } else if (subMetric.name === 'weekdayAndHour') {
-            this.traffic[subMetric.name] = resp.map(item => {
+            this.traffic[subMetric.name] = resp?.map(item => {
               return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
             });
           } else if (subMetric.name === 'weekday') {
-            resp = resp.sort((a, b) => (a.weekday > b.weekday ? -1 : 1));
-            this.traffic[subMetric.name] = resp.map(item => {
+            resp = resp?.sort((a, b) => (a.weekday > b.weekday ? -1 : 1));
+            this.traffic[subMetric.name] = resp?.map(item => {
               return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
             });
           } else {
@@ -386,9 +386,9 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  cleanKpis() {
+  clearKpis() {
     for (let kpi of this.kpis) {
-      if (kpi.metricName === 'average_session_duration') {
+      if (kpi.metricName === 'avg_session_duration') {
         kpi.metricValue = '00:00:00';
       } else {
         kpi.metricValue = 0;

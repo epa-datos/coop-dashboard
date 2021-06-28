@@ -34,8 +34,6 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
   private levelPageSource = new Subject<object>();
   levelPageChange$ = this.levelPageSource.asObservable();
 
-  previousRoute: string;
-
   constructor(
     private appStateService: AppStateService,
     private filtersStateService: FiltersStateService,
@@ -45,7 +43,6 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.countryID = this.appStateService.selectedCountry?.id;
     this.retailerID = this.appStateService.selectedRetailer?.id;
-    this.previousRoute = this.router.url;
     this.levelPage.latam = this.router.url.includes('latam') ? true : false;
 
     // restore init filters
@@ -63,11 +60,7 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
         this.filtersStateService.restoreFilters();
 
         this.levelPage.latam = this.router.url.includes('latam') ? true : false;
-        if (this.getPage(this.router.url) !== this.getPage(this.previousRoute)) {
-          this.getActiveView();
-        }
-
-        this.previousRoute = this.router.url;
+        this.getActiveView();
       }
     });
 
@@ -92,7 +85,7 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
     // catch a change in general filters
     this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
       // this.getActiveView();
-      this.requestInfoSource.next(manualChange);
+      this.emitRequestInfo();
     });
   }
 
@@ -108,13 +101,24 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
     this.levelPageSource.next(this.levelPage);
   }
 
-  getPage(route: string): string {
-    if (route.includes('main-region?') || route.includes('country?') || route.includes('retailer?')) {
-      return 'overview';
-    } else if (route.includes('tools?')) {
-      return 'tools';
+  emitRequestInfo() {
+    if (this.countryID || this.retailerID || this.levelPage?.latam) {
+      this.requestInfoSource.next();
+
     } else {
-      return;
+      // Since this component is reused in the 3 levels (latam, country or retailer) 
+      // when the application starts on this page (for example after refresh or a redirection) 
+      // it is necessary to have the value of the variables countryID, the retailer ID or be on the latam page 
+      // to emit the new value of the requestInfoSource observable otherwise the requests to the API 
+      // would have an undefined when referring to the countryID or retailerID variables.
+
+      // If the emission of the requestInfoSource value were done in the contry or retailer subscriptions, 
+      // repeated emissions could be generated, so it was chosen to use a setTimeOut function recursively,
+      // the tests that were made were never repeated more than once, for what so far is the most feasible option.
+
+      setTimeout(() => {
+        this.emitRequestInfo();
+      }, 500);
     }
   }
 
