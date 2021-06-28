@@ -1,3 +1,33 @@
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    column-gap: 20px;
+
+    @media screen and (min-width: 1200px) {
+        row-gap: 20px;
+    }
+
+    @media screen and (max-width: 1200px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media screen and (max-width: 1000px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pills-container {
+    width: 60%;
+
+    @media screen and (max-width: 820px) {
+        width: 100%;
+    }
+}
+
 .card-header.header-info {
     align-items: center;
     display: flex;
@@ -48,13 +78,5 @@
     .legend-label {
         color: #000000;
         font-size: 12px;
-    }
-}
-
-.pills-container {
-    width: 60%;
-
-    @media screen and (max-width: 820px) {
-        width: 100%;
     }
 }

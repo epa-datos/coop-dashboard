@@ -57,6 +57,7 @@ export class FiltersStateService {
   private sourcesSource = new Subject<any[]>();
   sources$ = this.sourcesSource.asObservable();
   sources: any[];
+  sourcesInitial: any[];
   sourcesQParams;
 
   // filtersChange
@@ -172,6 +173,7 @@ export class FiltersStateService {
     this.retailers = this.retailersInitial;
     this.period = this.periodInitial;
     this.sectors = this.sectorsInitial;
+    this.sources = this.sourcesInitial;
     this.categories = this.categoriesInitial;
     this.selectCampaigns([]);
     this.convertFiltersToQueryParams();
@@ -196,6 +198,11 @@ export class FiltersStateService {
     if (this.sectorsInitial) {
       delete this.sectorsInitial;
       delete this.sectors;
+    }
+
+    if (this.sourcesInitial) {
+      delete this.sourcesInitial;
+      delete this.sources;
     }
 
     if (this.categoriesInitial) {

@@ -44,22 +44,36 @@ export class OverviewService {
     });
   }
 
-  concatedQueryParams(isLatam?: boolean, uniqueSectorID?: number, uniqueCategoryID?: number, uniqueSourceID?: number, omitSectors?: boolean): string {
+
+  /**
+   * Concated query params
+   * @param [isLatam] to add reatilers and sources query params
+   * @param [uniqueSectorID] to use only one sectorID instead of all selected sectors in filters in query params
+   * @param [uniqueCategoryID] to use only one categoryID instead of all selected categories in filters in query params
+   * @param [uniqueSourceID] to use only one sourceID instead of all selected sources in filters in query params
+   * @param [omitSectors] to omit use sectors query params 
+   * @param [forceSourcesUse] to use sources query params (usefull when !isLatam)
+   * @returns query params 
+   */
+  concatedQueryParams(isLatam?: boolean, uniqueSectorID?: number, uniqueCategoryID?: number, uniqueSourceID?: number, omitSectors?: boolean, forceSourcesUse?: boolean): string {
     let startDate = this.filtersStateService.periodQParams.startDate;
     let endDate = this.filtersStateService.periodQParams.endDate;
     let sectors = !uniqueSectorID ? this.filtersStateService.sectorsQParams : uniqueSectorID;
     let categories = !uniqueCategoryID ? this.filtersStateService.categoriesQParams : uniqueCategoryID;
+    let sources = !uniqueSourceID ? this.filtersStateService.sourcesQParams : uniqueSourceID;
     let campaigns = this.filtersStateService.campaignsQParams;
 
     const baseQParams = `start_date=${startDate}&end_date=${endDate}${!omitSectors ? `&sectors=${sectors}` : ''}&categories=${categories}`;
-    if (!isLatam) {
+    if (!isLatam && !forceSourcesUse) {
       return `${baseQParams}${campaigns ? `&campaigns=${campaigns}` : ''}`;
-    } else {
+    } else if (!isLatam && forceSourcesUse) {
+      return `${baseQParams}&sources=${sources}${campaigns ? `&campaigns=${campaigns}` : ''}`;
+    }
+    else {
       // let countries = this.filtersStateService.countriesQParams; 
       // * NOTE: countries deprecated in LATAM endpoint, now with retailers list is enough
       let retailers = this.filtersStateService.retailersQParams;
-      let sources = !uniqueSourceID ? this.filtersStateService.sourcesQParams : uniqueSourceID;
-      return `retailers=${retailers}&sources=${sources}&${baseQParams}`;
+      return `retailers=${retailers}&${baseQParams}&sources=${sources}`;
     }
   }
 
@@ -132,7 +146,7 @@ export class OverviewService {
       return throwError('[overview.service]: not metricType provided');
     }
 
-    let queryParams = this.concatedQueryParams(false, sectorID, categoryID, sourceID);
+    let queryParams = this.concatedQueryParams(false, sectorID, categoryID, sourceID, false, true);
 
     if (this.retailerID) {
       return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/${metricType}?${queryParams}`);

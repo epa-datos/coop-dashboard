@@ -31,8 +31,7 @@ export class AcquisitionWrapperComponent implements OnInit, OnDestroy {
       name: 'campaign',
       title: 'Campaña',
       tooltip: true,
-      maxWidthTdPercentage: 15,
-      maxWidthSpan: '250px',
+      maxWidthColumn: 15
     },
     {
       name: 'users',

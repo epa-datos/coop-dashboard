@@ -53,8 +53,7 @@ export class ConversionWrapperComponent implements OnInit {
       name: 'product',
       title: 'Producto',
       tooltip: true,
-      maxWidthTdPercentage: 25,
-      maxWidthSpan: '400px',
+      maxWidthColumn: 25
     },
     {
       name: 'amount',

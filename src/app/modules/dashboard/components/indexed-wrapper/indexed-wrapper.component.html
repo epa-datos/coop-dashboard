@@ -1,25 +1,29 @@
-<!-- TABS -->
+<!-- KPIS -->
 <div class="row mt-2">
-    <div class="col-12 col-sm-6 col-lg-4 mt-lg-3" *ngFor="let stat of kpis">
-        <app-card-stat [stat]="stat" [loader]="kpisReqStatus <= 1" height="100px">
-        </app-card-stat>
+    <div class="col-12">
+        <div class="stats-container">
+            <app-card-stat *ngFor="let stat of kpis" [stat]="stat" [loader]="kpisReqStatus <= 1" [smallHeader]="true"
+                height="100px">
+            </app-card-stat>
+        </div>
         <p class="text-center text-muted mt-3 mb-0" [hidden]="kpisReqStatus !== 3">
             Error al consultar datos
         </p>
     </div>
 </div>
 
-<div class="row mt-5" *ngIf="!retailerView">
-    <div class="col-12" *ngIf="latamView">
+<!-- COUNTRIES AND RETAILERS TRAFFIC CHARTS -->
+<div class="row mt-5" *ngIf="!levelPage?.retailer">
+    <div class="col-12" *ngIf="levelPage?.latam">
         <div class="pills-container">
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                        (click)="getSessions('country');">Tráfico por Países</a>
+                        (click)="getTrafficByCountriesAndRetailers('countries');">Tráfico por Países</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                        (click)="getSessions('retailer')">Tráfico por Retailers</a>
+                        (click)="getTrafficByCountriesAndRetailers('retailers')">Tráfico por Retailers</a>
                 </li>
             </ul>
         </div>
@@ -27,35 +31,24 @@
     <div class="col-12 mt-4">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4" *ngIf="latamView">Tráfico por {{ selectedTab1 === 1 ? 'Países' : 'Retailers' }}</span>
-                <span class="h4" *ngIf="countryView">Tráfico por retailer</span>
+                <span class="h4" *ngIf="levelPage?.latam">
+                    Tráfico por {{ selectedTab1 === 1 ? 'Países' : 'Retailers' }}
+                </span>
+                <span class="h4" *ngIf="levelPage?.country">
+                    Tráfico por Retailers
+                </span>
             </div>
             <div class="card-body">
-                <app-chart-line-series [series]="latamView ? sessions : sessionsByRetailer"
-                    name="indexed-sessions-by-retailer" yTitle="Tráfico">
+                <app-chart-line-series [series]="counOrRet" name="indexed-sessions-by-retailer" yTitle="Tráfico"
+                    [status]="countOrRetReqStatus">
                 </app-chart-line-series>
             </div>
         </div>
     </div>
 </div>
 
-<!-- DEMOGRAPHICS CHARTS -->
+<!-- TRAFFIC CHARTS -->
 <div class="row mt-1">
-    <!-- <div class="col-12">
-        <div class="pills-container">
-            <ul class="nav nav-pills nav-fill">
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 1}"
-                        (click)="getDataBytrafficDemographics2('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab4 === 2}"
-                        (click)="getDataBytrafficDemographics2('sales'); chartsInitLoad = chartsInitLoad && false;">Conversiones</a>
-                </li>
-            </ul>
-        </div>
-    </div> -->
-
     <!-- devices -->
     <div class="col-12 col-md-6 mt-4">
         <div class="card">
@@ -66,26 +59,26 @@
                 <div class="row">
                     <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                         <div class="chart-legend legend-center mt-0">
-                            <div class="legend-container">
+                            <div class="legend-container" *ngIf="traffic?.desktop?.length > 0">
                                 <div class="legend-square on color-1"></div>
-                                <div class="legend-label">Desktop {{ trafficDemographics.desktop[1].value }}%</div>
+                                <div class="legend-label">Desktop {{ traffic?.desktop[1].value }}%</div>
                             </div>
                         </div>
-                        <app-chart-pictorial [data]="trafficDemographics.desktop" name="indexed-devices-desktop"
-                            [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
-                            height="280px">
+                        <app-chart-pictorial [data]="traffic?.desktop" name="indexed-devices-desktop"
+                            [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor" height="280px"
+                            [status]="trafficReqStatus[0].reqStatus">
                         </app-chart-pictorial>
                     </div>
                     <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                         <div class="chart-legend legend-center mt-0">
-                            <div class="legend-container">
+                            <div class="legend-container" *ngIf="traffic?.mobile?.length > 0">
                                 <div class="legend-square on color-2"></div>
-                                <div class="legend-label">Mobile {{ trafficDemographics.mobile[1].value }}%</div>
+                                <div class="legend-label">Mobile {{ traffic?.mobile[1].value }}%</div>
                             </div>
                         </div>
-                        <app-chart-pictorial [data]="trafficDemographics.mobile" name="indexed-devices-mobile"
+                        <app-chart-pictorial [data]="traffic?.mobile" name="indexed-devices-mobile"
                             [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
-                            height="280px">
+                            height="280px" [status]="trafficReqStatus[0].reqStatus">
                         </app-chart-pictorial>
                     </div>
                 </div>
@@ -103,32 +96,33 @@
                 <div class="row">
                     <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                         <div class="chart-legend legend-center mt-0">
-                            <div class="legend-container">
+                            <div class="legend-container" *ngIf="traffic?.men?.length > 0">
                                 <div class="legend-square on color-1"></div>
-                                <div class="legend-label">Hombres {{ trafficDemographics.men[1].value }}%</div>
+                                <div class="legend-label">Hombres {{ traffic?.men[1].value }}%</div>
                             </div>
                         </div>
-                        <app-chart-pictorial [data]="trafficDemographics.men" name="indexed-gender-man"
-                            [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man" height="280px">
+                        <app-chart-pictorial [data]="traffic?.men" name="indexed-gender-man"
+                            [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man" height="280px"
+                            [status]="trafficReqStatus[1].reqStatus">
                         </app-chart-pictorial>
                     </div>
 
                     <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                         <div class="chart-legend legend-center mt-0">
-                            <div class="legend-container">
+                            <div class="legend-container" *ngIf="traffic?.women?.length > 0">
                                 <div class="legend-square on color-2"></div>
-                                <div class="legend-label">Mujeres {{ trafficDemographics.women[1].value }}%</div>
+                                <div class="legend-label">Mujeres {{ traffic?.women[1].value }}%</div>
                             </div>
                         </div>
-                        <app-chart-pictorial [data]="trafficDemographics.women" name="indexed-gender-woman"
-                            [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman" height="280px">
+                        <app-chart-pictorial [data]="traffic?.women" name="indexed-gender-woman"
+                            [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman" height="280px"
+                            [status]="trafficReqStatus[1].reqStatus">
                         </app-chart-pictorial>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 
     <!-- age -->
     <div class="col-12 col-md-6 mt-4">
@@ -137,8 +131,8 @@
                 <span class="h4">Tráfico por Edad</span>
             </div>
             <div class="card-body">
-                <app-chart-lollipop [data]="trafficDemographics['age']" name="indexed-age" category="age" value="visits"
-                    height="280px" [status]="trafficDemoStatus[2].reqStatus">
+                <app-chart-lollipop [data]="traffic?.age" name="indexed-age" category="age" value="visits"
+                    height="280px" [status]="trafficReqStatus[2].reqStatus">
                 </app-chart-lollipop>
             </div>
         </div>
@@ -152,17 +146,16 @@
             </div>
             <div class="card-body" style="height: 328px">
                 <!-- loader -->
-                <app-chart-loader *ngIf="chartsInitLoad && trafficDemoStatus[3].reqStatus <= 1">
+                <app-chart-loader *ngIf="chartsInitLoad && trafficReqStatus[3].reqStatus <= 1">
                 </app-chart-loader>
 
                 <!-- ready -->
-                <app-chart-pyramid *ngIf="trafficDemographics['genderByAge']?.length > 0"
-                    [data]="trafficDemographics['genderByAge']" name="indexed-age-and-gender"
-                    [status]="trafficDemoStatus[3].reqStatus" height="280px">
+                <app-chart-pyramid *ngIf="traffic?.genderAndAge?.length > 0" [data]="traffic?.genderAndAge"
+                    name="indexed-age-and-gender" [status]="trafficReqStatus[3].reqStatus" height="280px">
                 </app-chart-pyramid>
 
                 <!-- empty data -->
-                <div *ngIf="trafficDemoStatus[3].reqStatus === 2 && trafficDemographics['genderByAge']?.length === 0"
+                <div *ngIf="trafficReqStatus[3].reqStatus === 2 && traffic?.genderAndAge?.length === 0"
                     class="chart-error-container text-muted">
                     <p class="text-center">
                         Sin datos disponibles <br>
@@ -171,7 +164,7 @@
                 </div>
 
                 <!-- error -->
-                <div *ngIf="chartsInitLoad && trafficDemoStatus[3].reqStatus === 3"
+                <div *ngIf="chartsInitLoad && trafficReqStatus[3].reqStatus === 3"
                     class="chart-error-container text-muted">
                     <span>Error al consultar datos</span>
                 </div>
@@ -186,7 +179,8 @@
                 <span class="h4">Tráfico por día de la semana y hora del día</span>
             </div>
             <div class="card-body">
-                <app-chart-heat-map [data]="trafficWeekdaysAndHours" name="indexed-weekday-sesions" height="100%">
+                <app-chart-heat-map [data]="traffic?.weekdayAndHour" name="indexed-weekday-sesions"
+                    categoryX="weekdayName" height="100%" [status]="trafficReqStatus[4].reqStatus">
                 </app-chart-heat-map>
             </div>
         </div>
@@ -199,8 +193,8 @@
                 <span class="h4">Tráfico por día de la semana</span>
             </div>
             <div class="card-body">
-                <app-chart-bar-horizontal [data]="trafficByDay" name="indexed-traffic-day" category='weekday'
-                    value='value' height="250px">
+                <app-chart-bar-horizontal [data]="traffic?.weekday" name="indexed-traffic-day" category="weekdayName"
+                    value='value' height="250px" [status]="trafficReqStatus[5].reqStatus">
                 </app-chart-bar-horizontal>
             </div>
         </div>
@@ -211,8 +205,8 @@
                 <span class="h4">Tráfico por hora del día</span>
             </div>
             <div class="card-body">
-                <app-chart-lollipop [data]="trafficByHour" name="indexed-traffic-hour" category="hour" value="visits"
-                    height="250px">
+                <app-chart-lollipop [data]="traffic?.hour" name="indexed-traffic-hour" category="hour" value="value"
+                    height="250px" [status]="trafficReqStatus[6].reqStatus">
                 </app-chart-lollipop>
             </div>
         </div>
@@ -227,8 +221,8 @@
                 <span class="h4">Visitantes nuevos - Visitantes recurrentes</span>
             </div>
             <div class="card-body">
-                <app-chart-pie [data]="sessionsVsRetVisitor" name="indexed-sessions-ret-visitor"
-                    legendPosition="bottom">
+                <app-chart-pie [data]="traffic?.newUsersVsCurrent" name="indexed-sessions-ret-visitor"
+                    legendPosition="bottom" [status]="trafficReqStatus[7].reqStatus">
                 </app-chart-pie>
             </div>
         </div>
@@ -236,10 +230,10 @@
     <div class="col-12 col-md-6 col-lg-8 mt-4">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Porcentaje de salidas, rebote y páginas vistas </span>
+                <span class="h4">Porcentaje de salidas y páginas vistas </span>
             </div>
             <div class="card-body">
-                <app-chart-line-series [series]="brAndPagesView" name="indexed-br-pages-view">
+                <app-chart-line-series [series]="exitsAndPagesViews" name="indexed-br-pages-view">
                 </app-chart-line-series>
             </div>
         </div>
@@ -254,9 +248,9 @@
                 <span class="h4">Modelos más visitados</span>
             </div>
             <div class="card-body">
-                <app-generic-table [displayedColumns]="mostVistitedProductsColumns" [tableData]="mostVisitedModels"
-                    [tableDataChange]="mostVisitedModels.data" errorMsg="Error al consultar modelos"
-                    emptyDataMsg="No se encontraron modelos">
+                <app-generic-table [displayedColumns]="topMostVisited.products.tableColumns"
+                    [tableData]="topMostVisited.products" [tableDataChange]="topMostVisited.products.data"
+                    errorMsg="Error al consultar modelos" emptyDataMsg="No se encontraron modelos">
                 </app-generic-table>
             </div>
         </div>
@@ -267,9 +261,9 @@
                 <span class="h4">Categorías más visitadas</span>
             </div>
             <div class="card-body">
-                <app-generic-table [displayedColumns]="mostVisitedCategoriesColumns" [tableData]="mostVisitedCategories"
-                    [tableDataChange]="mostVisitedCategories.data" errorMsg="Error al consultar categorías"
-                    emptyDataMsg="No se encontraron categorías">
+                <app-generic-table [displayedColumns]="topMostVisited.categories.tableColumns"
+                    [tableData]="topMostVisited.categories" [tableDataChange]="topMostVisited.categories.data"
+                    errorMsg="Error al consultar categorías" emptyDataMsg="No se encontraron categorías">
                 </app-generic-table>
             </div>
         </div>
@@ -299,8 +293,8 @@
                 </div>
             </div>
             <div class="card-body">
-                <app-chart-bar-horizontal [data]="categoryCoverage" name="indexed-category-coverage" value="users"
-                    [singleColorBars]="true">
+                <app-chart-bar-horizontal [data]="audiences?.affinityCategory" name="indexed-category-coverage"
+                    value="users" [singleColorBars]="true" [status]="audiencesReqStatus[0].reqStatus">
                 </app-chart-bar-horizontal>
 
                 <small class="text-muted mt-2 d-block d-sm-none">
@@ -327,8 +321,8 @@
                 </div>
             </div>
             <div class="card-body">
-                <app-chart-bar-horizontal [data]="marketSegment" name="indexed-market-segment" value="users"
-                    [singleColorBars]="true">
+                <app-chart-bar-horizontal [data]="audiences?.marketSegment" name="indexed-market-segment" value="users"
+                    [singleColorBars]="true" [status]="audiencesReqStatus[1].reqStatus">
                 </app-chart-bar-horizontal>
                 <small class="text-muted mt-2 d-block d-sm-none">
                     Para mejor visualización usar la versión de <strong>Escritorio</strong>

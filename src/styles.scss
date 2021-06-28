@@ -72,6 +72,24 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   font-size: 14px;
 }
 
+.mat-sort-header-arrow, [dir=rtl] .mat-sort-header-position-before .mat-sort-header-arrow {
+  margin: 0 0 0 3px !important;
+}
+
+table {
+  th.center-align {
+    .mat-sort-header-container {
+      justify-content: center;
+    }
+  }
+
+  th.right-align {
+    .mat-sort-header-container {
+      justify-content: flex-end;
+    }
+  }
+}
+
 // *** select ***
 .mat-select-trigger {
   background-color: #ffffff;

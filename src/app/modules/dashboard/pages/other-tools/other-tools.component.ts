@@ -15,7 +15,7 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
   countryID: number;
   retailerID: number;
 
-  selectedLevelPage = {
+  levelPage = {
     latam: false,
     country: false,
     retailer: false,
@@ -31,6 +31,11 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
   private requestInfoSource = new Subject<boolean>();
   requestInfoChange$ = this.requestInfoSource.asObservable();
 
+  private levelPageSource = new Subject<object>();
+  levelPageChange$ = this.levelPageSource.asObservable();
+
+  previousRoute: string;
+
   constructor(
     private appStateService: AppStateService,
     private filtersStateService: FiltersStateService,
@@ -40,14 +45,15 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.countryID = this.appStateService.selectedCountry?.id;
     this.retailerID = this.appStateService.selectedRetailer?.id;
-    this.selectedLevelPage.latam = this.router.url.includes('latam') ? true : false;
+    this.previousRoute = this.router.url;
+    this.levelPage.latam = this.router.url.includes('latam') ? true : false;
 
     // restore init filters
     if (this.filtersStateService.period && this.filtersStateService.categories) {
       this.filtersStateService.restoreFilters();
     }
 
-    if (this.countryID || this.retailerID || this.selectedLevelPage.latam) {
+    if (this.countryID || this.retailerID || this.levelPage.latam) {
       this.getActiveView();
     }
 
@@ -56,8 +62,12 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
       if (event instanceof NavigationEnd) {
         this.filtersStateService.restoreFilters();
 
-        this.selectedLevelPage.latam = this.router.url.includes('latam') ? true : false;
-        this.getActiveView();
+        this.levelPage.latam = this.router.url.includes('latam') ? true : false;
+        if (this.getPage(this.router.url) !== this.getPage(this.previousRoute)) {
+          this.getActiveView();
+        }
+
+        this.previousRoute = this.router.url;
       }
     });
 
@@ -81,17 +91,30 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
 
     // catch a change in general filters
     this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
+      // this.getActiveView();
       this.requestInfoSource.next(manualChange);
     });
   }
 
   getActiveView() {
     if (this.retailerID) {
-      this.selectedLevelPage = { latam: false, country: false, retailer: true };
+      this.levelPage = { latam: false, country: false, retailer: true };
     } else if (this.countryID) {
-      this.selectedLevelPage = { latam: false, country: true, retailer: false };
-    } else if (this.selectedLevelPage.latam) {
-      this.selectedLevelPage = { latam: true, country: false, retailer: false };
+      this.levelPage = { latam: false, country: true, retailer: false };
+    } else if (this.levelPage.latam) {
+      this.levelPage = { latam: true, country: false, retailer: false };
+    }
+
+    this.levelPageSource.next(this.levelPage);
+  }
+
+  getPage(route: string): string {
+    if (route.includes('main-region?') || route.includes('country?') || route.includes('retailer?')) {
+      return 'overview';
+    } else if (route.includes('tools?')) {
+      return 'tools';
+    } else {
+      return;
     }
   }
 
