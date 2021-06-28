@@ -19,19 +19,13 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                        (click)="getUsersInvOrAup('conversions-vs-users');">
+                        (click)="getUsersOrAup('conversions-vs-users');">
                         {{ 'general.usersVsSales' | translate }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                        (click)="getUsersInvOrAup('investment-vs-revenue');">
-                        {{ 'general.investmentVsRevenue' | translate }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
-                        (click)="getUsersInvOrAup('aup-vs-revenue')">
+                        (click)="getUsersOrAup('aup-vs-revenue')">
                         {{ 'general.revenueVsAup' | translate }}
                     </a>
                 </li>
@@ -50,12 +44,12 @@
             </div>
             <div class="card-body">
                 <app-chart-multiple-axes [data]="usersAndRevenue"
-                    [value1]="selectedTab1 === 1 ? 'transactions' : selectedTab1 === 2 ? 'revenue' : 'revenue'"
-                    [value2]="selectedTab1 === 1 ? 'users' : selectedTab1 === 2 ? 'investment': 'aup'"
-                    [valueName1]="selectedTab1 === 1 ? 'Conversiones' : selectedTab1 === 2 ? 'Revenue' :'Revenue'"
-                    [valueName2]="selectedTab1 === 1 ? 'Usuarios' : selectedTab1 === 2 ? 'Inversión' : 'AUP'"
-                    [valueFormat1]="selectedTab1 > 1 && 'USD'" [valueFormat2]="selectedTab1 > 1 && 'USD'"
-                    name="omnichat-traffic-vs-conversions" [status]="usersAndRevenueReqStatus">
+                    [value1]="selectedTab1 === 1 ? 'transactions' : 'revenue'"
+                    [value2]="selectedTab1 === 1 ? 'users' : 'aup'"
+                    [valueName1]="selectedTab1 === 1 ? 'Conversiones' : 'Revenue'"
+                    [valueName2]="selectedTab1 === 1 ? 'Usuarios' : 'AUP'" [valueFormat1]="selectedTab1 === 2 && 'USD'"
+                    [valueFormat2]="selectedTab1 === 2 && 'USD'" name="omnichat-traffic-vs-conversions"
+                    [status]="usersAndRevenueReqStatus">
                 </app-chart-multiple-axes>
             </div>
         </div>
@@ -70,7 +64,7 @@
             <span class="h3">Tráfico y Conversiones</span>
         </div>
     </div>
-    <div class="col-12" *ngIf="!selectedLevelPage.retailer">
+    <div class="col-12" *ngIf="!levelPage.retailer">
         <div class="pills-container">
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
@@ -85,7 +79,7 @@
         </div>
     </div>
 
-    <div class="col-12 col-lg-4 mt-4" *ngIf="selectedLevelPage.latam">
+    <div class="col-12 col-lg-4 mt-4" *ngIf="levelPage.latam">
         <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">
@@ -100,8 +94,8 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-4 mt-4" *ngIf="selectedLevelPage.latam || selectedLevelPage.country"
-        [ngClass]="{'col-lg-6' : !selectedLevelPage.latam}">
+    <div class="col-12 col-lg-4 mt-4" *ngIf="levelPage.latam || levelPage.country"
+        [ngClass]="{'col-lg-6' : !levelPage.latam}">
         <div class="card height-fluid superimposed">
             <div class="card-header">
                 <span class="h4">
@@ -120,12 +114,12 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-4 mt-4" [ngClass]="{'col-lg-6' : !selectedLevelPage.latam}">
+    <div class="col-12 col-lg-4 mt-4" [ngClass]="{'col-lg-6' : !levelPage.latam}">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4" *ngIf="!selectedLevelPage.retailer">
+                <span class="h4" *ngIf="!levelPage.retailer">
                     {{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por categoría</span>
-                <span class="h4" *ngIf="selectedLevelPage.retailer">Tráfico por categoría</span>
+                <span class="h4" *ngIf="levelPage.retailer">Tráfico por categoría</span>
             </div>
             <div class="card-body">
                 <app-chart-pie [data]="dataByLevel.category1" [status]="dataByLevelReqStatus[2].reqStatus"
@@ -135,10 +129,10 @@
         </div>
     </div>
 
-    <div class="col-12 col-lg-6 mt-4" *ngIf="selectedLevelPage.retailer">
+    <div class="col-12 col-lg-6 mt-4" *ngIf="levelPage.retailer">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4" *ngIf="selectedLevelPage.retailer">Conversiones por categoría</span>
+                <span class="h4" *ngIf="levelPage.retailer">Conversiones por categoría</span>
             </div>
             <div class="card-body">
                 <app-chart-pie [data]="dataByLevel.category2" [status]="dataByLevelReqStatus[3].reqStatus"
@@ -259,7 +253,7 @@
 
             <!-- devices -->
             <div class="col-12 col-md-6 mt-4">
-                <div class="card">
+                <div class="card height-fluid">
                     <div class="card-header">
                         <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por dispositivos</span>
                     </div>
@@ -296,7 +290,7 @@
 
             <!-- gender -->
             <div class="col-12 col-md-6 mt-4">
-                <div class="card">
+                <div class="card height-fluid">
                     <div class="card-header">
                         <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Género</span>
                     </div>
@@ -334,7 +328,7 @@
 
             <!-- age -->
             <div class="col-12 col-md-6 mt-4">
-                <div class="card">
+                <div class="card height-fluid">
                     <div class="card-header">
                         <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Edad</span>
                     </div>
@@ -349,7 +343,7 @@
 
             <!-- age and gender -->
             <div class="col-12 col-md-6 mt-4">
-                <div class="card">
+                <div class="card height-fluid">
                     <div class="card-header">
                         <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Género y Edad</span>
                     </div>
@@ -383,7 +377,7 @@
 
             <!-- weekday and hour -->
             <div class="col-12 col-lg-6 mt-4">
-                <div class="card" style="height: 100%;">
+                <div class="card height-fluid">
                     <div class="card-header">
                         <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}}
                             por día de la semana y hora del día</span>

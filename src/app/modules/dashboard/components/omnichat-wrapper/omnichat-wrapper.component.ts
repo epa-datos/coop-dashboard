@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./omnichat-wrapper.component.scss']
 })
 export class OmnichatWrapperComponent implements OnInit, OnDestroy {
-  @Input() selectedLevelPage: any;
+  @Input() levelPage: any // latam || country || retailer;
   @Input() requestInfoChange: Observable<boolean>;
 
   staticData = {
@@ -55,7 +55,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
         metricFormat: 'score',
         subMetricTitle: 'resultado',
         subMetricName: 'chat_score',
-        subMetricValue: '0/5'
+        subMetricValue: '0% - 0/5'
       },
       {
         metricTitle: 'usuarios',
@@ -213,19 +213,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     this.selectedCategories = this.filtersStateService.categories;
 
     // validate if filters are already loaded
-    if (this.filtersStateService.period &&
-      this.filtersStateService.categories) {
-
-      if (this.selectedLevelPage.latam &&
-        this.filtersStateService.countries &&
-        this.filtersStateService.retailers
-      ) {
-        this.getAllData();
-
-      } else {
-        this.getAllData();
-      }
-    }
+    this.filtersAreReady() && this.getAllData();
 
     this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
       this.getAllData();
@@ -237,12 +225,12 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     const previousCategory = this.selectedCategories?.find(category => category.id === this.selectedCategoryTab3?.id);
     const selectedCategory = previousCategory ? previousCategory : this.selectedCategories?.[0];
 
-    let selectedMetricForTab1 = this.selectedTab1 === 1 ? 'conversions-vs-users' : this.selectedTab1 === 2 ? 'investment-vs-revenue' : 'aup-vs-revenue';
+    let selectedMetricForTab1 = this.selectedTab1 === 1 ? 'conversions-vs-users' : 'aup-vs-revenue';
     let selectedMetricForTab2 = this.selectedTab2 === 1 ? 'traffic' : 'sales';
     let selectedMetricForTab3 = this.selectedTab3 === 1 ? 'traffic' : 'sales';
 
     this.getStaticDataByMetric();
-    this.getUsersInvOrAup(selectedMetricForTab1);
+    this.getUsersOrAup(selectedMetricForTab1);
     this.getDataByLevel(selectedMetricForTab2);
     this.getSalesByProduct(selectedCategory);
     this.getUsersSalesAndCR(selectedCategory);
@@ -262,7 +250,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       const reqStatusObj = this.staticDataReqStatus.find(item => item.name === metric.name);
       reqStatusObj.reqStatus = 1;
 
-      this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, metric.metricType, metric.subMtricType).subscribe(
+      this.omnichatService.getDataByMetric(this.levelPage.latam, metric.metricType, metric.subMtricType).subscribe(
         (resp: any[]) => {
           if (resp?.length < 1) {
             reqStatusObj.reqStatus = 2;
@@ -300,6 +288,8 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
           reqStatusObj.reqStatus = 2;
         },
         error => {
+          metric.name === 'kpis' ? this.cleanKpis() : this.cleanConversionsRate();
+
           const errorMsg = error?.error?.message ? error.error.message : error?.message;
           console.error(`[omnichat.component]: ${errorMsg}`);
           reqStatusObj.reqStatus = 3;
@@ -307,9 +297,9 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  getUsersInvOrAup(metricType: string) {
+  getUsersOrAup(metricType: string) {
     this.usersAndRevenueReqStatus = 1;
-    this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, metricType).subscribe(
+    this.omnichatService.getDataByMetric(this.levelPage.latam, metricType).subscribe(
       (resp: any[]) => {
         this.usersAndRevenue = resp;
         this.usersAndRevenueReqStatus = 2;
@@ -320,24 +310,24 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
         this.usersAndRevenueReqStatus = 3;
       });
 
-    this.selectedTab1 = metricType === 'conversions-vs-users' ? 1 : metricType === 'investment-vs-revenue' ? 2 : 3;
+    this.selectedTab1 = metricType === 'conversions-vs-users' ? 1 : 2;
   }
 
   getDataByLevel(metricType: string) {
     let requiredData: any[];
 
-    if (this.selectedLevelPage.latam) {
+    if (this.levelPage.latam) {
       requiredData = [
         { metricType, subMetricType: 'countries', name: 'countries' },
         { metricType, subMetricType: 'retailers', name: 'retailers' },
         { metricType, subMetricType: 'category', name: 'category1' }
       ]
-    } else if (this.selectedLevelPage.country) {
+    } else if (this.levelPage.country) {
       requiredData = [
         { metricType, subMetricType: 'retailers', name: 'retailers' },
         { metricType, subMetricType: 'category', name: 'category1' },
       ]
-    } else if (this.selectedLevelPage.retailer) {
+    } else if (this.levelPage.retailer) {
       requiredData = [
         { metricType: 'traffic', subMetricType: 'category', name: 'category1' },
         { metricType: 'sales', subMetricType: 'category', name: 'category2' }
@@ -348,7 +338,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       const reqStatusObj = this.dataByLevelReqStatus.find(item => item.name === metric.name);
       reqStatusObj.reqStatus = 1;
 
-      this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, metric.metricType, metric.subMetricType).subscribe(
+      this.omnichatService.getDataByMetric(this.levelPage.latam, metric.metricType, metric.subMetricType).subscribe(
         (resp: any[]) => {
           this.dataByLevel[metric.name] = resp.sort((a, b) => (a?.chats < b?.chats ? -1 : 1));
           reqStatusObj.reqStatus = 2;
@@ -366,7 +356,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   getSalesByProduct(selectedCategory?: any) {
     this.salesByProductReqStatus = 1;
     this.selectedCategoryTab3 = selectedCategory;
-    this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, 'conversions', 'products', selectedCategory.id).subscribe(
+    this.omnichatService.getDataByMetric(this.levelPage.latam, 'conversions', 'products', selectedCategory.id).subscribe(
       (resp: any[]) => {
         this.salesByProduct = resp.sort((a, b) => (a.quantity < b.quantity ? -1 : 1));
         this.salesByProductReqStatus = 2;
@@ -383,7 +373,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
 
   getUsersSalesAndCR(selectedCategory?: any) {
     this.usersSalesAndCRReqStatus = 1;
-    this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, 'conversion-rate', 'month', selectedCategory.id).subscribe(
+    this.omnichatService.getDataByMetric(this.levelPage.latam, 'conversion-rate', 'month', selectedCategory.id).subscribe(
       (months: any) => {
         const newMonthsObj = {};
         for (let item in months) {
@@ -407,7 +397,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
 
   getPerformanceByCategory() {
     this.performanceByCategory.reqStatus = 1;
-    this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, 'performance-by-category').subscribe(
+    this.omnichatService.getDataByMetric(this.levelPage.latam, 'performance-by-category').subscribe(
       (categories: any) => {
         this.performanceByCategory.data = categories.map(item => {
           return { ...item, conversion_rate_yoy: '-', amount_yoy: '-', revenue_yoy: '-' };
@@ -436,7 +426,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     for (let subMetric of requiredData) {
       const reqStatusObj = this.audienceReqStatus.find(item => item.name === subMetric.name);
       reqStatusObj.reqStatus = 1;
-      this.omnichatService.getDataByMetric(this.selectedLevelPage.latam, metricType, subMetric.subMetricType).subscribe(
+      this.omnichatService.getDataByMetric(this.levelPage.latam, metricType, subMetric.subMetricType).subscribe(
         (resp: any[]) => {
 
           if (subMetric.name === 'device') {
@@ -475,6 +465,46 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       this.selectedTab3 = metricType === 'traffic' ? 1 : 2;
     }
 
+  }
+
+  filtersAreReady(): boolean {
+    if (!this.levelPage ||
+      !this.filtersStateService.period ||
+      !this.filtersStateService.categories) {
+      return false;
+    }
+
+    if (this.levelPage.latam &&
+      this.filtersStateService.countries &&
+      this.filtersStateService.retailers
+    ) {
+      return true;
+
+    } else if (!this.levelPage.latam) {
+      return true;
+
+    } else {
+      return false;
+    }
+  }
+
+  cleanKpis() {
+    for (let kpi of this.staticData.kpis) {
+      if (kpi.metricName.includes('median_chat')) {
+        kpi.metricValue = '00:00:00';
+      } else if (kpi.metricName === 'chat_score') {
+        kpi.metricValue = '0';
+        kpi.subMetricValue = '0% - 0/5';
+      } else {
+        kpi.metricValue = 0;
+      }
+    }
+  }
+
+  cleanConversionsRate() {
+    for (let kpi of this.staticData.conversionRate) {
+      kpi.metricValue = 0;
+    }
   }
 
   ngOnDestroy() {
