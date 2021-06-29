@@ -179,7 +179,8 @@
         </div>
 
         <!-- category -->
-        <div class="col-12 col-sm-6 mb-4" [ngClass]="{'col-lg-3' : !isLatamSelected, 'col-lg-2' : isLatamSelected}">
+        <div [hidden]="hideCategories" class="col-12 col-sm-6 mb-4"
+            [ngClass]="{'col-lg-3' : !isLatamSelected, 'col-lg-2' : isLatamSelected}">
             <span class="mb-1 h4">{{ 'general.category' | translate }}</span>
             <mat-select formControlName="categories" multiple [placeholder]="'filters.categoryPh' | translate"
                 disableOptionCentering>

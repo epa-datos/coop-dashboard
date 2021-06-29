@@ -340,7 +340,6 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
           }
         });
 
-        console.log('bouncesExitsAndPv', this.bouncesExitsAndPv)
         this.bouncesExitsAndPvReqStatus = 2;
       },
       error => {

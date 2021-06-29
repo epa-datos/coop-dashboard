@@ -1,17 +1,20 @@
 <div class="main-container mt-4">
     <ul class="nav nav-tabs mb-4">
         <li class="nav-item">
-            <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 1}" (click)="activeTabView = 1">
+            <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 1}"
+                (click)="emitSelectedSection('indexed')">
                 <span class="h2 py-2 ml-3 mr-3">Indexado</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 2}" (click)="activeTabView = 2">
+            <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 2}"
+                (click)="emitSelectedSection('omnichat')">
                 <span class="h2 py-2 ml-3 mr-3">OmniChat</span>
             </a>
         </li>
         <li class="nav-item" *ngIf="levelPage.latam || (countryID === 9 && !retailerID) || retailerID === 29">
-            <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 3}" (click)="activeTabView = 3">
+            <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 3}"
+                (click)="emitSelectedSection('pc-selector')">
                 <span class="h2 py-2 ml-3 mr-3">PC Selector</span>
             </a>
         </li>

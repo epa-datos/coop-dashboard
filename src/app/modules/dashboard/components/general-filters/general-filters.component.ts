@@ -67,6 +67,8 @@ export class GeneralFiltersComponent implements OnInit {
   filteredCampaign: boolean; // flag to know is campaignsList is the result of a search filter
   campaignFilter: string; // filtered value in campaignsList
 
+  hideCategories: boolean;
+
   countryID: number;
   retailerID: number;
   isLatamSelected: boolean;
@@ -85,6 +87,7 @@ export class GeneralFiltersComponent implements OnInit {
   countrySub: Subscription;
   retailerSub: Subscription;
   routeSub: Subscription;
+  hideCategorySub: Subscription;
 
   prevCountries: any[];
   prevRetailers: any[];
@@ -177,6 +180,11 @@ export class GeneralFiltersComponent implements OnInit {
 
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
       this.countryID = country?.id;
+    });
+
+    // catch if categories filter have to be hide
+    this.hideCategorySub = this.filtersStateService.hideCategories$.subscribe(value => {
+      this.hideCategories = value;
     });
   }
 
@@ -809,5 +817,6 @@ export class GeneralFiltersComponent implements OnInit {
     this.routeSub?.unsubscribe();
     this.countrySub?.unsubscribe();
     this.retailerSub?.unsubscribe();
+    this.hideCategorySub?.unsubscribe();
   }
 }

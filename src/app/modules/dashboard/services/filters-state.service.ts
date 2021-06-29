@@ -42,6 +42,8 @@ export class FiltersStateService {
   // selected categories
   private categoriesSource = new Subject<any[]>();
   categories$ = this.categoriesSource.asObservable();
+  private hideCategoriesSource = new Subject<boolean>(); // only used in other-tools component
+  hideCategories$ = this.hideCategoriesSource.asObservable();
   categories: any[];
   categoriesInitial: any[];
   categoriesQParams;
@@ -141,6 +143,10 @@ export class FiltersStateService {
   selectRetailAudiences(audiences: any[]) {
     this.retailAudiencesSource.next(audiences);
     this.retailAudiences = audiences;
+  }
+
+  hideCategories(value) {
+    this.hideCategoriesSource.next(value);
   }
 
   convertFiltersToQueryParams() {
