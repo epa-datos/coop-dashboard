@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { CampaignInRetailService } from '../../services/campaign-in-retail.service';
 import { FiltersStateService } from '../../services/filters-state.service';
 
@@ -162,6 +162,7 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
         this.kpisReqStatus = 2;
       },
       error => {
+        this.clearStats(this.kpis);
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[campaign-in-retail.component]: ${errorMsg}`);
         this.kpisReqStatus = 3;
@@ -185,6 +186,7 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
         this.roasReqStatus = 2;
       },
       error => {
+        this.clearStats(this.roasBySector);
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[campaign-in-retail.component]: ${errorMsg}`);
         this.roasReqStatus = 3;
@@ -193,6 +195,16 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
 
   panelChange(panel, value) {
     this.extPanelIsOpen[panel] = value;
+  }
+
+  clearStats(stats) {
+    for (let stat of stats) {
+      stat.metricValue = 0;
+
+      if (stat.subMetricValue) {
+        stat.subMetricValue = 0;
+      }
+    }
   }
 
   ngOnDestroy() {

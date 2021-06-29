@@ -145,6 +145,7 @@ export class ConversionWrapperComponent implements OnInit {
         this.kpisReqStatus = 2;
       },
       error => {
+        this.clearKpis();
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[conversion-wrapper.component]: ${errorMsg}`);
         this.kpisReqStatus = 3;
@@ -184,6 +185,12 @@ export class ConversionWrapperComponent implements OnInit {
       });
 
     this.selectedTab = metricType === 'conversions-vs-users' ? 1 : 2
+  }
+
+  clearKpis() {
+    for (let kpi of this.kpis) {
+      kpi.metricValue = 0;
+    }
   }
 
   ngOnDestroy() {
