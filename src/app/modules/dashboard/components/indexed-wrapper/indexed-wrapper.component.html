@@ -231,10 +231,11 @@
     <div class="col-12 col-md-6 col-lg-8 mt-4">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Porcentaje de salidas y páginas vistas </span>
+                <span class="h4">Porcentaje de salidas, rebote y páginas vistas</span>
             </div>
             <div class="card-body">
-                <app-chart-line-series [series]="exitsAndPagesViews" name="indexed-br-pages-view">
+                <app-chart-line-series [series]="bouncesExitsAndPv" [status]="bouncesExitsAndPvReqStatus"
+                    name="indexed-br-pages-view">
                 </app-chart-line-series>
             </div>
         </div>

@@ -125,6 +125,10 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     { name: 'newUsersVsCurrent', reqStatus: 0 },
   ];
 
+  // bounces exits and page views
+  bouncesExitsAndPv = {};
+  bouncesExitsAndPvReqStatus;
+
   // most visited products & categories
   topMostVisited = {
     products: {
@@ -209,6 +213,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     this.getKpis();
     this.getTrafficByCountriesAndRetailers(subMetricForTraffic);
     this.getTrafficData();
+    this.getBouncesExitsAndPageviews();
     this.getMostVisited();
     this.getAudiences();
 
@@ -319,6 +324,30 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
           reqStatusObj.reqStatus = 3;
         });
     }
+  }
+
+  getBouncesExitsAndPageviews() {
+    this.bouncesExitsAndPvReqStatus = 1;
+
+    this.indexedService.getDataByMetric(this.levelPage.latam, 'bounces-exits-and-pageviews').subscribe(
+      (seriesData: any[]) => {
+
+        this.bouncesExitsAndPv = seriesData.map(serie => {
+          if (serie.name.toLowerCase().includes('porcentaje')) {
+            return { ...serie, valueFormat: '%' };
+          } else {
+            return serie;
+          }
+        });
+
+        console.log('bouncesExitsAndPv', this.bouncesExitsAndPv)
+        this.bouncesExitsAndPvReqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[indexed.component]: ${errorMsg}`);
+        this.bouncesExitsAndPvReqStatus = 3;
+      });
   }
 
   getMostVisited() {
