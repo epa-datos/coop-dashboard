@@ -4,8 +4,8 @@
         <app-card-stat [stat]="stat" [loader]="kpisReqStatus <= 1" height="100px">
         </app-card-stat>
     </div>
-    <div class="mt-lg-3" [hidden]="kpisReqStatus !== 3">
-        <p class="text-center text-muted mt-3 mb-0">
+    <div class="col-12 mt-lg-3" [hidden]="kpisReqStatus !== 3">
+        <p class="text-center text-muted mb-0">
             Error al consultar datos
         </p>
     </div>
@@ -18,11 +18,11 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                        (click)="getDataByUsersAndRevenue('users');">Usuarios - Conversiones</a>
+                        (click)="getUsersOrRevenue('conversions', 'users')">Usuarios - Conversiones</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                        (click)="getDataByUsersAndRevenue('revenue')">Revenue - AUP</a>
+                        (click)="getUsersOrRevenue('aup-vs-revenue')">Revenue - AUP</a>
                 </li>
             </ul>
         </div>
@@ -34,12 +34,13 @@
                 <span class="h4">{{ selectedTab1 === 1 ? 'Usuarios - Conversiones' : 'Revenue - AUP '}} </span>
             </div>
             <div class="card-body">
-                <app-chart-multiple-axes [data]="dataByUsersAndRevenue"
+                <app-chart-multiple-axes [data]="usersAndRevenue"
                     [value1]="selectedTab1 === 1 ? 'conversions' : 'revenue'"
-                    [value2]="selectedTab1 === 1 ? 'traffic' : 'aup'"
+                    [value2]="selectedTab1 === 1 ? 'users' : 'aup'"
                     [valueName1]="selectedTab1 === 1 ? 'Conversiones' : 'Revenue'"
                     [valueName2]="selectedTab1 === 1 ? 'Usuarios' : 'AUP'" [valueFormat1]="selectedTab1 === 2 && 'USD'"
-                    [valueFormat2]="selectedTab1 === 2 && 'USD'" name="pc-selector-traffic-vs-conversions">
+                    [valueFormat2]="selectedTab1 === 2 && 'USD'" name="pc-selector-traffic-vs-conversions"
+                    [status]="usersAndRevenueReqStatus">
                 </app-chart-multiple-axes>
             </div>
         </div>
@@ -59,40 +60,42 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                        (click)="getDataByCountriesAndRetailers('traffic')">Tráfico</a>
+                        (click)="getTrafficOrConversions('traffic')">Tráfico</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                        (click)="getDataByCountriesAndRetailers('conversions')">Conversiones</a>
+                        (click)="getTrafficOrConversions('conversions')">Conversiones</a>
                 </li>
             </ul>
         </div>
     </div>
 
     <!-- COUNTRIES -->
-    <div class="col-12 col-lg-6 mt-4" *ngIf="latamView">
+    <div class="col-12 col-lg-6 mt-4" *ngIf="levelPage.latam">
         <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por país</span>
             </div>
             <div class="card-body">
-                <app-chart-bar-horizontal [data]="countries" name="pc-selector-chats-by-country" category="country"
-                    value="chats" [singleColorBars]="true" [status]="chartsReqStatus.countries">
+                <app-chart-bar-horizontal [data]="trafficOrConversions?.countries" name="pc-selector-chats-by-country"
+                    category="country" [singleColorBars]="true" [status]="trafficOrConversionsReqStatus[0].reqStatus">
                 </app-chart-bar-horizontal>
             </div>
         </div>
     </div>
 
     <!-- RETAILERS -->
-    <div class="col-12 col-lg-6 mt-4" *ngIf="latamView || countryView" [ngClass]="{'col-lg-12' : !latamView}">
+    <div class="col-12 col-lg-6 mt-4" *ngIf="levelPage.latam || levelPage.country"
+        [ngClass]="{'col-lg-12' : !levelPage.latam}">
         <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por retailer</span>
             </div>
             <div class="card-body retailers-chart-container">
-                <app-chart-bar-horizontal [data]="retailers" name="pc-selector-chats-by-retailer" category="retailer"
-                    value="chats" [truncateLabels]="true" [singleColorBars]="true"
-                    [height]="latamView ? '900px' : '300px'">
+                <app-chart-bar-horizontal [data]="trafficOrConversions?.retailers" name="pc-selector-chats-by-retailer"
+                    category="retailer" [truncateLabels]="true" [singleColorBars]="true"
+                    [height]="trafficOrConversions?.retailers?.length > 14 ? '900px' : '350px'"
+                    [status]="trafficOrConversionsReqStatus[1].reqStatus">
                 </app-chart-bar-horizontal>
             </div>
         </div>
@@ -108,8 +111,9 @@
                             <span class="h4">Tasa de Abandono al inicio del proceso</span>
                         </div>
                         <div class="card-body">
-                            <app-chart-pie [data]="churnRateInInit" name="pc-selector-churn-rate"
-                                legendPosition="bottom" height="200px">
+                            <app-chart-pie [data]="trafficOrConversions?.exitRate" name="pc-selector-churn-rate"
+                                legendPosition="bottom" height="200px"
+                                [status]="trafficOrConversionsReqStatus[2].reqStatus">
                             </app-chart-pie>
                         </div>
                     </div>
@@ -120,8 +124,9 @@
                             <span class="h4">Tasa de Uso de Asistente Virtual</span>
                         </div>
                         <div class="card-body">
-                            <app-chart-pie [data]="useRateVirtualAssistant" name="pc-selector-use-rate"
-                                legendPosition="bottom" height="200px">
+                            <app-chart-pie [data]="trafficOrConversions?.useRate" name="pc-selector-use-rate"
+                                legendPosition="bottom" height="200px"
+                                [status]="trafficOrConversionsReqStatus[4].reqStatus">
                             </app-chart-pie>
                         </div>
                     </div>
@@ -134,7 +139,8 @@
                     <span class="h4">Tasa de Abandono por pregunta</span>
                 </div>
                 <div class="card-body">
-                    <app-chart-funnel [data]="churnRateByQuestion" name="pc-selector-churn-rate" height="515px">
+                    <app-chart-funnel [data]="trafficOrConversions?.exitRateByStep" name="pc-selector-churn-rate"
+                        height="515px" [status]="trafficOrConversionsReqStatus[3].reqStatus">
                     </app-chart-funnel>
                 </div>
             </div>
@@ -149,8 +155,9 @@
                 <span class="h4">Conversiones por producto</span>
             </div>
             <div class="card-body">
-                <app-chart-bar-horizontal [data]="conversionsByProduct" name="pc-selector-transactions-by-product"
-                    category="product" value="transactions" [singleColorBars]="true">
+                <app-chart-bar-horizontal [data]="trafficOrConversions?.products"
+                    name="pc-selector-transactions-by-product" category="product" value="transactions"
+                    [singleColorBars]="true" [status]="trafficOrConversionsReqStatus[5].reqStatus">
                 </app-chart-bar-horizontal>
                 <small class="text-muted mt-2 d-block d-sm-none">
                     Para mejor visualización usar la versión de <strong>Escritorio</strong>
@@ -166,7 +173,7 @@
                 <span class="h4">Usuarios, Conversiones y Tasa de conversión por fecha</span>
             </div>
             <div class="card-body">
-                <div class="chart-legend mt-0 mb-2">
+                <div class="chart-legend mt-0 mb-2" *ngIf="performance?.length > 0">
                     <div class="legend-container legend-right">
                         <div class="legend-square color-1"></div>
                         <div class="legend-label">Usuarios</div>
@@ -180,9 +187,9 @@
                         <div class="legend-label">Tasa de conversión</div>
                     </div>
                 </div>
-                <app-chart-bar-group [data]="usersTransactionsConversion" name="pc-selector-users-transactions-rate"
-                    height="325px" valueBar1="users" valueBar2="transactions" valueLine1="conversion_rate"
-                    valueNameBar1="Usuarios" valueNameBar2="Conversiones" valueFormatLine1="%">
+                <app-chart-bar-group [data]="performance" name="pc-selector-users-transactions-rate" height="325px"
+                    valueBar1="users" valueBar2="transactions" valueLine1="conversion_rate" valueNameBar1="Usuarios"
+                    valueNameBar2="Conversiones" valueFormatLine1="%" [status]="performanceReqStatus">
                 </app-chart-bar-group>
             </div>
         </div>
@@ -202,11 +209,11 @@
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
-                                (click)="getDataByTrafficAndSales('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
+                                (click)="getAudienceByMetric('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
-                                (click)="getDataByTrafficAndSales('conversions'); chartsInitLoad = chartsInitLoad && false;">Conversiones</a>
+                                (click)="getAudienceByMetric('conversions'); chartsInitLoad = chartsInitLoad && false;">Conversiones</a>
                         </li>
                     </ul>
                 </div>
@@ -222,27 +229,27 @@
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="demographics?.desktop?.length > 0">
+                                    <div class="legend-container" *ngIf="audience?.desktop?.length > 0">
                                         <div class="legend-square on color-4"></div>
-                                        <div class="legend-label">Desktop {{ demographics.desktop[1].value }}%
+                                        <div class="legend-label">Desktop {{ audience.desktop[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="demographics.desktop" name="pc-selectordevices-desktop"
+                                <app-chart-pictorial [data]="audience?.desktop" name="pc-selectordevices-desktop"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
-                                    height="280px">
+                                    height="280px" [status]="audienceReqStatus[0].reqStatus">
                                 </app-chart-pictorial>
                             </div>
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="demographics?.mobile?.length > 0">
+                                    <div class="legend-container" *ngIf="audience?.mobile?.length > 0">
                                         <div class="legend-square on color-5"></div>
-                                        <div class="legend-label">Mobile {{ demographics.mobile[1].value }}%</div>
+                                        <div class="legend-label">Mobile {{ audience.mobile[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="demographics.mobile" name="pc-selectordevices-mobile"
+                                <app-chart-pictorial [data]="audience.mobile" name="pc-selectordevices-mobile"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
-                                    height="280px">
+                                    height="280px" [status]="audienceReqStatus[0].reqStatus">
                                 </app-chart-pictorial>
                             </div>
                         </div>
@@ -260,27 +267,27 @@
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="demographics?.men?.length > 0">
+                                    <div class="legend-container" *ngIf="audience?.men?.length > 0">
                                         <div class="legend-square on color-4"></div>
-                                        <div class="legend-label">Hombres {{ demographics.men[1].value }}%</div>
+                                        <div class="legend-label">Hombres {{ audience.men[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="demographics.men" name="pc-selectorgender-man"
+                                <app-chart-pictorial [data]="audience.men" name="pc-selectorgender-man"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man"
-                                    height="280px">
+                                    height="280px" [status]="audienceReqStatus[1].reqStatus">
                                 </app-chart-pictorial>
                             </div>
 
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="demographics?.women?.length > 0">
+                                    <div class="legend-container" *ngIf="audience?.women?.length > 0">
                                         <div class="legend-square on color-5"></div>
-                                        <div class="legend-label">Mujeres {{ demographics.women[1].value }}%</div>
+                                        <div class="legend-label">Mujeres {{ audience.women[1].value }}%</div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="demographics.women" name="pc-selectorgender-woman"
+                                <app-chart-pictorial [data]="audience.women" name="pc-selectorgender-woman"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman"
-                                    height="280px">
+                                    height="280px" [status]="audienceReqStatus[1].reqStatus">
                                 </app-chart-pictorial>
                             </div>
                         </div>
@@ -295,9 +302,9 @@
                         <span class="h4">{{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Edad</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-lollipop [data]="demographics['age']" name="pc-selectorage" category="age"
+                        <app-chart-lollipop [data]="audience?.age" name="pc-selectorage" category="age"
                             [value]="selectedTab3 === 1 ? 'visits' : 'sales'" height="280px"
-                            [status]="trafficSalesReqStatus[2].reqStatus">
+                            [status]="audienceReqStatus[2].reqStatus">
                         </app-chart-lollipop>
                     </div>
                 </div>
@@ -311,17 +318,16 @@
                     </div>
                     <div class="card-body" style="height: 328px">
                         <!-- loader -->
-                        <app-chart-loader *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus <= 1">
+                        <app-chart-loader *ngIf="chartsInitLoad && audienceReqStatus[3].reqStatus <= 1">
                         </app-chart-loader>
 
                         <!-- ready -->
-                        <app-chart-pyramid *ngIf="demographics['genderByAge']?.length > 0"
-                            [data]="demographics['genderByAge']" name="pc-selectorage-and-gender"
-                            [status]="trafficSalesReqStatus[3].reqStatus" height="280px">
+                        <app-chart-pyramid *ngIf="audience?.genderByAge?.length > 0" [data]="audience?.genderByAge"
+                            name="pc-selectorage-and-gender" [status]="audienceReqStatus[3].reqStatus" height="280px">
                         </app-chart-pyramid>
 
                         <!-- empty data -->
-                        <div *ngIf="trafficSalesReqStatus[3].reqStatus === 2 && demographics['genderByAge']?.length === 0"
+                        <div *ngIf="audienceReqStatus[3].reqStatus === 2 && audience?.genderByAge?.length === 0"
                             class="chart-error-container text-muted">
                             <p class="text-center">
                                 Sin datos disponibles <br>
@@ -330,7 +336,7 @@
                         </div>
 
                         <!-- error -->
-                        <div *ngIf="chartsInitLoad && trafficSalesReqStatus[3].reqStatus === 3"
+                        <div *ngIf="chartsInitLoad && audienceReqStatus[3].reqStatus === 3"
                             class="chart-error-container text-muted">
                             <span>Error al consultar datos</span>
                         </div>
@@ -346,7 +352,8 @@
                             por día de la semana y hora del día</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-heat-map [data]="trafficHeatmapData" name="pc-selectorweekday-sesions" height="100%">
+                        <app-chart-heat-map [data]="audience?.weekdayAndHour" name="pc-selectorweekday-sesions"
+                            height="100%" [status]="audienceReqStatus[5].reqStatus">
                         </app-chart-heat-map>
                     </div>
                 </div>
@@ -360,8 +367,8 @@
                             por día de la semana</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-bar-horizontal [data]="weekdays" name="pc-selectortraffic-day" category='weekday'
-                            value='value' height="250px">
+                        <app-chart-bar-horizontal [data]="audience?.weekday" name="pc-selectortraffic-day"
+                            category='weekday' value='value' height="250px" [status]="audienceReqStatus[4].reqStatus">
                         </app-chart-bar-horizontal>
                     </div>
                 </div>
@@ -373,8 +380,8 @@
                             por hora del día</span>
                     </div>
                     <div class="card-body">
-                        <app-chart-lollipop [data]="trafficByHour" name="pc-selectortraffic-hour" category="hour"
-                            value="visits" height="250px">
+                        <app-chart-lollipop [data]="audience?.hour" name="pc-selectortraffic-hour" category="hour"
+                            value="visits" height="250px" [status]="audienceReqStatus[6].reqStatus">
                         </app-chart-lollipop>
                     </div>
                 </div>

@@ -1,605 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { AppStateService } from 'src/app/services/app-state.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, Subscription } from 'rxjs';
+import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
+import { convertMonthToString, convertWeekdayToString } from 'src/app/tools/functions/data-convert';
+import { strTimeFormat } from 'src/app/tools/functions/time-format';
+import { FiltersStateService } from '../../services/filters-state.service';
+import { PcSelectorService } from '../../services/pc-selector.service';
 
 @Component({
   selector: 'app-pc-selector-wrapper',
   templateUrl: './pc-selector-wrapper.component.html',
   styleUrls: ['./pc-selector-wrapper.component.scss']
 })
-export class PcSelectorWrapperComponent implements OnInit {
+export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
+  @Input() levelPage: any // latam || country || retailer;
+  @Input() requestInfoChange: Observable<boolean>;
 
-  // kpis
-  kpis: any[] = [
-    {
-      metricTitle: 'usuarios',
-      metricName: 'users',
-      metricValue: 128,
-      metricFormat: 'integer',
-      icon: 'fas fa-users',
-      iconBg: '#172b4d'
-    },
-    {
-      metricTitle: 'usuarios nuevos',
-      metricName: 'new_users',
-      metricValue: 127,
-      metricFormat: 'integer',
-      icon: 'fas fa-user-plus',
-      iconBg: '#2f9998'
-    },
-    {
-      metricTitle: 'duración media de la sesión',
-      metricName: 'avg_sessions_duration',
-      metricValue: '00:01:05',
-      icon: 'fas fa-user-clock',
-      iconBg: '#a77dcc'
-    },
-    {
-      metricTitle: 'conversiones',
-      metricName: 'transactions',
-      metricValue: 2,
-      metricFormat: 'integer',
-      icon: 'fas fa-shopping-cart',
-      iconBg: '#f89934'
-    },
-    {
-      metricTitle: 'conversion rate',
-      metricName: 'conversion_rate',
-      metricValue: 2.35,
-      metricFormat: 'percentage',
-      icon: 'fas fa-percentage',
-      iconBg: '#fbc001'
-    },
-    {
-      metricTitle: 'revenue',
-      metricName: 'revenue',
-      metricValue: 16799.4,
-      metricFormat: 'decimals',
-      metricSymbol: 'USD',
-      icon: 'fas fa-hand-holding-usd',
-      iconBg: '#2B96D5'
-    }
-  ];
-
-  // Usuarios vs Conversiones
-  usersVsConversions = [{
-    date: '2021-06-02',
-    traffic: 8,
-    conversions: 0,
-  }, {
-    date: '2021-06-03',
-    traffic: 12,
-    conversions: 1,
-  }, {
-    date: '2021-06-04',
-    traffic: 15,
-    conversions: 0,
-  }, {
-    date: '2021-06-05',
-    traffic: 11,
-    conversions: 0,
-  }, {
-    date: '2021-06-06',
-    traffic: 16,
-    conversions: 0,
-  }, {
-    date: '2021-06-07',
-    traffic: 21,
-    conversions: 1,
-  }, {
-    date: '2021-06-08',
-    traffic: 19,
-    conversions: 0,
-  }, {
-    date: '2021-06-09',
-    traffic: 18,
-    conversions: 0,
-  }, {
-    date: '2021-06-10',
-    traffic: 17,
-    conversions: 1,
-  }, {
-    date: '2021-06-11',
-    traffic: 15,
-    conversions: 0,
-  }, {
-    date: '2021-06-12',
-    traffic: 4,
-    conversions: 0,
-  }, {
-    date: '2021-06-13',
-    traffic: 16,
-    conversions: 0,
-  }, {
-    date: '2021-06-14',
-    traffic: 21,
-    conversions: 1,
-  }, {
-    date: '2021-06-15',
-    traffic: 19,
-    conversions: 0,
-  }, {
-    date: '2021-06-16',
-    traffic: 15,
-    conversions: 0,
-  }];
-
-  // Revenue vs AUP
-  aupVsRevenue = [{
-    date: '2021-06-02',
-    traffic: 0,
-    conversions: 0,
-  }, {
-    date: '2021-06-03',
-    traffic: 0,
-    conversions: 0,
-  }, {
-    date: '2021-06-04',
-    traffic: 0,
-    conversions: 0,
-  }, {
-    date: '2021-06-05',
-    traffic: 0,
-    conversions: 0,
-  }, {
-    date: '2021-06-06',
-    traffic: 0,
-    conversions: 0,
-  }, {
-    date: '2021-06-07',
-    traffic: 0,
-    conversions: 0,
-  }, {
-    date: '2021-06-08',
-    traffic: 0,
-    conversions: 0,
-  }, {
-    date: '2021-06-09',
-    traffic: 0,
-    conversions: 0,
-  }, {
-    date: '2021-06-10',
-    revenue: 0,
-    aup: 0,
-  }, {
-    date: '2021-06-11',
-    revenue: 8399.7,
-    aup: 8399.7,
-  }, {
-    date: '2021-06-12',
-    revenue: 0,
-    aup: 0,
-  }, {
-    date: '2021-06-13',
-    revenue: 0,
-    aup: 0,
-  }, {
-    date: '2021-06-14',
-    revenue: 0,
-    aup: 0,
-  }, {
-    date: '2021-06-15',
-    revenue: 8399.7,
-    aup: 8399.7,
-  }, {
-    date: '2021-06-16',
-    revenue: 0,
-    aup: 0,
-  }];
-
-  // Tráfico por país
-  trafficByCountry = [
-    { country: 'Panama', chats: 0 },
-    { country: 'Honduras', chats: 0 },
-    { country: 'Guatemala', chats: 0 },
-    { country: 'El Salvador', chats: 0 },
-    { country: 'Costa Rica', chats: 0 },
-    { country: 'Brasil', chats: 0 },
-    { country: 'Colombia', chats: 0 },
-    { country: 'Argentina', chats: 0 },
-    { country: 'Peru', chats: 0 },
-    { country: 'Chile', chats: 0 },
-    { country: 'Mexico', chats: 128 }
-  ];
-
-  // Conversiones por país
-  conversionsByCountry = [
-    { country: 'Panama', chats: 0 },
-    { country: 'Honduras', chats: 0 },
-    { country: 'Guatemala', chats: 0 },
-    { country: 'El Salvador', chats: 0 },
-    { country: 'Costa Rica', chats: 0 },
-    { country: 'Brasil', chats: 0 },
-    { country: 'Colombia', chats: 0 },
-    { country: 'Argentina', chats: 0 },
-    { country: 'Peru', chats: 0 },
-    { country: 'Chile', chats: 0 },
-    { country: 'Mexico', chats: 2 },
-  ];
-
-  // Tráfico por retailer
-  trafficByRetailer = [
-    {
-      "retailer": "SV - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "PE - Ripley",
-      "chats": 0
-    },
-    {
-      "retailer": "PE - Plaza Vea",
-      "chats": 0
-    },
-    {
-      "retailer": "PE - La Curaçao",
-      "chats": 0
-    },
-    {
-      "retailer": "PE - Hiraoka",
-      "chats": 0
-    },
-    {
-      "retailer": "PA - Rodelag",
-      "chats": 0
-    },
-    {
-      "retailer": "PA - Panafoto",
-      "chats": 0
-    },
-    {
-      "retailer": "PA - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Radio Shack",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Office Max",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Liverpool",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - El Palacio de Hierro",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Dusof",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Cyberpuerta",
-      "chats": 0
-    },
-    {
-      "retailer": "HN - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "HN - Jetstereo",
-      "chats": 0
-    },
-    {
-      "retailer": "GT - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "CR - Unimart",
-      "chats": 0
-    },
-    {
-      "retailer": "CR - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "CO - Teknopolis",
-      "chats": 0
-    },
-    {
-      "retailer": "CO - Panamericana",
-      "chats": 0
-    },
-    {
-      "retailer": "CO - Éxito",
-      "chats": 0
-    },
-    {
-      "retailer": "CO - Alkosto",
-      "chats": 0
-    },
-    {
-      "retailer": "CL - Ripley",
-      "chats": 0
-    },
-    {
-      "retailer": "CL - PC Factory",
-      "chats": 0
-    },
-    {
-      "retailer": "CL - Lider",
-      "chats": 0
-    },
-    {
-      "retailer": "CL - AbcDin",
-      "chats": 0
-    },
-    {
-      "retailer": "BR - Portinfo",
-      "chats": 0
-    },
-    {
-      "retailer": "BR - Kalunga",
-      "chats": 0
-    },
-    {
-      "retailer": "BR - Casas Bahia",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Walmart",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Musimundo",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Garbarino",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Fravega",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Compumundo",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Carrefour",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Pedidos",
-      "chats": 128
-    },
-  ]
-
-  // Tasa de Abandono al inicio del proceso
-  churnRateInInit = [
-    { category: 'Abandona', value: 1 },
-    { category: 'No abandona', value: 99 }
-  ];
-
-  // Tasa de Uso de Asistente Virtual
-  useRateVirtualAssistant = [
-    { category: 'Utiliza', value: 10 },
-    { category: 'No utiliza', value: 118 }
-  ];
-
-  // Tasa de Abandono por pregunta
-  churnRateByQuestion = [{
-    'name': 'Pregunta 2',
-    'value': 14
-  }, {
-    'name': 'Pregunta 3',
-    'value': 14
-  }, {
-    'name': 'Pregunta 5',
-    'value': 12
-  }, {
-    'name': 'Pregunta 9',
-    'value': 11
-  }, {
-    'name': 'Termina el proceso',
-    'value': 9
-  }];
-
-  // Conversiones por retailer
-  conversionsByRetailer = [
-    {
-      "retailer": "SV - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "PE - Ripley",
-      "chats": 0
-    },
-    {
-      "retailer": "PE - Plaza Vea",
-      "chats": 0
-    },
-    {
-      "retailer": "PE - La Curaçao",
-      "chats": 0
-    },
-    {
-      "retailer": "PE - Hiraoka",
-      "chats": 0
-    },
-    {
-      "retailer": "PA - Rodelag",
-      "chats": 0
-    },
-    {
-      "retailer": "PA - Panafoto",
-      "chats": 0
-    },
-    {
-      "retailer": "PA - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Radio Shack",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Office Max",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Liverpool",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - El Palacio de Hierro",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Dusof",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Cyberpuerta",
-      "chats": 0
-    },
-    {
-      "retailer": "HN - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "HN - Jetstereo",
-      "chats": 0
-    },
-    {
-      "retailer": "GT - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "CR - Unimart",
-      "chats": 0
-    },
-    {
-      "retailer": "CR - Office Depot",
-      "chats": 0
-    },
-    {
-      "retailer": "CO - Teknopolis",
-      "chats": 0
-    },
-    {
-      "retailer": "CO - Panamericana",
-      "chats": 0
-    },
-    {
-      "retailer": "CO - Éxito",
-      "chats": 0
-    },
-    {
-      "retailer": "CO - Alkosto",
-      "chats": 0
-    },
-    {
-      "retailer": "CL - Ripley",
-      "chats": 0
-    },
-    {
-      "retailer": "CL - PC Factory",
-      "chats": 0
-    },
-    {
-      "retailer": "CL - Lider",
-      "chats": 0
-    },
-    {
-      "retailer": "CL - AbcDin",
-      "chats": 0
-    },
-    {
-      "retailer": "BR - Portinfo",
-      "chats": 0
-    },
-    {
-      "retailer": "BR - Kalunga",
-      "chats": 0
-    },
-    {
-      "retailer": "BR - Casas Bahia",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Walmart",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Musimundo",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Garbarino",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Fravega",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Compumundo",
-      "chats": 0
-    },
-    {
-      "retailer": "AR - Carrefour",
-      "chats": 0
-    },
-    {
-      "retailer": "MX - Pedidos",
-      "chats": 2
-    },
-  ];
-
-  // Conversiones por producto
-  conversionsByProduct = [
-    { product: 'LAPTOP HP 15 EF1007LA AMD RYZEN 3 12 GB SSD 256 GB', transactions: 0 },
-    { product: 'LAPTOP HP 240 G7 INTEL CORE I3 RAM 4 GB DD 500 GB WINDOWS 10 HOME', transactions: 0 },
-    { product: 'LAPTOP HP 14-CK2097LA PROCESADOR INTEL CELERON RAM 4 GB DD 1 TB', transactions: 0 },
-    { product: 'LAPTOP HP CHROMEBOOK 11A G8 EE APU AMD A4 RAM 4 GB DD 32 GB EMMC', transactions: 0 },
-    { product: 'LAPTOP HP 240 G7 153J8LT INTEL CORE I5 RAM 8 GB DD 1 TB', transactions: 0 },
-    { product: 'LAPTOP HP 240 G7-151F5LT PROCESADOR INTEL CORE I5 RAM 8 GB DD 1 TB WINDOWS 10 HOME', transactions: 0 },
-    { product: 'LAPTOP HP 14 DK1010LA AMD ATHLON SILVER 3050U 4 GB 500 GB', transactions: 0 },
-    { product: 'LAPTOP HP 245 G7 AMD RYZEN 3 8 GB 1 TB', transactions: 0 },
-    { product: 'LAPTOP HP 445 G7 AMD RYZEN 7 RAM 8 GB DD 512 GB SSD', transactions: 0 },
-    { product: 'LAPTOP HP NOTEBOOK 250 G7 PROCESADOR INTEL CORE I3 RAM 8 GB DD 1 TB', transactions: 0 },
-    { product: 'LAPTOP HP PROBOOK X360 435 G7 PROCESADOR AMD RYZEN 5 RAM 8 GB DD SSD 256 GB', transactions: 0 },
-    { product: 'LAPTOP HP 240 G7 INTEL CELERON N4020 4 GB 500 GB', transactions: 2 },
-  ]
-
-  // Usuarios, Conversiones y Tasa de conversión por fecha
-  usersTransactionsConversion: any = {
-    'Mar 21': {
-      'users': 0,
-      'transactions': 0,
-      'conversion_rate': 0
-    },
-    'Abr 21': {
-      'users': 0,
-      'transactions': 0,
-      'conversion_rate': 0
-    },
-    'May 21': {
-      'users': 0,
-      'transactions': 0,
-      'conversion_rate': 0
-    },
-    'Jun 21': {
-      'users': 85,
-      'transactions': 2,
-      'conversion_rate': 2.35
-    }
-  }
 
   // Tráfico - Demográficos
   trafficDemographic = {
@@ -1626,19 +1042,6 @@ export class PcSelectorWrapperComponent implements OnInit {
     { weekday: 'Lun', value: 1 },
   ];
 
-  kpisReqStatus = 2;
-
-
-  countrySub: Subscription;
-  retailerSub: Subscription;
-  routeSub: Subscription;
-
-  countryID: number;
-  retailerID: number;
-
-  latamView: boolean;
-  countryView: boolean;
-  retailerView: boolean;
 
   chartsReqStatus = {
     countries: 2,
@@ -1653,9 +1056,89 @@ export class PcSelectorWrapperComponent implements OnInit {
     { name: 'gender-and-age', reqStatus: 2 }
   ];
 
-  dataByUsersAndRevenue: any[] = this.usersVsConversions;
-  countries: any[] = this.trafficByCountry;
-  retailers: any[] = this.trafficByRetailer;
+
+  // kpis
+  kpis: any[] = [
+    {
+      metricTitle: 'usuarios',
+      metricName: 'users',
+      metricValue: 0,
+      metricFormat: 'integer',
+      icon: 'fas fa-users',
+      iconBg: '#172b4d'
+    },
+    {
+      metricTitle: 'usuarios nuevos',
+      metricName: 'new_users',
+      metricValue: 0,
+      metricFormat: 'integer',
+      icon: 'fas fa-user-plus',
+      iconBg: '#2f9998'
+    },
+    {
+      metricTitle: 'duración media de la sesión',
+      metricName: 'avg_session_duration',
+      metricValue: '00:00:00',
+      icon: 'fas fa-user-clock',
+      iconBg: '#a77dcc'
+    },
+    {
+      metricTitle: 'conversiones',
+      metricName: 'conversions',
+      metricValue: 0,
+      metricFormat: 'integer',
+      icon: 'fas fa-shopping-cart',
+      iconBg: '#f89934'
+    },
+    {
+      metricTitle: 'conversion rate',
+      metricName: 'conversion_rate',
+      metricValue: 0,
+      metricFormat: 'percentage',
+      icon: 'fas fa-percentage',
+      iconBg: '#fbc001'
+    },
+    {
+      metricTitle: 'revenue',
+      metricName: 'revenue',
+      metricValue: 0,
+      metricFormat: 'decimals',
+      metricSymbol: 'USD',
+      icon: 'fas fa-hand-holding-usd',
+      iconBg: '#2B96D5'
+    }
+  ];
+  kpisReqStatus: number = 0;
+
+  usersAndRevenue: any[] = [];
+  usersAndRevenueReqStatus: number = 0;
+
+  trafficOrConversions = {};
+  trafficOrConversionsReqStatus = [
+    { name: 'countries', reqStatus: 0 },
+    { name: 'retailers', reqStatus: 0 },
+    { name: 'exitRate', reqStatus: 0 },
+    { name: 'exitRateByStep', reqStatus: 0 },
+    { name: 'useRate', reqStatus: 0 },
+    { name: 'products', reqStatus: 0 }
+  ];
+
+  performance: {};
+  performanceReqStatus: number = 0;
+
+
+  audience = {};
+  audienceReqStatus = [
+    { name: 'device', reqStatus: 0 },
+    { name: 'gender', reqStatus: 0 },
+    { name: 'age', reqStatus: 0 },
+    { name: 'genderAndAge', reqStatus: 0 },
+    { name: 'weekday', reqStatus: 0 },
+    { name: 'weekdayAndHour', reqStatus: 0 },
+    { name: 'hour', reqStatus: 0 },
+  ]
+
+
   demographics: any = this.trafficDemographic;
   weekdays: any[] = this.trafficByDay;
 
@@ -1664,96 +1147,258 @@ export class PcSelectorWrapperComponent implements OnInit {
   selectedTab3: number = 1;
   selectedTab4: number = 1;
 
+  chartsInitLoad: boolean = true;
+
+  requestInfoSub: Subscription;
+
   constructor(
-    private appStateService: AppStateService,
-    private router: Router,
+    private filtersStateService: FiltersStateService,
+    private pcSelectorService: PcSelectorService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
-    this.countryID = this.appStateService.selectedCountry?.id;
-    this.retailerID = this.appStateService.selectedRetailer?.id;
-    this.latamView = this.router.url.includes('latam') ? true : false;
+    // validate if filters are already loaded
+    this.filtersAreReady() && this.getAllData();
 
-    if (this.countryID || this.retailerID || this.latamView) {
-      this.getActiveView();
-    }
+    this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
+      this.filtersAreReady() && this.getAllData();
+    });
+  }
 
-    this.routeSub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    )
-      .subscribe(event => {
-        if (event instanceof NavigationEnd)
-          this.latamView = this.router.url.includes('latam') ? true : false;
-        this.getActiveView();
+  getAllData() {
+    console.log('getAllData')
+
+    let metricTab1 = this.selectedTab1 === 1 ? 'conversions' : 'aup-vs-revenue';
+    let subMetricTab1 = this.selectedTab1 === 1 && 'users';
+    let metricTab2 = this.selectedTab2 === 1 ? 'traffic' : 'conversions';
+    let metricTab3 = this.selectedTab3 === 1 ? 'traffic' : 'conversions';
+
+    this.getKpis();
+    this.getUsersOrRevenue(metricTab1, subMetricTab1);
+    this.getTrafficOrConversions(metricTab2);
+    this.getPerformance();
+    this.getAudienceByMetric(metricTab3);
+
+    this.chartsInitLoad = true;
+  }
+
+  getKpis() {
+    this.kpisReqStatus = 1;
+    this.pcSelectorService.getDataByMetric(this.levelPage.latam, 'kpis').subscribe(
+      (resp: any[]) => {
+        for (let i = 0; i < this.kpis.length; i++) {
+          const baseObj = resp.find(item => item.string === this.kpis[i].metricName);
+
+          if (!baseObj) {
+            continue;
+          }
+
+          if (this.kpis[i].metricName === 'avg_session_duration') {
+            this.kpis[i].metricValue = strTimeFormat(baseObj.value);
+          } else {
+            this.kpis[i].metricValue = baseObj.value;
+          }
+        }
+        this.kpisReqStatus = 2;
+      },
+      error => {
+        this.clearKpis();
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[pc-selector.component]: ${errorMsg}`);
+        this.kpisReqStatus = 3;
       });
-
-    this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
-      this.retailerID = retailer?.id;
-    });
-
-    this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
-      this.countryID = country?.id;
-    });
   }
 
-  getActiveView() {
-    if (this.retailerID) {
-      this.retailerView = true;
-      this.countryView = false;
-      this.latamView = false;
-    } else if (this.countryID) {
-      this.countryView = true;
-      this.retailerView = false;
-      this.latamView = false;
-    } else if (this.latamView) {
-      this.countryView = false;
-      this.retailerView = false;
-    }
+  getUsersOrRevenue(metricType: string, subMetricType?: string) {
+    this.selectedTab1 = metricType === 'conversions' ? 1 : 2;
 
-    if (this.countryView) {
-      this.retailers = this.retailers.filter(item => item.retailer.includes('MX'));
-    } else {
-      this.retailers = this.trafficByRetailer;
-    }
+    this.usersAndRevenueReqStatus = 1;
+    this.pcSelectorService.getDataByMetric(this.levelPage.latam, metricType, subMetricType).subscribe(
+      (resp: any[]) => {
+        this.usersAndRevenue = resp;
+        console.log('new resp', resp)
+        this.usersAndRevenueReqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[pc-selector.component]: ${errorMsg}`);
+        this.usersAndRevenueReqStatus = 3;
+      });
   }
 
-  getDataByUsersAndRevenue(metricType: string) {
-    this.selectedTab1 = metricType === 'users' ? 1 : 2;
-
-    if (metricType === 'users') {
-      this.dataByUsersAndRevenue = this.usersVsConversions;
-    } else if (metricType === 'revenue') {
-      this.dataByUsersAndRevenue = this.aupVsRevenue;
-    }
-  }
-
-  getDataByCountriesAndRetailers(metricType: string) {
+  getTrafficOrConversions(metricType: string) {
     this.selectedTab2 = metricType === 'traffic' ? 1 : 2;
 
+    let requiredData: any[] = [];
+
+    // required data by metricType
     if (metricType === 'traffic') {
-      this.countries = this.trafficByCountry;
-      this.retailers = this.trafficByRetailer
+      requiredData.push(
+        { metricType: 'funnel', subMetricType: 'exit-rate', name: 'exitRate' },
+        { metricType: 'funnel', subMetricType: 'exit-rate-by-step', name: 'exitRateByStep' },
+        { metricType: 'funnel', subMetricType: 'use-rate', name: 'useRate' }
+      );
     } else if (metricType === 'conversions') {
-      this.countries = this.conversionsByCountry;
-      this.retailers = this.conversionsByRetailer;
+      requiredData.push(
+        { metricType: 'conversions', subMetricType: 'products', name: 'products' }
+      );
     }
 
-    console.log('retailers', this.retailers)
+    // required data by levelPage
+    if (this.levelPage.latam) {
+      requiredData.push(
+        { metricType, subMetricType: 'countries', name: 'countries' },
+        { metricType, subMetricType: 'retailers', name: 'retailers' }
+      );
+    } else if (this.levelPage.country) {
+      requiredData.push(
+        { metricType, subMetricType: 'retailers', name: 'retailers' }
+      );
+    }
 
-    if (this.countryView) {
-      this.retailers = this.retailers.filter(item => item.retailer.includes('MX'));
+    for (let metric of requiredData) {
+      const reqStatusObj = this.trafficOrConversionsReqStatus.find(item => item.name === metric.name);
+      reqStatusObj.reqStatus = 1;
+
+      this.pcSelectorService.getDataByMetric(this.levelPage.latam, metric.metricType, metric.subMetricType).subscribe(
+        (resp: any[]) => {
+          if (metric.metricType === 'traffic' && (metric.name === 'countries' || metric.name === 'retailers')) {
+            this.trafficOrConversions[metric.name] = resp.sort((a, b) => (a?.chats < b?.chats ? -1 : 1));
+
+          } else if (metric.metricType === 'sales' && (metric.name === 'countries' || metric.name === 'retailers')) {
+            this.trafficOrConversions[metric.name] = resp.sort((a, b) => (a?.value < b?.value ? -1 : 1));
+
+          } else {
+            this.trafficOrConversions[metric.name] = resp;
+          }
+
+          console.log('trafficOrConversions', this.trafficOrConversions)
+
+          reqStatusObj.reqStatus = 2;
+        },
+        error => {
+          this.trafficOrConversions[metric.name] = [];
+          const errorMsg = error?.error?.message ? error.error.message : error?.message;
+          console.error(`[pc-selector.component]: ${errorMsg}`);
+          reqStatusObj.reqStatus = 3;
+        });
     }
   }
 
-  getDataByTrafficAndSales(metricType: string) {
+  getPerformance() {
+    this.performanceReqStatus = 1;
+    this.pcSelectorService.getDataByMetric(this.levelPage.latam, 'performance').subscribe(
+      (months: any) => {
+        const newMonthsObj = {};
+        for (let item in months) {
+          const date = item.split('-');
+          const dateStrFormat = `${convertMonthToString(date[1])} ${date[0]}`;
+
+          const obj = months[item];
+          newMonthsObj[dateStrFormat] = obj;
+        }
+
+        this.performance = newMonthsObj;
+        this.performanceReqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[pc-selector.component]: ${errorMsg}`);
+        this.performanceReqStatus = 3;
+      });
+  }
+
+  getAudienceByMetric(metricType: string) {
     this.selectedTab3 = metricType === 'traffic' ? 1 : 2;
 
+    const requiredData = [
+      { subMetricType: 'device', name: 'device' },
+      { subMetricType: 'gender', name: 'gender' },
+      { subMetricType: 'age', name: 'age' },
+      { subMetricType: 'gender-and-age', name: 'genderAndAge' },
+      { subMetricType: 'weekday', name: 'weekday' },
+    ];
+
     if (metricType === 'traffic') {
-      this.demographics = this.trafficDemographic;
-      this.weekdays = this.trafficByDay;
-    } else if (metricType === 'conversions') {
-      this.demographics = this.conversionsDemographic;
-      this.weekdays = this.conversionsByDay;
+      requiredData.push(
+        { subMetricType: 'weekday-and-hour', name: 'weekdayAndHour' },
+        { subMetricType: 'hour', name: 'hour' }
+      );
     }
+
+    for (let subMetric of requiredData) {
+      const reqStatusObj = this.audienceReqStatus.find(item => item.name === subMetric.name);
+      reqStatusObj.reqStatus = 1;
+      this.pcSelectorService.getDataByMetric(this.levelPage.latam, metricType, subMetric.subMetricType).subscribe(
+        (resp: any[]) => {
+
+          if (subMetric.name === 'device') {
+            const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp);
+            this.audience = { ...this.audience, desktop, mobile };
+
+          } else if (subMetric.name === 'gender') {
+            const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp);
+
+            hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
+            mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
+
+            this.audience = { ...this.audience, men: hombre, women: mujer };
+
+          } else if (subMetric.name === 'weekdayAndHour') {
+            this.audience['weekdayAndHour'] = resp.map(item => {
+              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
+            });
+          } else if (subMetric.name === 'weekday') {
+            resp = resp.sort((a, b) => (a.weekday > b.weekday ? -1 : 1));
+            this.audience[subMetric.name] = resp.map(item => {
+              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
+            });
+          } else {
+            this.audience[subMetric.name] = resp;
+          }
+
+          reqStatusObj.reqStatus = 2;
+        },
+        error => {
+          const errorMsg = error?.error?.message ? error.error.message : error?.message;
+          console.error(`[pc-selector-wrapper.component]: ${errorMsg}`);
+          reqStatusObj.reqStatus = 3;
+        });
+    }
+  }
+
+  filtersAreReady(): boolean {
+    if (!this.levelPage ||
+      !this.filtersStateService.period) {
+      return false;
+    }
+
+    if (this.levelPage.latam &&
+      this.filtersStateService.countries &&
+      this.filtersStateService.retailers
+    ) {
+      return true;
+
+    } else if (!this.levelPage.latam) {
+      return true;
+
+    } else {
+      return false;
+    }
+  }
+
+  clearKpis() {
+    for (let kpi of this.kpis) {
+      if (kpi.metricName === 'avg_session_duration') {
+        kpi.metricValue = '00:00:00';
+      } else {
+        kpi.metricValue = 0;
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.requestInfoSub?.unsubscribe();
   }
 }
