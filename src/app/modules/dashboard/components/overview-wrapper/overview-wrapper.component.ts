@@ -235,6 +235,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
         this.kpisReqStatus = 2;
       },
       error => {
+        this.clearKpis();
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[overview-wrapper.component]: ${errorMsg}`);
         this.kpisReqStatus = 3;
@@ -336,6 +337,16 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     this.selectedSectorTab && delete this.selectedSectorTab;
     this.selectedCategoryTab && delete this.selectedCategoryTab;
     this.selectedSourceTab && delete this.selectedSourceTab;
+  }
+
+  clearKpis() {
+    for (let kpi of this.kpis) {
+      kpi.metricValue = 0;
+
+      if (kpi.subMetricValue) {
+        kpi.subMetricValue = 0;
+      }
+    }
   }
 
   ngOnDestroy() {
