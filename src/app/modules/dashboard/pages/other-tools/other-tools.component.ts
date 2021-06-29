@@ -54,7 +54,7 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
       this.getActiveView();
     }
 
-    // catch if its LATAM view
+    // catch if the route changes
     this.routeSub = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.filtersStateService.restoreFilters();
@@ -69,7 +69,9 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
       if (country?.id !== this.countryID) {
         this.countryID = country?.id;
         this.getActiveView();
+
         this.activeTabView = 1;
+        this.emitSelectedSection('indexed');
       }
     });
 
@@ -78,7 +80,9 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
       if (retailer?.id !== this.retailerID) {
         this.retailerID = retailer?.id;
         this.getActiveView();
+
         this.activeTabView = 1;
+        this.emitSelectedSection('indexed');
       }
     });
 
@@ -122,7 +126,28 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
     }
   }
 
+  emitSelectedSection(section: string) {
+    switch (section) {
+      case 'indexed':
+        this.activeTabView = 1;
+        this.filtersStateService.hideCategories(false);
+        break;
+
+      case 'omnichat':
+        this.activeTabView = 2;
+        this.filtersStateService.hideCategories(false);
+        break;
+
+      case 'pc-selector':
+        this.activeTabView = 3;
+        this.filtersStateService.hideCategories(true);
+        break;
+    }
+  }
+
   ngOnDestroy() {
+    this.filtersStateService.hideCategories(false);
+
     this.routeSub?.unsubscribe();
     this.countrySub?.unsubscribe();
     this.retailerSub?.unsubscribe();
