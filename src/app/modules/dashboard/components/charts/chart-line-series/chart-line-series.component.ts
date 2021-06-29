@@ -85,7 +85,7 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestro
 
     dateAxis.renderer.minGridDistance = 50;
     // dateAxis.renderer.labels.template.rotation = -90;
-    this.axis = {valueAxis}
+    this.axis = { valueAxis }
 
     this.loadChartData(chart);
     this.loadYTitle(this.axis)
@@ -116,15 +116,20 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestro
 
     const colors = [
       '#67B6DC',
-      '#A367DC',
+      '#8067DC',
       '#DC67CE',
       '#DC6967',
       '#DCAE67',
-      '#86CC78'
+      '#86CC78',
+      '#6794DC',
+      '#A367DC',
+      '#C767DC',
+      '#DC6787',
+      '#DC8C67'
     ]
 
     for (var i = 0; i < this.series.length; i++) {
-      const color = colors[i] ? colors[i] : colors[0]
+      const color = colors[i] ? colors[i] : colors[Math.floor(Math.random() * colors.length)];
       // createSeries(this.value + i, this.series[i], this.value, this.valueName, this.valueFormat, color);
       createSeries(this.value + i, this.series[i], this.value, color);
     }
@@ -187,8 +192,8 @@ export class ChartLineSeriesComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  loadYTitle(axis){
-      axis.valueAxis.title.text = this._yTitle;
+  loadYTitle(axis) {
+    axis.valueAxis.title.text = this._yTitle;
   }
 
   ngOnDestroy() {
