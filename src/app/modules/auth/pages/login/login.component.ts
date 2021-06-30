@@ -69,20 +69,16 @@ export class LoginComponent implements OnInit {
     this.remember_password = this.form.controls['remember_password'];
 
     this.getSavedUserData();
-    if (this.usermail) {
-      this.email.setValue(this.usermail);
-    }
   }
 
   getSavedUserData() {
-    const un = !!localStorage.getItem('username')
-      ? localStorage.getItem('username')
-      : '';
-    this.username = un === 'null' ? '' : un;
-    const um = !!localStorage.getItem('usermail')
-      ? localStorage.getItem('usermail')
-      : '';
-    this.usermail = um === 'null' ? '' : um;
+    const savedUser = this.cookieService.get('coop_user') && JSON.parse(this.cookieService.get('coop_user'));
+
+    if (savedUser) {
+      this.email.setValue(savedUser.email);
+      this.password.setValue(savedUser.secret_key);
+      this.remember_password.setValue(true);
+    }
   }
 
   login(email: string, password: string) {
@@ -120,9 +116,11 @@ export class LoginComponent implements OnInit {
   rememberPsw() {
     const user = {
       email: this.email.value,
-      // anonymous_id: this.userService.hashPsw(this.password.value)
-      anonymous_id: this.password.value
+      // secret_key: this.userService.hashPsw(this.password.value)
+      secret_key: this.password.value,
+      create_at: new Date().getTime()
     }
+
     this.cookieService.set('coop_user', JSON.stringify(user), 365);
   }
 

@@ -230,7 +230,7 @@ export class UserService {
   cleanUserData() {
     this._loggedIn = false;
     this._user = new User();
-    this.router.navigate(["/"]);
+    this.router.navigate(['/login']);
 
     const savedLang = localStorage.getItem('lang') || 'es';
     window.localStorage.clear();
