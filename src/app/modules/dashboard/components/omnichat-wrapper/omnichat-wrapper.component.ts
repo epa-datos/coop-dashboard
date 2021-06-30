@@ -17,6 +17,12 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   @Input() levelPage: any // latam || country || retailer;
   @Input() requestInfoChange: Observable<boolean>;
 
+  selectedTab1: number = 1; // users vs conversions (1) or revenue vs aup (2) selection -> chart-multiple-axes
+  selectedTab2: number = 1; // traffic (1) or conversions (2) -> countries, retailers and categories charts
+  selectedTab3: number = 1; // selected category -> chart-bar-horizontal
+  selectedTab4: number = 1; // traffic (1) or conversions (2) -> audience charts
+
+  // kpis and conversion rates
   staticData = {
     kpis: [
       {
@@ -109,10 +115,11 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     { name: 'conversionRate', reqStatus: 0 },
   ];
 
-  usersAndRevenue: any[] = [];
-  usersAndRevenueReqStatus: number = 1;
+  // users vs conversions or revenue vs aup
+  usersOrRevenue: any[] = [];
+  usersOrRevenueReqStatus: number = 0;
 
-
+  // metrics for different levels (latam, country, retailer)
   dataByLevel = {};
   dataByLevelReqStatus = [
     { name: 'countries', reqStatus: 0 },
@@ -121,12 +128,15 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     { name: 'category2', reqStatus: 0 },
   ];
 
+  // conversions by products
   salesByProduct: any[] = [];
   salesByProductReqStatus: number = 0;
 
+  // users, conversions and conversion rate
   usersSalesAndCR = {};
   usersSalesAndCRReqStatus: number = 0;
 
+  // categories table
   performanceByCategoryColumns: TableItem[] = [
     {
       name: 'category',
@@ -134,7 +144,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     },
     {
       name: 'users',
-      title: 'usuarios',
+      title: 'Usuarios',
       formatValue: 'integer',
       textAlign: 'center',
     },
@@ -180,6 +190,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     reqStatus: 0
   }
 
+  // all traffic or conversions submetrics
   audience = {};
   audienceReqStatus = [
     { name: 'device', reqStatus: 0 },
@@ -189,19 +200,15 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     { name: 'weekday', reqStatus: 0 },
     { name: 'weekdayAndHour', reqStatus: 0 },
     { name: 'hour', reqStatus: 0 },
-  ]
+  ];
 
-  selectedTab1: number = 1;
-  selectedTab2: number = 1;
-  selectedTab3: number = 1;
+  // available tabs for salesByProduct
+  selectedCategories: any[] = [];
+  selectedCategoryTab3: any;
 
   chartsInitLoad: boolean = true;
 
   requestInfoSub: Subscription;
-
-  // available tabs
-  selectedCategories: any[] = []; // for salesByProduct
-  selectedCategoryTab3: any;
 
   constructor(
     private omnichatService: OmnichatService,
@@ -225,17 +232,17 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     const previousCategory = this.selectedCategories?.find(category => category.id === this.selectedCategoryTab3?.id);
     const selectedCategory = previousCategory ? previousCategory : this.selectedCategories?.[0];
 
-    let selectedMetricForTab1 = this.selectedTab1 === 1 ? 'conversions-vs-users' : 'aup-vs-revenue';
-    let selectedMetricForTab2 = this.selectedTab2 === 1 ? 'traffic' : 'sales';
-    let selectedMetricForTab3 = this.selectedTab3 === 1 ? 'traffic' : 'sales';
+    let metricTab1 = this.selectedTab1 === 1 ? 'conversions-vs-users' : 'aup-vs-revenue';
+    let metricTab2 = this.selectedTab2 === 1 ? 'traffic' : 'sales';
+    let metricTab4 = this.selectedTab4 === 1 ? 'traffic' : 'sales';
 
     this.getStaticDataByMetric();
-    this.getUsersOrAup(selectedMetricForTab1);
-    this.getDataByLevel(selectedMetricForTab2);
+    this.getUsersOrRevenue(metricTab1);
+    this.getDataByLevel(metricTab2);
     this.getSalesByProduct(selectedCategory);
     this.getUsersSalesAndCR(selectedCategory);
     this.getPerformanceByCategory();
-    this.getAudienceByMetric(selectedMetricForTab3);
+    this.getAudienceByMetric(metricTab4);
 
     this.chartsInitLoad = true;
   }
@@ -291,23 +298,23 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
           metric.name === 'kpis' ? this.clearKpis() : this.clearConversionsRate();
 
           const errorMsg = error?.error?.message ? error.error.message : error?.message;
-          console.error(`[omnichat.component]: ${errorMsg}`);
+          console.error(`[omnichat-wrapper.component]: ${errorMsg}`);
           reqStatusObj.reqStatus = 3;
         });
     }
   }
 
-  getUsersOrAup(metricType: string) {
-    this.usersAndRevenueReqStatus = 1;
+  getUsersOrRevenue(metricType: string) {
+    this.usersOrRevenueReqStatus = 1;
     this.omnichatService.getDataByMetric(this.levelPage.latam, metricType).subscribe(
       (resp: any[]) => {
-        this.usersAndRevenue = resp;
-        this.usersAndRevenueReqStatus = 2;
+        this.usersOrRevenue = resp;
+        this.usersOrRevenueReqStatus = 2;
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[omnichat.component]: ${errorMsg}`);
-        this.usersAndRevenueReqStatus = 3;
+        console.error(`[omnichat-wrapper.component]: ${errorMsg}`);
+        this.usersOrRevenueReqStatus = 3;
       });
 
     this.selectedTab1 = metricType === 'conversions-vs-users' ? 1 : 2;
@@ -351,7 +358,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
         error => {
           this.dataByLevel[metric.name] = [];
           const errorMsg = error?.error?.message ? error.error.message : error?.message;
-          console.error(`[omnichat.component]: ${errorMsg}`);
+          console.error(`[omnichat-wrapper.component]: ${errorMsg}`);
           reqStatusObj.reqStatus = 3;
         });
     }
@@ -369,7 +376,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[overview-latam.component]: ${errorMsg}`);
+        console.error(`[omnichat-wrapper.component]: ${errorMsg}`);
         this.salesByProductReqStatus = 3;
       }
     )
@@ -395,7 +402,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[overview-latam.component]: ${errorMsg}`);
+        console.error(`[omnichat-wrapper.component]: ${errorMsg}`);
         this.usersSalesAndCRReqStatus = 3;
       }
     )
@@ -412,7 +419,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[overview-latam.component]: ${errorMsg}`);
+        console.error(`[omnichat-wrapper.component]: ${errorMsg}`);
         this.performanceByCategory.reqStatus = 3;
       }
     )
@@ -448,7 +455,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
             this.audience = { ...this.audience, men: hombre, women: mujer };
 
           } else if (subMetric.name === 'weekdayAndHour') {
-            this.audience['weekdayAndHour'] = resp.map(item => {
+            this.audience[subMetric.name] = resp.map(item => {
               return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
             });
           } else if (subMetric.name === 'weekday') {
@@ -464,13 +471,12 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
         },
         error => {
           const errorMsg = error?.error?.message ? error.error.message : error?.message;
-          console.error(`[audiences-wrapper.component]: ${errorMsg}`);
+          console.error(`[omnichat-wrapper.component]: ${errorMsg}`);
           reqStatusObj.reqStatus = 3;
         });
 
-      this.selectedTab3 = metricType === 'traffic' ? 1 : 2;
+      this.selectedTab4 = metricType === 'traffic' ? 1 : 2;
     }
-
   }
 
   filtersAreReady(): boolean {

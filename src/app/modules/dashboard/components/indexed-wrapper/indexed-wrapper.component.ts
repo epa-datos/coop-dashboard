@@ -17,6 +17,8 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
   @Input() levelPageChange: Observable<object>;
   @Input() requestInfoChange: Observable<boolean>;
 
+  selectedTab1: number = 1; // traffic for countries (1) or retailers (2) selection -> chart-line-series
+
   // kpis
   kpis: any[] = [
     {
@@ -61,7 +63,6 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     }
   ];
   kpisReqStatus = 0;
-
 
   // exits rate and pages viewed
   exitsAndPagesViews = [
@@ -181,7 +182,6 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     { name: 'marketSegment', reqStatus: 0 }
   ];
 
-  selectedTab1: number = 1;
   chartsInitLoad: boolean = true;
 
   requestInfoSub: Subscription;
@@ -208,10 +208,10 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
   }
 
   getAllData() {
-    let subMetricForTraffic = this.levelPage.latam && this.selectedTab1 === 1 ? 'countries' : 'retailers';
+    let metricTraffic = this.levelPage.latam && this.selectedTab1 === 1 ? 'countries' : 'retailers';
 
     this.getKpis();
-    this.getTrafficByCountriesAndRetailers(subMetricForTraffic);
+    this.getTrafficByCountriesAndRetailers(metricTraffic);
     this.getTrafficData();
     this.getBouncesExitsAndPageviews();
     this.getMostVisited();
@@ -242,7 +242,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[indexed.component]: ${error}`);
+        console.error(`[indexed-wrapper.component]: ${errorMsg}`);
 
         this.clearKpis();
         this.kpisReqStatus = 3;
@@ -263,7 +263,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[indexed.component]: ${errorMsg}`);
+        console.error(`[indexed-wrapper.component]: ${errorMsg}`);
         this.countOrRetReqStatus = 3;
       });
 
@@ -344,7 +344,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
-        console.error(`[indexed.component]: ${errorMsg}`);
+        console.error(`[indexed-wrapper.component]: ${errorMsg}`);
         this.bouncesExitsAndPvReqStatus = 3;
       });
   }
