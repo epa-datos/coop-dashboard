@@ -1,9 +1,13 @@
-<div class="container-fluid mt-4">
-    <div class="row" [hidden]="!title">
-        <div class="col-12">
-            <p class="h2 mb-5 text-xl">{{ title }}</p>
-        </div>
+<div class="dashboard-container mt-4">
+    <div class="container-fluid-lg" [hidden]="!title">
+        <p class="h2 text-xl">{{ title }}</p>
     </div>
-    <app-general-filters></app-general-filters>
-    <router-outlet></router-outlet>
+    <div class="filters-container container-fluid-lg">
+        <app-general-filters></app-general-filters>
+        <hr class="mt-3 mb-5">
+    </div>
+
+    <div class="container-fluid">
+        <router-outlet></router-outlet>
+    </div>
 </div>
