@@ -169,6 +169,7 @@ export class InviteUserComponent implements OnInit {
       const region = (regions[item.region] || []);
       region.push(item);
       regions[item.region] = region;
+      regions.selected = false;
       return regions;
     }, {});
 
@@ -316,6 +317,19 @@ export class InviteUserComponent implements OnInit {
       this.form.controls[formSuboption].reset();
       formOption.allOptSelected = false;
     }
+
+    if (formSuboption === 'countries') {
+      for (let item of this.countries) {
+
+        if (!item.countries) {
+          continue;
+        }
+
+        item.countries = item.countries.map(subitem => {
+          return { ...subitem, selected: selectAllOptions }
+        });
+      }
+    }
   }
 
   allOptionsSelected(formSuboption) {
@@ -341,10 +355,40 @@ export class InviteUserComponent implements OnInit {
   filterFromList(listName: string, value: string) {
     this[listName].forEach(element => {
       element.hidden && delete element.hidden;
-      if (!element.name.toLowerCase().includes(value.toLowerCase())) {
+      if (!element.countries && !element.name.toLowerCase().includes(value.toLowerCase())) {
+        element.hidden = true;
+
+      } else if (element.countries && !element.countries.some(item => item.name.toLowerCase().includes(value.toLowerCase()))) {
         element.hidden = true;
       }
     });
+  }
+
+  countriesInRegionChange(selectedItem, selected) {
+    if (!selectedItem.countries) {
+      return;
+    }
+
+    selectedItem.countries = selectedItem.countries.map(subitem => {
+      return { ...subitem, selected };
+    });
+  }
+
+  regionChange(regionIndex, selectedItem, selected) {
+    selectedItem.selected = selected;
+
+    const countriesInRegion = this.countries.find(item => item.name === selectedItem.region)?.countries;
+    const selectedCountries = countriesInRegion.filter(item => item.selected);
+
+    const countriesFormList = this.form.controls['countries'].value;
+
+    if (countriesInRegion.length === selectedCountries.length) {
+      countriesFormList[regionIndex] = true;
+    } else {
+      countriesFormList[regionIndex] = "";
+    }
+
+    this.form.controls['countries'].patchValue(countriesFormList);
   }
 
   onSubmit() {

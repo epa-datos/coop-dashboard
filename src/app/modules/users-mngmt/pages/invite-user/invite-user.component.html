@@ -153,7 +153,8 @@
                                                         <!-- item (country or region) -->
                                                         <ng-container>
                                                             <input type="checkbox" class="custom-control-input"
-                                                                [formControlName]="i" [id]="'item-custom-checkbox-'+i">
+                                                                [formControlName]="i" [id]="'item-custom-checkbox-'+i"
+                                                                (change)="countriesInRegionChange(item, $event.target.checked)">
                                                             <label class="custom-control-label"
                                                                 [for]="'item-custom-checkbox-'+i">
                                                                 <span class="text-muted">{{ item.name }}</span>
@@ -165,7 +166,9 @@
                                                             <div class="submenu"
                                                                 *ngFor="let subItem of item.countries; let j = index">
                                                                 <input type="checkbox" class="custom-control-input"
-                                                                    [id]="i+'-subitem-custom-checkbox-'+j">
+                                                                    [id]="i+'-subitem-custom-checkbox-'+j"
+                                                                    [checked]="subItem.selected"
+                                                                    (change)="regionChange(i, subItem, $event.target.checked)">
                                                                 <label class="custom-control-label"
                                                                     [for]="i+'-subitem-custom-checkbox-'+j">
                                                                     <span class="text-muted">{{ subItem.name }}</span>
