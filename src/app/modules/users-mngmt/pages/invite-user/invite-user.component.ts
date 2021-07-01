@@ -339,16 +339,35 @@ export class InviteUserComponent implements OnInit {
   convertToValue(key: string, entityType: string): Permission[] {
     const permissions: Permission[] = [];
     this.form.value[key].forEach((x, i) => {
+
       if (x && this[key][i]) {
-        const permission = {
-          role_id: this.selectedRole.id,
-          entity_type: entityType,
-          entity_id: this[key][i].id
+        // for countries, retailers, sectors and categories
+        if (this[key][i].id) {
+          const permission = {
+            role_id: this.selectedRole.id,
+            entity_type: entityType,
+            entity_id: this[key][i].id
+          }
+          permissions.push(permission);
+
+        } else if (this[key][i].countries) {
+
+          // for countries grouped in regions
+          for (let item of this[key][i].countries) {
+            const permission = {
+              role_id: this.selectedRole.id,
+              entity_type: entityType,
+              entity_id: item.id
+            }
+            permissions.push(permission);
+          }
+
+          // falta un caso
+          // cuando no se tiene seleccionada la region pero si algunos paises dentro de la region 
+          // hacer un barrido para concatenarlos todos a la peticion
         }
-        permissions.push(permission);
       }
     });
-
     return permissions;
   }
 
@@ -413,12 +432,14 @@ export class InviteUserComponent implements OnInit {
     permissions = [...permissions, ...this.convertToValue('sectors', 'sector')];
     permissions = [...permissions, ...this.convertToValue('categories', 'category')];
 
+    console.log('FINAL permissions', permissions)
+
     const invite: Invite = {
       email: this.form.value.email,
       permissions
     }
 
-    this.sendInviteToUser(invite);
+    // this.sendInviteToUser(invite);
   }
 
   sendInviteToUser(invite) {
