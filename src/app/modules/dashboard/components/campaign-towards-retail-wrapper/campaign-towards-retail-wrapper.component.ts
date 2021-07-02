@@ -11,6 +11,8 @@ import { TableItem } from '../generic-table/generic-table.component';
 export class CampaignTowardsRetailWrapperComponent implements OnInit, OnDestroy {
   @Input() requestInfoChange: Observable<boolean>;
 
+  selectedTab1: number = 1;
+
   campPerformance: any[] = [];
   campPerformanceReqStatus: number = 0;
 
@@ -86,7 +88,10 @@ export class CampaignTowardsRetailWrapperComponent implements OnInit, OnDestroy 
       formatValue: 'percentage',
       emptyLine: true
     }
-  ]
+  ];
+
+  conversionsVsInvestment: any[] = [];
+  impresionsVsClicks: any[] = [];
 
   requestInfoSub: Subscription;
 
@@ -111,16 +116,43 @@ export class CampaignTowardsRetailWrapperComponent implements OnInit, OnDestroy 
     this.campPerformanceReqStatus = 1;
     this.campTowardsRetailServ.getCampaignsPerformance().subscribe(
       (metrics: any) => {
-        for (let metric of metrics) {
-          if (metric.name === 'Impresiones' || metric.name === 'Clicks') {
-            metric.customLineStye = 'dashed';
-          }
-          if (metric.name === 'Inversión') {
-            metric.valueFormat = 'USD';
+        // for (let metric of metrics) {
+        //   if (metric.name === 'Impresiones' || metric.name === 'Clicks') {
+        //     metric.customLineStye = 'dashed';
+        //   }
+        //   if (metric.name === 'Inversión') {
+        //     metric.valueFormat = 'USD';
+        //   }
+        // }
+
+        // this.campPerformance = metrics;
+
+
+        for (let i = 0; i < metrics.length; i++) {
+          let metricName = this.getParsedMetric(metrics[i].name);
+          for (let j = 0; j < metrics[i].serie.length; j++) {
+            const date = metrics[i].serie[j].date;
+
+            let obj;
+            obj = this.campPerformance.find(item => item.date === date);
+
+            if (obj) {
+              obj[metricName] = metrics[i].serie[j].value;
+            } else {
+              obj = { date, [metricName]: metrics[i].serie[j].value }
+              this.campPerformance.push(obj);
+            }
           }
         }
 
-        this.campPerformance = metrics;
+        this.conversionsVsInvestment = this.campPerformance.map((item: any) => {
+          return { date: item.date, conversions: item.conversions, investment: item.investment, }
+        });
+
+        this.impresionsVsClicks = this.campPerformance.map((item: any) => {
+          return { date: item.date, impressions: item.impressions, clicks: item.clicks, }
+        });
+
         this.campPerformanceReqStatus = 2;
       },
       error => {
@@ -128,6 +160,29 @@ export class CampaignTowardsRetailWrapperComponent implements OnInit, OnDestroy 
         console.error(`[campaign-towards-retail.component]: ${errorMsg}`);
         this.campPerformanceReqStatus = 3;
       });
+  }
+
+  getParsedMetric(metricName: string): string {
+    let parsedMetric: string;
+
+    switch (metricName.toLowerCase()) {
+      case 'inversión':
+        parsedMetric = 'investment';
+        break;
+
+      case 'conversiones':
+        parsedMetric = 'conversions';
+        break;
+
+      case 'impresiones':
+        parsedMetric = 'impressions';
+        break;
+
+      default:
+        parsedMetric = metricName.toLowerCase();
+    }
+
+    return parsedMetric;
   }
 
   getCampaignList() {

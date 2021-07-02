@@ -1,14 +1,54 @@
 <div class="row my-5">
     <div class="col-12">
+        <div class="pills-container">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}" (click)="selectedTab1 = 1">
+                        Inversión - Conversiones
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}" (click)="selectedTab1 = 2">
+                        Impresiones - Clicks
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-12 mt-4">
         <div class="card">
+            <div class="card-header">
+                <ng-container [ngSwitch]="selectedTab1">
+                    <span class="h4" *ngSwitchCase="1">Inversión - Conversiones</span>
+                    <span class="h4" *ngSwitchCase="2">Impresiones - Clicks</span>
+                </ng-container>
+            </div>
             <div class="card-body">
-                <app-chart-line-series [series]="campPerformance" [status]="campPerformanceReqStatus"
-                    name="campaign-towards-retail-metrics">
-                </app-chart-line-series>
+                <app-chart-multiple-axes [data]="selectedTab1 === 1 ?  conversionsVsInvestment : impresionsVsClicks"
+                    [value1]="selectedTab1 === 1 ? 'conversions' : 'clicks'"
+                    [value2]="selectedTab1 === 1 ? 'investment' : 'impressions'"
+                    [valueName1]="selectedTab1 === 1 ? 'Conversiones' : 'Clicks'"
+                    [valueName2]="selectedTab1 === 1 ? 'Inversión' : 'Impresiones'"
+                    [valueFormat2]="selectedTab1 === 1 && 'USD'" name="campaign-towards-retail-metrics"
+                    [status]="campPerformanceReqStatus">
+                </app-chart-multiple-axes>
             </div>
         </div>
     </div>
 </div>
+
+<!-- <div class="row my-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <app-chart-line-series [series]="campPerformance" [status]="campPerformanceReqStatus"
+                    name="campaign-towards-retail-metrics-deprecated">
+                </app-chart-line-series>
+            </div>
+        </div>
+    </div>
+</div> -->
 
 <div class="row">
     <div class="col-12 mb-5" *ngFor="let campaigns of campList">
