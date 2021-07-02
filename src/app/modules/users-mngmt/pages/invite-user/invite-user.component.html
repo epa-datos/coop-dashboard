@@ -30,37 +30,74 @@
                             </div>
                         </div>
 
-                        <!-- email and role -->
-                        <div class="row" *ngIf="getRoleStatus !== 1">
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group mb-3">
-                                    <div class="input-group input-group-alternative"
-                                        [ngClass]="{'is-invalid': !email.valid && email.touched || !email.valid && email.touched}">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                        <ng-container *ngIf="getRoleStatus !== 1">
+                            <!-- name and last name -->
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group input-group-alternative"
+                                            [ngClass]="{'is-invalid': !name.valid && name.touched || !name.valid && name.touched}">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            </div>
+                                            <input [formControl]="name" class="form-control" placeholder="Nombre"
+                                                type="text" autocomplete="new-name">
                                         </div>
-                                        <input [formControl]="email" class="form-control"
-                                            placeholder="Correo electrónico" type="email">
+                                        <small class="text-danger"
+                                            *ngIf="!name.valid && name.touched || !name.valid && name.touched">
+                                            Ingresa un nombre válido.
+                                        </small>
                                     </div>
-                                    <small class="text-danger"
-                                        *ngIf="!email.valid && email.touched || !email.valid && email.touched">
-                                        Ingresa un correo electrónico válido.
-                                    </small>
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group input-group-alternative"
+                                            [ngClass]="{'is-invalid': !lastName.valid && lastName.touched || !lastName.valid && lastName.touched}">
+                                            <input [formControl]="lastName" class="form-control" placeholder="Apellido"
+                                                type="text" autocomplete="new-last-name">
+                                        </div>
+                                        <small class="text-danger"
+                                            *ngIf="!lastName.valid && lastName.touched || !lastName.valid && lastName.touched">
+                                            Ingresa un apellido válido.
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-6">
-                                <mat-select formControlName="role" placeholder="Select a role" [(value)]="selectedRole"
-                                    (selectionChange)="roleChange()" disableOptionCentering>
-                                    <mat-option *ngFor="let role of roles" [value]="role" [ngSwitch]="role.name">
-                                        <span *ngSwitchCase="'admin'"> {{ 'administrador' | titlecase }}</span>
-                                        <span *ngSwitchCase="'country'"> {{ 'país' | titlecase }}</span>
-                                        <span *ngSwitchCase="'hp'"> {{ 'hp' | uppercase }}</span>
-                                        <span *ngSwitchDefault> {{ role.name | titlecase }}</span>
-                                    </mat-option>
-                                </mat-select>
+                            <!-- email and role -->
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group input-group-alternative"
+                                            [ngClass]="{'is-invalid': !email.valid && email.touched || !email.valid && email.touched}">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                            </div>
+                                            <input [formControl]="email" class="form-control"
+                                                placeholder="Correo electrónico" type="email">
+                                        </div>
+                                        <small class="text-danger"
+                                            *ngIf="!email.valid && email.touched || !email.valid && email.touched">
+                                            Ingresa un correo electrónico válido.
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <mat-select formControlName="role" placeholder="Selecciona un Rol"
+                                        [(value)]="selectedRole" (selectionChange)="roleChange()"
+                                        disableOptionCentering>
+                                        <mat-option *ngFor="let role of roles" [value]="role" [ngSwitch]="role.name">
+                                            <span *ngSwitchCase="'admin'"> {{ 'administrador' | titlecase }}</span>
+                                            <span *ngSwitchCase="'country'"> {{ 'país' | titlecase }}</span>
+                                            <span *ngSwitchCase="'hp'"> {{ 'hp' | uppercase }}</span>
+                                            <span *ngSwitchDefault> {{ role.name | titlecase }}</span>
+                                        </mat-option>
+                                    </mat-select>
+                                </div>
                             </div>
-                        </div>
+                        </ng-container>
 
                         <!-- loader (contries, retailers, sectors and categories) -->
                         <div class="loader row mt-4" *ngIf="getReqStatus === 1">
@@ -100,155 +137,153 @@
                             <div class="row mt-4"
                                 *ngIf="selectedRole && selectedRole?.name !== 'admin' && selectedRole?.name !== 'hp'">
                                 <div class="col-12 col-sm-6">
-                                    <div class="mb-4">
-                                        <!-- COUNTRIES -->
-                                        <ng-container *ngIf="selectedRole?.name === 'country'">
-                                            <p class="text-uppercase text-sm mb-2">Paises</p>
-                                            <div class="row section-header">
-                                                <div class="col-12 col-lg-6 mb-2">
-                                                    <small>Selecciona al menos un país</small>
-                                                </div>
-
-                                                <div class="col-12 col-lg-6 mb-2">
-                                                    <button *ngIf="countriesFilter?.length === 0 || !countriesFilter"
-                                                        type="button" class="btn btn-outline-primary btn-sm"
-                                                        (click)="convertAllOptionsTo('countries')">
-                                                        <div *ngIf="!allOptionsSelected('countries')">
-                                                            <i class="fas fa-check"></i>
-                                                            <span>
-                                                                Seleccionar todo
-                                                            </span>
-                                                        </div>
-                                                        <div *ngIf="allOptionsSelected('countries')">
-                                                            <i class="fas fa-minus"></i>
-                                                            <span>
-                                                                Deseleccionar todo
-                                                            </span>
-                                                        </div>
-                                                    </button>
-                                                </div>
+                                    <!-- COUNTRIES -->
+                                    <ng-container *ngIf="selectedRole?.name === 'country'">
+                                        <p class="text-uppercase text-sm mb-2">Paises</p>
+                                        <div class="row section-header">
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <small>Selecciona al menos un país</small>
                                             </div>
 
-                                            <div class="row">
-                                                <div class="col-12 col-lg-7 mb-2 options-filter">
-                                                    <div class="input-group input-group-alternative">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i
-                                                                    class="fas fa-search"></i></span>
-                                                        </div>
-                                                        <input class="form-control" [(ngModel)]="countriesFilter"
-                                                            matInput type="text"
-                                                            (keyup)="filterFromList('countries', $event.target.value)"
-                                                            placeholder="Buscar País"
-                                                            [ngModelOptions]="{standalone: true}">
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <button *ngIf="countriesFilter?.length === 0 || !countriesFilter"
+                                                    type="button" class="btn btn-outline-primary btn-sm"
+                                                    (click)="convertAllOptionsTo('countries')">
+                                                    <div *ngIf="!allOptionsSelected('countries')">
+                                                        <i class="fas fa-check"></i>
+                                                        <span>
+                                                            Seleccionar todo
+                                                        </span>
                                                     </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="options-container">
-                                                <ng-container *ngFor="let item of countries; let i = index"
-                                                    formArrayName="countries">
-                                                    <div [hidden]="item.hidden"
-                                                        class="custom-control custom-control-alternative custom-checkbox my-1">
-                                                        <!-- item (country or region) -->
-                                                        <ng-container>
-                                                            <input type="checkbox" class="custom-control-input"
-                                                                [formControlName]="i" [id]="'item-custom-checkbox-'+i"
-                                                                (change)="countriesInRegionChange(item, $event.target.checked)">
-                                                            <label class="custom-control-label"
-                                                                [for]="'item-custom-checkbox-'+i">
-                                                                <span class="text-muted">{{ item.name }}</span>
-                                                            </label>
-                                                        </ng-container>
-
-                                                        <!-- subitem (country within a region)-->
-                                                        <div class="submenu-container" *ngIf="item?.countries">
-                                                            <div class="submenu"
-                                                                *ngFor="let subItem of item.countries; let j = index">
-                                                                <input type="checkbox" class="custom-control-input"
-                                                                    [id]="i+'-subitem-custom-checkbox-'+j"
-                                                                    [checked]="subItem.selected"
-                                                                    (change)="regionChange(i, subItem, $event.target.checked)">
-                                                                <label class="custom-control-label"
-                                                                    [for]="i+'-subitem-custom-checkbox-'+j">
-                                                                    <span class="text-muted">{{ subItem.name }}</span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
+                                                    <div *ngIf="allOptionsSelected('countries')">
+                                                        <i class="fas fa-minus"></i>
+                                                        <span>
+                                                            Deseleccionar todo
+                                                        </span>
                                                     </div>
-                                                </ng-container>
+                                                </button>
                                             </div>
+                                        </div>
 
-                                        </ng-container>
-
-                                        <!-- RETAILERS -->
-                                        <ng-container *ngIf="selectedRole?.name === 'retailer'">
-                                            <p class="text-uppercase text-sm mb-2">Retailers</p>
-                                            <div class="row section-header">
-                                                <div class="col-12 col-lg-6 mb-2">
-                                                    <small>Selecciona al menos un retailer</small>
-                                                </div>
-
-                                                <div class="col-12 col-lg-6 mb-2">
-                                                    <button *ngIf="retailersFilter?.length === 0 || !retailersFilter"
-                                                        type="button" class="btn btn-outline-primary btn-sm"
-                                                        (click)="convertAllOptionsTo('retailers')">
-                                                        <div *ngIf="!allOptionsSelected('retailers')">
-                                                            <i class="fas fa-check"></i>
-                                                            <span>
-                                                                Seleccionar todo
-                                                            </span>
-                                                        </div>
-                                                        <div *ngIf="allOptionsSelected('retailers')">
-                                                            <i class="fas fa-minus"></i>
-                                                            <span>
-                                                                Deseleccionar todo
-                                                            </span>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-12 col-lg-7 mb-2 options-filter">
-                                                    <div class="input-group input-group-alternative">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i
-                                                                    class="fas fa-search"></i></span>
-                                                        </div>
-                                                        <input class="form-control" [(ngModel)]="retailersFilter"
-                                                            matInput type="text"
-                                                            (keyup)="filterFromList('retailers', $event.target.value)"
-                                                            placeholder="Buscar Retailer"
-                                                            [ngModelOptions]="{standalone: true}">
+                                        <div class="row">
+                                            <div class="col-12 col-lg-7 mb-2 options-filter">
+                                                <div class="input-group input-group-alternative">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i
+                                                                class="fas fa-search"></i></span>
                                                     </div>
+                                                    <input class="form-control" [(ngModel)]="countriesFilter" matInput
+                                                        type="text"
+                                                        (keyup)="filterFromList('countries', $event.target.value)"
+                                                        placeholder="Buscar País" [ngModelOptions]="{standalone: true}">
                                                 </div>
                                             </div>
+                                        </div>
 
-                                            <div class="options-container">
-                                                <ng-container *ngFor="let retailer of retailers; let i = index"
-                                                    formArrayName="retailers">
-                                                    <div [hidden]="retailer.hidden"
-                                                        class="custom-control custom-control-alternative custom-checkbox my-1">
+                                        <div class="options-container">
+                                            <ng-container *ngFor="let item of countries; let i = index"
+                                                formArrayName="countries">
+                                                <div [hidden]="item.hidden"
+                                                    class="custom-control custom-control-alternative custom-checkbox my-1">
+                                                    <!-- item (country or region) -->
+                                                    <ng-container>
                                                         <input type="checkbox" class="custom-control-input"
-                                                            [formControlName]="i" [id]="'retailer-custom-checkbox-'+i">
+                                                            [formControlName]="i" [id]="'item-custom-checkbox-'+i"
+                                                            (change)="countriesInRegionChange(item, $event.target.checked)">
                                                         <label class="custom-control-label"
-                                                            [for]="'retailer-custom-checkbox-'+i">
-                                                            <span class="text-muted">{{ retailer.name }}</span>
+                                                            [for]="'item-custom-checkbox-'+i">
+                                                            <span class="text-muted">{{ item.name }}</span>
                                                         </label>
-                                                    </div>
-                                                </ng-container>
+                                                    </ng-container>
 
+                                                    <!-- subitem (country within a region)-->
+                                                    <div class="submenu-container" *ngIf="item?.countries">
+                                                        <div class="submenu"
+                                                            *ngFor="let subItem of item.countries; let j = index">
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                [id]="i+'-subitem-custom-checkbox-'+j"
+                                                                [checked]="subItem.selected"
+                                                                (change)="regionChange(i, subItem, $event.target.checked)">
+                                                            <label class="custom-control-label"
+                                                                [for]="i+'-subitem-custom-checkbox-'+j">
+                                                                <span class="text-muted">{{ subItem.name }}</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+
+                                    </ng-container>
+
+                                    <!-- RETAILERS -->
+                                    <ng-container *ngIf="selectedRole?.name === 'retailer'">
+                                        <p class="text-uppercase text-sm mb-2">Retailers</p>
+                                        <div class="row section-header">
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <small>Selecciona al menos un retailer</small>
                                             </div>
-                                        </ng-container>
-                                    </div>
+
+                                            <div class="col-12 col-lg-6 mb-2">
+                                                <button *ngIf="retailersFilter?.length === 0 || !retailersFilter"
+                                                    type="button" class="btn btn-outline-primary btn-sm"
+                                                    (click)="convertAllOptionsTo('retailers')">
+                                                    <div *ngIf="!allOptionsSelected('retailers')">
+                                                        <i class="fas fa-check"></i>
+                                                        <span>
+                                                            Seleccionar todo
+                                                        </span>
+                                                    </div>
+                                                    <div *ngIf="allOptionsSelected('retailers')">
+                                                        <i class="fas fa-minus"></i>
+                                                        <span>
+                                                            Deseleccionar todo
+                                                        </span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12 col-lg-7 mb-2 options-filter">
+                                                <div class="input-group input-group-alternative">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i
+                                                                class="fas fa-search"></i></span>
+                                                    </div>
+                                                    <input class="form-control" [(ngModel)]="retailersFilter" matInput
+                                                        type="text"
+                                                        (keyup)="filterFromList('retailers', $event.target.value)"
+                                                        placeholder="Buscar Retailer"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="options-container">
+                                            <ng-container *ngFor="let retailer of retailers; let i = index"
+                                                formArrayName="retailers">
+                                                <div [hidden]="retailer.hidden"
+                                                    class="custom-control custom-control-alternative custom-checkbox my-1">
+                                                    <input type="checkbox" class="custom-control-input"
+                                                        [formControlName]="i" [id]="'retailer-custom-checkbox-'+i">
+                                                    <label class="custom-control-label"
+                                                        [for]="'retailer-custom-checkbox-'+i">
+                                                        <span class="text-muted">{{ retailer.name }}</span>
+                                                    </label>
+                                                </div>
+                                            </ng-container>
+
+                                        </div>
+                                    </ng-container>
+
                                 </div>
 
                                 <div class="col-12 col-sm-6"
                                     *ngIf="selectedRole?.name === 'country' || selectedRole?.name === 'retailer'">
 
                                     <!-- SECTORS -->
-                                    <div class="mb-4">
+                                    <div>
                                         <p class="text-uppercase text-sm mb-2">Sectores</p>
                                         <div class="row section-header">
                                             <div class="col-12 col-lg-6 mb-2">
@@ -343,7 +378,8 @@
 
                         <!-- send invitation button -->
                         <div class="text-right" *ngIf="getRoleStatus !== 1">
-                            <button type="submit" class="btn btn-primary mt-4"
+                            <button type="submit" class="btn btn-primary"
+                                [ngClass]="{'mt-4' : !selectedRole?.name || selectedRole?.name === 'admin' || selectedRole?.name === 'hp'}"
                                 [disabled]="!form.valid || inviteReqStatus === 1">
                                 Enviar invitación
                             </button>

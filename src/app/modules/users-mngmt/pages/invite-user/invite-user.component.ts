@@ -14,6 +14,8 @@ import { UsersMngmtService } from '../../services/users-mngmt.service';
 export class InviteUserComponent implements OnInit {
 
   form: FormGroup;
+  name: AbstractControl;
+  lastName: AbstractControl;
   email: AbstractControl;
   roles: any[] = [];
   countries: any[] = [];
@@ -60,20 +62,18 @@ export class InviteUserComponent implements OnInit {
 
   loadForm() {
     this.form = this.fb.group({
-      email: [
-        '',
-        Validators.compose([Validators.required, EmailValidator.validate])
-      ],
-      role: [
-        '',
-        [Validators.required]
-      ],
+      name: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      email: ['', Validators.compose([Validators.required, EmailValidator.validate])],
+      role: ['', [Validators.required]],
       countries: this.fb.array([]),
       retailers: this.fb.array([]),
       sectors: this.fb.array([]),
       categories: this.fb.array([])
     });
 
+    this.name = this.form.controls['name'];
+    this.lastName = this.form.controls['lastName'];
     this.email = this.form.controls['email'];
   }
 
@@ -459,6 +459,8 @@ export class InviteUserComponent implements OnInit {
 
     const invite: Invite = {
       email: this.form.value.email,
+      first_name: this.form.value.name,
+      last_name: this.form.value.lastName,
       permissions
     }
 
