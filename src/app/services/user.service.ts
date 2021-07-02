@@ -53,8 +53,12 @@ export class UserService {
       ? window.localStorage.getItem('usermail')
       : '';
 
-    this.user.username = !!window.localStorage.getItem('username')
-      ? window.localStorage.getItem('username')
+    this.user.first_name = !!window.localStorage.getItem('first_name')
+      ? window.localStorage.getItem('first_name')
+      : '';
+
+    this.user.last_name = !!window.localStorage.getItem('last_name')
+      ? window.localStorage.getItem('last_name')
       : '';
 
     this.user.role_name = !!window.localStorage.getItem('role_name')
@@ -70,10 +74,10 @@ export class UserService {
 
   singup(code: string, psw: string) {
     if (!code) {
-      return throwError("[user.service]: not email provided");
+      return throwError('[user.service]: not email provided');
     }
     if (!psw) {
-      return throwError("[user.service]: not psw provided");
+      return throwError('[user.service]: not psw provided');
     }
     // const password = this.hashPsw(psw);
     const password = psw;
@@ -82,14 +86,14 @@ export class UserService {
 
   login(email: string, psw: string) {
     if (!email) {
-      return throwError("[user.service]: not email provided");
+      return throwError('[user.service]: not email provided');
     }
     if (!psw) {
-      return throwError("[user.service]: not psw provided");
+      return throwError('[user.service]: not psw provided');
     }
 
     // Delete last session info if token expired and user doesn't logout.
-    if (window.localStorage.getItem("usermail") !== email) {
+    if (window.localStorage.getItem('usermail') !== email) {
       const savedLang = localStorage.getItem('lang') || 'es';
       window.localStorage.clear();
 
@@ -103,15 +107,16 @@ export class UserService {
       .pipe(
         tap((auth: any) => {
           if (auth.user && auth.token && auth.role) {
-            // this.user.email = email;
-            window.localStorage.setItem('usermail', auth.user.email);
-            window.localStorage.setItem('auth_token', auth.token);
-            window.localStorage.setItem('role_name', auth.role.name);
-            window.localStorage.setItem('view_level', auth.level);
 
             this.user = auth.user;
             this.user.role_name = auth.role.name;
             this.viewLevel = auth.level;
+
+            window.localStorage.setItem('usermail', this.user.email);
+            window.localStorage.setItem('first_name', this.user.first_name ? this.user.first_name : null);
+            window.localStorage.setItem('last_name', this.user.last_name ? this.user.last_name : null);
+            window.localStorage.setItem('auth_token', auth.token);
+            window.localStorage.setItem('role_name', auth.role.name);
 
             this._loggedIn = true;
           }
@@ -121,7 +126,7 @@ export class UserService {
 
   pswRecoveryRequest(email: string) {
     if (!email) {
-      return throwError("[user.service]: not email provided");
+      return throwError('[user.service]: not email provided');
     }
 
     return this.http.post(`${this.baseUrl}/users/forgot_password`, { email });
@@ -129,10 +134,10 @@ export class UserService {
 
   pswUpdateRequest(code: string, psw: string) {
     if (!code) {
-      return throwError("[user.service]: not code provided");
+      return throwError('[user.service]: not code provided');
     }
     if (!psw) {
-      return throwError("[user.service]: not password provided");
+      return throwError('[user.service]: not password provided');
     }
 
     // const password = this.hashPsw(psw);
