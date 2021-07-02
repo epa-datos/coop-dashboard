@@ -15,7 +15,10 @@
             <!-- <img alt="Image placeholder" src="assets/img/theme/team-4-800x800.jpg"> -->
             <i class="ni ni-single-02"></i>
             <div class="media-body ml-2 d-none d-lg-block">
-              <span class="mb-0 text-sm font-weight-bold">{{ user?.email }}</span>
+
+              <span class="mb-0 text-sm font-weight-bold">
+                {{ user?.first_name ? (user?.first_name + ' ' + user?.last_name) : user?.email }}
+              </span>
             </div>
           </div>
         </a>
