@@ -25,6 +25,10 @@
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
                                 (click)="getSectorsAndCategories('categories')">{{ 'general.category' | translate }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
+                                (click)="getSectorsAndCategories('funds')">Fondo</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -34,7 +38,8 @@
                         <span class="h4">
                             {{
                             ('overviewLatam.chart1CardTitle1' | translate) +
-                            (( selectedTab1 === 1 ? 'overviewLatam.chart1CardTitle2' : 'overviewLatam.chart1CardTitle3')
+                            (( selectedTab1 === 1 ? 'overviewLatam.chart1CardTitle2' : selectedTab1 === 2 ?
+                            'overviewLatam.chart1CardTitle3' : 'Fondos')
                             | translate) +
                             ('overviewLatam.chart1CardTitle4' | translate)
                             }}
@@ -42,9 +47,10 @@
                     </div>
                     <div class="card-body">
                         <app-chart-heat-map [data]="categoriesBySector" name="latam-categories-by-sector'"
-                            categoryX="country" [categoryY]="selectedTab1 === 1 ? 'sector' : 'category'" height="250px"
-                            [showGridBorders]="true" [showHeatLegend]="false" [status]="categoriesReqStatus"
-                            gridBordersColor="#f7f7f7">
+                            categoryX="country"
+                            [categoryY]="selectedTab1 === 1 ? 'sector' : selectedTab1 === 2 ? 'category' : 'fund'"
+                            height="250px" [showGridBorders]="true" [showHeatLegend]="false"
+                            [status]="categoriesReqStatus" gridBordersColor="#f7f7f7">
                         </app-chart-heat-map>
                     </div>
                 </div>

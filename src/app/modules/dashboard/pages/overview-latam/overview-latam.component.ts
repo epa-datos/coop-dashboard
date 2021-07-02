@@ -196,7 +196,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     // PRESERVE PREVIOUS SELECTION (TABS)
 
     // sectors and categories (chart-heat-map)
-    const sectorsOrCategoriesMetric = this.selectedTab1 === 1 ? 'sectors' : 'categories';
+    const sectorsOrCategoriesMetric = this.selectedTab1 === 1 ? 'sectors' : this.selectedTab1 === 2 ? 'categories' : 'funds';
 
     // demograhics
     const demohraphicMetric = this.selectedTab2 === 1 ? 'traffic' : 'sales';
@@ -281,7 +281,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
         this.categoriesReqStatus = 3;
       });
 
-    this.selectedTab1 = metricType === 'sectors' ? 1 : 2;
+    this.selectedTab1 = metricType === 'sectors' ? 1 : metricType === 'categories' ? 2 : 3;
   }
 
   getDemographics(metricType: string) {
