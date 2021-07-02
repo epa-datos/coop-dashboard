@@ -12,7 +12,7 @@ import { UsersMngmtService } from '../../services/users-mngmt.service';
   styleUrls: ['./users-list.component.scss']
 })
 export class UsersListComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['email', 'created_at', 'action'];
+  displayedColumns: string[] = ['email', 'first_name', 'last_name', 'created_at', 'action'];
 
   private users: User[] = [];
   dataSource = new MatTableDataSource<User>(this.users);
