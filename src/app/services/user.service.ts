@@ -117,6 +117,7 @@ export class UserService {
             window.localStorage.setItem('last_name', this.user.last_name ? this.user.last_name : null);
             window.localStorage.setItem('auth_token', auth.token);
             window.localStorage.setItem('role_name', auth.role.name);
+            window.localStorage.setItem('view_level', this.viewLevel);
 
             this._loggedIn = true;
           }
