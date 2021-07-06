@@ -1,3 +1,27 @@
+#sidenav-main {
+    .avatar-container {
+        background-color: #F8F9FE;
+        border-radius: 50%;
+        height: 32px;
+        width: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .user-image {
+        img {
+            border-radius: 50px;
+            height: 32px;
+            width: 32px;
+        }
+    }
+
+    .dropdown-item {
+        cursor: pointer;
+    }
+}
+
 .text-danger {
     line-height: 1rem; 
 }

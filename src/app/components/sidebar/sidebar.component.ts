@@ -52,6 +52,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public retailerSub: Subscription;
   public translateSub: Subscription;
   public routeSub: Subscription;
+  public userAvatarSub: Subscription;
+
+  public userAvatarUrl: string;
+  public userAvatarUrlBroken: boolean;
 
   constructor(
     private router: Router,
@@ -70,6 +74,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.userIsAdmin = this.userService.isAdmin();
     this.userRole = this.userService.user.role_name;
+
+    // user avatar url
+    this.userAvatarUrl = this.userService.user.avatar_url;
+
+    this.userAvatarSub = this.userService.userAvatarUrl$.subscribe((newUrl: string) => {
+      this.userAvatarUrlBroken = this.userAvatarUrlBroken && false;
+      this.userAvatarUrl = newUrl;
+    });
 
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.router.events.subscribe((event) => {
@@ -704,6 +716,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.countrySub?.unsubscribe();
     this.retailerSub?.unsubscribe();
     this.routeSub?.unsubscribe();
+    this.userAvatarSub?.unsubscribe();
 
     this.appStateService.selectCountry();
     this.appStateService.selectRetailer();

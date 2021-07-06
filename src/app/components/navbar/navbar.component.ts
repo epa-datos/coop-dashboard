@@ -26,6 +26,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   sidebarSub: Subscription;
   routeSub: Subscription;
+  userAvatarSub: Subscription;
 
   mainRegionSub: Subscription;
   countrySub: Subscription;
@@ -38,6 +39,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   mainRegionInit: boolean = true;
   countryInit: boolean = true;
   retailerInit: boolean = true;
+
+  userAvatarUrlBroken: boolean;
 
   selectedLang;
 
@@ -109,6 +112,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
           this.loadCustomTitles(event.url);
         }
       });
+
+    // user avatar url
+    this.userAvatarSub = this.userService.userAvatarUrl$.subscribe(() => {
+      this.userAvatarUrlBroken = this.userAvatarUrlBroken && false;
+      this.user = this.userService.user;
+    });
   }
 
   loadCustomTitles(currentUrl: string) {
@@ -205,5 +214,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.countrySub?.unsubscribe();
     this.retailerSub?.unsubscribe();
     this.routeSub?.unsubscribe();
+    this.userAvatarSub?.unsubscribe();
   }
 }
