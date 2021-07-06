@@ -18,6 +18,10 @@ export class UserService {
   private userSource = new Subject<User>();
   user$ = this.userSource.asObservable();
 
+  private _userAvatarUrl: string;
+  private userAvatarSource = new Subject<string>();
+  userAvatarUrl$ = this.userAvatarSource.asObservable();
+
   private _loggedIn = false;
 
   defaultRedirect: Route; // default url to redirect after login and sidebar icons
@@ -35,6 +39,21 @@ export class UserService {
     this.userSource.next(this._user);
   }
 
+  get userAvatarUrl(): string {
+    return this._userAvatarUrl;
+  }
+
+  set userAvatarUrl(url: string) {
+    if (!url) {
+      return;
+    }
+    this._userAvatarUrl = url;
+    this.user.avatar_url = url;
+    window.localStorage.setItem('avatar_url', this.user.avatar_url);
+
+    this.userAvatarSource.next(this._userAvatarUrl);
+  }
+
   get loggedIn() {
     return !!window.localStorage.getItem('auth_token')
   }
@@ -48,6 +67,10 @@ export class UserService {
     private usersMngmtService: UsersMngmtService
   ) {
     this._loggedIn = !!window.localStorage.getItem('auth_token');
+
+    this.user.id = !!window.localStorage.getItem('user_id')
+      ? +window.localStorage.getItem('user_id')
+      : null;
 
     this.user.email = !!window.localStorage.getItem('usermail')
       ? window.localStorage.getItem('usermail')
@@ -63,6 +86,10 @@ export class UserService {
 
     this.user.role_name = !!window.localStorage.getItem('role_name')
       ? window.localStorage.getItem('role_name')
+      : '';
+
+    this.user.avatar_url = !!window.localStorage.getItem('avatar_url')
+      ? window.localStorage.getItem('avatar_url')
       : '';
 
     this.viewLevel = !!window.localStorage.getItem('view_level')
@@ -112,9 +139,11 @@ export class UserService {
             this.user.role_name = auth.role.name;
             this.viewLevel = auth.level;
 
+            window.localStorage.setItem('user_id', this.user.id.toString());
             window.localStorage.setItem('usermail', this.user.email);
             window.localStorage.setItem('first_name', this.user.first_name ? this.user.first_name : null);
             window.localStorage.setItem('last_name', this.user.last_name ? this.user.last_name : null);
+            window.localStorage.setItem('avatar_url', this.user.avatar_url);
             window.localStorage.setItem('auth_token', auth.token);
             window.localStorage.setItem('role_name', auth.role.name);
             window.localStorage.setItem('view_level', this.viewLevel);
@@ -123,6 +152,19 @@ export class UserService {
           }
         })
       )
+  }
+
+  getUserInfo() {
+    if (!this.user.id) {
+      return throwError('[user.service]: not user ID provided');
+    }
+
+    return this.http.get(`${this.baseUrl}/users/${this.user.id}`);
+  }
+
+  logout() {
+    this.cleanUserData();
+    this.filtersStateService.deleteFilters();
   }
 
   pswRecoveryRequest(email: string) {
@@ -146,6 +188,19 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/users/restore_password`, { code, password });
   }
 
+  uploadProfileImage(file: FormData) {
+    if (!this.user.id) {
+      return throwError('[user.service]: not user ID provided');
+    }
+
+    if (!file) {
+      return throwError('[user.service]: not file provided');
+    }
+
+    const endpoint = `${this.baseUrl}/users/${this.user.id}/images`;
+    return this.http.put(endpoint, file);
+  }
+
   isLoggedIn(): boolean {
     return this.loggedIn;
   }
@@ -156,18 +211,6 @@ export class UserService {
       : window.localStorage.getItem('role_name');
 
     return role_name === 'admin' ? true : false;
-  }
-
-  redirectToDefaultPage() {
-    return new Promise<void>((resolve) => {
-      this.getDefaultRedirect().then((route: Route) => {
-        this.defaultRedirect = route;
-
-        const { url, queryParams } = route;
-        this.router.navigate([url], { queryParams });
-        resolve();
-      });
-    });
   }
 
   getDefaultRedirect() {
@@ -228,24 +271,16 @@ export class UserService {
     });
   }
 
-  logout() {
-    this.cleanUserData();
-    this.filtersStateService.deleteFilters();
-  }
+  redirectToDefaultPage() {
+    return new Promise<void>((resolve) => {
+      this.getDefaultRedirect().then((route: Route) => {
+        this.defaultRedirect = route;
 
-  cleanUserData() {
-    this._loggedIn = false;
-    this._user = new User();
-    this.router.navigate(['/login']);
-
-    const savedLang = localStorage.getItem('lang') || 'es';
-    window.localStorage.clear();
-
-    localStorage.setItem('lang', savedLang);
-  }
-
-  hashPsw(password: string): string | Int32Array {
-    return Md5.hashStr(password);
+        const { url, queryParams } = route;
+        this.router.navigate([url], { queryParams });
+        resolve();
+      });
+    });
   }
 
   deleteUserCookieIfExists() {
@@ -278,6 +313,21 @@ export class UserService {
       .catch((error) => {
         console.error(`[user.service]: ${error}`);
       });
+  }
+
+  cleanUserData() {
+    this._loggedIn = false;
+    this._user = new User();
+    this.router.navigate(['/login']);
+
+    const savedLang = localStorage.getItem('lang') || 'es';
+    window.localStorage.clear();
+
+    localStorage.setItem('lang', savedLang);
+  }
+
+  hashPsw(password: string): string | Int32Array {
+    return Md5.hashStr(password);
   }
 }
 

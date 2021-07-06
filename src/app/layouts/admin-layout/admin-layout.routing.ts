@@ -11,11 +11,11 @@ import { UsersMngmtGuard } from 'src/app/modules/users-mngmt/users-mngmt.guard';
 import { DashboardComponent } from 'src/app/modules/dashboard/dashboard.component';
 import { InvestmentComponent } from 'src/app/pages/investment/investment.component';
 import { HomeComponent } from 'src/app/modules/dashboard/pages/home/home.component';
+import { SettingsComponent } from 'src/app/modules/settings/settings.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'chart-js', component: ChartJsComponent },
     { path: 'amcharts', component: AmchartsComponent },
-    { path: 'user-profile', component: UserProfileComponent },
     { path: 'tables', component: TablesComponent },
     { path: 'icons', component: IconsComponent },
     { path: 'maps', component: MapsComponent },
@@ -42,5 +42,13 @@ export const AdminLayoutRoutes: Routes = [
                 m => m.UsersMngmtModule
             ),
         canActivate: [UsersMngmtGuard]
+    },
+    {
+        path: 'dashboard/settings',
+        component: SettingsComponent,
+        loadChildren: () =>
+            import('src/app/modules/settings/settings.module').then(
+                m => m.SettingsModule
+            )
     }
 ];

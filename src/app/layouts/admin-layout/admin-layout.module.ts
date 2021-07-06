@@ -8,13 +8,11 @@ import { UsersMngmtModule } from 'src/app/modules/users-mngmt/users-mngmt.module
 import { AdminLayoutRoutes } from './admin-layout.routing';
 import { IconsComponent } from '../../pages/icons/icons.component';
 import { MapsComponent } from '../../pages/maps/maps.component';
-import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { UsersMngmtGuard } from 'src/app/modules/users-mngmt/users-mngmt.guard';
 import { DashboardModule } from 'src/app/modules/dashboard/dashboard.module';
 import { InvestmentComponent } from 'src/app/pages/investment/investment.component';
 
-// import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   imports: [
@@ -26,7 +24,6 @@ import { InvestmentComponent } from 'src/app/pages/investment/investment.compone
     DashboardModule
   ],
   declarations: [
-    UserProfileComponent,
     TablesComponent,
     IconsComponent,
     MapsComponent,

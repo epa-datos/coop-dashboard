@@ -1,0 +1,57 @@
+.card-profile-image {
+    height: 180px;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    transform: translate(-50%, -30%);
+    transition: all 0.15s ease;
+    width: 180px;
+    left: 50%;
+
+    &:hover {
+        transform: translate(-50%, -33%);
+    }
+
+    .loading-shade {
+        align-items: center;
+        background: rgba(0, 0, 0, 0.2);
+        display: flex;
+        justify-content: center;
+        z-index: 1;
+    }
+
+    .avatar-container img, 
+    .loading-shade {
+        border-radius: 50%;
+        height: 180px;
+        left: 0;
+        top: 0;
+        position: absolute;
+        transform: unset;
+        width: 180px;
+    }
+
+    .avatar-container.default {
+        align-items: center;
+        border-radius: 50%;
+        box-shadow: 0 0 2rem 0 rgb(118 118 118 / 15%);
+        display: flex;
+        height: 100%;
+        justify-content: center;
+
+        i {
+            font-size: 100px;
+            color: #d3d8df;
+        }
+    }
+}
+
+.input-file {
+    display: none;
+}
+
+.file-status {
+    small {
+        display: block;
+    }
+}

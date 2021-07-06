@@ -23,15 +23,15 @@
           </div>
         </a>
         <div class="dropdown-menu-arrow dropdown-menu-right" ngbDropdownMenu>
-          <!-- <a routerLinkActive="active" class="dropdown-item">
+          <a routerLinkActive="active" class="dropdown-item" routerLink="/dashboard/settings/my-profile">
             <i class="ni ni-single-02"></i>
             <span>Mi perfil</span>
           </a>
-          <a routerLinkActive="active" class="dropdown-item">
+          <!-- <a routerLinkActive="active" class="dropdown-item">
             <i class="ni ni-support-16"></i>
             <span>Soporte</span>
           </a> -->
-          <!-- <div class="dropdown-divider"></div> -->
+          <div class="dropdown-divider"></div>
           <a class="dropdown-item" (click)="logout()">
             <i class="ni ni-user-run"></i>
             <span class="mb-0 text-sm">{{ 'navbar.logout' | translate }}</span>
