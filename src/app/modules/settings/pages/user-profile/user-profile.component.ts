@@ -30,6 +30,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   file;
   fileContent: string | ArrayBuffer;
   imgSub;
+  avatarUrl;
+
 
   constructor(
     private fb: FormBuilder,
@@ -56,6 +58,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.name.setValue(this.userService.user.first_name);
       this.lastName.setValue(this.userService.user.last_name);
       this.email.setValue(this.userService.user.email);
+      this.avatarUrl = this.userService.user.avatar_url;
     }
   }
 
@@ -78,15 +81,21 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     console.log('formData', formData)
 
     this.userProfileService.uploadProfileImage(formData).subscribe(
-      res => {
+      (res: any) => {
         console.log('res', res);
-
+        this.avatarUrl = res.url;
         this.file.status = 'loaded';
       },
       error => {
-        console.log('userProfileService error')
         this.file.status = 'failed';
-      })
+
+        const errorMsg = error?.error?.message
+          ? error.error.message :
+          error?.message
+            ? error?.message
+            : error;
+        console.error(`[user-profile.component]: ${errorMsg}`);
+      });
 
     // const fileReader = new FileReader();
     // fileReader.readAsArrayBuffer(this.file);

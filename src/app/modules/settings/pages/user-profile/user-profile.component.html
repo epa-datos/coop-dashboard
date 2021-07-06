@@ -4,6 +4,8 @@
     </div>
 </div>
 
+<!-- avatarUrl {{avatarUrl}}
+<br><br><br> -->
 <div class="row">
     <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
         <div class="card card-profile shadow height-fluid">
@@ -11,7 +13,7 @@
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
                         <a href="javascript:void(0)">
-                            <img src="assets/img/theme/team-3-800x800.jpg" class="rounded-circle">
+                            <img *ngIf="avatarUrl" [src]="avatarUrl" class="rounded-circle">
                         </a>
                     </div>
                 </div>
@@ -25,9 +27,9 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="file-status text-center mb-4">
-                            <progress *ngIf="file?.status === 'loading'"
+                            <!-- <progress *ngIf="file?.status === 'loading'"
                                 [ngClass]="{'completed': file?.progress === 100}" max="100"
-                                [value]="file?.progress"></progress>
+                                [value]="file?.progress"></progress> -->
 
                             <small *ngIf="file?.name && file?.status !== 'loaded'" class="text-muted mb-2">
                                 {{ file.name }}
@@ -44,7 +46,7 @@
                         </div>
 
                         <div class="d-flex justify-content-center">
-                            <ng-container *ngIf="!file || file?.status === 'invalid'">
+                            <ng-container *ngIf="!file || file?.status === 'invalid' || file?.status === 'loaded'">
                                 <input class="input-file" type="file" #fileInput
                                     (change)="onFileSelected($event.target.files)">
                                 <button class="btn btn-primary" (click)="fileInput.click()">
@@ -52,7 +54,7 @@
                                     Nueva foto de perfil
                                 </button>
                             </ng-container>
-                            <ng-container *ngIf="file && file?.status !== 'invalid'">
+                            <ng-container *ngIf="file && file?.status !== 'invalid' && file?.status !== 'loaded'">
                                 <button class="btn btn-primary" (click)="uploadImage()"
                                     [disabled]="file?.status === 'loading'">
                                     <i class="fas fa-save mr-2"></i>
