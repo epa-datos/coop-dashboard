@@ -69,6 +69,10 @@ export class UserService {
       ? window.localStorage.getItem('role_name')
       : '';
 
+    this.user.avatar_url = !!window.localStorage.getItem('avatar_url')
+      ? window.localStorage.getItem('avatar_url')
+      : '';
+
     this.viewLevel = !!window.localStorage.getItem('view_level')
       ? window.localStorage.getItem('view_level')
       : '';
@@ -120,8 +124,10 @@ export class UserService {
             window.localStorage.setItem('usermail', this.user.email);
             window.localStorage.setItem('first_name', this.user.first_name ? this.user.first_name : null);
             window.localStorage.setItem('last_name', this.user.last_name ? this.user.last_name : null);
+            window.localStorage.setItem('avatar_url', this.user.avatar_url);
             window.localStorage.setItem('auth_token', auth.token);
             window.localStorage.setItem('role_name', auth.role.name);
+            window.localStorage.setItem('view_level', this.viewLevel);
 
             this._loggedIn = true;
           }
