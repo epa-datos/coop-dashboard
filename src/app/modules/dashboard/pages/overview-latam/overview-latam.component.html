@@ -106,34 +106,33 @@
                             </div>
 
                             <div class="col-12 mb-2">
-                                <div [ngClass]="{'pills-container' : selectedTab4 !== 3}">
-                                    <!-- sector -->
-                                    <!-- <ul class="nav nav-pills nav-fill"
+                                <!-- sector -->
+                                <!-- <ul class="nav nav-pills nav-fill"
                                         *ngIf="selectedTab4 === 1 && selectedSectors?.length > 1">
                                         <li class="nav-item mb-2">
-                                            <a class="nav-link p-2" [ngClass]="{'active': selectAllTab}"
-                                                (click)="selectAllTab = true; getDataByUsersInvOrAup(); clearUsersAndSalesTabs()">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab5 === 1}"
+                                                (click)="selectedTab5 = 1; getDataByUsersInvOrAup(); clearUsersAndSalesTabs()">
                                                 {{ 'others.all' | translate | titlecase }}
                                             </a>
                                         </li>
                                         <li class="nav-item mb-2" *ngFor="let sector of selectedSectors">
                                             <a class="nav-link p-2"
-                                                [ngClass]="{'active': selectedSectorsTab?.includes(sector.id) && !selectAllTab}"
-                                                (click)="selectAllTab = false; getDataByUsersInvOrAup(null, sector)">
+                                                [ngClass]="{'active': category.id + 2 === selectedTab5}"
+                                                (click)="selectedTab5 = category.id + 2; getDataByUsersInvOrAup(null, sector)">
                                                 {{ sector.id }} - {{ sector.name }}
                                             </a>
                                         </li>
                                     </ul> -->
 
-                                    <ng-container *ngIf="selectedTab4 === 1 && selectedSectors?.length > 1">
-                                        <app-multiple-tabs-selector [tabList]="selectedSectors"
-                                            [selectedTabs]="selectedSectorsTab"
-                                            (selectedTabsChange)="multipleSelectorChange('sectors', $event)">
-                                        </app-multiple-tabs-selector>
-                                    </ng-container>
+                                <ng-container *ngIf="selectedTab4 === 1 && selectedSectors?.length > 1">
+                                    <app-multiple-tabs-selector [tabList]="selectedSectors"
+                                        [selectedTabs]="selectedSectorsTab" [adjustTabsRow]="true"
+                                        (selectedTabsChange)="multipleSelectorChange('sectors', $event)">
+                                    </app-multiple-tabs-selector>
+                                </ng-container>
 
-                                    <!-- categoria -->
-                                    <ul class="nav nav-pills nav-fill"
+                                <!-- categoria -->
+                                <!-- <ul class="nav nav-pills nav-fill"
                                         *ngIf="selectedTab4 === 2 && selectedCategories?.length > 1">
                                         <li class="nav-item mb-2">
                                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab5 === 1}"
@@ -148,10 +147,18 @@
                                                 {{ category.name }}
                                             </a>
                                         </li>
-                                    </ul>
+                                    </ul> -->
 
-                                    <!-- fuente -->
-                                    <ul class="nav nav-pills nav-fill"
+                                <ng-container *ngIf="selectedTab4 === 2 && selectedCategories?.length > 1">
+                                    <app-multiple-tabs-selector [tabList]="selectedCategories"
+                                        [selectedTabs]="selectedCategoriesTab" [adjustTabsRow]="true"
+                                        allSelectedTabText="female"
+                                        (selectedTabsChange)="multipleSelectorChange('categories', $event)">
+                                    </app-multiple-tabs-selector>
+                                </ng-container>
+
+                                <!-- fuente -->
+                                <!-- <ul class="nav nav-pills nav-fill"
                                         *ngIf="selectedTab4 === 3 && selectedSources?.length > 1">
                                         <li class="nav-item mb-2">
                                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab5 === 1}"
@@ -166,8 +173,18 @@
                                                 {{ source.name }}
                                             </a>
                                         </li>
-                                    </ul>
-                                </div>
+                                    </ul> -->
+
+                                <ng-container *ngIf="selectedTab4 === 3 && selectedSources?.length > 1">
+                                    <app-multiple-tabs-selector [tabList]="selectedSources"
+                                        [selectedTabs]="selectedSourcesTab" allSelectedTabText="female"
+                                        (selectedTabsChange)="multipleSelectorChange('sources', $event)">
+                                    </app-multiple-tabs-selector>
+                                </ng-container>
+
+                                <p class="mb-1 text-right">
+                                    <small class="text-muted">Ctrl + click para selección múltiple</small>
+                                </p>
                             </div>
                         </div>
 

@@ -145,7 +145,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   translateSub: Subscription;
   chartsInitLoad: boolean = true;
 
-  selectAllTab: boolean = true;
 
   constructor(
     private filtersStateService: FiltersStateService,
@@ -218,7 +217,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     switch (this.selectedTab4) {
       case 1:
         // there's a previous selected sector
-
         previousSectors = this.selectedSectors.filter(sector => this.selectedSectorsTab.includes(sector.id));
         console.log('previousSectors', previousSectors);
         break;
@@ -237,20 +235,27 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     }
     // }
 
-    let selectedSectors = previousSectors?.length > 0 ? previousSectors.map(item => item.id) : null;
+    const selectedSectors = previousSectors?.length > 0 ? previousSectors.map(item => item.id) : null;
     const selectedCategories = previousCategories?.length > 0 ? previousCategories.map(item => item.id) : null;
     const selectedSources = previousSources?.length > 0 ? previousSources.map(item => item.id) : null;
     const selectedCategory2 = previousCategory2 ? previousCategory2 : this.selectedCategories[0];
 
+    if (!selectedSectors) {
+      this.selectedSectorsTab = [];
+    }
+
+    if (!selectedCategories) {
+      this.selectedCategoriesTab = [];
+    }
+
+    if (!selectedSectors) {
+      this.selectedSourcesTab = [];
+    }
+
     this.getKpis();
     this.getSectorsAndCategories(sectorsOrCategoriesMetric);
     this.getDemographics(demohraphicMetric);
-    console.log('selectedSectors', selectedSectors)
-    console.log('this.selectedSectors', this.selectedSectors)
 
-    if (!selectedSectors && !selectedCategories && !selectedSources) {
-      selectedSectors = this.selectedSectors.map(item => item.id);
-    }
 
     this.getDataByUsersInvOrAup(null, selectedSectors, selectedCategories, selectedSources);
 
@@ -365,6 +370,8 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
         originalItemsLength = this.selectedSources.length;
         break;
     }
+
+    console.log('_____________________')
 
     // if (selectedIds.length === 1 || originalItemsLength === selectedIds.length) {
     this.getDataByUsersInvOrAup(null, this.selectedSectorsTab, this.selectedCategoriesTab, this.selectedSourcesTab);
