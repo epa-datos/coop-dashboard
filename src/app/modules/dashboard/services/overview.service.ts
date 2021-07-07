@@ -77,6 +77,27 @@ export class OverviewService {
     }
   }
 
+  customQueryParams(isLatam?: boolean, sectorsQP?: string, categoriesQP?: string, sourcesQP?: string, forceSourcesUse?: boolean) {
+    let startDate = this.filtersStateService.periodQParams.startDate;
+    let endDate = this.filtersStateService.periodQParams.endDate;
+    let campaigns = this.filtersStateService.campaignsQParams;
+    let sectors = !sectorsQP ? this.filtersStateService.sectorsQParams : sectorsQP;
+    let categories = !categoriesQP ? this.filtersStateService.categoriesQParams : categoriesQP;
+    let sources = !sourcesQP ? this.filtersStateService.sourcesQParams : sourcesQP;
+
+    const baseQParams = `start_date=${startDate}&end_date=${endDate}&sectors=${sectors}&categories=${categories}`;
+    if (!isLatam && !forceSourcesUse) {
+      return `${baseQParams}${campaigns ? `&campaigns=${campaigns}` : ''}`;
+
+    } else if (!isLatam && forceSourcesUse) {
+      return `${baseQParams}&sources=${sources}${campaigns ? `&campaigns=${campaigns}` : ''}`;
+
+    } else {
+      let retailers = this.filtersStateService.retailersQParams;
+      return `retailers=${retailers}&${baseQParams}&sources=${sources}`;
+    }
+  }
+
   /**** COUNTRIES AND RETAILERS
   * Overview endpoints for Countries and Retailers
   * ****/
@@ -191,12 +212,17 @@ export class OverviewService {
   }
 
   // *** users vs conversions / investment vs revenue / revenue vs aup ***
-  getUsersInvOrAupLatam(metricType: string, sectorID?: number, categoryID?: number, sourceID?: number) {
+  getUsersInvOrAupLatam(metricType: string, sectors?: number[], categories?: number[], sources?: number[]) {
     if (!metricType) {
       return throwError('[overview.service]: not metricType provided');
     }
 
-    let queryParams = this.concatedQueryParams(true, sectorID, categoryID, sourceID);
+    const sectorsQParams = sectors && this.filtersStateService.convertArrayToQueryParams(sectors);
+    const categoriesQParams = categories && this.filtersStateService.convertArrayToQueryParams(categories);
+    const sourcesQParams = sources && this.filtersStateService.convertArrayToQueryParams(sources);
+
+    let queryParams = this.customQueryParams(true, sectorsQParams, categoriesQParams, sourcesQParams, true);
+
     return this.http.get(`${this.baseUrl}/latam/${metricType}?${queryParams}`);
   }
 
