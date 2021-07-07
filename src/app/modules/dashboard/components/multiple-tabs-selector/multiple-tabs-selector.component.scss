@@ -1,6 +1,10 @@
 .multiple-tabs-container {
     width: 100%;
 
+    li {
+        cursor: pointer;
+    }
+
     .pills-container {
         width: 60%;
     

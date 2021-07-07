@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-multiple-tabs-selector',
@@ -7,33 +6,42 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./multiple-tabs-selector.component.scss']
 })
 export class MultipleTabsSelectorComponent implements OnInit {
-  @Input() showAllSelectedTab: boolean = true; // to show 'select all' tab
-  @Input() adjustTabsRow: boolean;
 
+  // tab list
   private _tabList: TabItem[];
   get tabList() {
     return this._tabList;
   }
   @Input() set tabList(value) {
     this._tabList = value;
+
+    if (!this.prevTabList) {
+      this.prevTabList = this._tabList;
+    }
+
+    // for dynamic tabs is necessary to select 'select all' tab when previous selected tab disappears
+    this.updateAllSelectedTabValue();
   }
 
+  // selected tab list
   private _selectedTabs: (number | string)[];
   get selectedTabs() {
     return this._selectedTabs;
   }
   @Input() set selectedTabs(value) {
     this._selectedTabs = value;
-    // this.getAllSelectTabValue();
   }
 
+  @Input() showAllSelectedTab: boolean = true; // to show 'select all' tab
+  @Input() allSelectedTabText: string = 'male'; // male | female
+  @Input() adjustTabsRow: boolean; // to apply pills-container class style to tabs container
   @Output() private selectedTabsChange = new EventEmitter<(number | string)[]>();
 
-  allSelectedTab: boolean;
+  prevTabList // previous tabList value to use for comparison (dynamic tabs);
+  allSelectedTab: boolean; // 'select all' tab value (on/off tab)
+  selectionWasAllTab: boolean; // to catch if previous selected tab was 'select all'
 
-  constructor(
-    private translate: TranslateService
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.getAllSelectTabValue();
@@ -46,22 +54,28 @@ export class MultipleTabsSelectorComponent implements OnInit {
     } else {
       this.allSelectedTab = false;
     }
+  }
 
-    console.log('allSelectedTab', this.allSelectedTab)
+  updateAllSelectedTabValue() {
+    if (JSON.stringify(this._tabList) !== JSON.stringify(this.prevTabList)) {
+      this.prevTabList = this._tabList;
+
+      const prevSelectedTab = this._tabList.some(r => this.selectedTabs.indexOf(r.id) >= 0);
+
+      if (!prevSelectedTab) {
+        this.allSelectedTab = true;
+      }
+    }
   }
 
   selectedTab(ev, item: TabItem) {
-    console.log('ev.ctrlKey', ev?.ctrlKey)
-    console.log('item', item)
-    console.log('selectedTabs', this.selectedTabs)
-
     // unique selection (click over one tab except 'select all' tab)
     if (!ev?.ctrlKey && item?.id) {
       this.selectedTabs = [item.id];
     }
 
     // unique selection (ctrl + click after 'select all' tab)
-    else if (ev?.ctrlKey && !this.selectedTabs && item?.id) {
+    else if (ev?.ctrlKey && item?.id && (!this.selectedTabs || this.selectionWasAllTab)) {
       this.selectedTabs = [item.id];
     }
 
@@ -82,12 +96,10 @@ export class MultipleTabsSelectorComponent implements OnInit {
       }
     }
 
-    console.log('selectedTabs', this.selectedTabs)
-    console.log('______________________________')
+    this.selectionWasAllTab = !item ? true : false;
 
     this.selectedTabsChange.emit(this.selectedTabs)
   }
-
 }
 
 export interface TabItem {
