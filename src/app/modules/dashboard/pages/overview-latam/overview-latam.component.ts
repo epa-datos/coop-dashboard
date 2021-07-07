@@ -5,7 +5,6 @@ import { OverviewService } from '../../services/overview.service';
 import { TableItem } from '../../components/generic-table/generic-table.component';
 import { TranslateService } from '@ngx-translate/core';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
-import { isNotEmittedStatement } from 'typescript';
 
 @Component({
   selector: 'app-overview-latam',
@@ -146,6 +145,8 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   translateSub: Subscription;
   chartsInitLoad: boolean = true;
 
+  selectAllTab: boolean = true;
+
   constructor(
     private filtersStateService: FiltersStateService,
     private overviewService: OverviewService,
@@ -213,37 +214,46 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     let previousCategories;
     let previousSources;
 
-    if (this.selectedTab5 !== 1) {
-      switch (this.selectedTab4) {
-        case 1:
-          // there's a previous selected sector
-          console.log('selectedSectorsTab', this.selectedSectorsTab);
-          previousSectors = this.selectedSectors.filter(sector => this.selectedSectorsTab.includes(sector.id));
-          break;
+    // if (this.selectedTab5 !== 1) {
+    switch (this.selectedTab4) {
+      case 1:
+        // there's a previous selected sector
 
-        case 2:
-          // there's a previous selected category
-          console.log('selectedCategoriesTab', this.selectedCategoriesTab);
-          previousCategories = this.selectedCategories.find(category => this.selectedCategoriesTab.includes(category.id));
-          break;
+        previousSectors = this.selectedSectors.filter(sector => this.selectedSectorsTab.includes(sector.id));
+        console.log('previousSectors', previousSectors);
+        break;
 
-        case 3:
-          // there's a previous selected source
-          console.log('selectedSourcesTab', this.selectedSourcesTab);
-          previousSources = this.selectedSources.find(source => this.selectedSourcesTab.includes(source.id));
-          break;
-      }
+      case 2:
+        // there's a previous selected category
+        previousCategories = this.selectedCategories.find(category => this.selectedCategoriesTab.includes(category.id));
+        console.log('previousCategories', previousCategories);
+        break;
+
+      case 3:
+        // there's a previous selected source
+        previousSources = this.selectedSources.find(source => this.selectedSourcesTab.includes(source.id));
+        console.log('previousSources', previousSources);
+        break;
     }
+    // }
 
-    const selectedSectors = previousSectors?.length > 0 ? previousSectors : null;
-    const selectedCategories = previousCategories?.length > 0 ? previousCategories : null;
-    const selectedSources = previousSources?.length > 0 ? previousSources : null;
+    let selectedSectors = previousSectors?.length > 0 ? previousSectors.map(item => item.id) : null;
+    const selectedCategories = previousCategories?.length > 0 ? previousCategories.map(item => item.id) : null;
+    const selectedSources = previousSources?.length > 0 ? previousSources.map(item => item.id) : null;
     const selectedCategory2 = previousCategory2 ? previousCategory2 : this.selectedCategories[0];
 
     this.getKpis();
     this.getSectorsAndCategories(sectorsOrCategoriesMetric);
     this.getDemographics(demohraphicMetric);
-    this.getDataByUsersInvOrAup(null, null, selectedSectors, selectedCategories, selectedSources);
+    console.log('selectedSectors', selectedSectors)
+    console.log('this.selectedSectors', this.selectedSectors)
+
+    if (!selectedSectors && !selectedCategories && !selectedSources) {
+      selectedSectors = this.selectedSectors.map(item => item.id);
+    }
+
+    this.getDataByUsersInvOrAup(null, selectedSectors, selectedCategories, selectedSources);
+
     this.getTopProducts(selectedCategory2);
 
     this.chartsInitLoad = true;
@@ -331,12 +341,37 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDataByUsersInvOrAup(ev?, metricType?: string, sector?: any, category?: any, source?: any) {
-    console.log('ev', ev)
-    console.log('ev.ctrlKey', ev?.ctrlKey)
-    console.log('sectors', sector)
-    console.log('categories', category)
-    console.log('sources', source)
+  multipleSelectorChange(option: string, selectedIds: any[]) {
+    console.log('option', option)
+    console.log('selectedIds', selectedIds)
+
+    let originalItemsLength;
+
+
+    switch (option) {
+      case 'sectors':
+        this.selectedSectorsTab = selectedIds;
+        originalItemsLength = this.selectedSectors.length;
+        break;
+
+      case 'categories':
+        this.selectedCategoriesTab = selectedIds;
+        originalItemsLength = this.selectedCategories.length;
+        break;
+
+
+      case 'sources':
+        this.selectedSourcesTab = selectedIds;
+        originalItemsLength = this.selectedSources.length;
+        break;
+    }
+
+    // if (selectedIds.length === 1 || originalItemsLength === selectedIds.length) {
+    this.getDataByUsersInvOrAup(null, this.selectedSectorsTab, this.selectedCategoriesTab, this.selectedSourcesTab);
+    // }
+  }
+
+  getDataByUsersInvOrAup(metricType?: string, sectors?: any, categories?: any, sources?: any) {
 
     this.usersInvOrAupReqStatus = 1;
 
@@ -350,35 +385,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       metricType = this.selectedTab3 === 1 ? 'users-vs-conversions' : this.selectedTab3 === 2 ? 'investment-vs-revenue' : 'aup-vs-revenue';
     }
 
-    if (!ev?.ctrlKey) {
-      // unique selection
-
-      this.getUsersInvOrAupUnique(metricType, sector, category, source);
-    } else {
-      // multiple selection
-      if (sector) {
-        const repeatedSectorIndex = this.selectedSectorsTab.findIndex(item => item.id === sector.id);
-        console.log('repeatedSectorIndex', repeatedSectorIndex);
-
-        if (repeatedSectorIndex > 0) {
-          this.selectedSectorsTab.splice(repeatedSectorIndex, 1)
-        } else {
-          !this.selectedSectorsTab.find(item => item.id === sector.id) && this.selectedSectorsTab.push(sector.id);
-        }
-
-
-      }
-
-
-
-      // this.selectedCategoriesTab.push(category);
-      // this.selectedSourcesTab.push(source);
-    }
-
-  }
-
-  getUsersInvOrAupUnique(metricType?: string, sector?: any, category?: any, source?: any) {
-    this.overviewService.getUsersInvOrAupLatam(metricType, sector?.id, category?.id, source?.id).subscribe(
+    this.overviewService.getUsersInvOrAupLatam(metricType, sectors, categories, sources).subscribe(
       (resp: any[]) => {
         this.usersInvOrAup = resp;
         this.usersInvOrAupReqStatus = 2;
@@ -390,15 +397,6 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       }
     );
 
-    if (!sector && !category && !source) {
-      this.selectedSectorsTab = [this.selectedSectors[0]?.id];
-      this.selectedTab5 = 1
-    } else {
-      this.selectedSectorsTab = sector?.id ? [sector.id] : [];
-      this.selectedCategoriesTab = category?.id ? [category.id] : [];
-      this.selectedSourcesTab = source?.id ? [source.id] : [];
-      console.log('selectedSectorsTab', this.selectedSectorsTab)
-    }
   }
 
   getTopProducts(selectedCategory?: any) {

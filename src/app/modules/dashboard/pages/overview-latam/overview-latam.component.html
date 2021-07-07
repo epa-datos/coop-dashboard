@@ -104,25 +104,33 @@
                                     </li>
                                 </ul>
                             </div>
+
                             <div class="col-12 mb-2">
                                 <div [ngClass]="{'pills-container' : selectedTab4 !== 3}">
                                     <!-- sector -->
-                                    <ul class="nav nav-pills nav-fill"
+                                    <!-- <ul class="nav nav-pills nav-fill"
                                         *ngIf="selectedTab4 === 1 && selectedSectors?.length > 1">
                                         <li class="nav-item mb-2">
-                                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab5 === 1}"
-                                                (click)="selectedTab5 = 1; getDataByUsersInvOrAup($event); clearUsersAndSalesTabs()">
+                                            <a class="nav-link p-2" [ngClass]="{'active': selectAllTab}"
+                                                (click)="selectAllTab = true; getDataByUsersInvOrAup(); clearUsersAndSalesTabs()">
                                                 {{ 'others.all' | translate | titlecase }}
                                             </a>
                                         </li>
                                         <li class="nav-item mb-2" *ngFor="let sector of selectedSectors">
                                             <a class="nav-link p-2"
-                                                [ngClass]="{'active': selectedSectorsTab.includes(sector.id)}"
-                                                (click)="getDataByUsersInvOrAup($event, null, sector)">
+                                                [ngClass]="{'active': selectedSectorsTab?.includes(sector.id) && !selectAllTab}"
+                                                (click)="selectAllTab = false; getDataByUsersInvOrAup(null, sector)">
                                                 {{ sector.id }} - {{ sector.name }}
                                             </a>
                                         </li>
-                                    </ul>
+                                    </ul> -->
+
+                                    <ng-container *ngIf="selectedTab4 === 1 && selectedSectors?.length > 1">
+                                        <app-multiple-tabs-selector [tabList]="selectedSectors"
+                                            [selectedTabs]="selectedSectorsTab"
+                                            (selectedTabsChange)="multipleSelectorChange('sectors', $event)">
+                                        </app-multiple-tabs-selector>
+                                    </ng-container>
 
                                     <!-- categoria -->
                                     <ul class="nav nav-pills nav-fill"
