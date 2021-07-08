@@ -19,7 +19,6 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
   selectedTab2: number = 2; // traffic (1) or conversions (2) selection -> demographics
   selectedTab3: number = 1; // users vs conversions (1) or investment vs revenue (2) or aup vs revenue (3) selection -> chart-multiple-axes
   selectedTab4: number = 1; // sector (1) or category (2) or source (3) selection ->  chart-multiple-axes
-  selectedTab5: number = 1; // subtab (sector, category or source) selection ->  chart-multiple-axes
 
   kpisLegends1 = ['investment', 'clicks', 'bounce_rate', 'transactions', 'revenue']
   kpisLegends2 = ['ctr', 'users', 'cr', 'roas']
@@ -111,9 +110,9 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
   selectedSources: any[] = [];
 
   // for usersInvOrAup selected tab
-  selectedSectorTab: any;
-  selectedCategoryTab: any
-  selectedSourceTab: any;
+  selectedSectorsTab: any;
+  selectedCategoriesTab: any
+  selectedSourcesTab: any;
 
   // for categoriesBySector (heatmap) selected tab
   selectedSectorTabHM: any;
@@ -153,10 +152,6 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     let selectedSectorHM;
     let demographicMetric;
 
-    let selectedSector;
-    let selectedCategory;
-    let selectedSource;
-
     if (!preserveSelectedTabs) {
       selectedSectorHM = this.selectedSectors[0];
       demographicMetric = 'traffic';
@@ -164,10 +159,6 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       // tabs for users vs conversions | investment vs revenue | revenue vs aup (chart-multiple-axes)
       this.selectedTab3 = 1;
       this.selectedTab4 = 1;
-      this.selectedTab5 = 1;
-      selectedSector = null;
-      selectedCategory = null;
-      selectedSource = null;
 
     } else {
       // PRESERVE PREVIOUS SELECTION (TABS)
@@ -180,38 +171,36 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       demographicMetric = this.selectedTab2 === 1 ? 'traffic' : 'sales';
 
       // users vs conversions | investment vs revenue | revenue vs aup (chart-multiple-axes)
-      let previousSector;
-      let previousCategory;
-      let previousSource;
+      let previousSectors;
+      let previousCategories;
+      let previousSources;
 
-      if (this.selectedTab5 !== 1) {
-        switch (this.selectedTab4) {
-          case 1:
-            // there's a previous selected sector
-            previousSector = this.selectedSectors.find(sector => sector.id === this.selectedSectorTab?.id);
-            break;
+      switch (this.selectedTab4) {
+        case 1:
+          // there's a previous selected sector
+          previousSectors = this.selectedSectors.filter(sector => this.selectedSectorsTab?.includes(sector.id));
+          break;
 
-          case 2:
-            // there's a previous selected category
-            previousCategory = this.selectedCategories.find(category => category.id === this.selectedCategoryTab?.id);
-            break;
+        case 2:
+          // there's a previous selected category
+          previousCategories = this.selectedCategories.filter(category => this.selectedCategoriesTab?.includes(category.id));
+          break;
 
-          case 3:
-            // there's a previous selected source
-            previousSource = this.selectedSources.find(source => source.id === this.selectedSourceTab?.id);
-            break;
-        }
+        case 3:
+          // there's a previous selected source
+          previousSources = this.selectedSources.filter(source => this.selectedSourcesTab?.includes(source.id));
+          break;
       }
 
-      selectedSector = previousSector ? previousSector : null;
-      selectedCategory = previousCategory ? previousCategory : null;
-      selectedSource = previousSource ? previousSource : null;
+      this.selectedSectorsTab = previousSectors?.map(item => item.id);
+      this.selectedCategoriesTab = previousCategories?.map(item => item.id);
+      this.selectedSourcesTab = previousSources?.map(item => item.id);
     }
 
     this.getKpis();
     this.getCategoriesBySector(selectedSectorHM);
     this.getDemographics(demographicMetric);
-    this.getDataByUsersInvOrAup(null, selectedSector, selectedCategory, selectedSource);
+    this.getDataByUsersInvOrAup(null, this.selectedSectorsTab, this.selectedCategoriesTab, this.selectedSourcesTab);
 
     this.chartsInitLoad = true;
   }
@@ -298,7 +287,31 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDataByUsersInvOrAup(metricType?: string, sector?: any, category?: any, source?: any) {
+  multipleSelectorChange(option: string, selectedIds: any[]) {
+    let originalItemsLength;
+
+    switch (option) {
+      case 'sectors':
+        this.selectedSectorsTab = selectedIds;
+        originalItemsLength = this.selectedSectors.length;
+        break;
+
+      case 'categories':
+        this.selectedCategoriesTab = selectedIds;
+        originalItemsLength = this.selectedCategories.length;
+        break;
+
+
+      case 'sources':
+        this.selectedSourcesTab = selectedIds;
+        originalItemsLength = this.selectedSources.length;
+        break;
+    }
+
+    this.getDataByUsersInvOrAup(null, this.selectedSectorsTab, this.selectedCategoriesTab, this.selectedSourcesTab);
+  }
+
+  getDataByUsersInvOrAup(metricType?: string, sectors?: any, categories?: any, sources?: any) {
     this.usersInvOrAupReqStatus = 1;
 
     if (metricType) {
@@ -311,7 +324,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       metricType = this.selectedTab3 === 1 ? 'users-vs-conversions' : this.selectedTab3 === 2 ? 'investment-vs-revenue' : 'aup-vs-revenue';
     }
 
-    this.overviewService.getUsersInvOrAup(metricType, sector?.id, category?.id, source?.id).subscribe(
+    this.overviewService.getUsersInvOrAup(metricType, sectors, categories, sources).subscribe(
       (resp: any[]) => {
         this.usersInvOrAup = resp;
         this.usersInvOrAupReqStatus = 2;
@@ -322,21 +335,12 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
         this.usersInvOrAupReqStatus = 3;
       }
     )
-
-    if (!sector && !category && !source) {
-      this.selectedSectorTab = this.selectedSectors[0];
-      this.selectedTab5 = 1
-    } else {
-      this.selectedSectorTab = sector;
-      this.selectedCategoryTab = category;
-      this.selectedSourceTab = source;
-    }
   }
 
-  clearUsersAndSalesTabs() {
-    this.selectedSectorTab && delete this.selectedSectorTab;
-    this.selectedCategoryTab && delete this.selectedCategoryTab;
-    this.selectedSourceTab && delete this.selectedSourceTab;
+  clearSubtabsSelection() {
+    this.selectedSectorsTab && delete this.selectedSectorsTab;
+    this.selectedCategoriesTab && delete this.selectedCategoriesTab;
+    this.selectedSourcesTab && delete this.selectedSourcesTab;
   }
 
   clearKpis() {

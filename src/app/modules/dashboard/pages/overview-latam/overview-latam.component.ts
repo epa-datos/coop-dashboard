@@ -215,17 +215,17 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     switch (this.selectedTab4) {
       case 1:
         // there's previous selected sectors
-        previousSectors = this.selectedSectors.filter(sector => this.selectedSectorsTab.includes(sector.id));
+        previousSectors = this.selectedSectors.filter(sector => this.selectedSectorsTab?.includes(sector.id));
         break;
 
       case 2:
         // there's previous selected categories
-        previousCategories = this.selectedCategories.filter(category => this.selectedCategoriesTab.includes(category.id));
+        previousCategories = this.selectedCategories.filter(category => this.selectedCategoriesTab?.includes(category.id));
         break;
 
       case 3:
         // there's previous selected sources
-        previousSources = this.selectedSources.filter(source => this.selectedSourcesTab.includes(source.id));
+        previousSources = this.selectedSources.filter(source => this.selectedSourcesTab?.includes(source.id));
         break;
     }
 
