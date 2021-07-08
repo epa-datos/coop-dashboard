@@ -216,7 +216,7 @@ export class OverviewService {
   }
 
   // *** demographics ***
-  getDemographicsLatam(metricType: string, subMetricType: string) {
+  getTrafficOrSalesLatam(metricType: string, subMetricType: string) {
     if (!metricType) {
       return throwError('[overview.service]: not metricType provided');
     }
