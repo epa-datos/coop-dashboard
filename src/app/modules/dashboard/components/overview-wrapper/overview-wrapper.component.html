@@ -62,19 +62,19 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
-                            (click)="getDataByUsersInvOrAup('users-vs-conversions')">
+                            (click)="getDataByUsersInvOrAup('users-vs-conversions', selectedSectorsTab, selectedCategoriesTab, selectedSourcesTab)">
                             {{ 'general.usersVsSales' | translate }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
-                            (click)="getDataByUsersInvOrAup('investment-vs-revenue')">
+                            (click)="getDataByUsersInvOrAup('investment-vs-revenue', selectedSectorsTab, selectedCategoriesTab, selectedSourcesTab)">
                             {{ 'general.investmentVsRevenue' | translate }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 3}"
-                            (click)="getDataByUsersInvOrAup('aup-vs-revenue')">
+                            (click)="getDataByUsersInvOrAup('aup-vs-revenue', selectedSectorsTab, selectedCategoriesTab, selectedSourcesTab)">
                             {{ 'general.revenueVsAup' | translate }}
                         </a>
                     </li>
@@ -97,65 +97,37 @@
                             <ul class="nav nav-tabs">
                                 <li class="nav-item" *ngFor="let metric of usersInvOrAupMetrics; let i = index">
                                     <a class="nav-link" [ngClass]="{'active bg-light' : selectedTab4 === i + 1}"
-                                        (click)="selectedTab4 = i + 1; selectedTab5 = 1; getDataByUsersInvOrAup()">
+                                        (click)="selectedTab4 = i + 1; clearSubtabsSelection(); getDataByUsersInvOrAup()">
                                         <span>{{ metric | titlecase }}</span>
                                     </a>
                                 </li>
                             </ul>
                         </div>
                         <div class="col-12 mb-2">
-                            <div [ngClass]="{'pills-container' : selectedTab4 !== 3}">
-                                <!-- sector -->
-                                <ul class="nav nav-pills nav-fill"
-                                    *ngIf="selectedTab4 === 1 && selectedSectors?.length > 1">
-                                    <li class="nav-item mb-2">
-                                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab5 === 1}"
-                                            (click)="selectedTab5 = 1; getDataByUsersInvOrAup(); clearUsersAndSalesTabs()">
-                                            {{ 'others.all' | translate | titlecase }}
-                                        </a>
-                                    </li>
-                                    <li class="nav-item mb-2" *ngFor="let sector of selectedSectors">
-                                        <a class="nav-link p-2" [ngClass]="{'active': sector.id + 2 === selectedTab5}"
-                                            (click)="selectedTab5 = sector.id + 2; getDataByUsersInvOrAup(null, sector)">
-                                            {{ sector.name }}
-                                        </a>
-                                    </li>
-                                </ul>
+                            <!-- sector -->
+                            <ng-container *ngIf="selectedTab4 === 1 && selectedSectors?.length > 1">
+                                <app-multiple-tabs-selector [tabList]="selectedSectors"
+                                    [selectedTabs]="selectedSectorsTab" [adjustTabsRow]="true"
+                                    (selectedTabsChange)="multipleSelectorChange('sectors', $event)">
+                                </app-multiple-tabs-selector>
+                            </ng-container>
 
-                                <!-- categoria -->
-                                <ul class="nav nav-pills nav-fill"
-                                    *ngIf="selectedTab4 === 2 && selectedCategories?.length > 1">
-                                    <li class="nav-item mb-2">
-                                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab5 === 1}"
-                                            (click)="selectedTab5 = 1; getDataByUsersInvOrAup()">
-                                            {{ 'others.all' | translate | titlecase }}
-                                        </a>
-                                    </li>
-                                    <li class="nav-item mb-2" *ngFor="let category of selectedCategories">
-                                        <a class="nav-link p-2" [ngClass]="{'active': category.id + 2 === selectedTab5}"
-                                            (click)="selectedTab5 = category.id + 2; getDataByUsersInvOrAup(null, null, category)">
-                                            {{ category.name }}
-                                        </a>
-                                    </li>
-                                </ul>
+                            <!-- categoria -->
+                            <ng-container *ngIf="selectedTab4 === 2 && selectedCategories?.length > 1">
+                                <app-multiple-tabs-selector [tabList]="selectedCategories"
+                                    [selectedTabs]="selectedCategoriesTab" [adjustTabsRow]="true"
+                                    allSelectedTabText="female"
+                                    (selectedTabsChange)="multipleSelectorChange('categories', $event)">
+                                </app-multiple-tabs-selector>
+                            </ng-container>
 
-                                <!-- fuente -->
-                                <ul class="nav nav-pills nav-fill"
-                                    *ngIf="selectedTab4 === 3 && selectedSources?.length > 1">
-                                    <li class="nav-item mb-2">
-                                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab5 === 1}"
-                                            (click)="selectedTab5 = 1; getDataByUsersInvOrAup()">
-                                            {{ 'others.all' | translate | titlecase }}
-                                        </a>
-                                    </li>
-                                    <li class="nav-item mb-2" *ngFor="let source of selectedSources">
-                                        <a class="nav-link p-2" [ngClass]="{'active': source.id + 2 === selectedTab5}"
-                                            (click)="selectedTab5 = source.id + 2; getDataByUsersInvOrAup(null, null, null, source)">
-                                            {{ source.name }}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                            <!-- fuente -->
+                            <ng-container *ngIf="selectedTab4 === 3 && selectedSources?.length > 1">
+                                <app-multiple-tabs-selector [tabList]="selectedSources"
+                                    [selectedTabs]="selectedSourcesTab" allSelectedTabText="female"
+                                    (selectedTabsChange)="multipleSelectorChange('sources', $event)">
+                                </app-multiple-tabs-selector>
+                            </ng-container>
                         </div>
                     </div>
 
