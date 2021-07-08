@@ -5,6 +5,7 @@ import { OverviewService } from '../../services/overview.service';
 import { TableItem } from '../../components/generic-table/generic-table.component';
 import { TranslateService } from '@ngx-translate/core';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
+import { convertWeekdayToString } from 'src/app/tools/functions/data-convert';
 
 @Component({
   selector: 'app-overview-latam',
@@ -15,7 +16,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   activeTabView = 1;
 
   selectedTab1: number = 1; // sector (1) or category (2) selection -> chart-heat-map
-  selectedTab2: number = 2; // traffic (1) or conversions (2) selection -> demographics
+  selectedTab2: number = 2; // traffic (1) or conversions (2) selection -> trafficOrSales
   selectedTab3: number = 1; // users vs conversions (1) or investment vs revenue (2) or aup vs revenue (3) selection -> chart-multiple-axes
   selectedTab4: number = 1; // sector (1) or category (2) or source (3) selection ->  chart-multiple-axes
   selectedTab5: number = 1; // category selection -> generic-table (top products)
@@ -88,7 +89,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
   categoriesBySector: any[] = [];
 
-  demographics = {};
+  trafficOrSales = {};
 
   usersInvOrAupMetrics: string[] = ['sector', 'categoría', 'fuente'];
   usersInvOrAup: any[] = [];
@@ -122,11 +123,12 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   categoriesReqStatus: number = 0;
   usersInvOrAupReqStatus: number = 0;
   invVsRevenueReqStatus: number = 0;
-  demographicsReqStatus = [
+  trafficOrSalesReqStatus = [
     { name: 'device', reqStatus: 0 },
     { name: 'gender', reqStatus: 0 },
     { name: 'age', reqStatus: 0 },
-    { name: 'gender-and-age', reqStatus: 0 }
+    { name: 'genderAndAge', reqStatus: 0 },
+    { name: 'weekdayAndHour', reqStatus: 0 }
   ];
 
   // available tabs
@@ -164,12 +166,12 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       this.usersInvOrAupMetrics[1] = this.translate.instant('general.category').toLowerCase();
       this.usersInvOrAupMetrics[2] = this.translate.instant('general.source').toLowerCase();
 
-      if (this.demographics['men']?.length > 0) {
-        this.demographics['men'][1].name = this.translate.instant('others.men');
+      if (this.trafficOrSales['men']?.length > 0) {
+        this.trafficOrSales['men'][1].name = this.translate.instant('others.men');
       }
 
-      if (this.demographics['women']?.length > 0) {
-        this.demographics['women'][1].name = this.translate.instant('others.women');
+      if (this.trafficOrSales['women']?.length > 0) {
+        this.trafficOrSales['women'][1].name = this.translate.instant('others.women');
       }
     });
   }
@@ -237,7 +239,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
     this.getKpis();
     this.getSectorsAndCategories(sectorsOrCategoriesMetric);
-    this.getDemographics(demohraphicMetric);
+    this.gettrafficOrSales(demohraphicMetric);
     this.getDataByUsersInvOrAup(null, this.selectedSectorsTab, this.selectedCategoriesTab, this.selectedSourcesTab);
     this.getTopProducts(selectedCategoryTab);
 
@@ -286,31 +288,39 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     this.selectedTab1 = metricType === 'sectors' ? 1 : metricType === 'categories' ? 2 : 3;
   }
 
-  getDemographics(metricType: string) {
-    const requiredData = ['device', 'gender', 'age', 'gender-and-age']
+  gettrafficOrSales(metricType: string) {
+    const requiredData = [
+      { subMetricType: 'device', name: 'device' },
+      { subMetricType: 'gender', name: 'gender' },
+      { subMetricType: 'age', name: 'age' },
+      { subMetricType: 'gender-and-age', name: 'genderAndAge' },
+      { subMetricType: 'weekday-and-hour', name: 'weekdayAndHour' },
+    ];
 
-    for (let subMetricType of requiredData) {
-      const reqStatusObj = this.demographicsReqStatus.find(item => item.name === subMetricType);
+    for (let subMetric of requiredData) {
+      const reqStatusObj = this.trafficOrSalesReqStatus.find(item => item.name === subMetric.name);
       reqStatusObj.reqStatus = 1;
-      this.overviewService.getDemographicsLatam(metricType, subMetricType).subscribe(
+      this.overviewService.getTrafficOrSalesLatam(metricType, subMetric.subMetricType).subscribe(
         (resp: any[]) => {
-          if (subMetricType === 'device') {
+          if (subMetric.name === 'device') {
             const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp);
-            this.demographics = { ...this.demographics, desktop, mobile };
+            this.trafficOrSales = { ...this.trafficOrSales, desktop, mobile };
 
-          } else if (subMetricType === 'gender') {
+          } else if (subMetric.name === 'gender') {
             const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp);
 
             hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
             mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
 
-            this.demographics = { ...this.demographics, men: hombre, women: mujer };
+            this.trafficOrSales = { ...this.trafficOrSales, men: hombre, women: mujer };
 
-          } else if (subMetricType === 'gender-and-age') {
-            this.demographics['genderByAge'] = resp;
+          } else if (subMetric.name === 'weekdayAndHour') {
+            this.trafficOrSales[subMetric.name] = resp.map(item => {
+              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
+            });
 
           } else {
-            this.demographics[subMetricType] = resp;
+            this.trafficOrSales[subMetric.name] = resp;
           }
 
           reqStatusObj.reqStatus = 2;

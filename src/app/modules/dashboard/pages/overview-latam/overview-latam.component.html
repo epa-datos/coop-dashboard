@@ -152,13 +152,13 @@
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                                (click)="getDemographics('traffic'); chartsInitLoad = chartsInitLoad && false">
+                                (click)="gettrafficOrSales('traffic'); chartsInitLoad = chartsInitLoad && false">
                                 {{ 'general.traffic' | translate }}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                                (click)="getDemographics('sales'); chartsInitLoad = chartsInitLoad && false">
+                                (click)="gettrafficOrSales('sales'); chartsInitLoad = chartsInitLoad && false">
                                 {{ 'general.sales' | translate }}
                             </a>
                         </li>
@@ -179,28 +179,28 @@
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="demographics?.desktop?.length > 0">
+                                    <div class="legend-container" *ngIf="trafficOrSales?.desktop?.length > 0">
                                         <div class="legend-square on color-1"></div>
-                                        <div class="legend-label">Desktop {{ demographics.desktop[1].value }}%
+                                        <div class="legend-label">Desktop {{ trafficOrSales.desktop[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="demographics?.desktop" name="latam-devices-desktop"
+                                <app-chart-pictorial [data]="trafficOrSales?.desktop" name="latam-devices-desktop"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="monitor"
-                                    [status]="demographicsReqStatus[0].reqStatus" height="280px">
+                                    [status]="trafficOrSalesReqStatus[0].reqStatus" height="280px">
                                 </app-chart-pictorial>
                             </div>
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="demographics?.mobile?.length > 0">
+                                    <div class="legend-container" *ngIf="trafficOrSales?.mobile?.length > 0">
                                         <div class="legend-square on color-2"></div>
-                                        <div class="legend-label">Mobile {{ demographics.mobile[1].value }}%
+                                        <div class="legend-label">Mobile {{ trafficOrSales.mobile[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="demographics?.mobile" name="latam-devices-mobile"
+                                <app-chart-pictorial [data]="trafficOrSales?.mobile" name="latam-devices-mobile"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="cellphone"
-                                    height="280px" [status]="demographicsReqStatus[0].reqStatus">
+                                    height="280px" [status]="trafficOrSalesReqStatus[0].reqStatus">
                                 </app-chart-pictorial>
                             </div>
                         </div>
@@ -221,32 +221,32 @@
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="demographics?.men?.length > 0">
+                                    <div class="legend-container" *ngIf="trafficOrSales?.men?.length > 0">
                                         <div class="legend-square on color-1"></div>
                                         <div class="legend-label">
                                             {{ ('others.men'| translate) + ' '}}
-                                            {{ demographics.men[1].value }}%
+                                            {{ trafficOrSales.men[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="demographics?.men" name="latam-gender-man"
+                                <app-chart-pictorial [data]="trafficOrSales?.men" name="latam-gender-man"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man"
-                                    [status]="demographicsReqStatus[1].reqStatus" height="280px">
+                                    [status]="trafficOrSalesReqStatus[1].reqStatus" height="280px">
                                 </app-chart-pictorial>
                             </div>
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
                                 <div class="chart-legend legend-center mt-0">
-                                    <div class="legend-container" *ngIf="demographics?.women?.length > 0">
+                                    <div class="legend-container" *ngIf="trafficOrSales?.women?.length > 0">
                                         <div class="legend-square on color-2"></div>
                                         <div class="legend-label">
                                             {{ ('others.women'| translate) + ' '}}
-                                            {{ demographics.women[1].value }}%
+                                            {{ trafficOrSales.women[1].value }}%
                                         </div>
                                     </div>
                                 </div>
-                                <app-chart-pictorial [data]="demographics?.women" name="latam-gender-woman"
+                                <app-chart-pictorial [data]="trafficOrSales?.women" name="latam-gender-woman"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman"
-                                    height="280px" [status]="demographicsReqStatus[1].reqStatus">
+                                    height="280px" [status]="trafficOrSalesReqStatus[1].reqStatus">
                                 </app-chart-pictorial>
                             </div>
                         </div>
@@ -264,9 +264,9 @@
                         </span>
                     </div>
                     <div class="card-body">
-                        <app-chart-lollipop [data]="demographics?.age" name="latam-age" category="age"
+                        <app-chart-lollipop [data]="trafficOrSales?.age" name="latam-age" category="age"
                             [value]="selectedTab2 === 1 ? 'visits' : 'sales'" height="280px"
-                            [status]="demographicsReqStatus[2].reqStatus">
+                            [status]="trafficOrSalesReqStatus[2].reqStatus">
                         </app-chart-lollipop>
                     </div>
                 </div>
@@ -283,17 +283,17 @@
                     </div>
                     <div class="card-body" style="height: 328px">
                         <!-- loader -->
-                        <app-chart-loader *ngIf="chartsInitLoad && demographicsReqStatus[3].reqStatus <= 1">
+                        <app-chart-loader *ngIf="chartsInitLoad && trafficOrSalesReqStatus[3].reqStatus <= 1">
                         </app-chart-loader>
 
                         <!-- ready -->
-                        <app-chart-pyramid *ngIf="demographics?.genderByAge?.length > 0"
-                            [data]="demographics?.genderByAge" name="latam-age-and-gender"
-                            [status]="demographicsReqStatus[3].reqStatus" height="280px">
+                        <app-chart-pyramid *ngIf="trafficOrSales?.genderAndAge?.length > 0"
+                            [data]="trafficOrSales?.genderAndAge" name="latam-age-and-gender"
+                            [status]="trafficOrSalesReqStatus[3].reqStatus" height="280px">
                         </app-chart-pyramid>
 
                         <!-- empty data -->
-                        <div *ngIf="demographicsReqStatus[3].reqStatus === 2 && demographics?.genderByAge?.length === 0"
+                        <div *ngIf="trafficOrSalesReqStatus[3].reqStatus === 2 && trafficOrSales?.genderAndAge?.length === 0"
                             class="chart-error-container text-muted">
                             <p class="text-center">
                                 {{ 'general.withoutData' | translate }} <br>
@@ -302,10 +302,26 @@
                         </div>
 
                         <!-- error -->
-                        <div *ngIf="chartsInitLoad && demographicsReqStatus[3].reqStatus === 3"
+                        <div *ngIf="chartsInitLoad && trafficOrSalesReqStatus[3].reqStatus === 3"
                             class="chart-error-container text-muted">
                             <span> {{ 'general.errorData' | translate }}</span>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- weekday and hour -->
+            <div class="col-12 col-lg-6 mt-4">
+                <div class="card height-fluid">
+                    <div class="card-header">
+                        <span class="h4">
+                            {{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}} por día de la semana y hora del día
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-heat-map [data]="trafficOrSales?.weekdayAndHour" name="latam-weekday-sesions"
+                            height="615px" [status]="trafficOrSalesReqStatus[4].reqStatus" categoryX="weekdayName">
+                        </app-chart-heat-map>
                     </div>
                 </div>
             </div>
