@@ -239,7 +239,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
     this.getKpis();
     this.getSectorsAndCategories(sectorsOrCategoriesMetric);
-    this.gettrafficOrSales(demohraphicMetric);
+    this.getTrafficOrSales(demohraphicMetric);
     this.getDataByUsersInvOrAup(null, this.selectedSectorsTab, this.selectedCategoriesTab, this.selectedSourcesTab);
     this.getTopProducts(selectedCategoryTab);
 
@@ -288,7 +288,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     this.selectedTab1 = metricType === 'sectors' ? 1 : metricType === 'categories' ? 2 : 3;
   }
 
-  gettrafficOrSales(metricType: string) {
+  getTrafficOrSales(metricType: string) {
     const requiredData = [
       { subMetricType: 'device', name: 'device' },
       { subMetricType: 'gender', name: 'gender' },
