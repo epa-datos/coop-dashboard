@@ -165,10 +165,15 @@ export class FiltersStateService {
     this.retailAudiencesQParams = this.retailAudiences && this.convertArrayToQueryParams(this.retailAudiences, 'id');
   }
 
-  convertArrayToQueryParams(array, param: string): string {
+  convertArrayToQueryParams(array, param?: string): string {
     let stringArray = '';
     for (let i = 0; i < array.length; i++) {
-      stringArray = array[i][param] ? stringArray.concat(',', array[i][param]) : stringArray;
+
+      if (param) {
+        stringArray = array[i][param] ? stringArray.concat(',', array[i][param]) : stringArray;
+      } else {
+        stringArray = array[i] ? stringArray.concat(',', array[i]) : stringArray;
+      }
     }
 
     return stringArray.substring(1);

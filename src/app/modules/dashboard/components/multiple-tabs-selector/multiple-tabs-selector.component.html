@@ -1,0 +1,23 @@
+<div class="multiple-tabs-container">
+    <div [ngClass]="{ 'pills-container' : adjustTabsRow}">
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item mb-2">
+                <a *ngIf="showAllSelectedTab" class="nav-link p-2" [ngClass]="{'active': allSelectedTab}"
+                    (click)="allSelectedTab = true; selectedTab($event); selectedTabs=[]">
+                    {{ (allSelectedTabText === 'male' ? 'others.allPluralM' : 'others.allPluralF') | translate |
+                    titlecase }}
+                </a>
+            </li>
+            <li class="nav-item mb-2" *ngFor="let item of tabList">
+                <a class="nav-link p-2" [ngClass]="{'active': selectedTabs?.includes(item.id) && !allSelectedTab}"
+                    (click)="allSelectedTab = false; selectedTab($event, item)">
+                    {{ item.name }}
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <p class="mb-1 text-right" *ngIf="tabList?.length > 1">
+        <small class="text-muted">Ctrl + click para selección múltiple</small>
+    </p>
+</div>

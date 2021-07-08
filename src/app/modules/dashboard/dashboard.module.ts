@@ -68,6 +68,7 @@ import { StarRaitingComponent } from './components/star-raiting/star-raiting.com
 import { PcSelectorWrapperComponent } from './components/pc-selector-wrapper/pc-selector-wrapper.component';
 import { ChartFunnelComponent } from './components/charts/chart-funnel/chart-funnel.component';
 import { HomeComponent } from './pages/home/home.component';
+import { MultipleTabsSelectorComponent } from './components/multiple-tabs-selector/multiple-tabs-selector.component';
 
 
 @NgModule({
@@ -113,6 +114,7 @@ import { HomeComponent } from './pages/home/home.component';
     ChartFunnelComponent,
     CampaignInRetailWrapperComponent,
     HomeComponent,
+    MultipleTabsSelectorComponent,
   ],
   imports: [
     CommonModule,
