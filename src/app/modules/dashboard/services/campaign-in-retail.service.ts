@@ -62,18 +62,6 @@ export class CampaignInRetailService {
     return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/in-retail/kpis?${queryParams}&${queryParamsR}`);
   }
 
-  getRoasBySector() {
-    if (!this.retailerID) {
-      return throwError('[campaign-in-retail.service]: not retailerID provided');
-    }
-
-    let queryParams = this.concatedQueryParams();
-    let queryParamsR = this.concatedRetailerQueryParams();
-
-    return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/in-retail/roas?${queryParams}&${queryParamsR}`);
-  }
-
-
   /**
    *  GENERIC ENDPOINT
    * For endponts with a metric and optional submetric
