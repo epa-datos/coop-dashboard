@@ -175,12 +175,16 @@ export class OverviewService {
   }
 
   // *** users vs conversions / investment vs revenue / revenue vs aup ***
-  getUsersInvOrAup(metricType: string, sectorID?: number, categoryID?: number, sourceID?: number) {
+  getUsersInvOrAup(metricType: string, sectors?: number[], categories?: number[], sources?: number[]) {
     if (!metricType) {
       return throwError('[overview.service]: not metricType provided');
     }
 
-    let queryParams = this.concatedQueryParams(false, sectorID, categoryID, sourceID, false, true);
+    const sectorsQParams = sectors && this.filtersStateService.convertArrayToQueryParams(sectors);
+    const categoriesQParams = categories && this.filtersStateService.convertArrayToQueryParams(categories);
+    const sourcesQParams = sources && this.filtersStateService.convertArrayToQueryParams(sources);
+
+    let queryParams = this.customQueryParams(false, sectorsQParams, categoriesQParams, sourcesQParams, true);
 
     if (this.retailerID) {
       return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/${metricType}?${queryParams}`);
