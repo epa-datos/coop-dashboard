@@ -151,7 +151,8 @@
         <p class="h4 mt-3">Tasas de conversión</p>
         <div class="row">
             <div *ngFor="let stat of staticData.conversionRate" class="col-lg-4 mb-2">
-                <app-card-stat [stat]="stat" [loader]="false" [smallHeader]="true" height="auto"></app-card-stat>
+                <app-card-stat [stat]="stat" [loader]="staticDataReqStatus[1].reqStatus <= 1" [smallHeader]="true"
+                    height="auto"></app-card-stat>
             </div>
             <div class="col-12 mt--3 mt-xl-2" [hidden]="staticDataReqStatus[1].reqStatus !== 3">
                 <p class="text-center text-muted mb-0">

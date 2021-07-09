@@ -90,7 +90,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
         metricSymbol: 'USD'
       }
     ],
-    conversionRate: [
+    conversionRateInitial: [
       {
         metricTitle: 'ps',
         metricName: 'PS',
@@ -109,7 +109,8 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
         metricValue: 0,
         metricFormat: 'percentage',
       }
-    ]
+    ],
+    conversionRate: []
   };
   staticDataReqStatus = [
     { name: 'kpis', reqStatus: 0 },
@@ -287,10 +288,19 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
             }
 
           } else if (metric.name === 'conversionRate') {
+            this.staticData.conversionRate = this.staticData.conversionRateInitial.map(item => ({ ...item }));
+
             for (let i = 0; i < this.staticData.conversionRate.length; i++) {
               const baseObj = resp.find(item => item.name === this.staticData.conversionRate[i].metricName);
-              this.staticData.conversionRate[i].metricValue = baseObj.value;
+              if (baseObj) {
+                this.staticData.conversionRate[i].metricValue = baseObj.value;
+              }
+
             }
+
+            // show only selected categories in general filters
+            const selectedCategories = this.filtersStateService.categories.map(item => item.name.toLowerCase());
+            this.staticData.conversionRate = this.staticData.conversionRate.filter(item => selectedCategories.includes(item.metricName.toLowerCase()));
           }
 
           reqStatusObj.reqStatus = 2;
