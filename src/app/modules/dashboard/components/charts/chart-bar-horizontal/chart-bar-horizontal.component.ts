@@ -56,6 +56,16 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDes
     this.series && this.loadSeriesNames(this.series);
   }
 
+  private _valueFormat: string; // USD, MXN, % copy shown in tooltip
+  get valueFormat() {
+    return this._valueFormat;
+  }
+  @Input() set valueFormat(value) {
+    this._valueFormat = value;
+    this.series && this.loadTooltips();
+  }
+
+
   chartID;
   chart;
   series;
@@ -112,18 +122,6 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDes
       label.maxWidth = 150;
     }
 
-    if (this.showCategoryInToolip) {
-      series.tooltipText = '[bold]{valueX}[/] - {categoryY}';
-
-      series.tooltip.fontSize = 12;
-      series.tooltip.label.maxWidth = 250;
-      series.tooltip.label.wrap = true;
-      series.tooltip.pointerOrientation = 'down';
-    } else {
-      series.tooltipText = '{valueX}';
-      series.tooltip.pointerOrientation = 'left';
-    }
-
     // series.columns.template.column.cornerRadiusTopLeft = 10;
     series.columns.template.column.cornerRadiusTopRight = 10;
     series.columns.template.column.cornerRadiusBottomRight = 10;
@@ -142,6 +140,7 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDes
     }
 
     this.loadSeriesNames(series);
+    this.loadTooltips();
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
@@ -160,6 +159,19 @@ export class ChartBarHorizontalComponent implements OnInit, AfterViewInit, OnDes
     this.series.dataFields.categoryY = this.category;
   }
 
+  loadTooltips() {
+    if (this.showCategoryInToolip) {
+      this.series.tooltipText = `[bold]{valueX}[/] - {categoryY}${this.valueFormat ? this.valueFormat : ''}`;
+
+      this.series.tooltip.fontSize = 12;
+      this.series.tooltip.label.maxWidth = 250;
+      this.series.tooltip.label.wrap = true;
+      this.series.tooltip.pointerOrientation = 'down';
+    } else {
+      this.series.tooltipText = `{valueX}${this.valueFormat ? this.valueFormat : ''}`;
+      this.series.tooltip.pointerOrientation = 'left';
+    }
+  }
 
   ngOnDestroy() {
     this.langSub?.unsubscribe();
