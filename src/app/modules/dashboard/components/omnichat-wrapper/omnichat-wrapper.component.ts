@@ -29,31 +29,40 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
         metricTitle: 'total chats',
         metricName: 'total_chats',
         metricValue: 0,
-        metricFormat: 'integer'
+        metricFormat: 'integer',
+        icon: 'fas fa-comment-dots',
+        iconBg: '#172b4d'
       },
       {
         metricTitle: 'promedio de chats por día',
         metricName: 'average_chats_by_day',
         metricValue: 0,
-        metricFormat: 'integer'
-
+        metricFormat: 'integer',
+        icon: 'far fa-chart-bar',
+        iconBg: '#2f9998'
       },
       {
         metricTitle: '% dedicado al cliente',
         metricName: 'average_of_answer_time',
         metricValue: 0,
-        metricFormat: 'percentage'
+        metricFormat: 'percentage',
+        icon: 'fas fa-user-check',
+        iconBg: '#a77dcc'
       },
       {
         metricTitle: 'duración media de la sesión',
         metricName: 'median_chat_duration',
         metricValue: '00:00:00',
+        icon: 'fas fa-user-clock',
+        iconBg: '#fbc001'
       },
       {
         metricTitle: 'páginas por sesión',
         metricName: 'pages_per_session',
         metricValue: 0,
-        metricFormat: 'decimals'
+        metricFormat: 'decimals',
+        icon: 'fas fa-file',
+        iconBg: '#2B96D5'
       },
       {
         metricTitle: 'calificación del chat',
@@ -68,26 +77,34 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
         metricTitle: 'usuarios',
         metricName: 'users',
         metricValue: 0,
-        metricFormat: 'integer'
+        metricFormat: 'integer',
+        icon: 'fas fa-users',
+        iconBg: '#2f9998'
       },
       {
         metricTitle: 'conversiones',
         metricName: 'conversions',
         metricValue: 0,
         metricFormat: 'integer',
+        icon: 'fas fa-shopping-basket',
+        iconBg: '#a77dcc'
       },
       {
         metricTitle: 'tasa de conversión',
         metricName: 'conversion_rate',
         metricValue: 0,
         metricFormat: 'percentage',
+        icon: 'fas fa-percentage',
+        iconBg: '#fbc001'
       },
       {
         metricTitle: 'revenue',
         metricName: 'revenue',
         metricValue: 0,
         metricFormat: 'decimals',
-        metricSymbol: 'USD'
+        metricSymbol: 'USD',
+        icon: 'fas fa-hand-holding-usd',
+        iconBg: '#2B96D5'
       }
     ],
     conversionRateInitial: [
