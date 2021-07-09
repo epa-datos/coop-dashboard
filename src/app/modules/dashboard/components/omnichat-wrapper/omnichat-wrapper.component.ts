@@ -50,9 +50,10 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
         metricValue: '00:00:00',
       },
       {
-        metricTitle: 'mediana de retardo',
-        metricName: 'median_chat_delay',
-        metricValue: '00:00:00',
+        metricTitle: 'páginas por sesión',
+        metricName: 'pages_per_session',
+        metricValue: 0,
+        metricFormat: 'decimals'
       },
       {
         metricTitle: 'calificación del chat',
@@ -274,7 +275,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
 
               const metricName = this.staticData.kpis[i].metricName;
 
-              if (metricName === 'median_chat_duration' || metricName === 'median_chat_delay') {
+              if (metricName === 'median_chat_duration') {
                 this.staticData.kpis[i].metricValue = strTimeFormat(baseObj.value);
               } else if (metricName === 'chat_score') {
                 const percentageScore = ((baseObj.value * 100) / 5).toFixed(2);
