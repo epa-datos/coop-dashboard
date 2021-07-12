@@ -49,13 +49,13 @@ export class UserService {
     }
     this._userAvatarUrl = url;
     this.user.avatar_url = url;
-    window.localStorage.setItem('avatar_url', this.user.avatar_url);
+    window.localStorage.setItem('avatar_url', JSON.stringify(this.user.avatar_url));
 
     this.userAvatarSource.next(this._userAvatarUrl);
   }
 
   get loggedIn() {
-    return !!window.localStorage.getItem('auth_token')
+    return !!JSON.parse(window.localStorage.getItem('auth_token'));
   }
 
   constructor(
@@ -66,7 +66,7 @@ export class UserService {
     private filtersStateService: FiltersStateService,
     private usersMngmtService: UsersMngmtService
   ) {
-    this._loggedIn = !!window.localStorage.getItem('auth_token');
+    this._loggedIn = !!JSON.parse(window.localStorage.getItem('auth_token'));
 
     this.user.id = !!window.localStorage.getItem('user_id')
       ? JSON.parse(window.localStorage.getItem('user_id'))
@@ -120,11 +120,11 @@ export class UserService {
     }
 
     // Delete last session info if token expired and user doesn't logout.
-    if (window.localStorage.getItem('usermail') !== email) {
-      const savedLang = localStorage.getItem('lang') || 'es';
+    if (JSON.parse(window.localStorage.getItem('usermail')) !== email) {
+      const savedLang = JSON.parse(localStorage.getItem('lang')) || 'es';
       window.localStorage.clear();
 
-      localStorage.setItem('lang', savedLang);
+      localStorage.setItem('lang', JSON.stringify(savedLang));
     }
 
     // const password = this.hashPsw(psw);
@@ -208,7 +208,7 @@ export class UserService {
   isAdmin(): boolean {
     let role_name = this.user.role_name
       ? this.user.role_name
-      : window.localStorage.getItem('role_name');
+      : JSON.parse(window.localStorage.getItem('role_name'));
 
     return role_name === 'admin' ? true : false;
   }
@@ -320,10 +320,10 @@ export class UserService {
     this._user = new User();
     this.router.navigate(['/login']);
 
-    const savedLang = localStorage.getItem('lang') || 'es';
+    const savedLang = JSON.parse(localStorage.getItem('lang')) || 'es';
     window.localStorage.clear();
 
-    localStorage.setItem('lang', savedLang);
+    localStorage.setItem('lang', JSON.stringify(savedLang));
   }
 
   hashPsw(password: string): string | Int32Array {
