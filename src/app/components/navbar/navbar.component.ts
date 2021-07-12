@@ -54,7 +54,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ) {
     this.location = location;
 
-    this.selectedLang = localStorage.getItem('lang') || this.appStateService.selectedLang || 'es';
+    this.selectedLang = JSON.parse(localStorage.getItem('lang')) || this.appStateService.selectedLang || 'es';
     translate.setDefaultLang('es');
     translate.use(this.selectedLang);
 
@@ -62,7 +62,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.selectedLang = localStorage.getItem('lang') || 'es';
+    this.selectedLang = JSON.parse(localStorage.getItem('lang')) || 'es';
     this.user = this.userService.user;
 
     this.newRetailer = this.appStateService.selectedRetailer;
@@ -198,8 +198,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   changeLang(lang) {
     this.selectedLang = lang;
-    localStorage.setItem('lang', lang);
-    const selectedLang = localStorage.getItem('lang') || 'es';
+    localStorage.setItem('lang', JSON.stringify(lang));
+    const selectedLang = JSON.parse(localStorage.getItem('lang')) || 'es';
 
     this.translate.use(selectedLang);
     this.appStateService.selectLang(lang);
