@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as moment from 'moment';
 import { Subscription } from 'rxjs';
+import { KpiCard } from 'src/app/models/kpi';
 import { CampaignInRetailService } from '../../services/campaign-in-retail.service';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { TableItem } from '../generic-table/generic-table.component';
@@ -13,30 +13,30 @@ import { TableItem } from '../generic-table/generic-table.component';
 export class ConversionWrapperComponent implements OnInit {
 
   // kpis
-  kpis: any[] = [
+  kpis: KpiCard[] = [
     {
-      metricTitle: 'cantidad',
-      metricName: 'quantity',
-      metricValue: 0,
-      metricFormat: 'integer',
+      title: 'cantidad',
+      name: 'quantity',
+      value: 0,
+      format: 'integer',
       icon: 'fas fa-chart-line',
       iconBg: '#172b4d'
     },
     {
-      metricTitle: 'revenue',
-      metricName: 'revenue',
-      metricValue: 0,
-      metricFormat: 'decimals',
-      metricSymbol: 'USD',
+      title: 'revenue',
+      name: 'revenue',
+      value: 0,
+      format: 'decimal',
+      symbol: 'USD',
       icon: 'fas fa-hand-holding-usd',
       iconBg: '#2f9998'
     },
     {
-      metricTitle: 'aup',
-      metricName: 'aup',
-      metricValue: 0,
-      metricFormat: 'decimals',
-      metricSymbol: 'USD',
+      title: 'aup',
+      name: 'aup',
+      value: 0,
+      format: 'decimal',
+      symbol: 'USD',
       icon: 'fas fa-file-invoice-dollar',
       iconBg: '#a77dcc'
     }
@@ -138,8 +138,8 @@ export class ConversionWrapperComponent implements OnInit {
         }
 
         for (let i = 0; i < this.kpis.length; i++) {
-          const baseObj = resp.find(item => item.name === this.kpis[i].metricName);
-          this.kpis[i].metricValue = baseObj.value;
+          const baseObj = resp.find(item => item.name === this.kpis[i].name);
+          this.kpis[i].value = baseObj.value;
         }
 
         this.kpisReqStatus = 2;
@@ -189,7 +189,7 @@ export class ConversionWrapperComponent implements OnInit {
 
   clearKpis() {
     for (let kpi of this.kpis) {
-      kpi.metricValue = 0;
+      kpi.value = 0;
     }
   }
 
