@@ -26,105 +26,118 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   staticData = {
     kpis: [
       {
-        metricTitle: 'total chats',
-        metricName: 'total_chats',
-        metricValue: 0,
-        metricFormat: 'integer',
+        title: 'total chats',
+        name: 'total_chats',
+        value: 0,
+        format: 'integer',
         icon: 'fas fa-comment-dots',
         iconBg: '#172b4d'
       },
       {
-        metricTitle: 'promedio de chats por día',
-        metricName: 'average_chats_by_day',
-        metricValue: 0,
-        metricFormat: 'integer',
+        title: 'promedio de chats por día',
+        name: 'average_chats_by_day',
+        value: 0,
+        format: 'decimal',
         icon: 'far fa-chart-bar',
         iconBg: '#2f9998'
       },
       {
-        metricTitle: '% dedicado al cliente',
-        metricName: 'average_of_answer_time',
-        metricValue: 0,
-        metricFormat: 'percentage',
+        title: '% dedicado al cliente',
+        name: 'average_of_answer_time',
+        value: 0,
+        format: 'percentage',
         icon: 'fas fa-user-check',
         iconBg: '#a77dcc'
       },
       {
-        metricTitle: 'duración media de la sesión',
-        metricName: 'median_chat_duration',
-        metricValue: '00:00:00',
+        title: 'duración media de la sesión',
+        name: 'median_chat_duration',
+        value: '00:00:00',
         icon: 'fas fa-user-clock',
         iconBg: '#fbc001'
       },
       {
-        metricTitle: 'páginas por sesión',
-        metricName: 'pages_per_session',
-        metricValue: 0,
-        metricFormat: 'decimals',
+        title: 'páginas por sesión',
+        name: 'pages_per_session',
+        value: 0,
+        format: 'decimal',
         icon: 'fas fa-file',
         iconBg: '#2B96D5'
       },
       {
-        metricTitle: 'calificación del chat',
-        metricName: 'chat_score',
-        metricValue: 0,
-        metricFormat: 'score',
-        subMetricTitle: 'resultado',
-        subMetricName: 'chat_score',
-        subMetricValue: '0% - 0/5'
+        title: 'calificación del chat',
+        name: 'chat_score',
+        value: 0,
+        format: 'score',
+        subKpis: [
+          {
+            title: 'resultado',
+            name: 'chat_score',
+            value: '0% - 0/5'
+          }
+        ]
       },
       {
-        metricTitle: 'usuarios',
-        metricName: 'users',
-        metricValue: 0,
-        metricFormat: 'integer',
+        title: 'usuarios',
+        name: 'users',
+        value: 0,
+        format: 'integer',
         icon: 'fas fa-users',
         iconBg: '#2f9998'
       },
       {
-        metricTitle: 'conversiones',
-        metricName: 'conversions',
-        metricValue: 0,
-        metricFormat: 'integer',
+        title: 'conversiones',
+        name: 'conversions',
+        value: 0,
+        format: 'integer',
         icon: 'fas fa-shopping-basket',
         iconBg: '#a77dcc'
       },
       {
-        metricTitle: 'tasa de conversión',
-        metricName: 'conversion_rate',
-        metricValue: 0,
-        metricFormat: 'percentage',
+        title: 'tasa de conversión',
+        name: 'conversion_rate',
+        value: 0,
+        format: 'percentage',
         icon: 'fas fa-percentage',
         iconBg: '#fbc001'
       },
       {
-        metricTitle: 'revenue',
-        metricName: 'revenue',
-        metricValue: 0,
-        metricFormat: 'decimals',
-        metricSymbol: 'USD',
+        title: 'revenue',
+        name: 'revenue',
+        value: 0,
+        format: 'decimal',
+        symbol: 'USD',
         icon: 'fas fa-hand-holding-usd',
-        iconBg: '#2B96D5'
+        iconBg: '#2B96D5',
+        subKpis: [
+          {
+            title: 'aup',
+            name: 'aup',
+            value: 0,
+            format: 'decimal',
+            symbol: 'USD',
+          }
+        ]
       }
     ],
     conversionRateInitial: [
       {
-        metricTitle: 'ps',
-        metricName: 'PS',
-        metricValue: 0,
-        metricFormat: 'percentage'
+        title: 'ps',
+        name: 'PS',
+        value: 0,
+        format: 'percentage'
       },
       {
-        metricTitle: 'hw Print',
-        metricName: 'HW Print',
-        metricValue: 0,
-        metricFormat: 'percentage'
+        title: 'hw Print',
+        name: 'HW Print',
+        value: 0,
+        format: 'percentage'
       },
       {
-        metricTitle: 'Supplies',
-        metricName: 'Supplies',
-        metricValue: 0,
-        metricFormat: 'percentage',
+        title: 'Supplies',
+        name: 'Supplies',
+        value: 0,
+        format: 'percentage',
       }
     ],
     conversionRate: []
@@ -286,22 +299,28 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
 
           if (metric.name === 'kpis') {
             for (let i = 0; i < this.staticData.kpis.length; i++) {
-              const baseObj = resp.find(item => item.string === this.staticData.kpis[i].metricName);
+              const baseObj = resp.find(item => item.string === this.staticData.kpis[i].name);
 
               if (!baseObj) {
-                break;
+                continue;
               }
 
-              const metricName = this.staticData.kpis[i].metricName;
+              const metricName = this.staticData.kpis[i].name;
 
               if (metricName === 'median_chat_duration') {
-                this.staticData.kpis[i].metricValue = strTimeFormat(baseObj.value);
+                this.staticData.kpis[i].value = strTimeFormat(baseObj.value);
+
               } else if (metricName === 'chat_score') {
                 const percentageScore = ((baseObj.value * 100) / 5).toFixed(2);
-                this.staticData.kpis[i].metricValue = percentageScore;
-                this.staticData.kpis[i].subMetricValue = `${percentageScore}% - ${baseObj.value.toFixed(2)}/5`;
+                this.staticData.kpis[i].value = percentageScore;
+                this.staticData.kpis[i].subKpis[0].value = `${percentageScore}% - ${baseObj.value.toFixed(2)}/5`;
+
+              } else if (metricName === 'revenue') {
+                this.staticData.kpis[i].value = baseObj.value;
+                this.staticData.kpis[i].subKpis[0].value = resp.find(kpi => kpi.string === 'aup')?.value;
+
               } else {
-                this.staticData.kpis[i].metricValue = baseObj.value;
+                this.staticData.kpis[i].value = baseObj.value;
               }
             }
 
@@ -315,16 +334,16 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
             this.dataByLevel['category3'] = [];
 
             for (let i = 0; i < this.staticData.conversionRate.length; i++) {
-              const baseObj = resp.find(item => item.name === this.staticData.conversionRate[i].metricName);
+              const baseObj = resp.find(item => item.name === this.staticData.conversionRate[i].name);
               if (baseObj) {
-                this.staticData.conversionRate[i].metricValue = baseObj.value;
+                this.staticData.conversionRate[i].value = baseObj.value;
                 this.dataByLevel['category3'].push(baseObj);
               }
             }
 
             // show only selected categories in general filters
             const selectedCategories = this.filtersStateService.categories.map(item => item.name.toLowerCase());
-            this.staticData.conversionRate = this.staticData.conversionRate.filter(item => selectedCategories.includes(item.metricName.toLowerCase()));
+            this.staticData.conversionRate = this.staticData.conversionRate.filter(item => selectedCategories.includes(item.name.toLowerCase()));
           }
 
           reqStatusObj.reqStatus = 2;
@@ -539,20 +558,23 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
 
   clearKpis() {
     for (let kpi of this.staticData.kpis) {
-      if (kpi.metricName.includes('median_chat')) {
-        kpi.metricValue = '00:00:00';
-      } else if (kpi.metricName === 'chat_score') {
-        kpi.metricValue = '0';
-        kpi.subMetricValue = '0% - 0/5';
+      if (kpi.name.includes('median_chat')) {
+        kpi.value = '00:00:00';
+      } else if (kpi.name === 'chat_score') {
+        kpi.value = '0';
+        kpi.subKpis[0].value = '0% - 0/5';
       } else {
-        kpi.metricValue = 0;
+        kpi.value = 0;
+        kpi.subKpis?.forEach(item => {
+          item.value = 0;
+        });
       }
     }
   }
 
   clearConversionsRate() {
     for (let kpi of this.staticData.conversionRate) {
-      kpi.metricValue = 0;
+      kpi.value = 0;
     }
   }
 
