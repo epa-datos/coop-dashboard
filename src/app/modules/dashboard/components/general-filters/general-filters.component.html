@@ -263,7 +263,8 @@
         </div>
 
         <!-- source -->
-        <div [hidden]="!isLatamSelected || currentPage === 'tools'" class="col-12 col-sm-6 col-lg-2 mb-4">
+        <div [hidden]="retailerID || currentPage === 'tools'" class="col-12 col-sm-6 col-lg-3 mb-4"
+            [ngClass]="{'col-lg-2': isLatamSelected}">
             <span class="mb-1 h4">{{ 'general.source' | translate }}</span>
             <mat-select formControlName="sources" multiple [placeholder]="'filters.sourcePh' | translate"
                 disableOptionCentering>
