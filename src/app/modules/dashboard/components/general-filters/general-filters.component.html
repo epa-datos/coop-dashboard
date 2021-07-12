@@ -112,27 +112,6 @@
             </small>
         </div>
 
-        <!-- period -->
-        <div class="col-12 col-sm-6 mb-4" [ngClass]="{'col-lg-3' : !isLatamSelected, 'col-lg-2' : isLatamSelected}">
-            <div class="date-picker">
-                <span class="mb-1 h4">{{ 'filters.period' | translate }}</span>
-                <mat-form-field appearance="fill">
-                    <mat-date-range-input [rangePicker]="picker">
-                        <input matStartDate formControlName="startDate" [placeholder]="'filters.periodPh1' | translate">
-                        <input matEndDate formControlName="endDate" [placeholder]="'filters.periodPh2' | translate">
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
-                </mat-form-field>
-                <small class="text-danger" *ngIf="!startDate.valid && startDate.touched">
-                    {{ 'filters.periodError1' | translate }}
-                </small>
-                <small class="text-danger" *ngIf="!endDate.valid && endDate.touched">
-                    {{ 'filters.periodError2' | translate }}
-                </small>
-            </div>
-        </div>
-
         <!-- sector -->
         <div class="col-12 col-sm-6 mb-4" [hidden]="currentPage === 'tools'"
             [ngClass]="{'col-lg-3' : !isLatamSelected, 'col-lg-2' : isLatamSelected}">
@@ -322,6 +301,27 @@
             <small class="text-danger" *ngIf="sources?.value?.length < 1 && sources.touched">
                 {{ 'filters.sourceError1' | translate }}
             </small>
+        </div>
+
+        <!-- period -->
+        <div class="col-12 col-sm-6 mb-4" [ngClass]="{'col-lg-3' : !isLatamSelected, 'col-lg-2' : isLatamSelected}">
+            <div class="date-picker">
+                <span class="mb-1 h4">{{ 'filters.period' | translate }}</span>
+                <mat-form-field appearance="fill">
+                    <mat-date-range-input [rangePicker]="picker">
+                        <input matStartDate formControlName="startDate" [placeholder]="'filters.periodPh1' | translate">
+                        <input matEndDate formControlName="endDate" [placeholder]="'filters.periodPh2' | translate">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+                <small class="text-danger" *ngIf="!startDate.valid && startDate.touched">
+                    {{ 'filters.periodError1' | translate }}
+                </small>
+                <small class="text-danger" *ngIf="!endDate.valid && endDate.touched">
+                    {{ 'filters.periodError2' | translate }}
+                </small>
+            </div>
         </div>
     </div>
 </form>
