@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { KpiCard } from 'src/app/models/kpi';
 
 @Component({
   selector: 'app-card-stat',
@@ -7,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CardStatComponent implements OnInit {
 
-  @Input() stat;
+  @Input() stat: KpiCard;
   @Input() height: string = '120px' // valid css height property value
   @Input() loader: boolean;
   @Input() smallHeader: boolean = false;

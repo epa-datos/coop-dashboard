@@ -14,7 +14,9 @@
         padding: 1rem 1.5rem;
 
         @media screen and (min-width: 1200px) and (max-width: 1328px) {
+            padding: 1.3rem 1rem;
             grid-template-columns: 1fr;
+
             .icon {
                 display: none;
             }
@@ -31,7 +33,7 @@
             margin-bottom: 0;
         
             span {
-                display: inline-block;
+                display: block;
             }
         }
         
@@ -41,6 +43,13 @@
 
         &.with-submetric {
             overflow-y: auto;
+
+            .metric-details {
+                span {
+                    line-height: 12px;
+                    margin-top: 5px;
+                }
+            }
         }
 
         .icon {
@@ -49,25 +58,45 @@
         }
     }
     
-    .submetric-container {
+    .submetrics-container {
         background-color: #f0f0f0;
         bottom: 0;
         position: absolute;
         width: 100%;
+        display: flex;
     
-        .submetric-data {
+        .submetrics-wrapper {
             align-items: center;
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             height: 25px;
-            overflow: hidden;
+            justify-content: space-between;
             padding: 0.1rem 1.5rem;
-            text-overflow: ellipsis;
+            overflow-x: overlay;
+            width: 100%;
+
+            &::-webkit-scrollbar {
+                height: 3px;
+            }
+
+            @media screen and (min-width: 1200px) and (max-width: 1328px) {
+                padding: 0.1rem 1rem;
+            }
+        }
+
+        .submetric-data {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
         }
 
         .submetric-details {
+            display: contents;
             font-size: 13px;
+            line-height: normal;
             margin-bottom: 0;
+            margin-top: 0;
+           
            
             span {
                 display: inline-block;
