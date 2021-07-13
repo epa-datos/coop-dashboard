@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router, Event } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { Country, MainRegion, Retailer } from 'src/app/models/access-levels';
 import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { UserService } from 'src/app/services/user.service';
@@ -47,6 +48,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public selectedCountryID;
   public selectedRetailerID;
 
+  public countries: any[] = [];
+  public retailers: any[] = [];
+
   public mainRegionSub: Subscription;
   public countrySub: Subscription;
   public retailerSub: Subscription;
@@ -91,12 +95,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.mainRegionSub = this.appStateService.selectedMainRegion$.subscribe(mainRegion => {
       this.selectedMainRegionName = mainRegion?.name ? mainRegion.name : undefined;
     });
+
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
       this.selectedCountryID = country?.id ? country.id : undefined;
     });
+
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       this.selectedRetailerID = retailer?.id ? retailer.id : undefined;
     });
+
+    // clear all selections for /dashboard/home
     this.routeSub = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         // clear selections
@@ -210,14 +218,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.selectedItemL2 = itemL2;
       this.selectedItemL2.submenuOpen = true;
 
-      this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+      this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL2, 'country'));
 
       const retailersList = await this.getAvailableRetailers(this.selectedItemL2.id);
       this.selectedItemL2.submenu = [... this.selectedItemL2.submenu, ...retailersList];
 
       if (retailer) {
         this.selectedItemL3 = this.selectedItemL2.submenu.find(item => item.title.toLocaleLowerCase() === retailer.replaceAll('-', ' '));
-        this.appStateService.selectRetailer({ id: this.selectedItemL3.id, name: this.selectedItemL3.title });
+        this.appStateService.selectRetailer(this.createSelectedItem(this.selectedItemL3, 'retailer'));
         this.selectedItemL3.submenuOpen = true;
 
         this.selectedItemL4 = this.getSelectionUsingRoute(this.selectedItemL3);
@@ -236,12 +244,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
       this.selectedItemL1.submenu = [...defaultSubmenu, ...retailersList];
       this.selectedItemL1.submenuOpen = true;
-      this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+      this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL1, 'country'));
 
       if (retailer) {
         const itemL2 = this.selectedItemL1.submenu.find(item => item.title.toLocaleLowerCase() === retailer.replaceAll('-', ' '));
         this.selectedItemL2 = itemL2;
-        this.appStateService.selectRetailer({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+        this.appStateService.selectRetailer(this.createSelectedItem(this.selectedItemL2, 'retailer'));
 
         const itemL3 = this.getSelectionUsingRoute(this.selectedItemL2);
         if (itemL3) {
@@ -263,7 +271,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       const item = this.menuItems.find(item => item.title.toLowerCase() === retailer.replaceAll('-', ' '));
       this.selectedItemL1 = item;
       this.appStateService.selectCountry();
-      this.appStateService.selectRetailer({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+      this.appStateService.selectRetailer(this.createSelectedItem(this.selectedItemL1, 'retailer'));
 
       const itemL2 = this.getSelectionUsingRoute(this.selectedItemL1);
       if (itemL2) {
@@ -304,6 +312,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     return this.usersMngmtService.getCountries()
       .toPromise()
       .then((countries: any[]) => {
+
+        this.countries = countries;
 
         let menuItems = [];
         const countriesWithoutRegion = countries.filter(c => !c.region);
@@ -416,6 +426,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
     return this.usersMngmtService.getRetailers(countryID)
       .toPromise()
       .then((retailers: any[]) => {
+
+        if (!countryID) {
+          this.retailers = this.retailers;
+        } else {
+          this.updateRetailersList(retailers);
+        }
+
         let menuItems: RouteInfo[];
         menuItems = retailers.map(item => {
           const submenu = [
@@ -450,6 +467,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.submenuReqStatus = 3;
         throw (new Error(errMsg));
       });
+  }
+
+  updateRetailersList(newRetailers: any[]) {
+    for (let newRetailer of newRetailers) {
+      if (!this.retailers.find(retailer => retailer.id === newRetailer.id)) {
+        this.retailers.push(newRetailer);
+      }
+    }
   }
 
   async selectItem(item, parent?, grandparent?, ggrandparent?, keepMenuOpen?: boolean) {
@@ -581,7 +606,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         if (this.selectedItemL2.param && item.param === 'latam' && this.selectedMainRegionName !== this.selectedItemL1.title) {
           this.appStateService.selectRetailer();
           this.appStateService.selectCountry();
-          this.appStateService.selectMainRegion({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+          this.appStateService.selectMainRegion(this.createSelectedItem(this.selectedItemL1, 'main-region'));
         }
         break;
       case 'country':
@@ -591,16 +616,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
           if (this.selectedItemL1.param && this.selectedItemL1.paramName !== 'region') {
             // When a country is selectedItemL1
             if (this.selectedCountryID !== this.selectedItemL1.id)
-              this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+              this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL1, 'country'));
           } else if (this.selectedItemL2.param) {
             // When a country is selectedItemL2 (There is a region value in selectedItemL1)
-            // if (item.param === 'latam') {
-            //   if (this.selectedCountryID !== this.selectedItemL1.id)
-            //     this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
-            // } else {
+
             if (this.selectedCountryID !== this.selectedItemL2.id)
-              this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
-            // }
+              this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL2, 'country'));
           }
           this.appStateService.selectMainRegion();
         }
@@ -609,7 +630,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       case 'retailer':
         if (this.userRole === 'retailer') {
           if (this.selectedRetailerID !== this.selectedItemL1.id) {
-            this.appStateService.selectRetailer({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+            this.appStateService.selectRetailer(this.createSelectedItem(this.selectedItemL1, 'retailer'));
           }
           this.appStateService.selectCountry();
 
@@ -617,20 +638,20 @@ export class SidebarComponent implements OnInit, OnDestroy {
           if (this.selectedItemL1.param && this.selectedItemL1.paramName !== 'region') {
             // When a country is selectedItemL1
             if (this.selectedRetailerID !== this.selectedItemL2.id) {
-              this.appStateService.selectRetailer({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+              this.appStateService.selectRetailer(this.createSelectedItem(this.selectedItemL2, 'retailer'));
             }
 
             if (this.selectedCountryID !== this.selectedItemL1.id) {
-              this.appStateService.selectCountry({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
+              this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL1, 'country'));
             }
           } else if (this.selectedItemL2.param) {
             if (this.selectedRetailerID !== this.selectedItemL3.id) {
-              this.appStateService.selectRetailer({ id: this.selectedItemL3.id, name: this.selectedItemL3.title });
+              this.appStateService.selectRetailer(this.createSelectedItem(this.selectedItemL3, 'retailer'));
             }
 
             // When a country is selectedItemL2 (There is a region value in selectedItemL1)
             if (this.selectedCountryID !== this.selectedItemL2.id) {
-              this.appStateService.selectCountry({ id: this.selectedItemL2.id, name: this.selectedItemL2.title });
+              this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL2, 'country'));
             }
           }
           this.appStateService.selectMainRegion();
@@ -641,6 +662,22 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.appStateService.selectRetailer();
         this.appStateService.selectCountry();
         this.appStateService.selectMainRegion();
+    }
+  }
+
+  createSelectedItem(item: RouteInfo, itemType: 'main-region' | 'country' | 'retailer') {
+    if (itemType === 'main-region') {
+      return { id: item.id, name: item.title };
+    }
+
+    if (itemType === 'country') {
+      const selectedCountry: any = { ...this.countries.find(country => country.id === item.id) };
+      return selectedCountry;
+    }
+
+    if (itemType === 'retailer') {
+      const selectedRetailer: any = { ...this.retailers.find(retailer => retailer.id === item.id) };
+      return selectedRetailer;
     }
   }
 
