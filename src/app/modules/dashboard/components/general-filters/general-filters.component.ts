@@ -262,7 +262,7 @@ export class GeneralFiltersComponent implements OnInit {
     this.prevPeriod = this.defaultPeriod;
 
     this.filtersStateService.periodInitial = this.defaultPeriod;
-    this.filtersStateService.sourcesInitial = this.sources.value;
+    this.filtersStateService.sourcesInitial = [...this.sourceList];
 
     this.formSub = this.form.valueChanges
       .pipe(debounceTime(5))
