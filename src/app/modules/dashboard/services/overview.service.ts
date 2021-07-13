@@ -51,11 +51,10 @@ export class OverviewService {
    * @param [uniqueSectorID] to use only one sectorID instead of all selected sectors in filters in query params
    * @param [uniqueCategoryID] to use only one categoryID instead of all selected categories in filters in query params
    * @param [uniqueSourceID] to use only one sourceID instead of all selected sources in filters in query params
-   * @param [omitSectors] to omit use sectors query params 
-   * @param [forceSourcesUse] to use sources query params (usefull when !isLatam)
+   * @param [omitSectors] to omit use sectors query params
    * @returns query params 
    */
-  concatedQueryParams(isLatam?: boolean, uniqueSectorID?: number, uniqueCategoryID?: number, uniqueSourceID?: number, omitSectors?: boolean, forceSourcesUse?: boolean): string {
+  concatedQueryParams(isLatam?: boolean, uniqueSectorID?: number, uniqueCategoryID?: number, uniqueSourceID?: number, omitSectors?: boolean): string {
     let startDate = this.filtersStateService.periodQParams.startDate;
     let endDate = this.filtersStateService.periodQParams.endDate;
     let sectors = !uniqueSectorID ? this.filtersStateService.sectorsQParams : uniqueSectorID;
@@ -64,14 +63,13 @@ export class OverviewService {
     let campaigns = this.filtersStateService.campaignsQParams;
 
     const baseQParams = `start_date=${startDate}&end_date=${endDate}${!omitSectors ? `&sectors=${sectors}` : ''}&categories=${categories}`;
-    if (!isLatam && !forceSourcesUse) {
+    if (this.retailerID) {
       return `${baseQParams}${campaigns ? `&campaigns=${campaigns}` : ''}`;
-    } else if (!isLatam && forceSourcesUse) {
-      return `${baseQParams}&sources=${sources}${campaigns ? `&campaigns=${campaigns}` : ''}`;
-    }
-    else {
-      // let countries = this.filtersStateService.countriesQParams; 
-      // * NOTE: countries deprecated in LATAM endpoint, now with retailers list is enough
+
+    } else if (this.countryID) {
+      return `${baseQParams}&sources=${sources}`;
+
+    } else {
       let retailers = this.filtersStateService.retailersQParams;
       return `retailers=${retailers}&${baseQParams}&sources=${sources}`;
     }
@@ -84,13 +82,12 @@ export class OverviewService {
    * @param [sectorsQP] sectors query params
    * @param [categoriesQP] categories query params
    * @param [sourcesQP] sources query params
-   * @param [forceSourcesUse] to use sources query params (usefull when !isLatam)
    * @returns query params
    */
 
   // This method not use sectors, categories and sources selected in general filters
   // So the selection and query params are generated independently
-  customQueryParams(isLatam?: boolean, sectorsQP?: string, categoriesQP?: string, sourcesQP?: string, forceSourcesUse?: boolean) {
+  customQueryParams(isLatam?: boolean, sectorsQP?: string, categoriesQP?: string, sourcesQP?: string) {
     let startDate = this.filtersStateService.periodQParams.startDate;
     let endDate = this.filtersStateService.periodQParams.endDate;
     let campaigns = this.filtersStateService.campaignsQParams;
@@ -99,10 +96,7 @@ export class OverviewService {
     let sources = !sourcesQP ? this.filtersStateService.sourcesQParams : sourcesQP;
 
     const baseQParams = `start_date=${startDate}&end_date=${endDate}&sectors=${sectors}&categories=${categories}`;
-    if (!isLatam && !forceSourcesUse) {
-      return `${baseQParams}${campaigns ? `&campaigns=${campaigns}` : ''}`;
-
-    } else if (!isLatam && forceSourcesUse) {
+    if (!isLatam) {
       return `${baseQParams}&sources=${sources}${campaigns ? `&campaigns=${campaigns}` : ''}`;
 
     } else {
@@ -184,7 +178,7 @@ export class OverviewService {
     const categoriesQParams = categories && this.filtersStateService.convertArrayToQueryParams(categories);
     const sourcesQParams = sources && this.filtersStateService.convertArrayToQueryParams(sources);
 
-    let queryParams = this.customQueryParams(false, sectorsQParams, categoriesQParams, sourcesQParams, true);
+    let queryParams = this.customQueryParams(false, sectorsQParams, categoriesQParams, sourcesQParams);
 
     if (this.retailerID) {
       return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/${metricType}?${queryParams}`);
@@ -238,7 +232,7 @@ export class OverviewService {
     const categoriesQParams = categories && this.filtersStateService.convertArrayToQueryParams(categories);
     const sourcesQParams = sources && this.filtersStateService.convertArrayToQueryParams(sources);
 
-    let queryParams = this.customQueryParams(true, sectorsQParams, categoriesQParams, sourcesQParams, true);
+    let queryParams = this.customQueryParams(true, sectorsQParams, categoriesQParams, sourcesQParams);
 
     return this.http.get(`${this.baseUrl}/latam/${metricType}?${queryParams}`);
   }
