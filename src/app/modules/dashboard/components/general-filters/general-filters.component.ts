@@ -52,6 +52,8 @@ export class GeneralFiltersComponent implements OnInit {
     { id: 'social', name: 'Social' },
     { id: 'email', name: 'Email' },
     { id: 'display', name: 'Display' },
+    { id: 'banner', name: 'Banner' },
+    { id: 'institucional', name: 'Institucional' },
     { id: 'others', name: 'Otros' }
   ];
 
