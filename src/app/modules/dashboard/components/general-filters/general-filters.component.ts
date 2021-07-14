@@ -141,7 +141,7 @@ export class GeneralFiltersComponent implements OnInit {
 
     await this.getSectors();
     await this.getCategories();
-    this.userService.user.role_name === 'retailer' && this.getCampaigns();
+    (this.userService.user.role_name === 'retailer' && this.retailerID) && this.getCampaigns();
 
     const selectedCountry = this.appStateService.selectedCountry;
     const selectedRetailer = this.appStateService.selectedRetailer;
@@ -177,6 +177,10 @@ export class GeneralFiltersComponent implements OnInit {
       if (this.retailerID && this.currentPage === 'overview') {
         this.getCampaigns();
         this.campsGetByRetailerChange = true;
+      }
+
+      if ((this.retailerID && this.userService.user.role_name === 'retailer')) {
+        this.getCampaigns();
       }
     });
 
