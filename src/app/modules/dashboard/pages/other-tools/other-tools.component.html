@@ -3,21 +3,21 @@
         <li class="nav-item"
             *ngIf="levelPage.latam || (levelPage.country && country?.indexed) || (levelPage.retailer && retailer?.indexed)">
             <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 1}"
-                (click)="emitSelectedSection('indexed')">
+                (click)="sectionChange('indexed')">
                 <span class="h2 py-2 ml-3 mr-3">Indexado</span>
             </a>
         </li>
         <li class="nav-item"
             *ngIf="levelPage.latam || (levelPage.country && country?.omnichat) || (levelPage.retailer && retailer?.omnichat)">
             <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 2}"
-                (click)="emitSelectedSection('omnichat')">
+                (click)="sectionChange('omnichat')">
                 <span class="h2 py-2 ml-3 mr-3">OmniChat</span>
             </a>
         </li>
         <li class="nav-item"
             *ngIf="levelPage.latam || (levelPage.country && country?.pc_selector) || (levelPage.retailer && retailer?.pc_selector)">
             <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 3}"
-                (click)="emitSelectedSection('pc-selector')">
+                (click)="sectionChange('pc-selector')">
                 <span class="h2 py-2 ml-3 mr-3">PC Selector</span>
             </a>
         </li>
