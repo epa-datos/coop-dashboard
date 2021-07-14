@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { Country, Retailer } from 'src/app/models/access-levels';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { FiltersStateService } from '../../services/filters-state.service';
 
@@ -12,8 +13,8 @@ import { FiltersStateService } from '../../services/filters-state.service';
 })
 export class OtherToolsComponent implements OnInit, OnDestroy {
 
-  countryID: number;
-  retailerID: number;
+  country: Country;
+  retailer: Retailer;
 
   levelPage = {
     latam: false,
@@ -26,13 +27,15 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
   routeSub: Subscription;
   filtersSub: Subscription;
 
-  activeTabView: number = 1;
+  activeTabView: number;
 
-  private requestInfoSource = new Subject<boolean>();
+  private requestInfoSource = new Subject<'indexed' | 'omnichat' | 'pc-selector'>();
   requestInfoChange$ = this.requestInfoSource.asObservable();
 
   private levelPageSource = new Subject<object>();
   levelPageChange$ = this.levelPageSource.asObservable();
+
+  initViewWasLoaded: boolean;
 
   constructor(
     private appStateService: AppStateService,
@@ -41,8 +44,8 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.countryID = this.appStateService.selectedCountry?.id;
-    this.retailerID = this.appStateService.selectedRetailer?.id;
+    this.country = this.appStateService.selectedCountry;
+    this.retailer = this.appStateService.selectedRetailer;
     this.levelPage.latam = this.router.url.includes('latam') ? true : false;
 
     // restore init filters
@@ -50,51 +53,69 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
       this.filtersStateService.restoreFilters();
     }
 
-    if (this.countryID || this.retailerID || this.levelPage.latam) {
-      this.getActiveView();
+    if (this.country?.id || this.retailer?.id || this.levelPage.latam) {
+      this.loadActiveView();
+      this.initViewWasLoaded = true;
     }
 
     // catch if the route changes
     this.routeSub = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
       if (event instanceof NavigationEnd) {
+        delete this.activeTabView;
         this.filtersStateService.restoreFilters();
 
         this.levelPage.latam = this.router.url.includes('latam') ? true : false;
-        this.getActiveView();
+        if (this.levelPage.latam || this.country?.id || this.retailer?.id) {
+          this.loadActiveView();
+
+          if (!this.initViewWasLoaded) {
+            this.initViewWasLoaded = true;
+          }
+        }
       }
     });
 
     // catch if its country  view
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
-      if (country?.id !== this.countryID) {
-        this.countryID = country?.id;
-        this.getActiveView();
+      if (country?.id !== this.country?.id) {
+        this.country = country;
 
-        this.emitSelectedSection('indexed');
+        if (this.country && !this.retailer) {
+          if (!this.initViewWasLoaded) {
+            this.loadActiveView();
+            this.initViewWasLoaded = true;
+          }
+        }
       }
     });
 
     // catch if its retailer view
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
-      if (retailer?.id !== this.retailerID) {
-        this.retailerID = retailer?.id;
-        this.getActiveView();
+      if (retailer?.id !== this.retailer?.id) {
+        this.retailer = retailer;
 
-        this.emitSelectedSection('indexed');
+        if (this.retailer) {
+          if (!this.initViewWasLoaded) {
+            this.loadActiveView();
+            this.initViewWasLoaded = true;
+          }
+        }
       }
     });
 
     // catch a change in general filters
     this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
-      // this.getActiveView();
       this.emitRequestInfo();
     });
   }
 
-  getActiveView() {
-    if (this.retailerID) {
+  /**
+   * Gets active (selected) level latam | country | retailer
+   */
+  getActiveLevel() {
+    if (this.retailer?.id) {
       this.levelPage = { latam: false, country: false, retailer: true };
-    } else if (this.countryID) {
+    } else if (this.country?.id) {
       this.levelPage = { latam: false, country: true, retailer: false };
     } else if (this.levelPage.latam) {
       this.levelPage = { latam: true, country: false, retailer: false };
@@ -103,28 +124,30 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
     this.levelPageSource.next(this.levelPage);
   }
 
-  emitRequestInfo() {
-    if (this.countryID || this.retailerID || this.levelPage?.latam) {
-      this.requestInfoSource.next();
+  /**
+   * Gets active (selected) (1) indexed | (2) omnichat | (3) pc-selector
+   */
+  getActiveTabView() {
+    if (this.levelPage.retailer) {
+      this.activeTabView = this.retailer.indexed ? 1 : this.retailer.omnichat ? 2 : this.retailer.pc_selector ? 3 : null;
 
-    } else {
-      // Since this component is reused in the 3 levels (latam, country or retailer) 
-      // when the application starts on this page (for example after refresh or a redirection) 
-      // it is necessary to have the value of the variables countryID, the retailer ID or be on the latam page 
-      // to emit the new value of the requestInfoSource observable otherwise the requests to the API 
-      // would have an undefined when referring to the countryID or retailerID variables.
+    } else if (this.levelPage.country) {
+      this.activeTabView = this.country.indexed ? 1 : this.country.omnichat ? 2 : this.country.pc_selector ? 3 : null;
 
-      // If the emission of the requestInfoSource value were done in the contry or retailer subscriptions, 
-      // repeated emissions could be generated, so it was chosen to use a setTimeOut function recursively,
-      // the tests that were made were never repeated more than once, for what so far is the most feasible option.
-
-      setTimeout(() => {
-        this.emitRequestInfo();
-      }, 500);
+    } else if (this.levelPage.latam) {
+      this.activeTabView = 1;
     }
   }
 
-  emitSelectedSection(section: string) {
+  loadActiveView() {
+    this.getActiveLevel();
+    this.getActiveTabView();
+
+    let firstAvailableSection = this.activeTabView === 1 ? 'indexed' : this.activeTabView === 2 ? 'omnichat' : 'pc-selector';
+    this.sectionChange(firstAvailableSection);
+  }
+
+  sectionChange(section: string) {
     switch (section) {
       case 'indexed':
         this.activeTabView = 1;
@@ -140,6 +163,28 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
         this.activeTabView = 3;
         this.filtersStateService.hideCategories(true);
         break;
+    }
+  }
+
+  emitRequestInfo() {
+    if (this.country?.id || this.retailer?.id || this.levelPage?.latam) {
+      let selectedSection: any = this.activeTabView === 1 ? 'indexed' : this.activeTabView === 2 ? 'omnichat' : 'pc-selector';
+      this.requestInfoSource.next(selectedSection);
+
+    } else {
+      // Since this component is reused in the 3 levels (latam, country or retailer) 
+      // when the application starts on this page (for example after refresh or a redirection) 
+      // it is necessary to have the value of the variables countryID, the retailer ID or be on the latam page 
+      // to emit the new value of the requestInfoSource observable otherwise the requests to the API 
+      // would have an undefined when referring to the countryID or retailerID variables.
+
+      // If the emission of the requestInfoSource value were done in the country or retailer subscriptions, 
+      // repeated emissions could be generated, so it was chosen to use a setTimeOut function recursively,
+      // the tests that were made were never repeated more than once, for what so far is the most feasible option.
+
+      setTimeout(() => {
+        this.emitRequestInfo();
+      }, 500);
     }
   }
 

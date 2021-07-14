@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { MainRegion, Country, Retailer } from '../models/access-levels';
 
 @Injectable({
   providedIn: 'root'
@@ -11,19 +12,19 @@ export class AppStateService {
   sidebarData$ = this.sidebarSource.asObservable();
 
   // selected main region as LATAM
-  private mainRegionSource = new Subject<any>();
+  private mainRegionSource = new Subject<MainRegion>();
   selectedMainRegion$ = this.mainRegionSource.asObservable();
-  selectedMainRegion;
+  selectedMainRegion: MainRegion;
 
   // selected country
-  private countrySource = new Subject<any>();
+  private countrySource = new Subject<Country>();
   selectedCountry$ = this.countrySource.asObservable();
-  selectedCountry;
+  selectedCountry: Country;
 
   // selected retailer
-  private retailerSource = new Subject<any>();
+  private retailerSource = new Subject<Retailer>();
   selectedRetailer$ = this.retailerSource.asObservable();
-  selectedRetailer;
+  selectedRetailer: Retailer;
 
   // selected language
   private langSource = new Subject<string>();
@@ -32,7 +33,7 @@ export class AppStateService {
 
   constructor() { }
 
-  selectMainRegion(mainRegion?) {
+  selectMainRegion(mainRegion?: MainRegion) {
     if (mainRegion) {
       this.mainRegionSource.next(mainRegion);
       this.selectedMainRegion = mainRegion;
@@ -42,7 +43,7 @@ export class AppStateService {
     }
   }
 
-  selectCountry(country?) {
+  selectCountry(country?: Country) {
     if (country) {
       this.countrySource.next(country);
       this.selectedCountry = country;
@@ -52,7 +53,7 @@ export class AppStateService {
     }
   }
 
-  selectRetailer(retailer?) {
+  selectRetailer(retailer?: Retailer) {
     if (retailer) {
       this.retailerSource.next(retailer);
       this.selectedRetailer = retailer;

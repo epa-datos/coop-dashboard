@@ -112,7 +112,7 @@ export class OverviewService {
   // *** filters ***
   getCampaigns(period?: any, sectorsStrList?: string, categoriesStrList?: string) {
     if (!this.retailerID) {
-      return throwError('[overview.service]: not countryID provided');
+      return throwError('[overview.service]: not retailerID provided');
     }
 
     const periodQParams = period ? `start_date=${moment(period.startDate).format('YYYY-MM-DD')}&end_date=${moment(period.endDate).format('YYYY-MM-DD')}` : '';

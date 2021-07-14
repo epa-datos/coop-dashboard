@@ -141,7 +141,7 @@ export class GeneralFiltersComponent implements OnInit {
 
     await this.getSectors();
     await this.getCategories();
-    this.userService.user.role_name === 'retailer' && this.getCampaigns();
+    (this.userService.user.role_name === 'retailer' && this.retailerID) && this.getCampaigns();
 
     const selectedCountry = this.appStateService.selectedCountry;
     const selectedRetailer = this.appStateService.selectedRetailer;
@@ -177,6 +177,10 @@ export class GeneralFiltersComponent implements OnInit {
       if (this.retailerID && this.currentPage === 'overview') {
         this.getCampaigns();
         this.campsGetByRetailerChange = true;
+      }
+
+      if ((this.retailerID && this.userService.user.role_name === 'retailer')) {
+        this.getCampaigns();
       }
     });
 
@@ -774,18 +778,18 @@ export class GeneralFiltersComponent implements OnInit {
    * @param [manualTriggered] change made by "filter" button click triggered manually by the user
    */
   applyFilters(manualTriggered?: boolean) {
-    this.filtersStateService.selectPeriod({ startDate: this.startDate.value._d, endDate: this.endDate.value._d });
-    this.filtersStateService.selectSectors(this.sectors.value.filter(item => item.id));
-    this.filtersStateService.selectCategories(this.categories.value.filter(item => item.id));
-    this.filtersStateService.selectSources(this.sources.value.filter(item => item.id));
+    this.filtersStateService.selectPeriod({ startDate: this.startDate?.value._d, endDate: this.endDate?.value._d });
+    this.filtersStateService.selectSectors(this.sectors?.value.filter(item => item.id));
+    this.filtersStateService.selectCategories(this.categories?.value.filter(item => item.id));
+    this.filtersStateService.selectSources(this.sources?.value.filter(item => item.id));
 
     if (this.isLatamSelected) {
-      this.filtersStateService.selectCountries(this.countries.value.filter(item => item.id));
-      this.filtersStateService.selectRetailers(this.retailers.value.filter(item => item.id));
+      this.filtersStateService.selectCountries(this.countries?.value.filter(item => item.id));
+      this.filtersStateService.selectRetailers(this.retailers?.value.filter(item => item.id));
     }
 
     const areAllCampsSelected = this.areAllCampaignsSelected();
-    this.filtersStateService.selectCampaigns(areAllCampsSelected ? [] : this.campaigns.value.filter(item => item.id));
+    this.filtersStateService.selectCampaigns(areAllCampsSelected ? [] : this.campaigns?.value.filter(item => item.id));
 
     this.filtersStateService.filtersChange(manualTriggered);
   }

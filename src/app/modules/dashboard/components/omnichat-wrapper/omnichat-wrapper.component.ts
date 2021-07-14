@@ -15,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   @Input() levelPage: any // latam || country || retailer;
-  @Input() requestInfoChange: Observable<boolean>;
+  @Input() requestInfoChange: Observable<'indexed' | 'omnichat' | 'pc-selector'>;
 
   selectedTab1: number = 1; // users vs conversions (1) or revenue vs aup (2) selection -> chart-multiple-axes
   selectedTab2: number = 1; // traffic (1) or conversions (2) -> countries, retailers and categories charts
@@ -255,8 +255,10 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     // validate if filters are already loaded
     this.filtersAreReady() && this.getAllData();
 
-    this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
-      this.filtersAreReady() && this.getAllData();
+    this.requestInfoSub = this.requestInfoChange.subscribe((selectedSection: 'indexed' | 'omnichat' | 'pc-selector') => {
+      if (selectedSection === 'omnichat' && this.filtersAreReady()) {
+        this.getAllData();
+      }
     });
   }
 
