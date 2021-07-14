@@ -32,20 +32,12 @@ export class CountryComponent implements OnInit, OnDestroy {
     this.countryID = selectedCountry?.id && selectedCountry?.id;
     this.retailerID = selectedRetailer?.id && selectedRetailer?.id;
 
+    // restore init filters
     if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
       this.filtersStateService.restoreFilters();
     }
 
-    this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
-      this.requestInfoSource.next(manualChange);
-    });
-
-    this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
-      if (retailer?.id !== this.retailerID) {
-        this.retailerID = retailer?.id;
-      }
-    });
-
+    // catch selected country
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
       if (country?.id !== this.countryID) {
         this.countryID = country?.id;
@@ -59,11 +51,23 @@ export class CountryComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+    // catch if there's a selected retailer
+    this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
+      if (retailer?.id !== this.retailerID) {
+        this.retailerID = retailer?.id;
+      }
+    });
+
+    // catch a change in general filters
+    this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
+      this.requestInfoSource.next(manualChange);
+    });
   }
 
   ngOnDestroy() {
-    this.filtersSub?.unsubscribe();
-    this.retailerSub?.unsubscribe();
     this.countrySub?.unsubscribe();
+    this.retailerSub?.unsubscribe();
+    this.filtersSub?.unsubscribe();
   }
 }

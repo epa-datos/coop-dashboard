@@ -38,14 +38,12 @@ export class RetailerComponent implements OnInit, OnDestroy {
     this.retailerID = selectedRetailer?.id;
     this.getGoogleBusinessAccess();
 
+    // restore init filters
     if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
       this.filtersStateService.restoreFilters();
     }
 
-    this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
-      this.requestInfoSource.next(manualChange);
-    });
-
+    // catch selected retailer
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       if (retailer?.id !== this.retailerID) {
         this.retailerID = retailer?.id;
@@ -63,6 +61,11 @@ export class RetailerComponent implements OnInit, OnDestroy {
           }
         }
       }
+    });
+
+    // catch a change in general filters
+    this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
+      this.requestInfoSource.next(manualChange);
     });
   }
 
