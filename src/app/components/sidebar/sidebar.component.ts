@@ -48,8 +48,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public selectedCountryID;
   public selectedRetailerID;
 
-  public countries: any[] = [];
-  public retailers: any[] = [];
+  public countries: Country[] = [];
+  public retailers: Retailer[] = [];
 
   public mainRegionSub: Subscription;
   public countrySub: Subscription;
@@ -60,6 +60,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   public userAvatarUrl: string;
   public userAvatarUrlBroken: boolean;
+
+  // NOTE: Country and Retailer selection
+  // When a retailer is selected, the country its belong to is also selected
+  // for that reason, whenever a new selection is emitted involving both, 
+  // the retailer's selection is emitted first followed by the country's selection
+  // in order that the observables in the components first listen to the changes of the selected retailer 
+  // and if there isn't a retailer, listen to the changes of the selected country
 
   constructor(
     private router: Router,
@@ -218,7 +225,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.selectedItemL2 = itemL2;
       this.selectedItemL2.submenuOpen = true;
 
-      this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL2, 'country'));
+      !retailer && this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL2, 'country'));
 
       const retailersList = await this.getAvailableRetailers(this.selectedItemL2.id);
       this.selectedItemL2.submenu = [... this.selectedItemL2.submenu, ...retailersList];
@@ -226,6 +233,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       if (retailer) {
         this.selectedItemL3 = this.selectedItemL2.submenu.find(item => item.title.toLocaleLowerCase() === retailer.replaceAll('-', ' '));
         this.appStateService.selectRetailer(this.createSelectedItem(this.selectedItemL3, 'retailer'));
+        this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL2, 'country'));
         this.selectedItemL3.submenuOpen = true;
 
         this.selectedItemL4 = this.getSelectionUsingRoute(this.selectedItemL3);
@@ -244,12 +252,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
       this.selectedItemL1.submenu = [...defaultSubmenu, ...retailersList];
       this.selectedItemL1.submenuOpen = true;
-      this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL1, 'country'));
+      !retailer && this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL1, 'country'));
 
       if (retailer) {
         const itemL2 = this.selectedItemL1.submenu.find(item => item.title.toLocaleLowerCase() === retailer.replaceAll('-', ' '));
         this.selectedItemL2 = itemL2;
         this.appStateService.selectRetailer(this.createSelectedItem(this.selectedItemL2, 'retailer'));
+        this.appStateService.selectCountry(this.createSelectedItem(this.selectedItemL1, 'country'));
 
         const itemL3 = this.getSelectionUsingRoute(this.selectedItemL2);
         if (itemL3) {
@@ -270,8 +279,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     else if (retailer) {
       const item = this.menuItems.find(item => item.title.toLowerCase() === retailer.replaceAll('-', ' '));
       this.selectedItemL1 = item;
-      this.appStateService.selectCountry();
       this.appStateService.selectRetailer(this.createSelectedItem(this.selectedItemL1, 'retailer'));
+      this.appStateService.selectCountry();
 
       const itemL2 = this.getSelectionUsingRoute(this.selectedItemL1);
       if (itemL2) {
@@ -297,8 +306,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         }
       }
 
-      this.appStateService.selectCountry();
       this.appStateService.selectRetailer();
+      this.appStateService.selectCountry();
     }
   }
 
@@ -428,7 +437,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       .then((retailers: any[]) => {
 
         if (!countryID) {
-          this.retailers = this.retailers;
+          this.retailers = retailers;
         } else {
           this.updateRetailersList(retailers);
         }
@@ -441,14 +450,17 @@ export class SidebarComponent implements OnInit, OnDestroy {
               path: '/dashboard/retailer',
               paramName: 'retailer',
               param: item.name.toLowerCase().replaceAll(' ', '-')
-            },
-            {
+            }
+          ];
+
+          if (item.indexed || item.omnichat || item.pc_selector) {
+            submenu.push({
               title: this.translate.instant('dashboard.otherTools'),
               path: '/dashboard/tools',
               paramName: 'retailer',
               param: item.name.toLowerCase().replaceAll(' ', '-')
-            }
-          ]
+            });
+          }
           return {
             id: item.id,
             title: item.name,
