@@ -15,7 +15,10 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   @Input() levelPage: any // latam || country || retailer;
-  @Input() requestInfoChange: Observable<'indexed' | 'omnichat' | 'pc-selector'>;
+  @Input() requestInfoChange: Observable<{
+    manualChange: boolean, // true if user clicks 'Filter' button of general-filters component; useful to preserve or clear selected tabs of active section template
+    selectedSection: 'indexed' | 'omnichat' | 'pc-selector'
+  }>;
 
   selectedTab1: number = 1; // users vs conversions (1) or revenue vs aup (2) selection -> chart-multiple-axes
   selectedTab2: number = 1; // traffic (1) or conversions (2) -> countries, retailers and categories charts
@@ -250,26 +253,39 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.selectedCategories = this.filtersStateService.categories;
-
     // validate if filters are already loaded
     this.filtersAreReady() && this.getAllData();
 
-    this.requestInfoSub = this.requestInfoChange.subscribe((selectedSection: 'indexed' | 'omnichat' | 'pc-selector') => {
+    this.requestInfoSub = this.requestInfoChange.subscribe(({ manualChange, selectedSection }) => {
       if (selectedSection === 'omnichat' && this.filtersAreReady()) {
-        this.getAllData();
+        this.getAllData(manualChange);
       }
     });
   }
 
-  getAllData() {
+  getAllData(preserveSelectedTabs?: boolean) {
     this.selectedCategories = this.filtersStateService.categories;
-    const previousCategory = this.selectedCategories?.find(category => category.id === this.selectedCategoryTab3?.id);
-    const selectedCategory = previousCategory ? previousCategory : this.selectedCategories?.[0];
+    let selectedCategory;
 
-    let metricTab1 = this.selectedTab1 === 1 ? 'conversions-vs-users' : 'aup-vs-revenue';
-    let metricTab2 = this.selectedTab2 === 1 ? 'traffic' : this.selectedTab2 === 2 ? 'sales' : 'conversion-rate';
-    let metricTab4 = this.selectedTab4 === 1 ? 'traffic' : 'sales';
+    let metricTab1;
+    let metricTab2;
+    let metricTab4;
+
+    if (!preserveSelectedTabs) {
+      metricTab1 = 'conversions-vs-users';
+      metricTab2 = 'traffic';
+      metricTab4 = 'traffic';
+
+      selectedCategory = this.selectedCategories?.[0];
+
+    } else {
+      metricTab1 = this.selectedTab1 === 1 ? 'conversions-vs-users' : 'aup-vs-revenue';
+      metricTab2 = this.selectedTab2 === 1 ? 'traffic' : this.selectedTab2 === 2 ? 'sales' : 'conversion-rate';
+      metricTab4 = this.selectedTab4 === 1 ? 'traffic' : 'sales';
+
+      const previousCategory = this.selectedCategories?.find(category => category.id === this.selectedCategoryTab3?.id);
+      selectedCategory = previousCategory ? previousCategory : this.selectedCategories?.[0];
+    }
 
     this.getStaticDataByMetric();
     this.getUsersOrRevenue(metricTab1);

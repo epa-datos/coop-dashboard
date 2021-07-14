@@ -15,7 +15,11 @@ import { PcSelectorService } from '../../services/pc-selector.service';
 })
 export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
   @Input() levelPage: any // latam || country || retailer;
-  @Input() requestInfoChange: Observable<'indexed' | 'omnichat' | 'pc-selector'>;
+  @Input() requestInfoChange: Observable<{
+    manualChange: boolean, // true if user clicks 'Filter' button of general-filters component; useful to preserve or clear selected tabs of active section template
+    selectedSection: 'indexed' | 'omnichat' | 'pc-selector'
+  }>;
+
 
   selectedTab1: number = 1; // users vs conversions (1) or revenue vs aup (2) selection -> chart-multiple-axes
   selectedTab2: number = 1; // traffic (1) or conversions (2) -> multiple charts
@@ -127,18 +131,31 @@ export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
     // validate if filters are already loaded
     this.filtersAreReady() && this.getAllData();
 
-    this.requestInfoSub = this.requestInfoChange.subscribe((selectedSection: 'indexed' | 'omnichat' | 'pc-selector') => {
+    this.requestInfoSub = this.requestInfoChange.subscribe(({ manualChange, selectedSection }) => {
       if (selectedSection === 'pc-selector' && this.filtersAreReady()) {
-        this.getAllData();
+        this.getAllData(manualChange);
       }
     });
   }
 
-  getAllData() {
-    let metricTab1 = this.selectedTab1 === 1 ? 'conversions' : 'revenue-vs-aup';
-    let subMetricTab1 = this.selectedTab1 === 1 && 'users';
-    let metricTab2 = this.selectedTab2 === 1 ? 'traffic' : 'conversions';
-    let metricTab3 = this.selectedTab3 === 1 ? 'traffic' : 'conversions';
+  getAllData(preserveSelectedTabs?: boolean) {
+    let metricTab1;
+    let subMetricTab1;
+    let metricTab2;
+    let metricTab3;
+
+    if (!preserveSelectedTabs) {
+      metricTab1 = 'conversions';
+      subMetricTab1 = 'users';
+      metricTab2 = 'traffic';
+      metricTab3 = 'traffic';
+
+    } else {
+      metricTab1 = this.selectedTab1 === 1 ? 'conversions' : 'revenue-vs-aup';
+      subMetricTab1 = this.selectedTab1 === 1 && 'users';
+      metricTab2 = this.selectedTab2 === 1 ? 'traffic' : 'conversions';
+      metricTab3 = this.selectedTab3 === 1 ? 'traffic' : 'conversions';
+    }
 
     this.getKpis();
     this.getUsersOrRevenue(metricTab1, subMetricTab1);

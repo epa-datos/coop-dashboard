@@ -29,7 +29,10 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
 
   activeTabView: number;
 
-  private requestInfoSource = new Subject<'indexed' | 'omnichat' | 'pc-selector'>();
+  private requestInfoSource = new Subject<{
+    manualChange: boolean, // true if user clicks 'Filter' button of general-filters component; useful to preserve or clear selected tabs of active section template
+    selectedSection: 'indexed' | 'omnichat' | 'pc-selector'
+  }>();
   requestInfoChange$ = this.requestInfoSource.asObservable();
 
   private levelPageSource = new Subject<object>();
@@ -75,7 +78,7 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
       }
     });
 
-    // catch if its country  view
+    // catch if its country view
     this.countrySub = this.appStateService.selectedCountry$.subscribe(country => {
       if (country?.id !== this.country?.id) {
         this.country = country;
@@ -105,7 +108,7 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
 
     // catch a change in general filters
     this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
-      this.emitRequestInfo();
+      this.emitRequestInfo(manualChange);
     });
   }
 
@@ -166,10 +169,10 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
     }
   }
 
-  emitRequestInfo() {
+  emitRequestInfo(manualChange: boolean) {
     if (this.country?.id || this.retailer?.id || this.levelPage?.latam) {
       let selectedSection: any = this.activeTabView === 1 ? 'indexed' : this.activeTabView === 2 ? 'omnichat' : 'pc-selector';
-      this.requestInfoSource.next(selectedSection);
+      this.requestInfoSource.next({ manualChange, selectedSection });
 
     } else {
       // Since this component is reused in the 3 levels (latam, country or retailer) 
@@ -183,7 +186,7 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
       // the tests that were made were never repeated more than once, for what so far is the most feasible option.
 
       setTimeout(() => {
-        this.emitRequestInfo();
+        this.emitRequestInfo(manualChange);
       }, 500);
     }
   }

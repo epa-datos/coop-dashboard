@@ -16,7 +16,10 @@ import { IndexedService } from '../../services/indexed.service';
 export class IndexedWrapperComponent implements OnInit, OnDestroy {
   @Input() levelPage: any // latam || country || retailer;
   @Input() levelPageChange: Observable<object>;
-  @Input() requestInfoChange: Observable<'indexed' | 'omnichat' | 'pc-selector'>;
+  @Input() requestInfoChange: Observable<{
+    manualChange: boolean, // true if user clicks 'Filter' button of general-filters component; useful to preserve or clear selected tabs of active section template
+    selectedSection: 'indexed' | 'omnichat' | 'pc-selector'
+  }>;
 
   selectedTab1: number = 1; // traffic for countries (1) or retailers (2) selection -> chart-line-series
 
@@ -64,51 +67,6 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     }
   ];
   kpisReqStatus = 0;
-
-  // exits rate and pages viewed
-  exitsAndPagesViews = [
-    {
-      name: 'Porcentaje de salidas',
-      serie: [
-        { date: '2021-06-02', value: 75 },
-        { date: '2021-06-03', value: 87 },
-        { date: '2021-06-04', value: 70 },
-        { date: '2021-06-05', value: 86 },
-        { date: '2021-06-06', value: 70 },
-        { date: '2021-06-07', value: 75 },
-        { date: '2021-06-08', value: 82 },
-        { date: '2021-06-09', value: 70 },
-        { date: '2021-06-10', value: 75 },
-        { date: '2021-06-11', value: 78 },
-        { date: '2021-06-12', value: 80 },
-        { date: '2021-06-13', value: 83 },
-        { date: '2021-06-14', value: 70 },
-        { date: '2021-06-15', value: 76 },
-        { date: '2021-06-16', value: 74 }
-      ],
-      valueFormat: '%'
-    },
-    {
-      name: 'Número de páginas vistas',
-      serie: [
-        { date: '2021-06-02', value: 7 },
-        { date: '2021-06-03', value: 5 },
-        { date: '2021-06-04', value: 4 },
-        { date: '2021-06-05', value: 2 },
-        { date: '2021-06-06', value: 3 },
-        { date: '2021-06-07', value: 5 },
-        { date: '2021-06-08', value: 4 },
-        { date: '2021-06-09', value: 3 },
-        { date: '2021-06-10', value: 7 },
-        { date: '2021-06-11', value: 6 },
-        { date: '2021-06-12', value: 5 },
-        { date: '2021-06-13', value: 2 },
-        { date: '2021-06-14', value: 3 },
-        { date: '2021-06-15', value: 1 },
-        { date: '2021-06-16', value: 6 }
-      ]
-    }
-  ]
 
   // countries or retailers chart
   counOrRet = {};
@@ -195,11 +153,13 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-
     // validate if filters are already loaded
     this.filtersAreReady() && this.getAllData();
 
-    this.requestInfoSub = this.requestInfoChange.subscribe((selectedSection: 'indexed' | 'omnichat' | 'pc-selector') => {
+    this.requestInfoSub = this.requestInfoChange.subscribe(({ manualChange, selectedSection }) => {
+      // manualChange isn't useful in this component because there isn't tabs to preserve or clear selection
+      // the only tab only appears in LATAM view level and it isn't necessary to clear the selection 
+      // when the view changes to country or retailer since it isn't shown at these levels
       if (selectedSection === 'indexed' && this.filtersAreReady()) {
         this.getAllData();
       }
