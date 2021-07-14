@@ -52,7 +52,7 @@ export class CountryComponent implements OnInit, OnDestroy {
       }
     });
 
-    // catch if there's a retailer selected
+    // catch if there's a selected retailer
     this.retailerSub = this.appStateService.selectedRetailer$.subscribe(retailer => {
       if (retailer?.id !== this.retailerID) {
         this.retailerID = retailer?.id;
