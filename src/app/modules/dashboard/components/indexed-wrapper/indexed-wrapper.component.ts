@@ -16,7 +16,7 @@ import { IndexedService } from '../../services/indexed.service';
 export class IndexedWrapperComponent implements OnInit, OnDestroy {
   @Input() levelPage: any // latam || country || retailer;
   @Input() levelPageChange: Observable<object>;
-  @Input() requestInfoChange: Observable<boolean>;
+  @Input() requestInfoChange: Observable<'indexed' | 'omnichat' | 'pc-selector'>;
 
   selectedTab1: number = 1; // traffic for countries (1) or retailers (2) selection -> chart-line-series
 
@@ -199,8 +199,10 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
     // validate if filters are already loaded
     this.filtersAreReady() && this.getAllData();
 
-    this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
-      this.filtersAreReady() && this.getAllData();
+    this.requestInfoSub = this.requestInfoChange.subscribe((selectedSection: 'indexed' | 'omnichat' | 'pc-selector') => {
+      if (selectedSection === 'indexed' && this.filtersAreReady()) {
+        this.getAllData();
+      }
     });
 
     this.levelPageSub = this.levelPageChange.subscribe((levelChange: object) => {
