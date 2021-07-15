@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { KpiCard } from 'src/app/models/kpi';
+import { AppStateService } from 'src/app/services/app-state.service';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
 import { convertWeekdayToString } from 'src/app/tools/functions/data-convert';
 import { FiltersStateService } from '../../services/filters-state.service';
@@ -146,6 +147,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
   constructor(
     private filtersStateService: FiltersStateService,
+    private appStateService: AppStateService,
     private overviewService: OverviewService,
     private translate: TranslateService
   ) { }
@@ -160,7 +162,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     }
 
     this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
-      this.getAllData(manualChange);
+      this.appStateService.selectedPage === 'overview' && this.getAllData(manualChange);
     })
   }
 

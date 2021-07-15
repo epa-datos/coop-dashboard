@@ -108,7 +108,7 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
 
     // catch a change in general filters
     this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange: boolean) => {
-      this.emitRequestInfo(manualChange);
+      this.appStateService.selectedPage === 'other-tools' && this.emitRequestInfo(manualChange);
     });
   }
 

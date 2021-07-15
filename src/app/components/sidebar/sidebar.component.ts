@@ -209,6 +209,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   async getPrevSelection() {
+    const baseUrl = this.router.url.split('?')[0];
+    this.appStateService.selectedPage = this.getPageUsingRoute(baseUrl);
+
     const params = this.route.snapshot.queryParams;
 
     const mainRegion = params['main-region'];
@@ -275,8 +278,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.selectedItemL1.submenuOpen = true;
       this.selectedItemL2 = this.getSelectionUsingRoute(this.selectedItemL1);
       this.appStateService.selectMainRegion({ id: this.selectedItemL1.id, name: this.selectedItemL1.title });
-    }
-    else if (retailer) {
+
+    } else if (retailer) {
       const item = this.menuItems.find(item => item.title.toLowerCase() === retailer.replaceAll('-', ' '));
       this.selectedItemL1 = item;
       this.appStateService.selectRetailer(this.createSelectedItem(this.selectedItemL1, 'retailer'));
@@ -287,6 +290,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.selectedItemL1.submenuOpen = true;
         this.selectedItemL2 = itemL2;
       }
+
     } else {
       const item = this.menuItems.find(item => item.path == this.router.url);
       if (item) {
@@ -315,6 +319,31 @@ export class SidebarComponent implements OnInit, OnDestroy {
     const currentPath = this.router.url.split('?')[0];
     const selectedSubItem = selectedItem.submenu.find(item => item.path === currentPath);
     return selectedSubItem;
+  }
+
+  getPageUsingRoute(url: string): 'overview' | 'other-tools' | 'other' {
+    const path = url.replace('/dashboard/', '');
+
+    let page;
+
+    switch (path) {
+      case 'main-region':
+      case 'country':
+      case 'retailer':
+        page = 'overview';
+        break;
+
+      case 'tools':
+        page = 'other-tools';
+        break
+
+      default:
+        page = 'others';
+        break;
+    }
+
+    console.log('page', page)
+    return page;
   }
 
   getAvailableCountries() {
@@ -613,6 +642,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   emitNewSelection(item) {
+    if (item?.path) {
+      this.appStateService.selectedPage = this.getPageUsingRoute(item?.path);
+    }
+
     switch (item.paramName) {
       case 'main-region':
         if (this.selectedItemL2.param && item.param === 'latam' && this.selectedMainRegionName !== this.selectedItemL1.title) {

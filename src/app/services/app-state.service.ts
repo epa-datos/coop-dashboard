@@ -31,6 +31,11 @@ export class AppStateService {
   selectedLang$ = this.langSource.asObservable();
   selectedLang: string;
 
+  // selected page of main region, country or retailer
+  selectedPage: 'overview' | 'other-tools' | 'other';
+  // variable used as a validator in the subscribers of the observable filtersChange$ (in filter-state service)
+  // to avoid making requests just before destroying the component when redirecting to a new route
+
   constructor() { }
 
   selectMainRegion(mainRegion?: MainRegion) {

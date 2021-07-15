@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
 import { convertWeekdayToString } from 'src/app/tools/functions/data-convert';
 import { KpiCard } from 'src/app/models/kpi';
+import { AppStateService } from 'src/app/services/app-state.service';
 
 @Component({
   selector: 'app-overview-latam',
@@ -172,6 +173,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
   constructor(
     private filtersStateService: FiltersStateService,
+    private appStateService: AppStateService,
     private overviewService: OverviewService,
     private translate: TranslateService
   ) {
@@ -212,7 +214,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     }
 
     this.filtersSub = this.filtersStateService.filtersChange$.subscribe(() => {
-      this.getAllData();
+      this.appStateService.selectedPage === 'overview' && this.getAllData();
     });
   }
 
