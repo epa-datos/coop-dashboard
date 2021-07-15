@@ -202,6 +202,9 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    let loadedFromInit: boolean; // first call to getAllData is from init
+    let firstTimeSub: boolean = true; // first time requestInfoSub listen a change
+
     if (this.filtersStateService.countries &&
       this.filtersStateService.retailers &&
       this.filtersStateService.period &&
@@ -211,10 +214,24 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
       this.filtersStateService.restoreFilters();
       this.getAllData();
+
+      // use loadedFromInit to avoid repeated calls to getAllData()
+      // when dashboard component is loaded for first time
+      // (e.g after page refresh or be redirected from other component that doesn't belong to to dashboard module)
+      loadedFromInit = true
     }
 
-    this.filtersSub = this.filtersStateService.filtersChange$.subscribe(() => {
-      this.appStateService.selectedPage === 'overview' && this.getAllData();
+    this.filtersSub = this.filtersStateService.filtersChange$.subscribe((manualChange) => {
+      // avoid repeated call to getAllData()
+      if (loadedFromInit && firstTimeSub && !manualChange) {
+        firstTimeSub = false;
+        return;
+      }
+
+      firstTimeSub = false;
+      loadedFromInit = false;
+
+      (this.appStateService.selectedPage === 'overview' && !loadedFromInit) && this.getAllData();
     });
   }
 

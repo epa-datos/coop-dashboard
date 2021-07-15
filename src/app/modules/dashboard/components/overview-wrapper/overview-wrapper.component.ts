@@ -153,17 +153,33 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    if (this.filtersStateService.period && this.filtersStateService.sectors && this.filtersStateService.categories) {
-      // removed line and used it from country & retailer components (init)
-      // this.filtersStateService.restoreFilters();
-      if ((this.selectedType === 'country' && this.filtersStateService.sources) || this.selectedType === 'retailer') {
-        this.getAllData();
-      }
+    let loadedFromInit: boolean; // first call to getAllData is from init
+    let firstTimeSub: boolean = true; // first time requestInfoSub listen a change
+
+    if (this.filtersAreReady()) {
+      this.getAllData();
+
+      // use loadedFromInit to avoid repeated calls to getAllData()
+      // when dashboard component is loaded for first time
+      // (e.g after page refresh or be redirected from other component that doesn't belong to to dashboard module)
+      loadedFromInit = true
     }
 
     this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
-      this.appStateService.selectedPage === 'overview' && this.getAllData(manualChange);
-    })
+      // avoid repeated call to getAllData()
+      if (loadedFromInit && firstTimeSub && !manualChange) {
+        firstTimeSub = false;
+        return;
+      }
+
+      firstTimeSub = false;
+      loadedFromInit = false;
+
+
+      if (this.appStateService.selectedPage === 'overview' && this.filtersAreReady() && !loadedFromInit) {
+        this.getAllData(manualChange);
+      }
+    });
   }
 
   getAllData(preserveSelectedTabs?: boolean) {
@@ -386,6 +402,27 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
         this.usersInvOrAupReqStatus = 3;
       }
     )
+  }
+
+  filtersAreReady(): boolean {
+    if (!this.filtersStateService.sectors ||
+      !this.filtersStateService.categories ||
+      !this.filtersStateService.period
+    ) {
+      return false;
+    }
+
+    if (this.selectedType === 'country' &&
+      this.filtersStateService.sources) {
+      return true;
+    }
+
+    if (this.selectedType === 'retailer' &&
+      this.filtersStateService.campaigns) {
+      return true;
+    }
+
+    return false;
   }
 
   clearSubtabsSelection() {

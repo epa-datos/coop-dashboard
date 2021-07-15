@@ -153,14 +153,34 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    let loadedFromInit: boolean; // first call to getAllData is from init
+    let firstTimeSub: boolean = true; // first time requestInfoSub listen a change
+
     // validate if filters are already loaded
-    this.filtersAreReady() && this.getAllData();
+    if (this.filtersAreReady()) {
+      this.getAllData();
+
+      // use loadedFromInit to avoid repeated calls to getAllData()
+      // when dashboard component is loaded for first time
+      // (e.g after page refresh or be redirected from other component that doesn't belong to to dashboard module)
+      loadedFromInit = true
+    }
 
     this.requestInfoSub = this.requestInfoChange.subscribe(({ manualChange, selectedSection }) => {
       // manualChange isn't useful in this component because there isn't tabs to preserve or clear selection
       // the only tab only appears in LATAM view level and it isn't necessary to clear the selection 
-      // when the view changes to country or retailer since it isn't shown at these levels
-      if (selectedSection === 'indexed' && this.filtersAreReady()) {
+      // when the view changes to country or retailer since it isn't shown at these levels 
+
+      // avoid repeated call to getAllData()
+      if (loadedFromInit && firstTimeSub && !manualChange) {
+        firstTimeSub = false;
+        return;
+      }
+
+      firstTimeSub = false;
+      loadedFromInit = false;
+
+      if (selectedSection === 'indexed' && this.filtersAreReady() && !loadedFromInit) {
         this.getAllData();
       }
     });
