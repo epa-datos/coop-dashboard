@@ -128,11 +128,30 @@ export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    let loadedFromInit: boolean; // first call to getAllData is from init
+    let firstTimeSub: boolean = true; // first time requestInfoSub listen a change
+
     // validate if filters are already loaded
-    this.filtersAreReady() && this.getAllData();
+    if (this.filtersAreReady()) {
+      this.getAllData();
+
+      // use loadedFromInit to avoid repeated calls to getAllData()
+      // when dashboard component is loaded for first time
+      // (e.g after page refresh or be redirected from other component that doesn't belong to to dashboard module)
+      loadedFromInit = true;
+    }
 
     this.requestInfoSub = this.requestInfoChange.subscribe(({ manualChange, selectedSection }) => {
-      if (selectedSection === 'pc-selector' && this.filtersAreReady()) {
+      // avoid repeated call to getAllData()
+      if (loadedFromInit && firstTimeSub && !manualChange) {
+        firstTimeSub = false;
+        return;
+      }
+
+      firstTimeSub = false;
+      loadedFromInit = false;
+
+      if (selectedSection === 'pc-selector' && this.filtersAreReady() && !loadedFromInit) {
         this.getAllData(manualChange);
       }
     });
