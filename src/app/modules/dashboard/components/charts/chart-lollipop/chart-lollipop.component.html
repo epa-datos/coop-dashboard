@@ -6,10 +6,13 @@
     <div [hidden]="status !== 2 || data?.length < 1" [id]="chartID" style="height: 100%"></div>
 
     <!-- empty data -->
-    <div [hidden]="status !== 2 || data?.length > 0" class="chart-error-container text-muted">
-        <p class="text-center">
+    <div [hidden]="status !== 2 || data?.length > 0" class="chart-error-container text-muted text-center">
+        <p *ngIf="!emptyDataLegend">
             {{ 'general.withoutData' | translate }} <br>
             {{ 'general.withoutData2' | translate }}
+        </p>
+        <p *ngIf="emptyDataLegend">
+            {{ emptyDataLegend }}
         </p>
     </div>
 

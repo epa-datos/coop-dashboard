@@ -20,6 +20,7 @@ export class ChartBarComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() legendsByCategory: boolean; // show a legend (category + value + value format) per category only recommended for a small number of categories
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
+  @Input() emptyDataLegend: string;
 
   chartID;
 
