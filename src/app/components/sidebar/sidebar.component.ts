@@ -342,7 +342,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
         break;
     }
 
-    console.log('page', page)
     return page;
   }
 
