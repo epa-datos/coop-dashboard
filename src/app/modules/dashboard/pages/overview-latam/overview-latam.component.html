@@ -46,12 +46,35 @@
                         </span>
                     </div>
                     <div class="card-body">
-                        <app-chart-heat-map [data]="categoriesBySector" name="latam-categories-by-sector'"
+                        <app-chart-heat-map [data]="metricByCountry" name="latam-categories-by-sector'"
                             categoryX="country"
                             [categoryY]="selectedTab1 === 1 ? 'sector' : selectedTab1 === 2 ? 'category' : 'fund'"
                             height="250px" [showGridBorders]="true" [showHeatLegend]="false"
-                            [status]="categoriesReqStatus" formatValue="USD" gridBordersColor="#f7f7f7">
+                            [status]="metricByCountryReqStatus" formatValue="USD" gridBordersColor="#f7f7f7">
                         </app-chart-heat-map>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h4">
+                            {{
+                            ('overviewLatam.chart1CardTitle1' | translate) +
+                            (( selectedTab1 === 1 ? 'overviewLatam.chart1CardTitle2' : selectedTab1 === 2 ?
+                            'overviewLatam.chart1CardTitle3' : 'Fondos')
+                            | translate) +
+                            ('overviewLatam.chart1CardTitle4' | translate)
+                            }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <app-generic-table
+                            [displayedColumns]="selectedTab1 === 1 ? metricByCountryColumns.sector : selectedTab1 === 2  ? metricByCountryColumns.category : metricByCountryColumns.found"
+                            [tableData]="metricByCountryTable" [tableDataChange]="metricByCountryTable.data"
+                            errorData="Error al consultar países" emptyDataMsg="No se encontraron países">
+                        </app-generic-table>
                     </div>
                 </div>
             </div>

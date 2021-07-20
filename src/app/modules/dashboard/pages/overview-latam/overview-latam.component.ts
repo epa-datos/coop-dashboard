@@ -111,7 +111,35 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     }
   ];
 
-  categoriesBySector: any[] = [];
+  metricByCountry: any[] = [];
+  metricByCountryColumns = {
+    sector: [
+      { name: 'country', title: 'País' },
+      { name: 'search', title: 'Search', textAlign: 'center', formatValue: 'currency' },
+      { name: 'marketing', title: 'Marketing', textAlign: 'center', formatValue: 'currency' },
+      { name: 'ventas', title: 'Ventas', textAlign: 'center', formatValue: 'currency' },
+    ],
+    category: [
+      { name: 'country', title: 'País' },
+      { name: 'ps', title: 'PS', textAlign: 'center', formatValue: 'currency' },
+      { name: 'hw_print', title: 'HW Print', textAlign: 'center', formatValue: 'currency' },
+      { name: 'supplies', title: 'Supplies', textAlign: 'center', formatValue: 'currency' },
+    ],
+    found: [
+      { name: 'country', title: 'País' },
+      { name: 'hw_print', title: 'HW Print', textAlign: 'center', formatValue: 'currency' },
+      { name: 'supplies', title: 'Supplies', textAlign: 'center', formatValue: 'currency' },
+      { name: 'intel_premium', title: 'Intel Premium', textAlign: 'center', formatValue: 'currency' },
+      { name: 'intel_gaming', title: 'Intel Gaming', textAlign: 'center', formatValue: 'currency' },
+      { name: 'ms_jma_premium', title: 'MS JMA Premium', textAlign: 'center', formatValue: 'currency' },
+      { name: 'ms_jma_gaming', title: 'MS JMA Gaming', textAlign: 'center', formatValue: 'currency' },
+    ]
+  };
+
+  metricByCountryTable = {
+    data: [],
+    reqStatus: 0
+  }
 
   trafficOrSales = {};
 
@@ -120,22 +148,9 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
   // top products
   topProductsColumns: TableItem[] = [
-    {
-      name: 'rank',
-      title: 'Posición',
-      tooltip: true,
-    },
-    {
-      name: 'product',
-      title: 'Producto',
-      tooltip: true,
-    },
-    {
-      name: 'amount',
-      title: 'Cantidad',
-      textAlign: 'center',
-      formatValue: 'integer'
-    }
+    { name: 'rank', title: 'Posición', tooltip: true },
+    { name: 'product', title: 'Producto', tooltip: true },
+    { name: 'amount', title: 'Cantidad', textAlign: 'center', formatValue: 'integer' }
   ];
   topProducts = {
     data: [],
@@ -144,7 +159,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
   // requests status
   kpisReqStatus: number = 0;
-  categoriesReqStatus: number = 0;
+  metricByCountryReqStatus: number = 0;
   usersInvOrAupReqStatus: number = 0;
   invVsRevenueReqStatus: number = 0;
   trafficOrSalesReqStatus = [
@@ -319,16 +334,52 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
   }
 
   getSectorsAndCategories(metricType: string) {
-    this.categoriesReqStatus = 1;
+    this.metricByCountryReqStatus = 1;
+    this.metricByCountryTable.reqStatus = 1;
     this.overviewService.getSectorsAndCategoriesLatam(metricType).subscribe(
       (resp: any[]) => {
-        this.categoriesBySector = resp;
-        this.categoriesReqStatus = 2;
+        this.metricByCountry = resp;
+        this.metricByCountryReqStatus = 2;
+
+        this.metricByCountryTable.data = [];
+
+        let countries: any[] = [];
+        for (let item of resp) {
+          let baseObj = countries.find(c => c.country === item.country);
+
+          let propName;
+          switch (metricType) {
+            case 'sectors':
+              propName = item.sector.toLowerCase().replaceAll(' ', '_');
+              break;
+
+            case 'categories':
+              propName = item.category.toLowerCase().replaceAll(' ', '_');
+              break;
+
+            case 'funds':
+              propName = item.fund.toLowerCase().replaceAll(' ', '_');
+              break;
+
+            default:
+              break;
+          }
+
+          if (!baseObj) {
+            countries.push({ country: item.country, [propName]: item.value });
+          } else {
+            baseObj[propName] = item.value;
+          }
+        }
+
+        this.metricByCountryTable.data = countries;
+        this.metricByCountryTable.reqStatus = 2;
       },
       error => {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[overview-latam.component]: ${errorMsg}`);
-        this.categoriesReqStatus = 3;
+        this.metricByCountryReqStatus = 3;
+        this.metricByCountryTable.reqStatus = 3;
       });
 
     this.selectedTab1 = metricType === 'sectors' ? 1 : metricType === 'categories' ? 2 : 3;
