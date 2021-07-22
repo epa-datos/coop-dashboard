@@ -31,7 +31,6 @@
         "sidebarError3": "to which you have access. Please try later."
     },
     "filters": {
-        "country": "Country",
         "countryPh": "Select a Country",
         "countrySearchPh": "Search Country",
         "countryError1": "Error when consulting countries",
@@ -39,7 +38,6 @@
         "retailerSearchPh": "Search Retailer",
         "retailerError1": "Select at least one Retailer",
         "retailerError2": "Error when consulting Retailers",
-        "period": "Period",
         "periodPh1": "Start date",
         "periodPh2": "End date",
         "periodError1": "Invalid start date",
@@ -58,11 +56,12 @@
         "sourceError1": "Select at least one Source",
         "filter": "Filter"
     },
-    "overviewLatam": {
+    "overview": {
         "chart1CardTitle1": "Investment in ",
         "chart1CardTitle2": "Sectors",
         "chart1CardTitle3": "Categories",
-        "chart1CardTitle4": " by Country",
+        "chart1CardTitle4": "Funds",
+        "chart1CardTitle5": " by Country",
         "chart2CardTitle1": " by Devices",
         "chart3CardTitle1": " by Gender",
         "chart4CardTitle1": " by Age",
@@ -70,11 +69,14 @@
         "chart7CardTitle1": "Investment - Revenue",
         "chart7ValueName1": "Investment",
         "chart7ValueName2": "Revenue",
-        "table1CardTitle1": "Top Products"
+        "table1Error": "Error when consulting countries",
+        "table1Empty": "No countries found",
+        "table2CardTitle1": "Top Products",
+        "table2Error": "Error when consulting products",
+        "table2Empty": "No products found"
     },
-    "kpis": {
-        "investment": "investment",
-        "transactions": "conversions"
+    "charts": {
+        "dayAndHour": " by day of week and time of day"
     },
     "paginator": {
         "itemsPerPage": "Items per page",
@@ -86,15 +88,21 @@
     },
     "general": {
         "coop": "COOP Program",
+        "country": "Country",
         "sector": "Sector",
         "category": "Category",
         "source": "Source",
+        "campaign": "Campaign",
+        "period": "Period",
         "traffic": "Traffic",
-        "sales": "Conversions",
+        "conversions": "Conversions",
+        "sales": "Sales",
         "users": "Users",
+        "investment": "Investment",
         "ranking": "Ranking",
         "product": "Product",
         "amount": "Amount",
+        "fund": "Fund",
         "institutional": "Institutional",
         "others": "Others",
         "usersVsSales": "Users - Conversions",

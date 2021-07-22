@@ -31,7 +31,6 @@
         "sidebarError3": "a los que tienes acceso. Intenta más tarde."
     },
     "filters": {
-        "country": "País",
         "countryPh": "Selecciona un País",
         "countrySearchPh": "Buscar País",
         "countryError1": "Error al consultar países",
@@ -39,7 +38,6 @@
         "retailerSearchPh": "Buscar Retailer",
         "retailerError1": "Selecciona al menos un Retailer",
         "retailerError2": "Error al consultar Retailers",
-        "period": "Período",
         "periodPh1": "Fecha inicio",
         "periodPh2": "Fecha fin",
         "periodError1": "Fecha inicio inválida",
@@ -58,11 +56,12 @@
         "sourceError1": "Selecciona al menos una Fuente",
         "filter": "Filtrar"
     },
-    "overviewLatam": {
+    "overview": {
         "chart1CardTitle1": "Inversión en ",
         "chart1CardTitle2": "Sectores",
         "chart1CardTitle3": "Categorías",
-        "chart1CardTitle4": " por País",
+        "chart1CardTitle4": "Fondos",
+        "chart1CardTitle5": " por País",
         "chart2CardTitle1": " por Dispositivos",
         "chart3CardTitle1": " por Género",
         "chart4CardTitle1": " por Edad",
@@ -70,11 +69,14 @@
         "chart7CardTitle1": "Inversión - Revenue",
         "chart7ValueName1": "Inversión",
         "chart7ValueName2": "Revenue",
-        "table1CardTitle1": "Top Productos"
+        "table1Error": "Error al consultar países",
+        "table1Empty": "No se encontraron países",
+        "table2CardTitle1": "Top Productos",
+        "table2Error": "Error al consultar productos",
+        "table2Empty": "No se encontraron productos"
     },
-    "kpis": {
-        "investment": "inversión",
-        "transactions": "conversiones"
+    "charts": {
+        "dayAndHour": " por día de la semana y hora del día"
     },
     "paginator": {
         "itemsPerPage": "Registros por página",
@@ -86,16 +88,21 @@
     },
     "general": {
         "coop": "Programa COOP",
+        "country": "País",
         "sector": "Sector",
         "category": "Categoría",
         "source": "Fuente",
         "campaign": "Campaña",
+        "period": "Período",
         "traffic": "Tráfico",
-        "sales": "Conversiones",
+        "conversions": "Conversiones",
+        "sales": "Ventas",
         "users": "Usuarios",
+        "investment": "Inversión",
         "ranking": "Ranking",
         "product": "Producto",
         "amount": "Catindad",
+        "fund": "Fondo",
         "institutional": "Institucional",
         "others": "Otros",
         "usersVsSales": "Usuarios - Conversiones",
