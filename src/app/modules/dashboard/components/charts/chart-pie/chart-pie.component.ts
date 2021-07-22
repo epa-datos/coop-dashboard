@@ -21,6 +21,7 @@ export class ChartPieComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() height: string = '350px'; // height property value valid in css
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
+  @Input() minLegendHeight: number;
 
   private _name: string;
   get name() {
@@ -77,9 +78,12 @@ export class ChartPieComponent implements OnInit, AfterViewInit, OnDestroy {
   */
   loadChart(lang?: string) {
     this.browserOnly(() => {
+
       // Chart code goes in here
       am4core.useTheme(am4themes_animated);
       let chart = am4core.create(this.chartID, am4charts.PieChart);
+
+
 
       this.loadChartData(chart);
       loadLanguage(chart, lang);
@@ -109,6 +113,8 @@ export class ChartPieComponent implements OnInit, AfterViewInit, OnDestroy {
       pieSeries.ticks.template.disabled = true;
       pieSeries.slices.template.fillOpacity = 0.8;
 
+      pieSeries.slicesContainer.maxHeight = 2;
+
       // Create a base filter effect (as if it's not there) for the hover to return to
       let shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
       shadow.opacity = 0;
@@ -126,7 +132,15 @@ export class ChartPieComponent implements OnInit, AfterViewInit, OnDestroy {
       chart.legend.position = this.legendPosition;
       chart.legend.fontSize = 12;
       chart.legend.useDefaultMarker = true;
-      chart.legend.maxHeight = 150;
+
+      if (!this.minLegendHeight) {
+        chart.legend.maxHeight = 150;
+      } else {
+        // 0.1 is a min difference of minLegendHeight in order to align charts where there're multiple charts in a row
+        chart.legend.minHeight = this.minLegendHeight - 0.1;
+        chart.legend.maxHeight = this.minLegendHeight;
+      }
+
       chart.legend.scrollable = true;
 
       let marker = chart.legend.markers.template.children.getIndex(0);
