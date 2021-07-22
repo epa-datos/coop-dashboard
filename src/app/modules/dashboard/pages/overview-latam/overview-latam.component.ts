@@ -193,26 +193,8 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     private translate: TranslateService
   ) {
 
-    this.translateSub = translate.stream('overviewLatam').subscribe(() => {
-      this.kpis[0].title = this.translate.instant('kpis.investment');
-      this.kpis[2].subKpis[0].title = this.translate.instant('general.users');
-      this.kpis[3].title = this.translate.instant('kpis.transactions');
-
-      this.topProductsColumns[0].title = this.translate.instant('general.ranking');
-      this.topProductsColumns[1].title = this.translate.instant('general.product');
-      this.topProductsColumns[2].title = this.translate.instant('general.amount');
-
-      this.usersInvOrAupMetrics[0] = this.translate.instant('general.sector').toLowerCase();
-      this.usersInvOrAupMetrics[1] = this.translate.instant('general.category').toLowerCase();
-      this.usersInvOrAupMetrics[2] = this.translate.instant('general.source').toLowerCase();
-
-      if (this.trafficOrSales['men']?.length > 0) {
-        this.trafficOrSales['men'][1].name = this.translate.instant('others.men');
-      }
-
-      if (this.trafficOrSales['women']?.length > 0) {
-        this.trafficOrSales['women'][1].name = this.translate.instant('others.women');
-      }
+    this.translateSub = translate.stream('overview').subscribe(() => {
+      this.loadI18nContent();
     });
   }
 
@@ -516,6 +498,31 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       kpi.subKpis?.forEach(item => {
         item.value = 0;
       });
+    }
+  }
+
+  loadI18nContent() {
+    this.kpis[0].title = this.translate.instant('general.investment');
+    this.kpis[2].subKpis[0].title = this.translate.instant('general.users');
+    this.kpis[3].title = this.translate.instant('general.conversions');
+
+    this.metricByCountryColumns.sector[0].title = this.translate.instant('general.country');
+    this.metricByCountryColumns.sector[3].title = this.translate.instant('general.sales');
+
+    this.topProductsColumns[0].title = this.translate.instant('general.ranking');
+    this.topProductsColumns[1].title = this.translate.instant('general.product');
+    this.topProductsColumns[2].title = this.translate.instant('general.amount');
+
+    this.usersInvOrAupMetrics[0] = this.translate.instant('general.sector').toLowerCase();
+    this.usersInvOrAupMetrics[1] = this.translate.instant('general.category').toLowerCase();
+    this.usersInvOrAupMetrics[2] = this.translate.instant('general.source').toLowerCase();
+
+    if (this.trafficOrSales['men']?.length > 0) {
+      this.trafficOrSales['men'][1].name = this.translate.instant('others.men');
+    }
+
+    if (this.trafficOrSales['women']?.length > 0) {
+      this.trafficOrSales['women'][1].name = this.translate.instant('others.women');
     }
   }
 
