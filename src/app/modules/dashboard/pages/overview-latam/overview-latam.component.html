@@ -35,15 +35,15 @@
             <div class="col-12 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">
-                            {{
-                            ('overview.chart1CardTitle1' | translate) +
-                            (( selectedTab1 === 1 ? 'overview.chart1CardTitle2' : selectedTab1 === 2 ?
-                            'overview.chart1CardTitle3' : 'overview.chart1CardTitle4')
-                            | translate) +
-                            ('overview.chart1CardTitle5' | translate)
-                            }}
-                        </span>
+                        <span class="h4">{{'overviewLatam.chart1CardTitle1' | translate }}</span>
+
+                        <ng-container [ngSwitch]="selectedTab1">
+                            <span class="h4" *ngSwitchCase="1">{{ 'overviewLatam.chart1CardTitle2' | translate}}</span>
+                            <span class="h4" *ngSwitchCase="2">{{ 'overviewLatam.chart1CardTitle3' | translate}}</span>
+                            <span class="h4" *ngSwitchCase="3">{{ 'overviewLatam.chart1CardTitle4' | translate}}</span>
+                        </ng-container>
+
+                        <span class="h4">{{ 'charts.byCountry' | translate }}</span>
                     </div>
                     <div class="card-body">
                         <app-chart-heat-map [data]="metricByCountry" name="latam-categories-by-sector'"
@@ -60,22 +60,22 @@
             <div class="col-12 mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">
-                            {{
-                            ('overview.chart1CardTitle1' | translate) +
-                            (( selectedTab1 === 1 ? 'overview.chart1CardTitle2' : selectedTab1 === 2 ?
-                            'overview.chart1CardTitle3' : 'overview.chart1CardTitle4')
-                            | translate) +
-                            ('overview.chart1CardTitle5' | translate)
-                            }}
-                        </span>
+                        <span class="h4">{{'overviewLatam.chart1CardTitle1' | translate }}</span>
+
+                        <ng-container [ngSwitch]="selectedTab1">
+                            <span class="h4" *ngSwitchCase="1">{{ 'overviewLatam.chart1CardTitle2' | translate}}</span>
+                            <span class="h4" *ngSwitchCase="2">{{ 'overviewLatam.chart1CardTitle3' | translate}}</span>
+                            <span class="h4" *ngSwitchCase="3">{{ 'overviewLatam.chart1CardTitle4' | translate}}</span>
+                        </ng-container>
+
+                        <span class="h4">{{ 'charts.byCountry' | translate }}</span>
                     </div>
                     <div class="card-body">
                         <app-generic-table
                             [displayedColumns]="selectedTab1 === 1 ? metricByCountryColumns.sector : selectedTab1 === 2  ? metricByCountryColumns.category : metricByCountryColumns.fund"
                             [tableData]="metricByCountryTable" [tableDataChange]="metricByCountryTable.data"
-                            [errorMsg]="'overview.table1Error' | translate"
-                            [emptyDataMsg]="'overview.table1Empty' | translate">
+                            [errorMsg]="'overviewLatam.table1Error' | translate"
+                            [emptyDataMsg]="'overviewLatam.table1Empty' | translate">
                         </app-generic-table>
                     </div>
                 </div>
@@ -159,9 +159,9 @@
                         </div>
 
                         <app-chart-multiple-axes [data]="usersInvOrAup"
-                            [value1]="selectedTab3 === 1 ? 'transactions' : selectedTab3 === 2 ? 'revenue' : 'revenue'"
+                            [value1]="selectedTab3 === 1 ? 'transactions' : 'revenue'"
                             [value2]="selectedTab3 === 1 ? 'users' : selectedTab3 === 2 ? 'investment': 'aup'"
-                            [valueName1]="selectedTab3 === 1 ? ('general.conversions' | translate) : selectedTab3 === 2 ? 'Revenue' :'Revenue'"
+                            [valueName1]="selectedTab3 === 1 ? ('general.conversions' | translate) : 'Revenue'"
                             [valueName2]="selectedTab3 === 1 ? ('general.users' | translate) : selectedTab3 === 2 ? ('general.investment' | translate) : 'AUP'"
                             [valueFormat1]="selectedTab3 > 1 && 'USD'" [valueFormat2]="selectedTab3 > 1 && 'USD'"
                             [status]="usersInvOrAupReqStatus" name="latam-metric-comparison">
@@ -197,7 +197,7 @@
                     <div class="card-header">
                         <span class="h4">
                             {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
-                            ('overview.chart2CardTitle1' | translate) }}
+                            ('charts.byDevice' | translate) }}
                         </span>
                     </div>
                     <div class="card-body">
@@ -239,7 +239,7 @@
                     <div class="card-header">
                         <span class="h4">
                             {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
-                            ('overview.chart3CardTitle1' | translate) }}
+                            ('charts.byGender' | translate) }}
                         </span>
                     </div>
                     <div class="card-body">
@@ -285,7 +285,7 @@
                     <div class="card-header">
                         <span class="h4">
                             {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
-                            ('overview.chart4CardTitle1' | translate) }}
+                            ('charts.byAge' | translate) }}
                         </span>
                     </div>
                     <div class="card-body">
@@ -303,7 +303,7 @@
                     <div class="card-header">
                         <span class="h4">
                             {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
-                            ('overview.chart5CardTitle1' | translate) }}
+                            ('charts.byGenderAndAge' | translate) }}
                         </span>
                     </div>
                     <div class="card-body" style="height: 328px">
@@ -341,7 +341,7 @@
                     <div class="card-header">
                         <span class="h4">
                             {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
-                            ('charts.dayAndHour' | translate) }}
+                            ('charts.byDayAndHour' | translate) }}
                         </span>
                     </div>
                     <div class="card-body">
@@ -369,7 +369,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <span class="h4">{{ 'overview.table2CardTitle1' | translate }}</span>
+                        <span class="h4">{{ 'overviewLatam.table2CardTitle1' | translate }}</span>
                         <ng-container *ngIf="selectedCategories?.length > 1">
                             <ng-container [ngSwitch]="selectedTab5">
                                 <span *ngSwitchCase="1" class="h4"> - PS</span>
@@ -381,8 +381,8 @@
                     </div>
                     <div class="card-body">
                         <app-generic-table [displayedColumns]="topProductsColumns" [tableData]="topProducts"
-                            [tableDataChange]="topProducts.data" [errorMsg]="'overview.table2Error' | translate"
-                            [emptyDataMsg]="'overview.table2Empty' | translate">
+                            [tableDataChange]="topProducts.data" [errorMsg]="'overviewLatam.table2Error' | translate"
+                            [emptyDataMsg]="'overviewLatam.table2Empty' | translate">
                         </app-generic-table>
                     </div>
                 </div>

@@ -5,9 +5,9 @@ import { OverviewService } from '../../services/overview.service';
 import { TableItem } from '../../components/generic-table/generic-table.component';
 import { TranslateService } from '@ngx-translate/core';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
-import { convertWeekdayToString } from 'src/app/tools/functions/data-convert';
 import { KpiCard } from 'src/app/models/kpi';
 import { AppStateService } from 'src/app/services/app-state.service';
+import { TranslationsService } from 'src/app/services/translations.service';
 
 @Component({
   selector: 'app-overview-latam',
@@ -193,10 +193,11 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     private filtersStateService: FiltersStateService,
     private appStateService: AppStateService,
     private overviewService: OverviewService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private translationsServ: TranslationsService
   ) {
 
-    this.translateSub = translate.stream('overview').subscribe(() => {
+    this.translateSub = translate.stream('overviewLatam').subscribe(() => {
       this.loadI18nContent();
     });
   }
@@ -398,7 +399,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
           } else if (subMetric.name === 'weekdayAndHour') {
             this.trafficOrSales[subMetric.name] = resp.map(item => {
-              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
+              return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
             });
 
           } else {
@@ -527,6 +528,10 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     if (this.trafficOrSales['women']?.length > 0) {
       this.trafficOrSales['women'][1].name = this.translate.instant('others.women');
     }
+
+    this.trafficOrSales['weekdayAndHour'] = this.trafficOrSales['weekdayAndHour']?.map(item => {
+      return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+    });
   }
 
   ngOnDestroy() {
