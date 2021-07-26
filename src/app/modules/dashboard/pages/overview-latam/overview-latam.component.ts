@@ -125,14 +125,17 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
       { name: 'hw_print', title: 'HW Print', textAlign: 'center', formatValue: 'currency' },
       { name: 'supplies', title: 'Supplies', textAlign: 'center', formatValue: 'currency' },
     ],
-    found: [
+    fund: [
       { name: 'country', title: 'País' },
-      { name: 'hw_print', title: 'HW Print', textAlign: 'center', formatValue: 'currency' },
-      { name: 'supplies', title: 'Supplies', textAlign: 'center', formatValue: 'currency' },
-      { name: 'intel_premium', title: 'Intel Premium', textAlign: 'center', formatValue: 'currency' },
-      { name: 'intel_gaming', title: 'Intel Gaming', textAlign: 'center', formatValue: 'currency' },
-      { name: 'ms_jma_premium', title: 'MS JMA Premium', textAlign: 'center', formatValue: 'currency' },
+      { name: 'mdf', title: 'MDF', textAlign: 'center', formatValue: 'currency' },
+      { name: 'amd', title: 'AMD', textAlign: 'center', formatValue: 'currency' },
+      { name: 'ms_jma', title: 'MS JMA', textAlign: 'center', formatValue: 'currency' },
+      { name: 'intel_mdf_gaming', title: 'Intel MDF Gaming', textAlign: 'center', formatValue: 'currency' },
+      { name: 'intel_mdf_premium', title: 'Intel MDF Premium', textAlign: 'center', formatValue: 'currency' },
       { name: 'ms_jma_gaming', title: 'MS JMA Gaming', textAlign: 'center', formatValue: 'currency' },
+      { name: 'ms_jma_premium', title: 'MS JMA Premium', textAlign: 'center', formatValue: 'currency' },
+      { name: 'supplies', title: 'Supplies', textAlign: 'center', formatValue: 'currency' },
+      { name: 'hw_print', title: 'HW Print', textAlign: 'center', formatValue: 'currency' },
     ]
   };
 
@@ -358,7 +361,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
               break;
 
             case 'funds':
-              propName = item.fund.toLowerCase().replaceAll(' ', '_');
+              propName = item.fund.toLowerCase().replaceAll(' - ', '_').replaceAll(' ', '_');
               break;
 
             default:

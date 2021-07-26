@@ -71,7 +71,7 @@
                     </div>
                     <div class="card-body">
                         <app-generic-table
-                            [displayedColumns]="selectedTab1 === 1 ? metricByCountryColumns.sector : selectedTab1 === 2  ? metricByCountryColumns.category : metricByCountryColumns.found"
+                            [displayedColumns]="selectedTab1 === 1 ? metricByCountryColumns.sector : selectedTab1 === 2  ? metricByCountryColumns.category : metricByCountryColumns.fund"
                             [tableData]="metricByCountryTable" [tableDataChange]="metricByCountryTable.data"
                             errorData="Error al consultar países" emptyDataMsg="No se encontraron países">
                         </app-generic-table>
