@@ -49,8 +49,9 @@
                         <app-chart-heat-map [data]="metricByCountry" name="latam-categories-by-sector'"
                             categoryX="country"
                             [categoryY]="selectedTab1 === 1 ? 'sector' : selectedTab1 === 2 ? 'category' : 'fund'"
-                            height="250px" [showGridBorders]="true" [showHeatLegend]="false"
-                            [status]="metricByCountryReqStatus" formatValue="USD" gridBordersColor="#f7f7f7">
+                            [height]="selectedTab1 === 3 ? '350px' : '250px'" [showGridBorders]="true"
+                            [showHeatLegend]="false" [status]="metricByCountryReqStatus" formatValue="USD"
+                            gridBordersColor="#f7f7f7">
                         </app-chart-heat-map>
                     </div>
                 </div>
@@ -71,7 +72,7 @@
                     </div>
                     <div class="card-body">
                         <app-generic-table
-                            [displayedColumns]="selectedTab1 === 1 ? metricByCountryColumns.sector : selectedTab1 === 2  ? metricByCountryColumns.category : metricByCountryColumns.found"
+                            [displayedColumns]="selectedTab1 === 1 ? metricByCountryColumns.sector : selectedTab1 === 2  ? metricByCountryColumns.category : metricByCountryColumns.fund"
                             [tableData]="metricByCountryTable" [tableDataChange]="metricByCountryTable.data"
                             [errorMsg]="'overview.table1Error' | translate"
                             [emptyDataMsg]="'overview.table1Empty' | translate">

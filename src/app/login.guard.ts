@@ -13,7 +13,7 @@ export class LoginGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, rss: RouterStateSnapshot) {
         this.token = route.queryParams['token']
         if (this.token) {
-            localStorage.setItem('auth_token', this.token)
+            // localStorage.setItem('auth_token', JSON.stringify(this.token))
             this.router.navigate([rss.url.split('?')[0]], { queryParams: {}, replaceUrl: true, state: {} });
         }
         if (this.userService.isLoggedIn()) {

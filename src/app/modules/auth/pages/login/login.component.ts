@@ -42,11 +42,11 @@ export class LoginComponent implements OnInit {
 
     islogged && this.router.navigate(['/dashboard/home']);
 
-    if (!localStorage.getItem('lang')) {
-      localStorage.setItem('lang', 'es');
+    if (!JSON.parse(localStorage.getItem('lang'))) {
+      localStorage.setItem('lang', JSON.stringify('es'));
     }
 
-    this.defaultLang = localStorage.getItem('lang');
+    this.defaultLang = JSON.parse(localStorage.getItem('lang'));
     translate.setDefaultLang(this.defaultLang);
     this.selectedLang = this.defaultLang;
   }
@@ -125,7 +125,7 @@ export class LoginComponent implements OnInit {
   }
 
   langChange() {
-    localStorage.setItem('lang', this.selectedLang);
+    localStorage.setItem('lang', JSON.stringify(this.selectedLang));
 
     this.translate.use(this.selectedLang);
     this.appStateService.selectLang(this.selectedLang);

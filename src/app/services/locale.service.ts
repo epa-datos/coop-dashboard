@@ -16,7 +16,7 @@ export class LocaleService {
     this._locale = value;
   }
   get locale(): string {
-    const selectedLang = localStorage.getItem('lang');
+    const selectedLang = JSON.parse(localStorage.getItem('lang'));
     if (selectedLang === 'en') {
       return 'en';
     }

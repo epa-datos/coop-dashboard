@@ -13,7 +13,7 @@ export class SessionInterceptor {
   ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let authToken = localStorage.getItem('auth_token');
+    let authToken = JSON.parse(localStorage.getItem('auth_token'));
     if (authToken) {
       request = request.clone({
         headers: request.headers.set('Authorization', 'Bearer ' + authToken)
