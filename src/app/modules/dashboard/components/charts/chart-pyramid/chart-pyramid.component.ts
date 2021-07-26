@@ -59,6 +59,7 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit, OnDestroy {
   valueAxis: any;
   columns: any;
   langSub: Subscription;
+  yearsLegend: string = this.translate.instant('others.years');
 
   constructor(
     private translate: TranslateService,
@@ -69,6 +70,7 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit, OnDestroy {
     this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
       this.valueName1 = this.translate.instant('others.men');
       this.valueName2 = this.translate.instant('others.women');
+      this.yearsLegend = this.translate.instant('others.years');
 
       this.loadChart(lang);
     });
@@ -138,7 +140,7 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit, OnDestroy {
     female.dataFields.categoryY = this.category;
     female.clustered = false;
     female.columns.template.column.fillOpacity = 0.8;
-    female.columns.template.tooltipText = '{categoryY} años';
+    female.columns.template.tooltipText = `{categoryY} ${this.yearsLegend}`;
     female.name = this.valueName2;
 
     this.columns = { male, female }
@@ -177,8 +179,8 @@ export class ChartPyramidComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadValueFormat(valueFormat) {
-    this.columns.male.columns.template.tooltipText = `{categoryY} años: [bold]{valueX} ${this.valueFormat ? this.valueFormat : ''}[/]`;
-    this.columns.female.columns.template.tooltipText = `{categoryY} años: [bold]{valueX} ${this.valueFormat ? this.valueFormat : ''}[/]`;
+    this.columns.male.columns.template.tooltipText = `{categoryY} ${this.yearsLegend}: [bold]{valueX} ${this.valueFormat ? this.valueFormat : ''}[/]`;
+    this.columns.female.columns.template.tooltipText = `{categoryY} ${this.yearsLegend}: [bold]{valueX} ${this.valueFormat ? this.valueFormat : ''}[/]`;
     // this.labels.labelLeft.label.text = `{valueX} ${valueFormat ? valueFormat : ''}`;
     // this.labels.labelRight.label.text = `{valueX} ${valueFormat ? valueFormat : ''}`;
 
