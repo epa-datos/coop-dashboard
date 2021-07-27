@@ -2,7 +2,7 @@
     <div class="container-fluid-lg" [hidden]="!title">
         <p class="h2 text-xl">{{ title }}</p>
     </div>
-    <div class="filters-container container-fluid-lg">
+    <div class="filters-container container-fluid-lg" [hidden]="!showFilters">
         <app-general-filters></app-general-filters>
         <hr class="mt-3 mb-5">
     </div>
