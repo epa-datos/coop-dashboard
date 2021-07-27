@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationStart, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { AppStateService } from 'src/app/services/app-state.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,6 +11,8 @@ import { AppStateService } from 'src/app/services/app-state.service';
 export class DashboardComponent implements OnInit, OnDestroy {
 
   title: string;
+  showFilters: boolean;
+
   routeSub: Subscription;
   translateSub: Subscription;
 
@@ -21,30 +22,46 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) {
     this.routeSub = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
-        this.loadTitle(event.url);
+        this.loadContent(event.url);
       }
     })
 
     this.translateSub = translate.stream('dashboard').subscribe(() => {
-      this.loadTitle(this.router.url);
+      this.loadContent(this.router.url);
     });
   }
 
   ngOnInit(): void { }
 
-  loadTitle(route: string) {
-    if (route.includes('/dashboard/main-region')) {
-      this.title = this.translate.instant('dashboard.overview');
-    } else if (route.includes('/dashboard/country')) {
-      this.title = this.translate.instant('dashboard.overviewCountry');
-    } else if (route.includes('/dashboard/retailer')) {
-      this.title = this.translate.instant('dashboard.overviewRetailer');
-    } else if (route.includes('/dashboard/tools')) {
-      this.title = this.translate.instant('dashboard.otherTools');
-    } else if (route.includes('/dashboard/omnichat')) {
-      this.title = this.translate.instant('dashboard.feelingsAnalysis');
-    } else {
-      delete this.title;
+  loadContent(route: string) {
+    this.showFilters = true;
+
+    const path = route.replace('/dashboard/', '').split('?')[0];
+    switch (path) {
+      case 'main-region':
+        this.title = this.translate.instant('dashboard.overview');
+        break;
+
+      case 'country':
+        this.title = this.translate.instant('dashboard.overviewCountry');
+        break;
+
+      case 'retailer':
+        this.title = this.translate.instant('dashboard.overviewRetailer');
+        break;
+
+      case 'tools':
+        this.title = this.translate.instant('dashboard.otherTools');
+        break;
+
+      case 'omnichat':
+        this.title = this.translate.instant('dashboard.feelingsAnalysis');
+        break;
+
+      default:
+        delete this.title;
+        this.showFilters = false;
+        break;
     }
   }
 
