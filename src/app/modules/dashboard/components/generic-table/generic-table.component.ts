@@ -14,6 +14,8 @@ export class GenericTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() errorMsg = 'Error al consultar datos';
   @Input() emptyDataMsg = 'No se encontraron datos';
+  @Input() reducedPadding: boolean;
+
   private _displayedColumns: TableItem[];
   get displayedColumns() {
     return this._displayedColumns;
