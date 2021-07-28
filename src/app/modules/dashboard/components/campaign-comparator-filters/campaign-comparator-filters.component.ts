@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsersMngmtService } from 'src/app/modules/users-mngmt/services/users-mngmt.service';
-import { AppStateService } from 'src/app/services/app-state.service';
 import { CampaignComparatorService } from '../../services/campaign-comparator.service';
 import { FiltersStateService } from '../../services/filters-state.service';
 
@@ -13,6 +12,7 @@ import { FiltersStateService } from '../../services/filters-state.service';
 export class CampaignComparatorFiltersComponent implements OnInit {
 
   @Output() selectedFiltersChange = new EventEmitter<{ retailer: any, campaign: any }>();
+  @Output() validFiltersChange = new EventEmitter<boolean>();
 
   retailerList: any[];
   campaignList: any[];
@@ -79,6 +79,10 @@ export class CampaignComparatorFiltersComponent implements OnInit {
         this.retailersReqStatus = 2;
       })
       .catch((error) => {
+        this.retailerList = [];
+        this.selectedRetailer && delete this.selectedRetailer;
+        this.retailer.reset();
+
         console.error(`[campaign-comparator-filter.component]: ${error}`);
         this.retailersReqStatus = 3;
       });
@@ -96,6 +100,10 @@ export class CampaignComparatorFiltersComponent implements OnInit {
         this.campaignsReqStatus = 2;
       })
       .catch(error => {
+        this.campaignList = [];
+        this.selectedCampaign && delete this.selectedCampaign;
+        this.campaign.reset();
+
         console.error(`[campaign-comparator-filter.component]: ${error}`);
         this.campaignsReqStatus = 3;
       });
@@ -130,15 +138,18 @@ export class CampaignComparatorFiltersComponent implements OnInit {
     }
   }
 
-  retailerChange() {
+  async retailerChange() {
     this.retailerFilter && delete this.retailerFilter;
-    this.getCampaigns();
+
+    await this.getCampaigns();
+    this.validFiltersChange.emit(this.form.valid);
   }
 
   campaignChange() {
     this.campaignFilter && delete this.campaignFilter;
 
     this.selectedFiltersChange.emit({ retailer: this.selectedRetailer, campaign: this.selectedCampaign });
+    this.validFiltersChange.emit(this.form.valid);
   }
 
 }
