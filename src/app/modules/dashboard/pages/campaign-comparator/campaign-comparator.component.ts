@@ -203,7 +203,7 @@ export class CampaignComparatorComponent implements OnInit {
       name: 'product',
       title: 'Producto',
       tooltip: true,
-      maxWidthColumn: 25
+      maxWidthColumn: 8
     },
     {
       name: 'amount',
@@ -254,6 +254,7 @@ export class CampaignComparatorComponent implements OnInit {
     }
   };
 
+  showComparison: boolean;
 
   constructor(
     private campaignCompService: CampaignComparatorService
@@ -268,6 +269,7 @@ export class CampaignComparatorComponent implements OnInit {
   }
 
   compareCampaigns() {
+    this.showComparison = true;
     const selection = [
       { ...this.firstSelection, selection: 'camp1' },
       { ...this.secondSelection, selection: 'camp2' }

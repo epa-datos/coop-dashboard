@@ -1,25 +1,36 @@
 <div class="main-container mt-4">
     <div class="row">
-        <div class="col-12 col-md-6">
+        <!-- first campaign -->
+        <div class="col-12 col-lg-6">
+            <span class="h4 mb-2">Primer campaña</span>
             <app-campaign-comparator-filters (selectedFiltersChange)="filtersChange(1, $event)">
             </app-campaign-comparator-filters>
         </div>
-        <div class="col-12 col-md-6">
+
+        <!-- second campaign -->
+        <div class="col-12 col-lg-6">
+            <span class="h4 mb-2">Segunda campaña</span>
             <app-campaign-comparator-filters (selectedFiltersChange)="filtersChange(2, $event)">
             </app-campaign-comparator-filters>
         </div>
+
         <div class="col-12 text-right">
             <button class="btn btn-primary" [disabled]="!firstSelection?.campaign || !secondSelection?.campaign"
                 (click)="compareCampaigns()">Comparar</button>
         </div>
     </div>
 
-    <ng-container *ngIf="firstSelection?.campaign && secondSelection?.campaign">
+    <ng-container *ngIf="firstSelection?.campaign && secondSelection?.campaign && showComparison">
         <div class="row mt-4">
+            <!-- first campaign -->
             <div class="col-12 col-md-6">
+                <span class="h4 mb-2 d-block d-lg-none d-xl-none">Primer campaña</span>
                 <div class="row">
-                    <div *ngFor="let kpi of kpisCamps.camp1.kpis" class="col-12 col-lg-6 col-xl-4 mb-4">
-                        <app-card-stat [stat]="kpi" [loader]="kpisCamps.camp1.reqStatus <= 1"></app-card-stat>
+                    <div *ngFor="let kpi of kpisCamps.camp1.kpis"
+                        class="col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 mb-md-4">
+                        <app-card-stat [stat]="kpi" [loader]="kpisCamps.camp1.reqStatus <= 1" [smallHeader]="true"
+                            [reducedPadding]="true">
+                        </app-card-stat>
                     </div>
                     <div class="col-12 mt--3 mt-xl-2" [hidden]="kpisCamps.camp1.reqStatus !== 3">
                         <p class="text-center text-muted mb-0">
@@ -29,10 +40,15 @@
                 </div>
             </div>
 
+            <!-- second campaign -->
             <div class="col-12 col-md-6">
+                <span class="h4 mb-2 d-block d-lg-none d-xl-none mt-4 mt-md-0">Segunda campaña</span>
                 <div class="row">
-                    <div *ngFor="let kpi of kpisCamps.camp2.kpis" class="col-12 col-lg-6 col-xl-4 mb-4">
-                        <app-card-stat [stat]="kpi" [loader]="kpisCamps.camp2.reqStatus <= 1"></app-card-stat>
+                    <div *ngFor="let kpi of kpisCamps.camp2.kpis"
+                        class="col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 mb-md-4">
+                        <app-card-stat [stat]="kpi" [loader]="kpisCamps.camp2.reqStatus <= 1" [smallHeader]="true"
+                            [reducedPadding]="true">
+                        </app-card-stat>
                     </div>
                     <div class="col-12 mt--3 mt-xl-2" [hidden]="kpisCamps.camp2.reqStatus !== 3">
                         <p class="text-center text-muted mb-0">
@@ -44,13 +60,23 @@
         </div>
 
         <div class="row mt-4">
-            <div class="col-12 col-md-6 mb-4">
+            <div class="col-12">
+                <p class="h2">Adquisición</p>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <!-- first campaign -->
+            <div class="col-12 col-lg-6 mb-4">
+                <span class="h4 mb-2 d-block d-lg-none d-xl-none">Primer campaña</span>
                 <app-generic-table [displayedColumns]="acqCampaignsTableColumns" [tableData]="acqCamps.camp1"
                     [tableDataChange]="acqCamps.camp1.data">
                 </app-generic-table>
             </div>
 
-            <div class="col-12 col-md-6 mb-4">
+            <!-- second campaign -->
+            <div class="col-12 col-lg-6 mb-4">
+                <span class="h4 mb-2 d-block d-lg-none d-xl-none mt-4">Segunda campaña</span>
                 <app-generic-table [displayedColumns]="acqCampaignsTableColumns" [tableData]="acqCamps.camp2"
                     [tableDataChange]="acqCamps.camp2.data">
                 </app-generic-table>
@@ -58,22 +84,27 @@
         </div>
 
 
-        <ng-container>
-            <div class="row mt-4">
-                <div class="col-12 col-md-6 mb-4">
-                    <app-generic-table [displayedColumns]="convCampTableColumns" [tableData]="convCamps.camp1"
-                        [tableDataChange]="convCamps.camp1.data">
-                    </app-generic-table>
-                </div>
-
-                <div class="col-12 col-md-6 mb-4">
-                    <app-generic-table [displayedColumns]="convCampTableColumns" [tableData]="convCamps.camp2"
-                        [tableDataChange]="convCamps.camp2.data">
-                    </app-generic-table>
-                </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <p class="h2">Conversión</p>
             </div>
-        </ng-container>
+        </div>
+        <div class="row mt-3">
+            <!-- first campaign -->
+            <div class="col-12 col-lg-6 mb-4">
+                <span class="h4 mb-2 d-block d-lg-none d-xl-none">Primer campaña</span>
+                <app-generic-table [displayedColumns]="convCampTableColumns" [tableData]="convCamps.camp1"
+                    [tableDataChange]="convCamps.camp1.data">
+                </app-generic-table>
+            </div>
 
+            <!-- second campaign -->
+            <div class="col-12 col-lg-6 mb-4">
+                <span class="h4 mb-2 d-block d-lg-none d-xl-none mt-4">Segunda campaña</span>
+                <app-generic-table [displayedColumns]="convCampTableColumns" [tableData]="convCamps.camp2"
+                    [tableDataChange]="convCamps.camp2.data">
+                </app-generic-table>
+            </div>
+        </div>
     </ng-container>
-
 </div>
