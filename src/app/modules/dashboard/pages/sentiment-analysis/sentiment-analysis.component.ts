@@ -17,7 +17,9 @@ export class SentimentAnalysisComponent implements OnInit {
     { category: 'Excelente experiencia', value: 22.27 }
   ];
 
-  distributionBarChart = [...this.distributionPieChart].sort().reverse();
+  // distributionBarChart = [...this.distributionPieChart].sort().reverse();
+
+  distributionBarChart = [...this.distributionPieChart];
 
   distributionReqStatus: number = 2;
 
