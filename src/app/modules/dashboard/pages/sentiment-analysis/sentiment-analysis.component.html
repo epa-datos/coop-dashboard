@@ -186,7 +186,9 @@
                     <span class="h4">Motivos de uso del chat</span>
                 </div>
                 <div class="card-body">
-
+                    <app-chart-tree-map name="sentiment-reason" [data]="reasons" [status]="reasonsReqStatus"
+                        valueFormat="%">
+                    </app-chart-tree-map>
                 </div>
             </div>
         </div>
@@ -213,7 +215,10 @@
                 <div class="card-header">
                     <span class="h4">Corte de Sentimiento por Retailer para el top 10</span>
                 </div>
-                <div class="card-body" style="height: 300px;">
+                <div class="card-body">
+                    <app-chart-stacked-bar name="sentiment-retailers" [data]="retailers.data"
+                        [status]="retailers.reqStatus" [series]="retailers.chartSeries" category="retailer"
+                        height="550px" valueFormat="%"></app-chart-stacked-bar>
                 </div>
             </div>
         </div>
