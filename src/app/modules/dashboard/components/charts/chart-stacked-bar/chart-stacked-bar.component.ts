@@ -105,8 +105,9 @@ export class ChartStackedBarComponent implements OnInit, AfterViewInit, OnDestro
       series.dataFields.valueXShow = "totalPercent";
       series.stacked = true;
       series.name = name;
-      series.columns.template.tooltipText = `{name}: [bold]{valueX.formatNumber('#.00')}${valueFormat ? valueFormat : ''} ({valueX.totalPercent.formatNumber('#.00')}%)[/]`;
+      series.columns.template.tooltipText = `{categoryY}\n{name}: [font-size: 14px bold]{valueX.formatNumber('#.00')}${valueFormat ? valueFormat : ''} ({valueX.totalPercent.formatNumber('#.00')}%)[/]`;
 
+      // use if is necessary to show the value inside stacked bars
       // let labelBullet = series.bullets.push(new am4charts.LabelBullet());
       // labelBullet.locationX = 0.5;
       // labelBullet.label.text = '{valueX}';
