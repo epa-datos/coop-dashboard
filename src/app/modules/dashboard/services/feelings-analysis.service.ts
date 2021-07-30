@@ -18,11 +18,11 @@ export class FeelingsAnalysisService {
     this.baseUrl = this.config.endpoint;
   }
 
-  concatedQueryParams(): string {
+  concatedQueryParams(uniqueCategoryID?: number): string {
     let retailers = this.filtersStateService.retailersQParams;
     let startDate = this.filtersStateService.periodQParams.startDate;
     let endDate = this.filtersStateService.periodQParams.endDate;
-    let categories = this.filtersStateService.categoriesQParams;
+    let categories = !uniqueCategoryID ? this.filtersStateService.categoriesQParams : uniqueCategoryID;
 
     return `retailers=${retailers}&start_date=${startDate}&end_date=${endDate}&categories=${categories}`;
   }
@@ -34,8 +34,8 @@ export class FeelingsAnalysisService {
 * @param [subMetricType] 
 * @returns  
 */
-  getDataByMetric(metricType: string, subMetricType?: string) {
-    let queryParams = this.concatedQueryParams();
+  getDataByMetric(metricType: string, subMetricType?: string, uniqueCategoryID?: number) {
+    let queryParams = this.concatedQueryParams(uniqueCategoryID);
 
     if (!metricType) {
       return throwError('[feelings-analysis]: not metricType provided');
