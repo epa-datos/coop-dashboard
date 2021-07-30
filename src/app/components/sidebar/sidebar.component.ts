@@ -338,7 +338,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         break
 
       default:
-        page = 'others';
+        page = 'other';
         break;
     }
 
