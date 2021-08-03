@@ -294,16 +294,24 @@ export class CampaignComparatorComponent implements OnInit {
 
       this.campaignCompService.getCampKpis(item.retailer.id, item.campaign.id).subscribe(
         (resp: any[]) => {
+          if (!resp || resp.length < 1) {
+            this.clearKpis(item.selection);
+            this.kpisCamps[item.selection].reqStatus = 2;
+          };
+
           const kpis1 = resp.filter(kpi => this.kpisLegends1.includes(kpi.string));
           const kpis2 = resp.filter(kpi => this.kpisLegends2.includes(kpi.string));
 
           const campaignKpis: KpiCard[] = [];
           for (let i = 0; i < this.kpisBase.length; i++) {
+            // create new objects with different references (including sub arrays)
             const baseObj = { ...this.kpisBase[i] };
+            baseObj.subKpis = baseObj.subKpis?.map(item => ({ ...item }));
+
             baseObj.value = kpis1[i]['value'];
 
             if (i !== 0 && kpis2[i - 1]) {
-              baseObj.subKpis[0].value = kpis2[i - 1]['value'];
+              baseObj.subKpis[0].value = kpis2[i - 1].value;
             }
 
             if (this.kpisBase[i].name === 'revenue' && this.kpisBase[i].subKpis[1]) {
