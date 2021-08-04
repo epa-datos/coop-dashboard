@@ -175,13 +175,13 @@
 
     <!-- weekday and hour -->
     <div class="col-12 col-lg-6 mt-4">
-        <div class="card" style="height: 100%;">
+        <div class="card">
             <div class="card-header">
                 <span class="h4">Tráfico por día de la semana y hora del día</span>
             </div>
             <div class="card-body">
                 <app-chart-heat-map [data]="traffic?.weekdayAndHour" name="indexed-weekday-sesions"
-                    categoryX="weekdayName" height="100%" [status]="trafficReqStatus[4].reqStatus">
+                    categoryX="weekdayName" height="615px" [status]="trafficReqStatus[4].reqStatus">
                 </app-chart-heat-map>
             </div>
         </div>

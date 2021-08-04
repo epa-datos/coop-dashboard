@@ -298,6 +298,20 @@ table {
 
 // **** OTHERS ****
 
+
+
+* {
+  color-adjust: exact;
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active{
+    text-decoration: none !important;
+}
+
 // *** sidebar ***
 ::-webkit-scrollbar-track {
   background-color: #F5F5F5;
@@ -389,4 +403,9 @@ table {
 
 .card.height-fluid {
   height: 100%;
+}
+
+.chart {
+  width: 100%;
+  overflow: hidden;
 }

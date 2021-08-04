@@ -250,14 +250,14 @@
 
     <div class="row" *ngIf="selectedTab2 === 1 || selectedTab2 === 2">
         <div class="col-12 col-lg-6 mt-4">
-            <div class="card" style="height: 100%;">
+            <div class="card">
                 <div class="card-header">
                     <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}}
                         por día de la semana y hora del día</span>
                 </div>
                 <div class="card-body">
                     <app-chart-heat-map name="aud-weekday-sesions" [data]="weekDaysAndHours?.weekdayAndHour"
-                        [status]="weekDaysAndHoursReqStatus[0].reqStatus" categoryX="weekdayName" height="100%">
+                        [status]="weekDaysAndHoursReqStatus[0].reqStatus" categoryX="weekdayName" height="615px">
                     </app-chart-heat-map>
                 </div>
             </div>
