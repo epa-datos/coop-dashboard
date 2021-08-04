@@ -16,8 +16,7 @@ export class CampaignComparatorComponent implements OnInit {
 
   validFilters = { firstSelection: false, secondSelection: false };
 
-  kpisLegends1 = ['investment', 'clicks', 'bounce_rate', 'transactions', 'revenue'] // main kpis
-  kpisLegends2 = ['ctr', 'users', 'cr', 'roas', 'aup']; // sub kpis
+  kpisLegends1 = ['investment', 'clicks', 'bounce_rate', 'users', 'transactions', 'revenue'] // main kpis
   kpisBase: KpiCard[] = [
     {
       title: 'inversión',
@@ -50,15 +49,15 @@ export class CampaignComparatorComponent implements OnInit {
       value: 0,
       format: 'percentage',
       icon: 'fas fa-stopwatch',
-      iconBg: '#a77dcc',
-      subKpis: [
-        {
-          title: 'usuarios',
-          name: 'users',
-          value: 0,
-          format: 'integer',
-        }
-      ]
+      iconBg: '#a77dcc'
+    },
+    {
+      title: 'usuarios',
+      name: 'users',
+      value: 0,
+      format: 'integer',
+      icon: 'fas fa-users',
+      iconBg: '#f89934',
     },
     {
       title: 'conversiones',
@@ -66,7 +65,7 @@ export class CampaignComparatorComponent implements OnInit {
       value: 0,
       format: 'integer',
       icon: 'fas fa-shopping-basket',
-      iconBg: '#f89934',
+      iconBg: '#fbc001',
       subKpis: [
         {
           title: 'CR',
@@ -83,7 +82,7 @@ export class CampaignComparatorComponent implements OnInit {
       format: 'decimal',
       symbol: 'USD',
       icon: 'fas fa-hand-holding-usd',
-      iconBg: '#fbc001',
+      iconBg: '#2B96D5',
       subKpis: [
         {
           title: 'roas',
@@ -121,12 +120,6 @@ export class CampaignComparatorComponent implements OnInit {
     {
       name: 'medium',
       title: 'Medio'
-    },
-    {
-      name: 'campaign',
-      title: 'Campaña',
-      tooltip: true,
-      maxWidthColumn: 8
     },
     {
       name: 'users',
@@ -293,14 +286,15 @@ export class CampaignComparatorComponent implements OnInit {
       this.kpisCamps[item.selection].reqStatus = 1;
 
       this.campaignCompService.getCampKpis(item.retailer.id, item.campaign.id).subscribe(
-        (resp: any[]) => {
-          if (!resp || resp.length < 1) {
+        (kpisList: any[]) => {
+          if (!kpisList || kpisList.length < 1) {
             this.clearKpis(item.selection);
             this.kpisCamps[item.selection].reqStatus = 2;
           };
 
-          const kpis1 = resp.filter(kpi => this.kpisLegends1.includes(kpi.string));
-          const kpis2 = resp.filter(kpi => this.kpisLegends2.includes(kpi.string));
+          const mainKpis = kpisList.filter(kpi => this.kpisLegends1.includes(kpi.string));
+
+          console.log('mainKpis', mainKpis)
 
           const campaignKpis: KpiCard[] = [];
           for (let i = 0; i < this.kpisBase.length; i++) {
@@ -308,14 +302,19 @@ export class CampaignComparatorComponent implements OnInit {
             const baseObj = { ...this.kpisBase[i] };
             baseObj.subKpis = baseObj.subKpis?.map(item => ({ ...item }));
 
-            baseObj.value = kpis1[i]['value'];
+            baseObj.value = mainKpis[i]['value'];
 
-            if (i !== 0 && kpis2[i - 1]) {
-              baseObj.subKpis[0].value = kpis2[i - 1].value;
+            if (baseObj.name === 'clicks') {
+              baseObj.subKpis[0].value = kpisList.find(i => i.string === 'ctr')?.value;
+            }
+
+            if (baseObj.name === 'transactions') {
+              baseObj.subKpis[0].value = kpisList.find(i => i.string === 'cr')?.value;
             }
 
             if (this.kpisBase[i].name === 'revenue' && this.kpisBase[i].subKpis[1]) {
-              baseObj.subKpis[1].value = resp.find(kpi => kpi.string === 'aup')?.value;
+              baseObj.subKpis[0].value = kpisList.find(i => i.string === 'roas')?.value;
+              baseObj.subKpis[1].value = kpisList.find(i => i.string === 'aup')?.value;
             }
 
             campaignKpis.push(baseObj);
