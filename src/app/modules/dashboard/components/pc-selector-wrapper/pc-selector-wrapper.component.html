@@ -356,7 +356,7 @@
 
             <!-- weekday and hour -->
             <div class="col-12 col-lg-6 mt-4" *ngIf="selectedTab3 === 1">
-                <div class="card" style="height: 100%;">
+                <div class="card">
                     <div class="card-header">
                         <span class="h4">
                             {{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por día de la semana y hora del día
@@ -364,7 +364,7 @@
                     </div>
                     <div class="card-body">
                         <app-chart-heat-map [data]="audience?.weekdayAndHour" name="pc-selectorweekday-sesions"
-                            categoryX="weekdayName" height="100%" [status]="audienceReqStatus[5].reqStatus">
+                            categoryX="weekdayName" height="615px" [status]="audienceReqStatus[5].reqStatus">
                         </app-chart-heat-map>
                     </div>
                 </div>
