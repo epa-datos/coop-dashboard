@@ -22,6 +22,7 @@ import { DashboardComponent } from './dashboard.component';
 import { GeneralFiltersComponent } from './components/general-filters/general-filters.component';
 import { RetailFiltersComponent } from './components/retail-filters/retail-filters.component';
 import { GoogleBusinessFiltersComponent } from './components/google-business-filters/google-business-filters.component';
+import { CampaignComparatorFiltersComponent } from './components/campaign-comparator-filters/campaign-comparator-filters.component';
 import { CardStatComponent } from './components/card-stat/card-stat.component';
 import { GenericTableComponent } from './components/generic-table/generic-table.component';
 import { CampaignComparatorComponent } from './pages/campaign-comparator/campaign-comparator.component';
@@ -116,6 +117,7 @@ import { NgxPrintModule } from 'ngx-print';
     CampaignInRetailWrapperComponent,
     HomeComponent,
     MultipleTabsSelectorComponent,
+    CampaignComparatorFiltersComponent,
   ],
   imports: [
     CommonModule,

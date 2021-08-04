@@ -1,0 +1,76 @@
+<form role="form" [formGroup]="form">
+    <div class="row">
+
+        <!-- RETAILER -->
+        <div class="col-12 col-sm-6 mb-4">
+            <mat-select formControlName="retailer" placeholder="Selecciona un Retailer" [(value)]="selectedRetailer"
+                (selectionChange)="retailerChange()" (openedChange)="openedChange('retailer', $event)"
+                disableOptionCentering>
+
+                <!-- search -->
+                <div class="input-group input-group-alternative mb-1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control" [(ngModel)]="retailerFilter" matInput type="text"
+                        (keyup)="filterFromList('retailer', $event.target.value)"
+                        [placeholder]="'filters.retailerSearchPh' | translate" [ngModelOptions]="{standalone: true}"
+                        (keydown.space)="$event.stopPropagation()">
+                </div>
+
+                <!-- options list -->
+                <mat-option *ngFor="let retailer of retailerList" [value]="retailer">
+                    <span>{{ retailer.name }}</span>
+                </mat-option>
+
+                <!-- without results in search -->
+                <div *ngIf="retailerList?.length < 1" class="filtered-results-container">
+                    <small class="text-muted">{{ 'filters.retailerEmptyMsg' | translate }}</small>
+                </div>
+            </mat-select>
+
+            <small class="text-danger" *ngIf="!retailer?.value && retailer.touched && retailersReqStatus !== 3">
+                {{ 'filters.retailerError3' | translate }}
+            </small>
+            <small class="text-danger" *ngIf="retailersReqStatus === 3">
+                {{ 'filters.retailerError2' | translate }}
+            </small>
+        </div>
+
+        <!-- CAMPAIGN -->
+        <div class="col-12 col-sm-6 mb-4">
+            <mat-select formControlName="campaign" placeholder="Selecciona un Campaña" [(value)]="selectedCampaign"
+                (selectionChange)="campaignChange()" (openedChange)="openedChange('campaign', $event)"
+                disableOptionCentering>
+
+                <!-- search -->
+                <div class="input-group input-group-alternative mb-1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control" [(ngModel)]="campaignFilter" matInput type="text"
+                        (keyup)="filterFromList('campaign', $event.target.value)"
+                        [placeholder]="'filters.campaignSearchPh' | translate" [ngModelOptions]="{standalone: true}"
+                        (keydown.space)="$event.stopPropagation()">
+                </div>
+
+                <!-- options list -->
+                <mat-option *ngFor="let campaign of campaignList" [value]="campaign">
+                    <span>{{ campaign.name }}</span>
+                </mat-option>
+
+                <!-- without results in search -->
+                <div *ngIf="campaignList?.length < 1" class="filtered-results-container">
+                    <small class="text-muted">{{ 'filters.campaignEmptyMsg' | translate }}</small>
+                </div>
+            </mat-select>
+
+            <small class="text-danger" *ngIf="!campaign?.value && campaign.touched && campaignsReqStatus !== 3">
+                {{ 'filters.campaignError3' | translate }}
+            </small>
+            <small class="text-danger" *ngIf="campaignsReqStatus === 3">
+                {{ 'filters.campaignError2' | translate }}
+            </small>
+        </div>
+    </div>
+</form>
