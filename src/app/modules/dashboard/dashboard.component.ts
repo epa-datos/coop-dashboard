@@ -14,6 +14,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   title: string;
   printWindowTitle: string;
   showFilters: boolean;
+  currentPath: string;
 
   routeSub: Subscription;
   translateSub: Subscription;
@@ -39,8 +40,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   loadContent(route: string) {
     this.showFilters = true;
 
-    const path = route.replace('/dashboard/', '').split('?')[0];
-    switch (path) {
+    this.currentPath = route.replace('/dashboard/', '').split('?')[0];
+    switch (this.currentPath) {
       case 'main-region':
         this.title = this.translate.instant('dashboard.overview');
         break;
@@ -81,7 +82,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (mainRegionName || countryName || retailerName) {
       this.printWindowTitle = `${this.title} - ${mainRegionName ? `${mainRegionName} ` : ''}${countryName ? `${countryName} ` : ''}${retailerName ? `- ${retailerName} ` : ''}`;
     } else {
-      this.printWindowTitle = this.title;
+      this.printWindowTitle = this.currentPath === 'campaign-comparator' ? 'Comparador de campaña' : this.title;
     }
   }
 
