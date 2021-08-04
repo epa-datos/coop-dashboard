@@ -127,6 +127,12 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
           title: 'Usuarios',
           textAlign: 'center',
           formatValue: 'integer',
+        },
+        {
+          name: 'pdf_downloads',
+          title: '# de Descargas PDF',
+          textAlign: 'center',
+          formatValue: 'integer',
         }
       ],
       data: [],
