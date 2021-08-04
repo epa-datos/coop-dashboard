@@ -118,7 +118,7 @@ export class ConversionWrapperComponent implements OnInit {
     // add source column for México - Liverpool retailer
     if (this.retailerID === 26) {
       const newTableColumn = {
-        name: 'source',
+        name: 'origin',
         title: 'Origen',
         textAlign: 'center'
       };
@@ -176,7 +176,7 @@ export class ConversionWrapperComponent implements OnInit {
           }
 
           // add source property for México - Liverpool retailer
-          return { ...item, yoy_amount: '-', yoy_product_revenue: '-', yoy_aup: '-', source: item.source ? item.source : '-' };
+          return { ...item, yoy_amount: '-', yoy_product_revenue: '-', yoy_aup: '-', origin: item.origin ? item.origin : '-' };
         });
 
         this.products.reqStatus = 2;
