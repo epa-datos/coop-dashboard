@@ -16,7 +16,7 @@ export class CampaignComparatorComponent implements OnInit {
 
   validFilters = { firstSelection: false, secondSelection: false };
 
-  kpisLegends1 = ['investment', 'users', 'clicks', 'bounce_rate', , 'transactions', 'revenue'] // main kpis
+  kpisLegends1 = ['investment', 'users', 'clicks', 'bounce_rate', 'transactions', 'revenue'] // main kpis
   kpisBase: KpiCard[] = [
     {
       title: 'inversión',
