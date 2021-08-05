@@ -119,10 +119,9 @@ export class ConversionWrapperComponent implements OnInit {
     if (this.retailerID === 26) {
       const newTableColumn = {
         name: 'origin',
-        title: 'Origen',
-        textAlign: 'center'
+        title: 'Origen'
       };
-      this.productsTableColumns.splice(2, 0, newTableColumn);
+      this.productsTableColumns.splice(0, 0, newTableColumn);
     }
     this.getAllData();
 
@@ -176,7 +175,7 @@ export class ConversionWrapperComponent implements OnInit {
           }
 
           // add origin property for México - Liverpool retailer
-          return { ...item, yoy_amount: '-', yoy_product_revenue: '-', yoy_aup: '-', origin: item.origin ? item.origin : '-' };
+          return { ...item, yoy_amount: '-', yoy_product_revenue: '-', yoy_aup: '-', origin: item.origin ? item.origin : '  -' };
         });
 
         this.products.reqStatus = 2;
