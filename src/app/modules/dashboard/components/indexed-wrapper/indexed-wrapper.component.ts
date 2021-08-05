@@ -130,9 +130,8 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
         },
         {
           name: 'pdf_downloads',
-          title: '# de Descargas PDF',
-          textAlign: 'center',
-          formatValue: 'integer',
+          title: 'Descargas PDF',
+          textAlign: 'center'
         }
       ],
       data: [],
@@ -348,7 +347,21 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
       this.topMostVisited[metric.name].reqStatus = 1;
       this.indexedService.getDataByMetric(this.levelPage.latam, metric.metricType).subscribe(
         (resp: any[]) => {
-          this.topMostVisited[metric.name]['data'] = resp;
+          if (metric.name === 'top-products') {
+            this.topMostVisited[metric.name]['data'] = resp;
+          } else {
+            this.topMostVisited[metric.name]['data'] = resp.map(item => {
+
+              if (item.name !== 'Supplies') {
+                return { ...item, pdf_downloads: '-' };
+              }
+
+              const pdf_downloads = item.pdf_downloads ? item.pdf_downloads : Math.round(Math.random() * (20 - 1));
+
+              return { ...item, pdf_downloads };
+            });
+          }
+
           this.topMostVisited[metric.name].reqStatus = 2;
         },
         error => {
