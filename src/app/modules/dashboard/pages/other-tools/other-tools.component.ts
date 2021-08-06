@@ -159,7 +159,7 @@ export class OtherToolsComponent implements OnInit, OnDestroy {
 
       case 'omnichat':
         this.activeTabView = 2;
-        this.filtersStateService.hideCategories(false);
+        this.filtersStateService.hideCategories(true);
         break;
 
       case 'pc-selector':
