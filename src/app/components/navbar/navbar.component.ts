@@ -159,6 +159,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
       } else if (this.newMainRegion?.name) {
         this.customTitle = this.newMainRegion?.name;
         this.customSubtitle && delete this.customSubtitle;
+      } else if (currentUrl.includes('users')) {
+        this.customTitle = !currentUrl.includes('activity') ? 'Usuarios' : 'Registro de actividad';
+        this.customSubtitle && delete this.customSubtitle;
       } else {
         this.customTitle && delete this.customTitle;
         this.customSubtitle && delete this.customSubtitle;
