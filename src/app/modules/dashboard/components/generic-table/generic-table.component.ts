@@ -12,8 +12,8 @@ import { MatSort } from '@angular/material/sort';
 })
 export class GenericTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input() errorMsg = 'Error al consultar datos';
-  @Input() emptyDataMsg = 'No se encontraron datos';
+  @Input() errorMsg;
+  @Input() emptyDataMsg;
   @Input() reducedPadding: boolean;
 
   private _displayedColumns: TableItem[];
@@ -57,8 +57,14 @@ export class GenericTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.langSub = this.translate.stream('general').subscribe(() => {
-      this.errorMsg = this.translate.instant('general.errorData');
-      this.emptyDataMsg = this.translate.instant('general.withoutData3');
+      if (!this.errorMsg) {
+        this.errorMsg = this.translate.instant('general.errorData');
+      }
+
+      if (!this.emptyDataMsg) {
+        this.emptyDataMsg = this.translate.instant('general.withoutData3');
+      }
+
       this.loadPaginator();
     });
   }
