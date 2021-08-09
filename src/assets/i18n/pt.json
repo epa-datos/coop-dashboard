@@ -84,6 +84,11 @@
         "chart1Legend1": "Ativas",
         "chart1Legend2": "Inativas"
     },
+    "campTowardsRetail": {
+        "table1Error": "Erro ao consultar campanhas",
+        "table1Empty": "Nenhum campanha encontrada",
+        "campList1": "Google Search e MDF"
+    },
     "charts": {
         "byCountry": " por País",
         "byDevices": " por Dispositivos",
@@ -120,6 +125,9 @@
         "fund": "Fundo",
         "institutional": "Institucional",
         "others": "Outros",
+        "impressions": "Impressões",
+        "clicks": "Clicks",
+        "name": "Nome",
         "usersVsSales": "Usuários - Conversões",
         "investmentVsRevenue": "Investimento - Revenue",
         "revenueVsAup": "Revenue - AUP",
