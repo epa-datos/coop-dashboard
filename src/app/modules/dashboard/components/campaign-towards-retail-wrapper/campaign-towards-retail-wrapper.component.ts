@@ -220,5 +220,6 @@ export class CampaignTowardsRetailWrapperComponent implements OnInit, OnDestroy 
 
   ngOnDestroy() {
     this.requestInfoSub?.unsubscribe();
+    this.translateSub?.unsubscribe();
   }
 }
