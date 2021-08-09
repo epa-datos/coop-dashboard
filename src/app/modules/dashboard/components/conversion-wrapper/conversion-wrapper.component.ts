@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KpiCard } from 'src/app/models/kpi';
+import { AppStateService } from 'src/app/services/app-state.service';
 import { CampaignInRetailService } from '../../services/campaign-in-retail.service';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { TableItem } from '../generic-table/generic-table.component';
@@ -12,6 +13,7 @@ import { TableItem } from '../generic-table/generic-table.component';
 })
 export class ConversionWrapperComponent implements OnInit {
 
+  retailerID;
   // kpis
   kpis: KpiCard[] = [
     {
@@ -107,10 +109,20 @@ export class ConversionWrapperComponent implements OnInit {
 
   constructor(
     private filtersStateService: FiltersStateService,
-    private campInRetailService: CampaignInRetailService
+    private campInRetailService: CampaignInRetailService,
+    private appStateService: AppStateService,
   ) { }
 
   ngOnInit(): void {
+    this.retailerID = this.appStateService.selectedRetailer?.id;
+    // add origin column for México - Liverpool retailer
+    if (this.retailerID === 26) {
+      const newTableColumn = {
+        name: 'origin',
+        title: 'Origen'
+      };
+      this.productsTableColumns.splice(0, 0, newTableColumn);
+    }
     this.getAllData();
 
     this.generalFiltersSub = this.filtersStateService.filtersChange$.subscribe(() => {
@@ -158,7 +170,12 @@ export class ConversionWrapperComponent implements OnInit {
       (products: any[]) => {
         // provisional until data exists
         this.products.data = products.map(item => {
-          return { ...item, yoy_amount: '-', yoy_product_revenue: '-', yoy_aup: '-' };
+          if (this.retailerID !== 26) {
+            return { ...item, yoy_amount: '-', yoy_product_revenue: '-', yoy_aup: '-' };
+          }
+
+          // add origin property for México - Liverpool retailer
+          return { ...item, yoy_amount: '-', yoy_product_revenue: '-', yoy_aup: '-', origin: item.origin ? item.origin : '  -' };
         });
 
         this.products.reqStatus = 2;

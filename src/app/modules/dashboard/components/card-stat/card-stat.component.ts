@@ -11,7 +11,8 @@ export class CardStatComponent implements OnInit {
   @Input() stat: KpiCard;
   @Input() height: string = '120px' // valid css height property value
   @Input() loader: boolean;
-  @Input() smallHeader: boolean = false;
+  @Input() smallHeader: boolean;
+  @Input() reducedPadding: boolean;
 
   constructor() { }
 

@@ -7,6 +7,7 @@ import { TableItem } from '../generic-table/generic-table.component';
 import { strTimeFormat } from 'src/app/tools/functions/time-format';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
 import { TranslateService } from '@ngx-translate/core';
+import { KpiCard } from 'src/app/models/kpi';
 
 @Component({
   selector: 'app-omnichat-wrapper',
@@ -21,134 +22,116 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   }>;
 
   selectedTab1: number = 1; // users vs conversions (1) or revenue vs aup (2) selection -> chart-multiple-axes
-  selectedTab2: number = 1; // traffic (1) or conversions (2) -> countries, retailers and categories charts
+  selectedTab2: number = 1;
   selectedTab3: number = 1; // selected category -> chart-bar-horizontal
   selectedTab4: number = 1; // traffic (1) or conversions (2) -> audience charts
 
-  // kpis and conversion rates
-  staticData = {
-    kpis: [
-      {
-        title: 'total chats',
-        name: 'total_chats',
-        value: 0,
-        format: 'integer',
-        icon: 'fas fa-comment-dots',
-        iconBg: '#172b4d'
-      },
-      {
-        title: 'promedio de chats por día',
-        name: 'average_chats_by_day',
-        value: 0,
-        format: 'decimal',
-        icon: 'far fa-chart-bar',
-        iconBg: '#2f9998'
-      },
-      {
-        title: '% dedicado al cliente',
-        name: 'average_of_answer_time',
-        value: 0,
-        format: 'percentage',
-        icon: 'fas fa-user-check',
-        iconBg: '#a77dcc'
-      },
-      {
-        title: 'duración media de la sesión',
-        name: 'median_chat_duration',
-        value: '00:00:00',
-        icon: 'fas fa-user-clock',
-        iconBg: '#fbc001'
-      },
-      {
-        title: 'páginas por sesión',
-        name: 'pages_per_session',
-        value: 0,
-        format: 'decimal',
-        icon: 'fas fa-file',
-        iconBg: '#2B96D5'
-      },
-      {
-        title: 'calificación del chat',
-        name: 'chat_score',
-        value: 0,
-        format: 'score',
-        subKpis: [
-          {
-            title: 'resultado',
-            name: 'chat_score',
-            value: '0% - 0/5'
-          }
-        ]
-      },
-      {
-        title: 'usuarios',
-        name: 'users',
-        value: 0,
-        format: 'integer',
-        icon: 'fas fa-users',
-        iconBg: '#2f9998'
-      },
-      {
-        title: 'conversiones',
-        name: 'conversions',
-        value: 0,
-        format: 'integer',
-        icon: 'fas fa-shopping-basket',
-        iconBg: '#a77dcc'
-      },
-      {
-        title: 'tasa de conversión',
-        name: 'conversion_rate',
-        value: 0,
-        format: 'percentage',
-        icon: 'fas fa-percentage',
-        iconBg: '#fbc001'
-      },
-      {
-        title: 'revenue',
-        name: 'revenue',
-        value: 0,
-        format: 'decimal',
-        symbol: 'USD',
-        icon: 'fas fa-hand-holding-usd',
-        iconBg: '#2B96D5',
-        subKpis: [
-          {
-            title: 'aup',
-            name: 'aup',
-            value: 0,
-            format: 'decimal',
-            symbol: 'USD',
-          }
-        ]
-      }
-    ],
-    conversionRateInitial: [
-      {
-        title: 'ps',
-        name: 'PS',
-        value: 0,
-        format: 'percentage'
-      },
-      {
-        title: 'hw Print',
-        name: 'HW Print',
-        value: 0,
-        format: 'percentage'
-      },
-      {
-        title: 'Supplies',
-        name: 'Supplies',
-        value: 0,
-        format: 'percentage',
-      }
-    ],
-    conversionRate: []
-  };
-  staticDataReqStatus = [
-    { name: 'kpis', reqStatus: 0 },
-    { name: 'conversionRate', reqStatus: 0 },
+  metricsForTab2 = [
+    { tab: 1, metricType: 'chats' },
+    { tab: 2, metricType: 'traffic' },
+    { tab: 3, metricType: 'sales' },
+    { tab: 4, metricType: 'conversion-rate' },
   ];
+
+  // kpis and conversion rates
+  kpis: KpiCard[] = [
+    {
+      title: 'total chats',
+      name: 'total_chats',
+      value: 0,
+      format: 'integer',
+      icon: 'fas fa-comment-dots',
+      iconBg: '#172b4d'
+    },
+    {
+      title: 'promedio de chats por día',
+      name: 'average_chats_by_day',
+      value: 0,
+      format: 'decimal',
+      icon: 'far fa-chart-bar',
+      iconBg: '#2f9998'
+    },
+    {
+      title: '% dedicado al cliente',
+      name: 'average_of_answer_time',
+      value: 0,
+      format: 'percentage',
+      icon: 'fas fa-user-check',
+      iconBg: '#a77dcc'
+    },
+    {
+      title: 'duración media de la sesión',
+      name: 'median_chat_duration',
+      value: '00:00:00',
+      icon: 'fas fa-user-clock',
+      iconBg: '#fbc001'
+    },
+    {
+      title: 'páginas por sesión',
+      name: 'pages_per_session',
+      value: 0,
+      format: 'decimal',
+      icon: 'fas fa-file',
+      iconBg: '#2B96D5'
+    },
+    {
+      title: 'calificación del chat',
+      name: 'chat_score',
+      value: 0,
+      format: 'score',
+      subKpis: [
+        {
+          title: 'resultado',
+          name: 'chat_score',
+          value: '0% - 0/5'
+        }
+      ]
+    },
+    {
+      title: 'usuarios',
+      name: 'users',
+      value: 0,
+      format: 'integer',
+      icon: 'fas fa-users',
+      iconBg: '#2f9998'
+    },
+    {
+      title: 'conversiones',
+      name: 'conversions',
+      value: 0,
+      format: 'integer',
+      icon: 'fas fa-shopping-basket',
+      iconBg: '#a77dcc'
+    },
+    {
+      title: 'tasa de conversión',
+      name: 'conversion_rate',
+      value: 0,
+      format: 'percentage',
+      icon: 'fas fa-percentage',
+      iconBg: '#fbc001'
+    },
+    {
+      title: 'revenue',
+      name: 'revenue',
+      value: 0,
+      format: 'decimal',
+      symbol: 'USD',
+      icon: 'fas fa-hand-holding-usd',
+      iconBg: '#2B96D5',
+      subKpis: [
+        {
+          title: 'aup',
+          name: 'aup',
+          value: 0,
+          format: 'decimal',
+          symbol: 'USD',
+        }
+      ]
+    }
+  ];
+
+  kpisReqStatus: number = 0;
 
   // users vs conversions or revenue vs aup
   usersOrRevenue: any[] = [];
@@ -160,8 +143,9 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     { name: 'countries', reqStatus: 0 },
     { name: 'retailers', reqStatus: 0 },
     { name: 'category1', reqStatus: 0 },
-    { name: 'category2', reqStatus: 0 },
-    { name: 'category3', reqStatus: 0 },
+    // { name: 'category2', reqStatus: 0 },
+    // { name: 'category3', reqStatus: 0 },
+    // { name: 'category4', reqStatus: 0 },
   ];
 
   // conversions by products
@@ -177,24 +161,6 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     {
       name: 'category',
       title: 'Categoría',
-    },
-    {
-      name: 'users',
-      title: 'Usuarios',
-      formatValue: 'integer',
-      textAlign: 'center',
-    },
-    {
-      name: 'conversion_rate',
-      title: 'Tasa de conversión',
-      textAlign: 'center',
-      formatValue: 'percentage'
-    },
-    {
-      name: 'conversion_rate_yoy',
-      title: '%YoY',
-      textAlign: 'center',
-      // formatValue: 'percentage'
     },
     {
       name: 'amount',
@@ -292,14 +258,14 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
 
     if (!preserveSelectedTabs) {
       metricTab1 = 'conversions-vs-users';
-      metricTab2 = 'traffic';
+      metricTab2 = 'chats';
       metricTab4 = 'traffic';
 
       selectedCategory = this.selectedCategories?.[0];
 
     } else {
       metricTab1 = this.selectedTab1 === 1 ? 'conversions-vs-users' : 'aup-vs-revenue';
-      metricTab2 = this.selectedTab2 === 1 ? 'traffic' : this.selectedTab2 === 2 ? 'sales' : 'conversion-rate';
+      metricTab2 = this.metricsForTab2.find(metric => metric.tab === this.selectedTab2)?.metricType;
       metricTab4 = this.selectedTab4 === 1 ? 'traffic' : 'sales';
 
       const previousCategory = this.selectedCategories?.find(category => category.id === this.selectedCategoryTab3?.id);
@@ -318,81 +284,50 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   }
 
   getStaticDataByMetric() {
-    const requiredData = [
-      { metricType: 'kpis', name: 'kpis' },
-      { metricType: 'conversion-rate', subMtricType: 'category', name: 'conversionRate' }
-    ];
 
-    for (let metric of requiredData) {
-      const reqStatusObj = this.staticDataReqStatus.find(item => item.name === metric.name);
-      reqStatusObj.reqStatus = 1;
+    this.kpisReqStatus = 1;
 
-      this.omnichatService.getDataByMetric(this.levelPage.latam, metric.metricType, metric.subMtricType).subscribe(
-        (resp: any[]) => {
-          if (resp?.length < 1) {
-            reqStatusObj.reqStatus = 2;
-            return;
+    this.omnichatService.getDataByMetric(this.levelPage.latam, 'kpis').subscribe(
+      (resp: any[]) => {
+        if (resp?.length < 1) {
+          this.kpisReqStatus = 2;
+          return;
+        }
+
+        for (let i = 0; i < this.kpis.length; i++) {
+          const baseObj = resp.find(item => item.string === this.kpis[i].name);
+
+          if (!baseObj) {
+            continue;
           }
 
-          if (metric.name === 'kpis') {
-            for (let i = 0; i < this.staticData.kpis.length; i++) {
-              const baseObj = resp.find(item => item.string === this.staticData.kpis[i].name);
+          const metricName = this.kpis[i].name;
 
-              if (!baseObj) {
-                continue;
-              }
+          if (metricName === 'median_chat_duration') {
+            this.kpis[i].value = strTimeFormat(baseObj.value);
 
-              const metricName = this.staticData.kpis[i].name;
+          } else if (metricName === 'chat_score') {
+            const percentageScore = ((baseObj.value * 100) / 5).toFixed(2);
+            this.kpis[i].value = percentageScore;
+            this.kpis[i].subKpis[0].value = `${percentageScore}% - ${baseObj.value.toFixed(2)}/5`;
 
-              if (metricName === 'median_chat_duration') {
-                this.staticData.kpis[i].value = strTimeFormat(baseObj.value);
+          } else if (metricName === 'revenue') {
+            this.kpis[i].value = baseObj.value;
+            this.kpis[i].subKpis[0].value = resp.find(kpi => kpi.string === 'aup')?.value;
 
-              } else if (metricName === 'chat_score') {
-                const percentageScore = ((baseObj.value * 100) / 5).toFixed(2);
-                this.staticData.kpis[i].value = percentageScore;
-                this.staticData.kpis[i].subKpis[0].value = `${percentageScore}% - ${baseObj.value.toFixed(2)}/5`;
-
-              } else if (metricName === 'revenue') {
-                this.staticData.kpis[i].value = baseObj.value;
-                this.staticData.kpis[i].subKpis[0].value = resp.find(kpi => kpi.string === 'aup')?.value;
-
-              } else {
-                this.staticData.kpis[i].value = baseObj.value;
-              }
-            }
-
-          } else if (metric.name === 'conversionRate') {
-            this.staticData.conversionRate = this.staticData.conversionRateInitial.map(item => ({ ...item }));
-
-            // in order to avoid reapeted requests 
-            // this response is use to show conversions rate by sectors in:
-            // a) cards -> staticData.conversionRate
-            // b) chart-bar-horizontal -> this.dataByLevel['category3']
-            this.dataByLevel['category3'] = [];
-
-            for (let i = 0; i < this.staticData.conversionRate.length; i++) {
-              const baseObj = resp.find(item => item.name === this.staticData.conversionRate[i].name);
-              if (baseObj) {
-                this.staticData.conversionRate[i].value = baseObj.value;
-                this.dataByLevel['category3'].push(baseObj);
-              }
-            }
-
-            // show only selected categories in general filters
-            const selectedCategories = this.filtersStateService.categories.map(item => item.name.toLowerCase());
-            this.staticData.conversionRate = this.staticData.conversionRate.filter(item => selectedCategories.includes(item.name.toLowerCase()));
+          } else {
+            this.kpis[i].value = baseObj.value;
           }
+        }
+        this.kpisReqStatus = 2;
+      },
+      error => {
+        this.clearKpis();
 
-          reqStatusObj.reqStatus = 2;
-        },
-        error => {
-          metric.name === 'kpis' ? this.clearKpis() : this.clearConversionsRate();
-
-          const errorMsg = error?.error?.message ? error.error.message : error?.message;
-          console.error(`[omnichat-wrapper.component]: ${errorMsg}`);
-          reqStatusObj.reqStatus = 3;
-        });
-    }
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[omnichat-wrapper.component]: ${errorMsg}`);
+        this.kpisReqStatus = 3;
+      });
   }
 
   getUsersOrRevenue(metricType: string) {
@@ -425,13 +360,14 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       ]
     } else if (this.levelPage.retailer) {
       requiredData = [
-        { metricType: 'traffic', subMetricType: 'category', name: 'category1' },
-        { metricType: 'sales', subMetricType: 'category', name: 'category2' }
+        { metricType: 'chats', subMetricType: 'categories', name: 'category1' },
+        // { metricType: 'traffic', subMetricType: 'categories', name: 'category2' }, //users
+        // { metricType: 'sales', subMetricType: 'categories', name: 'category3' }
       ];
     }
 
-    if (metricType !== 'conversion-rate' && !this.levelPage.retailer) {
-      requiredData.push({ metricType, subMetricType: 'category', name: 'category1' });
+    if (metricType === 'chats' && !this.levelPage.retailer) {
+      requiredData.push({ metricType, subMetricType: 'categories', name: 'category1' });
     }
 
     for (let metric of requiredData) {
@@ -440,7 +376,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
 
       this.omnichatService.getDataByMetric(this.levelPage.latam, metric.metricType, metric.subMetricType).subscribe(
         (resp: any[]) => {
-          if (metric.metricType === 'traffic') {
+          if (metric.metricType === 'chats' || metric.metricType === 'traffic') {
             this.dataByLevel[metric.name] = resp.sort((a, b) => (a?.chats < b?.chats ? -1 : 1));
           } else {
             this.dataByLevel[metric.name] = resp.sort((a, b) => (a?.value < b?.value ? -1 : 1));
@@ -454,9 +390,9 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
           console.error(`[omnichat-wrapper.component]: ${errorMsg}`);
           reqStatusObj.reqStatus = 3;
         });
-    }
 
-    this.selectedTab2 = metricType === 'traffic' ? 1 : metricType === 'sales' ? 2 : 3;
+      this.selectedTab2 = this.metricsForTab2.find(metric => metric.metricType === metricType)?.tab;
+    }
   }
 
   getSalesByProduct(selectedCategory?: any) {
@@ -594,7 +530,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   }
 
   clearKpis() {
-    for (let kpi of this.staticData.kpis) {
+    for (let kpi of this.kpis) {
       if (kpi.name.includes('median_chat')) {
         kpi.value = '00:00:00';
       } else if (kpi.name === 'chat_score') {
@@ -606,12 +542,6 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
           item.value = 0;
         });
       }
-    }
-  }
-
-  clearConversionsRate() {
-    for (let kpi of this.staticData.conversionRate) {
-      kpi.value = 0;
     }
   }
 

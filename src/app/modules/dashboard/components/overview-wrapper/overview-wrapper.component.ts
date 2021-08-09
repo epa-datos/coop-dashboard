@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { KpiCard } from 'src/app/models/kpi';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { TranslationsService } from 'src/app/services/translations.service';
+import { SOURCES } from 'src/app/tools/constants/filters';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { OverviewService } from '../../services/overview.service';
@@ -199,15 +200,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
     } else if (this.selectedType === 'retailer') {
       // for retailer view all valid sources are used because sources filter isn't shown 
-      this.selectedSources = [
-        { id: 'google', name: 'Google' },
-        { id: 'social', name: 'Social' },
-        { id: 'email', name: 'Email' },
-        { id: 'display', name: 'Display' },
-        { id: 'banner', name: 'Banner' },
-        { id: 'institucional', name: 'Institucional' },
-        { id: 'others', name: 'Otros' }
-      ];
+      this.selectedSources = SOURCES;
     }
 
     let selectedSectorHM;

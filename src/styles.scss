@@ -90,6 +90,11 @@ table {
   }
 }
 
+.mat-sort-header-content {
+  line-height: 16px;
+}
+
+
 // *** select ***
 .mat-select-trigger {
   background-color: #ffffff;
@@ -165,6 +170,11 @@ table {
 }
 
 // *** paginator ***
+.mat-paginator {
+  border-bottom-left-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+}
+
 .mat-paginator-page-size-select {
   width: 70px !important;
 }
@@ -288,12 +298,27 @@ table {
 
 // **** OTHERS ****
 
+
+
+* {
+  color-adjust: exact;
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active{
+    text-decoration: none !important;
+}
+
 // *** sidebar ***
 ::-webkit-scrollbar-track {
   background-color: #F5F5F5;
 }
 
 ::-webkit-scrollbar {
+  height: 8px;
   width: 10px;
   background-color: #F5F5F5;
 }
@@ -378,4 +403,9 @@ table {
 
 .card.height-fluid {
   height: 100%;
+}
+
+.chart {
+  width: 100%;
+  overflow: hidden;
 }

@@ -153,7 +153,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     // Other routes
     const menuItem1 = {
       title: this.translate.instant('dashboard.campaignComparator'),
-      path: '/campaign-comparator',
+      path: '/dashboard/campaign-comparator',
     }
     this.menuItems.push(menuItem1);
 

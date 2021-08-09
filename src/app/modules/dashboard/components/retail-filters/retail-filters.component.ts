@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
+import { AUDIENCES, MEDIUMS, SOURCES } from 'src/app/tools/constants/filters';
 import { FiltersStateService } from '../../services/filters-state.service';
 
 @Component({
@@ -10,61 +11,9 @@ import { FiltersStateService } from '../../services/filters-state.service';
 })
 export class RetailFiltersComponent implements OnInit {
 
-  sourceList: any[] = [
-    { id: 'google', name: 'google' },
-    { id: 'social', name: 'social' },
-    { id: 'email', name: 'email' },
-    { id: 'display', name: 'display' },
-    { id: 'others', name: 'otros' },
-  ];
-
-  mediumList: any[] = [
-    { id: 'cpc', name: 'cpc' },
-    { id: 'pla', name: 'pla' },
-    { id: 'gdn', name: 'gdn' },
-    { id: 'gsp', name: 'gsp' },
-    { id: 'mailing_retail', name: 'mailing_retail' },
-    { id: 'facebook_linkad', name: 'facebook_linkad' },
-    { id: 'facebook_carrusel', name: 'facebook_carrusel' },
-    { id: 'facebook_collection', name: 'facebook_collection' },
-    { id: 'facebook_video', name: 'facebook_video' },
-    { id: 'facebook_stories', name: 'facebook_stories' },
-    { id: 'instagram_linkad', name: 'instagram_linkad' },
-    { id: 'instagram_carrusel', name: 'instagram_carrusel' },
-    { id: 'instagram_collection', name: 'instagram_collection' },
-    { id: 'instagram_stories', name: 'instagram_stories' },
-    { id: 'instagram_video', name: 'instagram_video' },
-    { id: 'linkedin_linkad', name: 'linkedin_linkad' },
-    { id: 'linkedin_text', name: 'linkedin_text' },
-    { id: 'linkedin_video', name: 'linkedin_video' },
-    { id: 'linkedin_carrusel', name: 'linkedin_carrusel' },
-    { id: 'linkedin_spotlight', name: 'linkedin_spotlight' },
-    { id: 'youtube', name: 'youtube' },
-    { id: 'twitter', name: 'twitter' },
-    { id: 's4m', name: 's4m' },
-    { id: 'criteo', name: 'criteo' },
-    { id: 'banner', name: 'banner' },
-    { id: 'programmatic_audiencias_3rd_party', name: 'programmatic_audiencias_3rd_party' },
-    { id: 'programmatic_audiencias_google', name: 'programmatic_audiencias_google' },
-    { id: 'programmatic_lookalikes', name: 'programmatic_lookalikes' },
-    { id: 'programmatic_custom_audiences_kw', name: 'programmatic_custom_audiences_kw' },
-    { id: 'programmatic_custom_audience_url', name: 'programmatic_custom_audience_url' },
-    { id: 'programmatic_retargeting', name: 'programmatic_retargeting' },
-    { id: 'programmatic_pmp_sunmedia', name: 'programmatic_pmp_sunmedia' },
-    { id: 'programmatic_pmp_teads', name: 'programmatic_pmp_teads' },
-    { id: 'promgrammatic_pmp_mercadolibre', name: 'promgrammatic_pmp_mercadolibre' },
-    { id: 'programmatic_pmp_dynamic', name: 'programmatic_pmp_dynamic' },
-    { id: 'programmatic_pmp_general', name: 'programmatic_pmp_general' },
-    { id: 'programmatic_youtube', name: 'programmatic_youtube' },
-    { id: 'programmatic_others', name: 'programmatic_others' },
-    { id: 'whatsapp_bot', name: 'whatsapp_bot' },
-    { id: 'institucional', name: 'institucional' },
-    { id: 'others', name: 'otros' },
-  ];
-  audienceList: any[] = [
-    { id: 'prospecting', name: 'prospecting' },
-    { id: 'remarketing', name: 'remarketing' },
-  ]
+  sourceList: any[] = SOURCES.filter(item => item.id !== 'banner' && item.id !== 'institucional');
+  mediumList: any[] = MEDIUMS;
+  audienceList: any[] = AUDIENCES;
 
   filteredSourceList: any[] = this.sourceList;
   filteredMediumList: any[] = this.mediumList;

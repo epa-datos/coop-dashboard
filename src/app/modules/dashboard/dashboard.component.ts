@@ -12,39 +12,77 @@ import { AppStateService } from 'src/app/services/app-state.service';
 export class DashboardComponent implements OnInit, OnDestroy {
 
   title: string;
+  printWindowTitle: string;
+  showFilters: boolean;
+  currentPath: string;
+
   routeSub: Subscription;
   translateSub: Subscription;
 
   constructor(
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private appStateService: AppStateService
   ) {
     this.routeSub = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
-        this.loadTitle(event.url);
+        this.loadContent(event.url);
       }
     })
 
     this.translateSub = translate.stream('dashboard').subscribe(() => {
-      this.loadTitle(this.router.url);
+      this.loadContent(this.router.url);
     });
   }
 
   ngOnInit(): void { }
 
-  loadTitle(route: string) {
-    if (route.includes('/dashboard/main-region')) {
-      this.title = this.translate.instant('dashboard.overview');
-    } else if (route.includes('/dashboard/country')) {
-      this.title = this.translate.instant('dashboard.overviewCountry');
-    } else if (route.includes('/dashboard/retailer')) {
-      this.title = this.translate.instant('dashboard.overviewRetailer');
-    } else if (route.includes('/dashboard/tools')) {
-      this.title = this.translate.instant('dashboard.otherTools');
-    } else if (route.includes('/dashboard/omnichat')) {
-      this.title = this.translate.instant('dashboard.feelingsAnalysis');
+  loadContent(route: string) {
+    this.showFilters = true;
+
+    this.currentPath = route.replace('/dashboard/', '').split('?')[0];
+    switch (this.currentPath) {
+      case 'main-region':
+        this.title = this.translate.instant('dashboard.overview');
+        break;
+
+      case 'country':
+        this.title = this.translate.instant('dashboard.overviewCountry');
+        break;
+
+      case 'retailer':
+        this.title = this.translate.instant('dashboard.overviewRetailer');
+        break;
+
+      case 'tools':
+        this.title = this.translate.instant('dashboard.otherTools');
+        break;
+
+      case 'omnichat':
+        this.title = this.translate.instant('dashboard.feelingsAnalysis');
+        break;
+
+      default:
+        delete this.title;
+        this.showFilters = false;
+        break;
+    }
+
+    setTimeout(() => {
+      this.getPrintTitle();
+    }, 1000);
+  }
+
+
+  getPrintTitle() {
+    let mainRegionName = this.appStateService.selectedMainRegion?.name;
+    let countryName = this.appStateService.selectedCountry?.name;
+    let retailerName = this.appStateService.selectedRetailer?.name;
+
+    if (mainRegionName || countryName || retailerName) {
+      this.printWindowTitle = `${this.title} - ${mainRegionName ? `${mainRegionName} ` : ''}${countryName ? `${countryName} ` : ''}${retailerName ? `- ${retailerName} ` : ''}`;
     } else {
-      delete this.title;
+      this.printWindowTitle = this.currentPath === 'campaign-comparator' ? 'Comparador de campaña' : this.title;
     }
   }
 

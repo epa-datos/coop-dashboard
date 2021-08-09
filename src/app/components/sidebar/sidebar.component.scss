@@ -20,6 +20,10 @@
     .dropdown-item {
         cursor: pointer;
     }
+
+    @media print {
+        display: none;
+    }
 }
 
 .text-danger {

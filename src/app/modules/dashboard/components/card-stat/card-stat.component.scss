@@ -36,8 +36,13 @@
                 display: block;
             }
         }
+
+        .icon {
+            height: 2rem;
+            width: 2rem;
+        }
         
-        &.with-icon{
+        &.with-icon {
             grid-template-columns: 1fr auto;
         }
 
@@ -52,9 +57,18 @@
             }
         }
 
-        .icon {
-            height: 2rem;
-            width: 2rem;
+        &.reduced-padding {
+            padding: 1rem 1rem;
+
+            @media screen and (min-width: 1200px) and (max-width: 1328px) {
+                padding: 0.85rem 0.85rem;  
+            }
+
+            @media screen and (min-width: 1200px) and (max-width: 1483px) {
+                .icon {
+                    display: none;
+                }
+            }
         }
     }
     
@@ -102,9 +116,20 @@
                 display: inline-block;
             }
         }
+
+        &.reduced-padding {
+            .submetrics-wrapper {
+                padding: 0.1rem 1rem;
+
+                @media screen and (min-width: 1200px) and (max-width: 1328px) {
+                    padding: 0.1rem 0.85rem;
+                }
+            }
+        }
     }
 
     ::-webkit-scrollbar {
         width: 3px;
+        height: 4px;
     }
 }

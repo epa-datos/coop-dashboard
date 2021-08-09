@@ -12,6 +12,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user.service';
 import { equalsArrays } from 'src/app/tools/validators/arrays-comparator';
+import { SOURCES } from 'src/app/tools/constants/filters';
 
 export const MY_FORMATS = {
   parse: {
@@ -47,15 +48,7 @@ export class GeneralFiltersComponent implements OnInit {
   sectorList: any[];
   categoryList: any[];
   campaignList: any[];
-  sourceList: any[] = [
-    { id: 'google', name: 'Google' },
-    { id: 'social', name: 'Social' },
-    { id: 'email', name: 'Email' },
-    { id: 'display', name: 'Display' },
-    { id: 'banner', name: 'Banner' },
-    { id: 'institucional', name: 'Institucional' },
-    { id: 'others', name: 'Otros' }
-  ];
+  sourceList: any[] = SOURCES;
 
   filteredCountryList: any[];
   filteredCountry: boolean; // flag to know is filteredCountryList is the result of a search filter

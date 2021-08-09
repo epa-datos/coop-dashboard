@@ -18,6 +18,7 @@ export class ChartPieComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() value: string = 'value';
   @Input() category: string = 'category';
   @Input() legendPosition: am4charts.LegendPosition = 'left';
+  @Input() legendAlign: am4core.Align;
   @Input() height: string = '350px'; // height property value valid in css
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
@@ -130,6 +131,9 @@ export class ChartPieComponent implements OnInit, AfterViewInit, OnDestroy {
       // Add a legend
       chart.legend = new am4charts.Legend();
       chart.legend.position = this.legendPosition;
+      if (this.legendAlign) {
+        chart.legend.contentAlign = this.legendAlign;
+      }
       chart.legend.fontSize = 12;
       chart.legend.useDefaultMarker = true;
 

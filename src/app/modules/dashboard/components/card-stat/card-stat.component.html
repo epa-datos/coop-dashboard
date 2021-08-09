@@ -1,6 +1,7 @@
 <div class="card card-stats mb-4 mb-xl-0" [style.height]="height">
     <div class="card-body">
-        <div class="metric-container" [ngClass]="{ 'with-icon': stat.icon, 'with-submetric' : stat.subKpis}">
+        <div class="metric-container"
+            [ngClass]="{ 'with-icon': stat.icon, 'with-submetric' : stat.subKpis, 'reduced-padding' : reducedPadding }">
             <div class="metric-data">
                 <p class="card-title text-uppercase text-muted mb-0"
                     [ngClass]="{'h4': !smallHeader, 'h5': smallHeader}">{{ stat.title }}</p>
@@ -39,7 +40,8 @@
                 </div>
             </div>
         </div>
-        <div class="submetrics-container text-muted" *ngIf="stat.subKpis">
+        <div *ngIf="stat.subKpis" class="submetrics-container text-muted"
+            [ngClass]="{ 'reduced-padding' : reducedPadding }">
             <div class="submetrics-wrapper my-0 h5">
                 <div class="submetric-data" *ngFor="let subKip of stat.subKpis">
                     <span class="text-nowrap mr-1 text-muted text-uppercase">{{ subKip.title }} </span>

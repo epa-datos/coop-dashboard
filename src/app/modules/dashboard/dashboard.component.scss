@@ -13,6 +13,12 @@
         }
     }
 
+    .btn {
+        @media print {
+            display: none;
+        }
+    }
+
     .filters-container {
         @media screen and (min-width: 575px) {
             background: #F8F9FE;
