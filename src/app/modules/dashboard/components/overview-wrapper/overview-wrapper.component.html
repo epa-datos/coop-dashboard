@@ -6,7 +6,7 @@
                 <app-card-stat *ngFor="let stat of kpis" [stat]="stat" [loader]="kpisReqStatus <= 1"></app-card-stat>
             </div>
             <p class="text-center text-muted mt-3 mb-0" [hidden]="kpisReqStatus !== 3">
-                Error al consultar datos
+                {{ 'general.errorData' | translate }}
             </p>
         </div>
     </div>
@@ -28,22 +28,23 @@
             <div class="card">
                 <div class="card-header">
                     <ng-container *ngIf="selectedType === 'country'" [ngSwitch]="selectedTab1">
-                        <span *ngSwitchCase="1" class="h4">Categorías por Retailer - Search</span>
-                        <span *ngSwitchCase="2" class="h4">Categorías por Retailer - Marketing</span>
-                        <span *ngSwitchCase="3" class="h4">Categorías por Retailer - Ventas</span>
+                        <span *ngSwitchCase="1" class="h4">{{ 'overviewWrapper.chart1CardTitle1' | translate }}</span>
+                        <span *ngSwitchCase="2" class="h4">{{ 'overviewWrapper.chart1CardTitle2' | translate }}</span>
+                        <span *ngSwitchCase="3" class="h4">{{ 'overviewWrapper.chart1CardTitle3' | translate }}</span>
                     </ng-container>
 
-                    <span *ngIf="selectedType === 'retailer'" class="h4">Categorías por Sector</span>
+                    <span *ngIf="selectedType === 'retailer'" class="h4">{{ 'overviewWrapper.chart1CardTitle4' |
+                        translate }}</span>
                 </div>
                 <div class="card-body">
                     <div class="chart-legend mt-0 mb-2">
                         <div class="legend-container-hp">
                             <div class="legend-square on"></div>
-                            <div class="legend-label">Activas</div>
+                            <div class="legend-label">{{ 'overviewWrapper.chart1Legend1' | translate }}</div>
                         </div>
                         <div class="legend-container-hp ml-3">
                             <div class="legend-square off"></div>
-                            <div class="legend-label">Inactivas</div>
+                            <div class="legend-label">{{ 'overviewWrapper.chart1Legend2' | translate }}</div>
                         </div>
                     </div>
                     <app-chart-heat-map [data]="categoriesBySector" [name]="selectedType + 'categories-by-sector'"
@@ -132,10 +133,10 @@
                     </div>
 
                     <app-chart-multiple-axes [data]="usersInvOrAup"
-                        [value1]="selectedTab3 === 1 ? 'transactions' : selectedTab3 === 2 ? 'revenue' : 'revenue'"
+                        [value1]="selectedTab3 === 1 ? 'transactions' : 'revenue'"
                         [value2]="selectedTab3 === 1 ? 'users' : selectedTab3 === 2 ? 'investment': 'aup'"
-                        [valueName1]="selectedTab3 === 1 ? 'Conversiones' : selectedTab3 === 2 ? 'Revenue' :'Revenue'"
-                        [valueName2]="selectedTab3 === 1 ? 'Usuarios' : selectedTab3 === 2 ? 'Inversión' : 'AUP'"
+                        [valueName1]="selectedTab3 === 1 ? ('general.conversions' | translate) : 'Revenue'"
+                        [valueName2]="selectedTab3 === 1 ? ('general.users' | translate) : selectedTab3 === 2 ? ('general.investment' | translate) : 'AUP'"
                         [valueFormat1]="selectedTab3 > 1 && 'USD'" [valueFormat2]="selectedTab3 > 1 && 'USD'"
                         [status]="usersInvOrAupReqStatus" [name]="selectedType + 'metric-comparison'">
                     </app-chart-multiple-axes>
@@ -150,11 +151,13 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                            (click)="getTrafficOrSales('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
+                            (click)="getTrafficOrSales('traffic'); chartsInitLoad = chartsInitLoad && false;">{{
+                            'general.traffic' | translate }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                            (click)="getTrafficOrSales('sales'); chartsInitLoad = chartsInitLoad && false;">Conversiones</a>
+                            (click)="getTrafficOrSales('sales'); chartsInitLoad = chartsInitLoad && false;">{{
+                            'general.conversions' | translate }}</a>
                     </li>
                 </ul>
             </div>
@@ -165,8 +168,8 @@
             <div class="card height-fluid">
                 <div class="card-header">
                     <span class="h4">
-                        {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.sales') | translate) +
-                        ('overviewLatam.chart2CardTitle1' | translate) }}
+                        {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
+                        ('charts.byDevice' | translate) }}
                     </span>
                 </div>
                 <div class="card-body">
@@ -208,8 +211,8 @@
             <div class="card height-fluid">
                 <div class="card-header">
                     <span class="h4">
-                        {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.sales') | translate) +
-                        ('overviewLatam.chart3CardTitle1' | translate) }}
+                        {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
+                        ('charts.byGender' | translate) }}
                     </span>
                 </div>
                 <div class="card-body">
@@ -253,7 +256,10 @@
         <div class="col-12 col-md-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}} por Edad</span>
+                    <span class="h4">
+                        {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
+                        ('charts.byAge' | translate) }}
+                    </span>
                 </div>
                 <div class="card-body">
                     <app-chart-lollipop [data]="trafficOrSales?.age" [name]="selectedType + 'age'" category="age"
@@ -268,7 +274,10 @@
         <div class="col-12 col-md-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}} por Género y Edad</span>
+                    <span class="h4">
+                        {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
+                        ('charts.byGenderAndAge' | translate) }}
+                    </span>
                 </div>
                 <div class="card-body" style="height: 328px">
                     <!-- loader -->
@@ -285,15 +294,15 @@
                     <div *ngIf="trafficOrSalesReqStatus[3].reqStatus === 2 && trafficOrSales?.genderAndAge?.length === 0"
                         class="chart-error-container text-muted">
                         <p class="text-center">
-                            Sin datos disponibles <br>
-                            Muestra insuficiente
+                            {{ 'general.withoutData' | translate }} <br>
+                            {{ 'general.withoutData2' | translate }}
                         </p>
                     </div>
 
                     <!-- error -->
                     <div *ngIf="chartsInitLoad && trafficOrSalesReqStatus[3].reqStatus === 3"
                         class="chart-error-container text-muted">
-                        <span>Error al consultar datos</span>
+                        <span> {{ 'general.errorData' | translate }}</span>
                     </div>
                 </div>
             </div>
@@ -304,7 +313,8 @@
             <div class="card height-fluid">
                 <div class="card-header">
                     <span class="h4">
-                        {{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}} por día de la semana y hora del día
+                        {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
+                        ('charts.byDayAndHour' | translate) }}
                     </span>
                 </div>
                 <div class="card-body">

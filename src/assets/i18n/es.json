@@ -31,7 +31,6 @@
         "sidebarError3": "a los que tienes acceso. Intenta más tarde."
     },
     "filters": {
-        "country": "País",
         "countryPh": "Selecciona un País",
         "countrySearchPh": "Buscar País",
         "countryEmptyMsg": "No se encontraron Países",
@@ -70,19 +69,28 @@
         "chart1CardTitle1": "Inversión en ",
         "chart1CardTitle2": "Sectores",
         "chart1CardTitle3": "Categorías",
-        "chart1CardTitle4": " por País",
-        "chart2CardTitle1": " por Dispositivos",
-        "chart3CardTitle1": " por Género",
-        "chart4CardTitle1": " por Edad",
-        "chart5CardTitle1": " por Género y Edad",
-        "chart7CardTitle1": "Inversión - Revenue",
-        "chart7ValueName1": "Inversión",
-        "chart7ValueName2": "Revenue",
-        "table1CardTitle1": "Top Productos"
+        "chart1CardTitle4": "Fondos",
+        "table1Error": "Error al consultar países",
+        "table1Empty": "No se encontraron países",
+        "table2CardTitle1": "Top Productos",
+        "table2Error": "Error al consultar productos",
+        "table2Empty": "No se encontraron productos"
     },
-    "kpis": {
-        "investment": "inversión",
-        "transactions": "conversiones"
+    "overviewWrapper": {
+        "chart1CardTitle1": "Categorías por Retailer - Search",
+        "chart1CardTitle2": "Categorías por Retailer - Marketing",
+        "chart1CardTitle3": "Categorías por Retailer - Ventas",
+        "chart1CardTitle4": "Categorías por Sector",
+        "chart1Legend1": "Activas",
+        "chart1Legend2": "Inactivas"
+    },
+    "charts": {
+        "byCountry": " por País",
+        "byDevice": " por Dispositivos",
+        "byGender": " por Género",
+        "byAge": " por Edad",
+        "byGenderAndAge": " por Género y Edad",
+        "byDayAndHour": " por día de la semana y hora del día"
     },
     "paginator": {
         "itemsPerPage": "Registros por página",
@@ -94,16 +102,22 @@
     },
     "general": {
         "coop": "Programa COOP",
+        "country": "País",
+        "retailer": "Retailer",
         "sector": "Sector",
         "category": "Categoría",
         "source": "Fuente",
         "campaign": "Campaña",
+        "period": "Período",
         "traffic": "Tráfico",
-        "sales": "Conversiones",
+        "conversions": "Conversiones",
+        "sales": "Ventas",
         "users": "Usuarios",
+        "investment": "Inversión",
         "ranking": "Ranking",
         "product": "Producto",
         "amount": "Catindad",
+        "fund": "Fondo",
         "institutional": "Institucional",
         "others": "Otros",
         "usersVsSales": "Usuarios - Conversiones",
@@ -125,6 +139,31 @@
         "otherPluralF": "otras",
         "only": "solamente",
         "men": "Hombres",
-        "women": "Mujeres"
+        "women": "Mujeres",
+        "years": "años",
+        "multSelection": "Ctrl + click para selección múltiple",
+        "days": {
+            "mon": "Lun",
+            "tue": "Mar",
+            "wed": "Mier",
+            "thu": "Jue",
+            "fri": "Vier",
+            "sat": "Sab",
+            "sun": "Dom"
+        },
+        "months": {
+            "jan": "Ene",
+            "feb": "Feb",
+            "mar": "Mar",
+            "apr": "Abr",
+            "may": "May",
+            "jun": "Jun",
+            "jul": "Jul",
+            "aug": "Ago",
+            "sep": "Sep",
+            "oct": "Oct",
+            "nov": "Nov",
+            "dec": "Dic"
+        }
     }
 }
