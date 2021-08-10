@@ -356,9 +356,7 @@ export class IndexedWrapperComponent implements OnInit, OnDestroy {
                 return { ...item, pdf_downloads: '-' };
               }
 
-              const pdf_downloads = item.pdf_downloads ? item.pdf_downloads : Math.round(Math.random() * (20 - 1));
-
-              return { ...item, pdf_downloads };
+              return item;
             });
           }
 
