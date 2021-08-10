@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { GoogleBusinessService } from '../../services/google-business.service';
 import { TableItem } from '../generic-table/generic-table.component';
@@ -44,10 +45,17 @@ export class GoogleBusinessWrapperComponent implements OnInit, OnDestroy {
   selectedFilters: any;
 
   requestInfoSub: Subscription;
+  translateSub: Subscription;
 
   constructor(
-    private googleBusinessServ: GoogleBusinessService
-  ) { }
+    private googleBusinessServ: GoogleBusinessService,
+    private translate: TranslateService,
+  ) {
+
+    this.translateSub = translate.stream('googleBusiness').subscribe(() => {
+      this.loadI18nContent();
+    });
+  }
 
   ngOnInit(): void {
     this.requestInfoSub = this.requestInfoChange.subscribe((manualChange: boolean) => {
@@ -129,7 +137,15 @@ export class GoogleBusinessWrapperComponent implements OnInit, OnDestroy {
     this.locationColumns = [...this.locationColumns, newLocationColumn];
   }
 
+  loadI18nContent() {
+    this.locationColumns[0].title = this.translate.instant('googleBusiness.province');
+    this.locationColumns[1].title = this.translate.instant('googleBusiness.city');
+    this.locationColumns[2].title = this.translate.instant('googleBusiness.store');
+    this.locationColumns[3].title = this.translate.instant('googleBusiness.visits');
+  }
+
   ngOnDestroy() {
     this.requestInfoSub?.unsubscribe();
+    this.translateSub?.unsubscribe();
   }
 }

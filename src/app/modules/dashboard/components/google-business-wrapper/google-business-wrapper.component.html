@@ -6,7 +6,7 @@
     <div class="col-12 mt-4">
         <div class="card">
             <div class="card-body">
-                <app-chart-multiple-axes valueName1="Visitas"
+                <app-chart-multiple-axes [valueName1]="'googleBusiness.visits' | translate"
                     [valueName2]="isVisitRate ? '% Visit Rate' : '% Store Visits Rate'" value1="visits"
                     [value2]="isVisitRate ? 'visits_rate' : 'store_visits_rate'" valueFormat2="%" name="visits-vs-rate"
                     [status]="visitsReqStatus" [data]="visits">
@@ -19,8 +19,7 @@
 <div class="row mt-5">
     <div class="col-12">
         <app-generic-table [displayedColumns]="locationColumns" [tableData]="locations"
-            [tableDataChange]="locations.data" errorMsg="Error al consultar datos"
-            emptyDataMsg="No se encontraron datos">
+            [tableDataChange]="locations.data">
         </app-generic-table>
     </div>
 </div>

@@ -24,9 +24,6 @@ export class GoogleBusinessFiltersComponent implements OnInit {
   provincesReqStatus = 0;
   citiesReqStatus = 0;
 
-  provincesErrorMsg;
-  citiesErrorMsg;
-
   provinceFilter: string
   cityFilter: string;
 
@@ -69,13 +66,11 @@ export class GoogleBusinessFiltersComponent implements OnInit {
         this.provincesCounter = res?.length;
         this.provinces.patchValue([...this.provinceList.map(item => item), 0]);
 
-        this.provincesErrorMsg && delete this.provincesErrorMsg;
         this.provincesReqStatus = 2;
 
       })
       .catch(error => {
         this.provinceList = [];
-        this.provincesErrorMsg = 'Error al consultar Provincias';
         console.error(`[google-business.component]: ${error}`);
         this.provincesReqStatus = 3;
       })
@@ -91,13 +86,11 @@ export class GoogleBusinessFiltersComponent implements OnInit {
         this.citiesCounter = res?.length;
         this.cities.patchValue([...this.cityList.map(item => item), 0]);
 
-        this.citiesErrorMsg && delete this.citiesErrorMsg;
         this.citiesReqStatus = 2;
 
       })
       .catch(error => {
         this.cityList = [];
-        this.citiesErrorMsg = 'Error al consultar Ciudades';
         console.error(`[google-business.component]: ${error}`);
         this.citiesReqStatus = 3;
       })
