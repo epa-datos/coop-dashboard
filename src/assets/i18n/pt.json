@@ -31,7 +31,6 @@
         "sidebarError3": "aos quais você tem acesso. Por favor tente mais tarde."
     },
     "filters": {
-        "country": "País",
         "countryPh": "Selecione um Pais",
         "countrySearchPh": "Procure um país",
         "countryEmptyMsg": "Nenhum país encontrado",
@@ -70,19 +69,33 @@
         "chart1CardTitle1": "Investimento em ",
         "chart1CardTitle2": "Setors",
         "chart1CardTitle3": "Categorias",
-        "chart1CardTitle4": " por País",
-        "chart2CardTitle1": " por Dispositivos",
-        "chart3CardTitle1": " por Gênero",
-        "chart4CardTitle1": " por Idade",
-        "chart5CardTitle1": " por Gênero e Idade",
-        "chart7CardTitle1": "Investimento - Revenue",
-        "chart7ValueName1": "Investimento",
-        "chart7ValueName2": "Revenue",
-        "table1CardTitle1": "Top Produtos"
+        "chart1CardTitle4": "Fundos",
+        "table1Error": "Erro ao consultar países",
+        "table1Empty": "nenhum país encontrado",
+        "table2CardTitle1": "Top Produtos",
+        "table2Error": "Erro ao consultar produtos",
+        "table2Empty": "nenhum produto encontrado"
     },
-    "kpis": {
-        "investment": "investimento",
-        "transactions": "conversões"
+    "overviewWrapper": {
+        "chart1CardTitle1": "Categorias por Retailer - Search",
+        "chart1CardTitle2": "Categorias por Retailer - Marketing",
+        "chart1CardTitle3": "Categorias por Retailer - Vendas",
+        "chart1CardTitle4": "Categorias por Setor",
+        "chart1Legend1": "Ativas",
+        "chart1Legend2": "Inativas"
+    },
+    "campTowardsRetail": {
+        "table1Error": "Erro ao consultar campanhas",
+        "table1Empty": "Nenhum campanha encontrada",
+        "campList1": "Google Search e MDF"
+    },
+    "charts": {
+        "byCountry": " por País",
+        "byDevices": " por Dispositivos",
+        "byGender": " por Gênero",
+        "byAge": " por Idade",
+        "byGenderAndAge": " por Gênero e Idade",
+        "byDayAndHour": " por dia da semana e hora do dia"
     },
     "paginator": {
         "itemsPerPage": "Itens por página",
@@ -94,17 +107,27 @@
     },
     "general": {
         "coop": "Programa COOP",
+        "country": "País",
+        "retailer": "Retailer",
         "sector": "Setor",
         "category": "Categoria",
         "source": "Fonte",
+        "campaign": "Campaña",
+        "period": "Período",
         "traffic": "Tráfego",
-        "sales": "Conversões",
+        "conversions": "Conversões",
+        "sales": "Vendas",
         "users": "Usuários",
+        "investment": "Investimento",
         "ranking": "Ranking",
         "product": "Produtos",
         "amount": "Quantidade",
+        "fund": "Fundo",
         "institutional": "Institucional",
         "others": "Outros",
+        "impressions": "Impressões",
+        "clicks": "Clicks",
+        "name": "Nome",
         "usersVsSales": "Usuários - Conversões",
         "investmentVsRevenue": "Investimento - Revenue",
         "revenueVsAup": "Revenue - AUP",
@@ -124,6 +147,31 @@
         "otherPluralF": "outras",
         "only": "somente",
         "men": "Masculino",
-        "women": "Feminino"
+        "women": "Feminino",
+        "years": "anos",
+        "multSelection": "Ctrl + click para seleção múltipla",
+        "days": {
+            "mon": "Seg",
+            "tue": "Ter",
+            "wed": "Qua",
+            "thu": "Qui",
+            "fri": "Sex",
+            "sat": "Sab",
+            "sun": "Dom"
+        },
+        "months": {
+            "jan": "Jan",
+            "feb": "Fev",
+            "mar": "Mar",
+            "apr": "Abr",
+            "may": "Mai",
+            "jun": "Jun",
+            "jul": "Jul",
+            "aug": "Ago",
+            "sep": "Set",
+            "oct": "Out",
+            "nov": "Nov",
+            "dec": "Dez"
+        }
     }
 }

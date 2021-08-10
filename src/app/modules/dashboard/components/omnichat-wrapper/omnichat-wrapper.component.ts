@@ -142,7 +142,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   dataByLevelReqStatus = [
     { name: 'countries', reqStatus: 0 },
     { name: 'retailers', reqStatus: 0 },
-    { name: 'category1', reqStatus: 0 },
+    // { name: 'category1', reqStatus: 0 },
     // { name: 'category2', reqStatus: 0 },
     // { name: 'category3', reqStatus: 0 },
     // { name: 'category4', reqStatus: 0 },
@@ -360,14 +360,14 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       ]
     } else if (this.levelPage.retailer) {
       requiredData = [
-        { metricType: 'chats', subMetricType: 'categories', name: 'category1' },
+        // { metricType: 'chats', subMetricType: 'categories', name: 'category1' },
         // { metricType: 'traffic', subMetricType: 'categories', name: 'category2' }, //users
         // { metricType: 'sales', subMetricType: 'categories', name: 'category3' }
       ];
     }
 
     if (metricType === 'chats' && !this.levelPage.retailer) {
-      requiredData.push({ metricType, subMetricType: 'categories', name: 'category1' });
+      // requiredData.push({ metricType, subMetricType: 'categories', name: 'category1' });
     }
 
     for (let metric of requiredData) {

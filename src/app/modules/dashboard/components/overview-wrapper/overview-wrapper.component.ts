@@ -3,9 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { KpiCard } from 'src/app/models/kpi';
 import { AppStateService } from 'src/app/services/app-state.service';
+import { TranslationsService } from 'src/app/services/translations.service';
 import { SOURCES } from 'src/app/tools/constants/filters';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
-import { convertWeekdayToString } from 'src/app/tools/functions/data-convert';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { OverviewService } from '../../services/overview.service';
 
@@ -144,14 +144,21 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
   selectedSectorTabHM: any;
 
   requestInfoSub: Subscription;
+  translateSub: Subscription;
   chartsInitLoad: boolean = true;
 
   constructor(
     private filtersStateService: FiltersStateService,
     private appStateService: AppStateService,
     private overviewService: OverviewService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+    private translationsServ: TranslationsService
+  ) {
+
+    this.translateSub = translate.stream('overviewWrapper').subscribe(() => {
+      this.loadI18nContent();
+    });
+  }
 
   ngOnInit(): void {
     let loadedFromInit: boolean; // first call to getAllData is from init
@@ -328,7 +335,7 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
           } else if (subMetric.name === 'weekdayAndHour') {
             this.trafficOrSales[subMetric.name] = resp.map(item => {
-              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
+              return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
             });
 
           } else {
@@ -434,7 +441,31 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
+  loadI18nContent() {
+    this.kpis[0].title = this.translate.instant('general.investment');
+    this.kpis[2].subKpis[0].title = this.translate.instant('general.users');
+    this.kpis[3].title = this.translate.instant('general.conversions');
+
+    this.usersInvOrAupMetrics[0] = this.translate.instant('general.sector').toLowerCase();
+    this.usersInvOrAupMetrics[1] = this.translate.instant('general.category').toLowerCase();
+    this.usersInvOrAupMetrics[2] = this.translate.instant('general.source').toLowerCase();
+
+    if (this.trafficOrSales['men']?.length > 0) {
+      this.trafficOrSales['men'][1].name = this.translate.instant('others.men');
+    }
+
+    if (this.trafficOrSales['women']?.length > 0) {
+      this.trafficOrSales['women'][1].name = this.translate.instant('others.women');
+    }
+
+    this.trafficOrSales['weekdayAndHour'] = this.trafficOrSales['weekdayAndHour']?.map(item => {
+      return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+    });
+  }
+
+
   ngOnDestroy() {
     this.requestInfoSub?.unsubscribe();
+    this.translateSub?.unsubscribe();
   }
 }

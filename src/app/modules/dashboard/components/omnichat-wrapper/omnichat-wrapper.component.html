@@ -57,156 +57,156 @@
 <hr>
 
 <!-- CHARTS POR PAÍS, RETAILER & CATEGORIA -->
-<div class="row mt-5">
-    <ng-container *ngIf="!levelPage.retailer">
-        <div class="col-12">
-            <div class="mb-3">
-                <span class="h3">Chats, Usuarios, Conversiones y Tasa de conversión</span>
-            </div>
-        </div>
-        <div class="col-12" *ngIf="!levelPage.retailer">
-            <div class="pills-container">
-                <ul class="nav nav-pills nav-fill">
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                            (click)="getDataByLevel('chats')">Chats</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                            (click)="getDataByLevel('traffic')">Usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 3}"
-                            (click)="getDataByLevel('sales')">Conversiones</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 4}"
-                            (click)="getDataByLevel('conversion-rate')">Tasa de conversión</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-    </ng-container>
-
-    <div *ngIf="levelPage.latam" class="col-12 col-lg-4 mt-4" [ngClass]="{'col-lg-6': selectedTab2 > 1}">
-        <div class="card height-fluid">
-            <div class="card-header">
-                <ng-container [ngSwitch]="selectedTab2">
-                    <span *ngSwitchCase="1" class="h4">Chats por país</span>
-                    <span *ngSwitchCase="2" class="h4">Usuarios por país</span>
-                    <span *ngSwitchCase="3" class="h4">Conversiones por país</span>
-                    <span *ngSwitchCase="4" class="h4">Tasa de conversión por país</span>
-                </ng-container>
-            </div>
-            <div class="card-body">
-                <app-chart-bar-horizontal [data]="dataByLevel.countries" name="omnichat-chats-by-country"
-                    category="country" [value]="selectedTab2 <= 2 ? 'chats' : 'value'"
-                    [valueFormat]="selectedTab2 === 4 && '%'" [singleColorBars]="true"
-                    [status]="dataByLevelReqStatus[0].reqStatus">
-                </app-chart-bar-horizontal>
-            </div>
-        </div>
-    </div>
-    <div *ngIf="levelPage.latam || levelPage.country" class="col-12 col-lg-4 mt-4"
-        [ngClass]="{'col-lg-6' : selectedTab2 > 1 || (levelPage.country && selectedTab2 === 1), 'col-lg-12' : levelPage.country && selectedTab2 > 1}">
-        <div class="card height-fluid superimposed">
-            <div class="card-header">
-                <ng-container [ngSwitch]="selectedTab2">
-                    <span *ngSwitchCase="1" class="h4">Chats por Retailer</span>
-                    <span *ngSwitchCase="2" class="h4">Usuarios por Retailer</span>
-                    <span *ngSwitchCase="3" class="h4">Conversiones por Retailer</span>
-                    <span *ngSwitchCase="4" class="h4">Tasa de conversión por Retailer</span>
-                </ng-container>
-            </div>
-            <div class="card-body" [ngClass]="{'overfow-container': dataByLevel?.retailers?.length > 10}">
-                <div class="superimposed">
-                    <app-chart-bar-horizontal [data]="dataByLevel.retailers" name="omnichat-chats-by-retailer"
-                        category="retailer" [value]="selectedTab2 <= 2 ? 'chats' : 'value'"
-                        [valueFormat]="selectedTab2 === 4 && '%'" [truncateLabels]="true" [singleColorBars]="true"
-                        [height]="dataByLevel?.retailers?.length > 10 ? '600px' : '350px'"
-                        [status]="dataByLevelReqStatus[1].reqStatus">
-                    </app-chart-bar-horizontal>
+<ng-container *ngIf="!levelPage.retailer">
+    <div class="row mt-5">
+        <ng-container *ngIf="!levelPage.retailer">
+            <div class="col-12">
+                <div class="mb-3">
+                    <span class="h3">Chats, Usuarios, Conversiones y Tasa de conversión</span>
                 </div>
-
             </div>
-        </div>
-    </div>
-    <div *ngIf="selectedTab2 === 1 || levelPage.retailer" class="col-12 col-lg-4 mt-4"
-        [ngClass]="{ 'col-lg-6' : levelPage.country, 'col-lg-12 mt--3' : levelPage.retailer }">
-        <div class="card height-fluid">
-            <div class="card-header">
-                <!-- <ng-container *ngIf="!levelPage.retailer">
+            <div class="col-12" *ngIf="!levelPage.retailer">
+                <div class="pills-container">
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="nav-item">
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
+                                (click)="getDataByLevel('chats')">Chats</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
+                                (click)="getDataByLevel('traffic')">Usuarios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 3}"
+                                (click)="getDataByLevel('sales')">Conversiones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 4}"
+                                (click)="getDataByLevel('conversion-rate')">Tasa de conversión</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </ng-container>
+
+        <div *ngIf="levelPage.latam" class="col-12 col-lg-4 mt-4" [ngClass]="{'col-lg-6': selectedTab2 > 0}">
+            <div class="card height-fluid">
+                <div class="card-header">
                     <ng-container [ngSwitch]="selectedTab2">
-                        <span *ngSwitchCase="1" class="h4">Chats por categoría</span>
-                        <span *ngSwitchCase="2" class="h4">Usuarios por categoría</span>
-                        <span *ngSwitchCase="3" class="h4">Conversiones por categoría</span>
-                        <span *ngSwitchCase="4" class="h4">Tasa de conversión por categoría</span>
+                        <span *ngSwitchCase="1" class="h4">Chats por país</span>
+                        <span *ngSwitchCase="2" class="h4">Usuarios por país</span>
+                        <span *ngSwitchCase="3" class="h4">Conversiones por país</span>
+                        <span *ngSwitchCase="4" class="h4">Tasa de conversión por país</span>
                     </ng-container>
-                </ng-container> -->
-
-                <span class="h4">Chats por categoría</span>
-            </div>
-            <div class="card-body">
-                <!-- for traffic and conversions selected tab -->
-                <ng-container *ngIf="selectedTab2 !== 4">
-                    <app-chart-pie [data]="dataByLevel.category1" [status]="dataByLevelReqStatus[2].reqStatus"
-                        name="omnichat-chats-by-category-1" legendPosition="bottom" legendAlign="center">
-                    </app-chart-pie>
-                </ng-container>
-
-                <!-- for conversion rate selected tab -->
-                <!-- <ng-container *ngIf="selectedTab2 === 4">
-                    <app-chart-bar-horizontal [data]="dataByLevel.category4" name="omnichat-chats-by-category-2"
-                        category="name" value="value" valueFormat="%" [truncateLabels]="true" [singleColorBars]="true"
-                        [status]="staticDataReqStatus[1].reqStatus">
+                </div>
+                <div class="card-body">
+                    <app-chart-bar-horizontal [data]="dataByLevel.countries" name="omnichat-chats-by-country"
+                        category="country" [value]="selectedTab2 <= 2 ? 'chats' : 'value'"
+                        [valueFormat]="selectedTab2 === 4 && '%'" [singleColorBars]="true"
+                        [status]="dataByLevelReqStatus[0].reqStatus">
                     </app-chart-bar-horizontal>
-                </ng-container> -->
+                </div>
             </div>
         </div>
+        <div *ngIf="levelPage.latam || levelPage.country" class="col-12 col-lg-4 mt-4"
+            [ngClass]="{'col-lg-6' : selectedTab2 > 0 || (levelPage.country && selectedTab2 === 1), 'col-lg-12' : levelPage.country && selectedTab2 > 0}">
+            <div class="card height-fluid superimposed">
+                <div class="card-header">
+                    <ng-container [ngSwitch]="selectedTab2">
+                        <span *ngSwitchCase="1" class="h4">Chats por Retailer</span>
+                        <span *ngSwitchCase="2" class="h4">Usuarios por Retailer</span>
+                        <span *ngSwitchCase="3" class="h4">Conversiones por Retailer</span>
+                        <span *ngSwitchCase="4" class="h4">Tasa de conversión por Retailer</span>
+                    </ng-container>
+                </div>
+                <div class="card-body" [ngClass]="{'overfow-container': dataByLevel?.retailers?.length > 10}">
+                    <div class="superimposed">
+                        <app-chart-bar-horizontal [data]="dataByLevel.retailers" name="omnichat-chats-by-retailer"
+                            category="retailer" [value]="selectedTab2 <= 2 ? 'chats' : 'value'"
+                            [valueFormat]="selectedTab2 === 4 && '%'" [truncateLabels]="true" [singleColorBars]="true"
+                            [height]="dataByLevel?.retailers?.length > 10 ? '600px' : '350px'"
+                            [status]="dataByLevelReqStatus[1].reqStatus">
+                        </app-chart-bar-horizontal>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- <div *ngIf="selectedTab2 === 1 || levelPage.retailer" class="col-12 col-lg-4 mt-4"
+            [ngClass]="{ 'col-lg-6' : levelPage.country, 'col-lg-12 mt--3' : levelPage.retailer }">
+            <div class="card height-fluid">
+                <div class="card-header">
+                    <ng-container *ngIf="!levelPage.retailer">
+                        <ng-container [ngSwitch]="selectedTab2">
+                            <span *ngSwitchCase="1" class="h4">Chats por categoría</span>
+                            <span *ngSwitchCase="2" class="h4">Usuarios por categoría</span>
+                            <span *ngSwitchCase="3" class="h4">Conversiones por categoría</span>
+                            <span *ngSwitchCase="4" class="h4">Tasa de conversión por categoría</span>
+                        </ng-container>
+                    </ng-container>
+    
+                    <span class="h4">Chats por categoría</span>
+                </div>
+                <div class="card-body">
+                    <ng-container *ngIf="selectedTab2 !== 4">
+                        <app-chart-pie [data]="dataByLevel.category1" [status]="dataByLevelReqStatus[2].reqStatus"
+                            name="omnichat-chats-by-category-1" legendPosition="bottom" legendAlign="center">
+                        </app-chart-pie>
+                    </ng-container>
+    
+                    <ng-container *ngIf="selectedTab2 === 4">
+                        <app-chart-bar-horizontal [data]="dataByLevel.category4" name="omnichat-chats-by-category-2"
+                            category="name" value="value" valueFormat="%" [truncateLabels]="true" [singleColorBars]="true"
+                            [status]="staticDataReqStatus[1].reqStatus">
+                        </app-chart-bar-horizontal>
+                    </ng-container>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- <ng-container *ngIf="levelPage.retailer">
+            <div class="col-12 col-lg-6 mt-4">
+                <div class="card height-fluid">
+                    <div class="card-header">
+                        <span class="h4">Usuarios por categoría</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-pie [data]="dataByLevel.category2" [status]="dataByLevelReqStatus[3].reqStatus"
+                            name="omnichat-chats-by-category-3" legendPosition="bottom">
+                        </app-chart-pie>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 mt-4">
+                <div class="card height-fluid">
+                    <div class="card-header">
+                        <span class="h4">Conversiones por categoría</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-pie [data]="dataByLevel.category3" [status]="dataByLevelReqStatus[4].reqStatus"
+                            name="omnichat-chats-by-category-4" legendPosition="bottom">
+                        </app-chart-pie>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 mt-4">
+                <div class="card height-fluid">
+                    <div class="card-header">
+                        <span class="h4">Tasa de conversión por categoría</span>
+                    </div>
+                    <div class="card-body">
+                        <app-chart-bar-horizontal [data]="dataByLevel.category4" name="omnichat-chats-by-category-5"
+                            category="name" value="value" valueFormat="%" [truncateLabels]="true" [singleColorBars]="true"
+                            [status]="staticDataReqStatus[1].reqStatus">
+                        </app-chart-bar-horizontal>
+                    </div>
+                </div>
+            </div>
+        </ng-container> -->
     </div>
-
-    <!-- <ng-container *ngIf="levelPage.retailer">
-        <div class="col-12 col-lg-6 mt-4">
-            <div class="card height-fluid">
-                <div class="card-header">
-                    <span class="h4">Usuarios por categoría</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-pie [data]="dataByLevel.category2" [status]="dataByLevelReqStatus[3].reqStatus"
-                        name="omnichat-chats-by-category-3" legendPosition="bottom">
-                    </app-chart-pie>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-lg-6 mt-4">
-            <div class="card height-fluid">
-                <div class="card-header">
-                    <span class="h4">Conversiones por categoría</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-pie [data]="dataByLevel.category3" [status]="dataByLevelReqStatus[4].reqStatus"
-                        name="omnichat-chats-by-category-4" legendPosition="bottom">
-                    </app-chart-pie>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-lg-6 mt-4">
-            <div class="card height-fluid">
-                <div class="card-header">
-                    <span class="h4">Tasa de conversión por categoría</span>
-                </div>
-                <div class="card-body">
-                    <app-chart-bar-horizontal [data]="dataByLevel.category4" name="omnichat-chats-by-category-5"
-                        category="name" value="value" valueFormat="%" [truncateLabels]="true" [singleColorBars]="true"
-                        [status]="staticDataReqStatus[1].reqStatus">
-                    </app-chart-bar-horizontal>
-                </div>
-            </div>
-        </div>
-    </ng-container> -->
-</div>
-<hr>
+    <hr>
+</ng-container>
 
 <!-- CONVERSIONES - TASAS DE CONVERSION -->
 <div class="row mt-5">

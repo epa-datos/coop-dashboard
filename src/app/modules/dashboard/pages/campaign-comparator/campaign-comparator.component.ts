@@ -16,7 +16,7 @@ export class CampaignComparatorComponent implements OnInit {
 
   validFilters = { firstSelection: false, secondSelection: false };
 
-  kpisLegends1 = ['investment', 'clicks', 'bounce_rate', 'users', 'transactions', 'revenue'] // main kpis
+  kpisLegends1 = ['investment', 'users', 'clicks', 'bounce_rate', 'transactions', 'revenue'] // main kpis
   kpisBase: KpiCard[] = [
     {
       title: 'inversión',
@@ -28,12 +28,20 @@ export class CampaignComparatorComponent implements OnInit {
       iconBg: '#172b4d'
     },
     {
+      title: 'usuarios',
+      name: 'users',
+      value: 0,
+      format: 'integer',
+      icon: 'fas fa-users',
+      iconBg: '#2f9998'
+    },
+    {
       title: 'clicks',
       name: 'clicks',
       value: 0,
       format: 'integer',
       icon: 'fas fa-hand-pointer',
-      iconBg: '#2f9998',
+      iconBg: '#a77dcc',
       subKpis: [
         {
           title: 'ctr',
@@ -49,14 +57,6 @@ export class CampaignComparatorComponent implements OnInit {
       value: 0,
       format: 'percentage',
       icon: 'fas fa-stopwatch',
-      iconBg: '#a77dcc'
-    },
-    {
-      title: 'usuarios',
-      name: 'users',
-      value: 0,
-      format: 'integer',
-      icon: 'fas fa-users',
       iconBg: '#f89934',
     },
     {
@@ -294,7 +294,9 @@ export class CampaignComparatorComponent implements OnInit {
             const baseObj = { ...this.kpisBase[i] };
             baseObj.subKpis = baseObj.subKpis?.map(item => ({ ...item }));
 
-            baseObj.value = mainKpis[i]['value'];
+            // baseObj.value = mainKpis[i]['value'];
+
+            baseObj.value = mainKpis.find(i => i.string === baseObj.name)?.value;
 
             if (baseObj.name === 'clicks') {
               baseObj.subKpis[0].value = kpisList.find(i => i.string === 'ctr')?.value;

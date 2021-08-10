@@ -4,12 +4,12 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}" (click)="selectedTab1 = 1">
-                        Inversión - Conversiones
+                        {{ ('general.investment' | translate) + ' - ' + ('general.conversions' | translate) }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}" (click)="selectedTab1 = 2">
-                        Impresiones - Clicks
+                        {{ ('general.impressions' | translate) + ' - ' + ('general.clicks' | translate) }}
                     </a>
                 </li>
             </ul>
@@ -20,16 +20,18 @@
         <div class="card">
             <div class="card-header">
                 <ng-container [ngSwitch]="selectedTab1">
-                    <span class="h4" *ngSwitchCase="1">Inversión - Conversiones</span>
-                    <span class="h4" *ngSwitchCase="2">Impresiones - Clicks</span>
+                    <span class="h4" *ngSwitchCase="1">{{ ('general.investment' | translate) + ' - ' +
+                        ('general.conversions' | translate) }}</span>
+                    <span class="h4" *ngSwitchCase="2"> {{ ('general.impressions' | translate) + ' - ' +
+                        ('general.clicks' | translate) }}</span>
                 </ng-container>
             </div>
             <div class="card-body">
                 <app-chart-multiple-axes [data]="selectedTab1 === 1 ?  conversionsVsInvestment : impresionsVsClicks"
                     [value1]="selectedTab1 === 1 ? 'conversions' : 'clicks'"
                     [value2]="selectedTab1 === 1 ? 'investment' : 'impressions'"
-                    [valueName1]="selectedTab1 === 1 ? 'Conversiones' : 'Clicks'"
-                    [valueName2]="selectedTab1 === 1 ? 'Inversión' : 'Impresiones'"
+                    [valueName1]="selectedTab1 === 1 ? ('general.conversions' | translate) : ('general.clicks' | translate)"
+                    [valueName2]="selectedTab1 === 1 ? ('general.investment' | translate) : ('general.impressions' | translate)"
                     [valueFormat2]="selectedTab1 === 1 && 'USD'" name="campaign-towards-retail-metrics"
                     [status]="campPerformanceReqStatus">
                 </app-chart-multiple-axes>
@@ -58,8 +60,8 @@
             </p>
         </div>
         <app-generic-table [displayedColumns]="campListDisplayedColumns" [tableData]="campaigns"
-            [tableDataChange]="campaigns.data" errorMsg="Error al consultar campañas"
-            emptyDataMsg="No se encontraron campañas">
+            [tableDataChange]="campaigns.data" [errorMsg]="'campTowardsRetail.table1Error' | translate"
+            [emptyDataMsg]="'campTowardsRetail.table1Empty' | translate">
         </app-generic-table>
     </div>
 </div>

@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { CampaignTowardsRetailService } from '../../services/campaign-towards-retail.service';
 import { TableItem } from '../generic-table/generic-table.component';
@@ -93,11 +94,18 @@ export class CampaignTowardsRetailWrapperComponent implements OnInit, OnDestroy 
   conversionsVsInvestment: any[] = [];
   impresionsVsClicks: any[] = [];
 
+  translateSub: Subscription;
   requestInfoSub: Subscription;
 
   constructor(
-    private campTowardsRetailServ: CampaignTowardsRetailService
-  ) { }
+    private campTowardsRetailServ: CampaignTowardsRetailService,
+    private translate: TranslateService,
+  ) {
+
+    this.translateSub = translate.stream('campTowardsRetail').subscribe(() => {
+      this.loadI18nContent();
+    });
+  }
 
   ngOnInit(): void {
     this.getAllData();
@@ -199,6 +207,15 @@ export class CampaignTowardsRetailWrapperComponent implements OnInit, OnDestroy 
           item.reqStatus = 3;
         });
     });
+  }
+
+  loadI18nContent() {
+    this.campList[0].name = this.translate.instant('campTowardsRetail.campList1');
+
+    this.campListDisplayedColumns[0].title = this.translate.instant('general.name');
+    this.campListDisplayedColumns[1].title = this.translate.instant('general.investment');
+    this.campListDisplayedColumns[2].title = this.translate.instant('general.impressions');
+    this.campListDisplayedColumns[3].title = this.translate.instant('general.clicks');
   }
 
   ngOnDestroy() {

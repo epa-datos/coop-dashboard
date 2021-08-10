@@ -5,9 +5,9 @@ import { OverviewService } from '../../services/overview.service';
 import { TableItem } from '../../components/generic-table/generic-table.component';
 import { TranslateService } from '@ngx-translate/core';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
-import { convertWeekdayToString } from 'src/app/tools/functions/data-convert';
 import { KpiCard } from 'src/app/models/kpi';
 import { AppStateService } from 'src/app/services/app-state.service';
+import { TranslationsService } from 'src/app/services/translations.service';
 
 @Component({
   selector: 'app-overview-latam',
@@ -193,29 +193,12 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
     private filtersStateService: FiltersStateService,
     private appStateService: AppStateService,
     private overviewService: OverviewService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private translationsServ: TranslationsService
   ) {
 
     this.translateSub = translate.stream('overviewLatam').subscribe(() => {
-      this.kpis[0].title = this.translate.instant('kpis.investment');
-      this.kpis[2].subKpis[0].title = this.translate.instant('general.users');
-      this.kpis[3].title = this.translate.instant('kpis.transactions');
-
-      this.topProductsColumns[0].title = this.translate.instant('general.ranking');
-      this.topProductsColumns[1].title = this.translate.instant('general.product');
-      this.topProductsColumns[2].title = this.translate.instant('general.amount');
-
-      this.usersInvOrAupMetrics[0] = this.translate.instant('general.sector').toLowerCase();
-      this.usersInvOrAupMetrics[1] = this.translate.instant('general.category').toLowerCase();
-      this.usersInvOrAupMetrics[2] = this.translate.instant('general.source').toLowerCase();
-
-      if (this.trafficOrSales['men']?.length > 0) {
-        this.trafficOrSales['men'][1].name = this.translate.instant('others.men');
-      }
-
-      if (this.trafficOrSales['women']?.length > 0) {
-        this.trafficOrSales['women'][1].name = this.translate.instant('others.women');
-      }
+      this.loadI18nContent();
     });
   }
 
@@ -416,7 +399,7 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
 
           } else if (subMetric.name === 'weekdayAndHour') {
             this.trafficOrSales[subMetric.name] = resp.map(item => {
-              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
+              return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
             });
 
           } else {
@@ -520,6 +503,35 @@ export class OverviewLatamComponent implements OnInit, OnDestroy {
         item.value = 0;
       });
     }
+  }
+
+  loadI18nContent() {
+    this.kpis[0].title = this.translate.instant('general.investment');
+    this.kpis[2].subKpis[0].title = this.translate.instant('general.users');
+    this.kpis[3].title = this.translate.instant('general.conversions');
+
+    this.metricByCountryColumns.sector[0].title = this.translate.instant('general.country');
+    this.metricByCountryColumns.sector[3].title = this.translate.instant('general.sales');
+
+    this.topProductsColumns[0].title = this.translate.instant('general.ranking');
+    this.topProductsColumns[1].title = this.translate.instant('general.product');
+    this.topProductsColumns[2].title = this.translate.instant('general.amount');
+
+    this.usersInvOrAupMetrics[0] = this.translate.instant('general.sector').toLowerCase();
+    this.usersInvOrAupMetrics[1] = this.translate.instant('general.category').toLowerCase();
+    this.usersInvOrAupMetrics[2] = this.translate.instant('general.source').toLowerCase();
+
+    if (this.trafficOrSales['men']?.length > 0) {
+      this.trafficOrSales['men'][1].name = this.translate.instant('others.men');
+    }
+
+    if (this.trafficOrSales['women']?.length > 0) {
+      this.trafficOrSales['women'][1].name = this.translate.instant('others.women');
+    }
+
+    this.trafficOrSales['weekdayAndHour'] = this.trafficOrSales['weekdayAndHour']?.map(item => {
+      return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+    });
   }
 
   ngOnDestroy() {

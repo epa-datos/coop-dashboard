@@ -56,7 +56,10 @@
 
                 <!-- options list -->
                 <mat-option *ngFor="let campaign of campaignList" [value]="campaign">
-                    <span>{{ campaign.name }}</span>
+                    <span #tooltip="matTooltip" md-raised-button [matTooltip]="campaign.name" matTooltipPosition="below"
+                        matTooltipClass="custom-tooltip">
+                        {{ campaign.name }}
+                    </span>
                 </mat-option>
 
                 <!-- without results in search -->

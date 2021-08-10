@@ -1,3 +1,10 @@
 .filtered-results-container {
     margin: .5em .75em .5em .75em; 
 }
+
+::ng-deep .custom-tooltip {
+    font-size: 12px !important;
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+    max-width: unset !important;
+}
