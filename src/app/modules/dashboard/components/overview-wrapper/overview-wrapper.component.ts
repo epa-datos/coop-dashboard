@@ -8,6 +8,7 @@ import { SOURCES } from 'src/app/tools/constants/filters';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { OverviewService } from '../../services/overview.service';
+import { TableItem } from '../generic-table/generic-table.component';
 
 @Component({
   selector: 'app-overview-wrapper',
@@ -15,7 +16,7 @@ import { OverviewService } from '../../services/overview.service';
   styleUrls: ['./overview-wrapper.component.scss']
 })
 export class OverviewWrapperComponent implements OnInit, OnDestroy {
-  @Input() selectedType: string; // country or retailer
+  @Input() selectedType: 'country' | 'retailer';
   @Input() requestInfoChange: Observable<boolean>;
   @Input() showTrafficAndSalesSection: boolean = true;
 
@@ -111,6 +112,17 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
   ];
 
   categoriesBySector: any[] = [];
+
+  investmentBySectorColumns: TableItem[] = [
+    { name: 'name', title: 'País' },
+    { name: 'ps', title: 'PS', textAlign: 'center', formatValue: 'currency' },
+    { name: 'hw_print', title: 'HW Print', textAlign: 'center', formatValue: 'currency' },
+    { name: 'supplies', title: 'Supplies', textAlign: 'center', formatValue: 'currency' },
+  ];
+  investmentBySectorTable = {
+    data: [],
+    reqStatus: 0
+  };
 
   trafficOrSales = {};
 
@@ -291,7 +303,10 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
   getCategoriesBySector(selectedSector: any) {
     this.categoriesReqStatus = 1;
+    this.investmentBySectorTable.reqStatus = 1;
+
     this.selectedSectorTabHM = selectedSector;
+
     this.overviewService.getCategoriesBySector(selectedSector?.name).subscribe(
       (resp: any[]) => {
         this.categoriesBySector = resp;
@@ -301,6 +316,21 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
         const errorMsg = error?.error?.message ? error.error.message : error?.message;
         console.error(`[overview-wrapper.component]: ${errorMsg}`);
         this.categoriesReqStatus = 3;
+      });
+
+    this.investmentBySectorColumns[0].title = this.selectedType === 'country' ? 'Retailer' : 'Sector';
+
+    this.overviewService.getInvestmentBySector(selectedSector?.name).subscribe(
+      (resp: any[]) => {
+        this.investmentBySectorTable.data = resp;
+        this.investmentBySectorTable.reqStatus = 2;
+      },
+      error => {
+        const errorMsg = error?.error?.message ? error.error.message : error?.message;
+        console.error(`[overview-wrapper.component]: ${errorMsg}`);
+
+        this.investmentBySectorTable.data = [];
+        this.investmentBySectorTable.reqStatus = 3;
       });
 
     // Tabs are only used for country view

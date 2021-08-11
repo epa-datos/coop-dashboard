@@ -148,6 +148,18 @@ export class OverviewService {
     }
   }
 
+  getInvestmentBySector(sector?: string) {
+    if (this.retailerID) {
+      let queryParams = this.concatedQueryParams();
+      return this.http.get(`${this.baseUrl}/retailers/${this.retailerID}/sectors/investment?${queryParams}`);
+    } else if (this.countryID) {
+      let queryParams = this.concatedQueryParams(null, null, null, null, true);
+      return this.http.get(`${this.baseUrl}/countries/${this.countryID}/retailers/investment?sector=${sector}&${queryParams}`);
+    } else {
+      return throwError('[overview.service]: not retailerID or countryID provided');
+    }
+  }
+
   // *** traffic or sales + submetric ***
   getTrafficOrSales(metricType: string, subMetricType: string) {
     if (!metricType) {

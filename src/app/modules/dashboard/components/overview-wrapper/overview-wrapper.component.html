@@ -24,6 +24,7 @@
                 </ul>
             </div>
         </div>
+
         <div class="col-12 mt-4">
             <div class="card">
                 <div class="card-header">
@@ -52,6 +53,26 @@
                         height="250px" [showTooltipValue]="false" [showGridBorders]="true" [showHeatLegend]="false"
                         [status]="categoriesReqStatus" [minValue]="0" [maxValue]="1" initialColor="#e9e9e9">
                     </app-chart-heat-map>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <ng-container *ngIf="selectedType === 'country'" [ngSwitch]="selectedTab1">
+                        <span *ngSwitchCase="1" class="h4">{{ 'overviewWrapper.chart1CardTitle1' | translate }}</span>
+                        <span *ngSwitchCase="2" class="h4">{{ 'overviewWrapper.chart1CardTitle2' | translate }}</span>
+                        <span *ngSwitchCase="3" class="h4">{{ 'overviewWrapper.chart1CardTitle3' | translate }}</span>
+                    </ng-container>
+
+                    <span *ngIf="selectedType === 'retailer'" class="h4">{{ 'overviewWrapper.chart1CardTitle4' |
+                        translate }}</span>
+                </div>
+                <div class="card-body">
+                    <app-generic-table [displayedColumns]="investmentBySectorColumns"
+                        [tableData]="investmentBySectorTable" [tableDataChange]="investmentBySectorTable.data">
+                    </app-generic-table>
                 </div>
             </div>
         </div>
