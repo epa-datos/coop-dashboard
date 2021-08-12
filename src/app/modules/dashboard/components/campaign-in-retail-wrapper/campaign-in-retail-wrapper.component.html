@@ -10,7 +10,7 @@
             <app-card-stat *ngFor="let kpi of kpis" [stat]="kpi" [loader]="kpisReqStatus <= 1"></app-card-stat>
         </div>
         <p class="text-center text-muted mt-2 mb-0" [hidden]="kpisReqStatus !== 3">
-            Error al consultar datos
+            {{ 'general.errorData' | translate }}
         </p>
     </div>
 </div>
@@ -18,7 +18,7 @@
 <!-- ROAS CARDS -->
 <div class="row mt-5">
     <div class="col-12">
-        <span class="h3">ROAS por Sector</span>
+        <span class="h3">{{ 'campInRetail.cards1Title' | translate }}</span>
     </div>
 </div>
 <div class="row mt-2">
@@ -27,7 +27,7 @@
     </div>
     <div class="col-12 mt--3 mt-xl-2" [hidden]="roasReqStatus !== 3">
         <p class="text-center text-muted mb-0">
-            Error al consultar datos
+            {{ 'general.errorData' | translate }}
         </p>
     </div>
 </div>
@@ -35,7 +35,7 @@
 <!-- CR CARDS -->
 <div class="row">
     <div class="col-12">
-        <span class="h3">Tasa de conversión por Sector</span>
+        <span class="h3">{{ 'campInRetail.cards2Title' | translate }}</span>
     </div>
 </div>
 <div class="row mt-2">
@@ -44,7 +44,7 @@
     </div>
     <div class="col-12 mt--3 mt-xl-2" [hidden]="crReqStatus !== 3">
         <p class="text-center text-muted mb-0">
-            Error al consultar datos
+            {{ 'general.errorData' | translate }}
         </p>
     </div>
 </div>
@@ -59,7 +59,7 @@
                         <div class="icon icon-shape text-white rounded-circle shadow bg-default">
                             <i class="fas fa-users"></i>
                         </div>
-                        <span class="h3 mb-0">Audiencias</span>
+                        <span class="h3 mb-0">{{ 'campInRetail.panel1Title' | translate }}</span>
                     </div>
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -73,7 +73,7 @@
                         <div class="icon icon-shape text-white rounded-circle shadow bg-primary">
                             <i class="fas fa-user-plus"></i>
                         </div>
-                        <span class="h3 mb-0">Adquisición</span>
+                        <span class="h3 mb-0">{{ 'campInRetail.panel2Title' | translate }}</span>
                     </div>
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -87,7 +87,7 @@
                         <div class="icon icon-shape text-white rounded-circle shadow bg-purple">
                             <i class="fas fa-eye"></i>
                         </div>
-                        <span class="h3 mb-0">Comportamiento</span>
+                        <span class="h3 mb-0">{{ 'campInRetail.panel3Title' | translate }}</span>
                     </div>
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -101,7 +101,7 @@
                         <div class="icon icon-shape text-white rounded-circle shadow bg-warning">
                             <i class="fas fa-hand-holding-usd"></i>
                         </div>
-                        <span class="h3 mb-0">Conversión</span>
+                        <span class="h3 mb-0">{{ 'campInRetail.panel4Title' | translate }}</span>
                     </div>
                 </mat-panel-title>
             </mat-expansion-panel-header>
