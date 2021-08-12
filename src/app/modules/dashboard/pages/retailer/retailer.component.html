@@ -2,17 +2,17 @@
     <ul class="nav nav-tabs mb-4">
         <li class="nav-item">
             <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 1}" (click)="activeTabView = 1">
-                <span class="h2 py-2 ml-3 mr-3">Visión General</span>
+                <span class="h2 py-2 ml-3 mr-3">{{ 'dashboard.overview' | translate }}</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 2}" (click)="activeTabView = 2">
-                <span class="h2 py-2 ml-3 mr-3">Campaña hacia el Retail</span>
+                <span class="h2 py-2 ml-3 mr-3">{{ 'retailer.campTowardsRetail' | translate }}</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" [ngClass]="{'active bg-light' : activeTabView === 3}" (click)="activeTabView = 3">
-                <span class="h2 py-2 ml-3 mr-3">Campaña en el Retail</span>
+                <span class="h2 py-2 ml-3 mr-3">{{ 'retailer.campInRetail' | translate }}</span>
             </a>
         </li>
         <!-- only visible for all retailers in Brazil and some retailers in Mexico -->

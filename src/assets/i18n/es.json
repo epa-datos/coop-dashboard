@@ -60,8 +60,6 @@
         "campaignError1": "No existen Campañas para el Periodo, Sectores y Categorías seleccionados",
         "campaignError2": "Error al consultar Campañas",
         "campaignError3": "Selecciona una Campaña",
-        "sourcePh": "Selecciona una Fuente",
-        "sourceError1": "Selecciona al menos una Fuente",
         "province": "Provincia",
         "provincePh": "Selecciona una Provincia",
         "provinceSearchPh": "Buscar Provincia",
@@ -76,6 +74,24 @@
         "cityError1": "Error al consultar Ciudades",
         "cityError2": "No se encontraron Ciudades para este Retailer",
         "cityError3": " No se encontraron Provincias ni Ciudades para este Retailer",
+        "source": "Fuente",
+        "sourcePh": "Selecciona una Fuente",
+        "sourceSearchPh": "Buscar Fuente",
+        "sourceEmptyMsg": "No se encontraron Fuentes",
+        "sourceError1": "Selecciona al menos una Fuente",
+        "sourceError2": "Error al consultar Fuentes",
+        "sourceError3": "Selecciona al menos una Fuente o Medio",
+        "medium": "Medio",
+        "mediumPh": "Selecciona un Medio",
+        "mediumSearchPh": "Buscar Medio",
+        "mediumEmptyMsg": "No se encontraron Medios",
+        "mediumError1": "Selecciona al menos un Medio",
+        "mediumError2": "Error al consultar Medios",
+        "audience": "Audiencia",
+        "audicencePh": "Selecciona una Audiencia",
+        "audienceSearchPh": "Buscar Audiencia",
+        "audienceEmptyMsg": "No se encontraron Audiencias",
+        "audienceError1": "Selecciona al menos una Audiencia",
         "genericEmptyMsg": "No se encontraron resultados",
         "filter": "Filtrar"
     },
@@ -98,10 +114,22 @@
         "chart1Legend1": "Activas",
         "chart1Legend2": "Inactivas"
     },
+    "retailer": {
+        "campTowardsRetail": "Campaña hacia el Retail",
+        "campInRetail": "Campaña en el Retail"
+    },
     "campTowardsRetail": {
         "table1Error": "Error al consultar campañas",
         "table1Empty": "No se encontraron campañas",
         "campList1": "Google Search y MDF"
+    },
+    "campInRetail": {
+        "cards1Title": "ROAS por Sector",
+        "cards2Title": "Tasa de conversión por Sector",
+        "panel1Title": "Audiencias",
+        "panel2Title": "Adquisición",
+        "panel3Title": "Comportamiento",
+        "panel4Title": "Conversión"
     },
     "googleBusiness": {
         "province": "Provincia",

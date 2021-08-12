@@ -60,8 +60,6 @@
         "campaignError1": "There aren't Campaigns for the selected Period, Sectors and Categories",
         "campaignError2": "Error when consulting Campaigns",
         "campaignError3": "Select a Campaign",
-        "sourcePh": "Select a Source",
-        "sourceError1": "Select at least one Source",
         "province": "Province",
         "provincePh": "Select a Province",
         "provinceSearchPh": "Search Province",
@@ -76,6 +74,24 @@
         "cityError1": "Error when consulting Cities",
         "cityError2": "No Cities found for this Retailer",
         "cityError3": "No Provinces or Cities found for this Retailer",
+        "source": "Fuente",
+        "sourcePh": "Select a Source",
+        "sourceSearchPh": "Search Source",
+        "sourceEmptyMsg": "No Sources found",
+        "sourceError1": "Select at least one Source",
+        "sourceError2": "Error when consulting Sources",
+        "sourceError3": "Select at least one Source or Medium",
+        "medium": "Medium",
+        "mediumPh": "Select Medium",
+        "mediumSearchPh": "Search Medium",
+        "mediumEmptyMsg": "No Mediums found",
+        "mediumError1": "Select at least one Medium",
+        "mediumError2": "Error when consulting Mediums",
+        "audience": "Audience",
+        "audicencePh": "Select Audience",
+        "audienceSearchPh": "Search Audience",
+        "audienceEmptyMsg": "No Audiences found",
+        "audienceError1": "Select at least one Audience",
         "genericEmptyMsg": "No results found",
         "filter": "Filter"
     },
@@ -98,10 +114,22 @@
         "chart1Legend1": "Active",
         "chart1Legend2": "Inactive"
     },
+    "retailer": {
+        "campTowardsRetail": "Campaign through Retail",
+        "campInRetail": "Campaign in Retail"
+    },
     "campTowardsRetail": {
         "table1Error": "Error when consulting campaigns",
         "table1Empty": "No found campaigns",
         "campList1": "Google Search and MDF"
+    },
+    "campInRetail": {
+        "cards1Title": "ROAS by Sector",
+        "cards2Title": "Conversion rate by Sector",
+        "panel1Title": "Audiences",
+        "panel2Title": "Acquisition",
+        "panel3Title": "Behavior",
+        "panel4Title": "Conversion"
     },
     "googleBusiness": {
         "province": "Province",

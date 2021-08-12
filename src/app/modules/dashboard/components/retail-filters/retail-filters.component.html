@@ -2,15 +2,17 @@
 
     <!-- source -->
     <div class="col-12 col-sm-6 col-lg-3 mb-4">
-        <small class="h4 mb-1">Fuente</small>
-        <mat-select [formControl]="sources" multiple placeholder="Selecciona una Fuente" disableOptionCentering>
+        <small class="h4 mb-1">{{ 'filters.source' | translate }}</small>
+        <mat-select [formControl]="sources" multiple [placeholder]="'filters.sourcePh' | translate"
+            disableOptionCentering>
             <div class="input-group input-group-alternative mb-1">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                 </div>
                 <input class="form-control" [(ngModel)]="sourceFilter" matInput type="text"
-                    (keyup)="filterFromList('sources', 'source', $event.target.value)" placeholder="Buscar Fuente"
-                    [ngModelOptions]="{standalone: true}" (keydown.space)="$event.stopPropagation()">
+                    (keyup)="filterFromList('sources', 'source', $event.target.value)"
+                    [placeholder]="'filters.sourceSearchPh' | translate" [ngModelOptions]="{standalone: true}"
+                    (keydown.space)="$event.stopPropagation()">
             </div>
             <mat-select-trigger>
                 <div class="select-value-container">
@@ -22,14 +24,15 @@
                         : ''}}
                     </span>
                     <span *ngIf="sourcesCounter > 1" class="example-additional-selection ml-1">
-                        (+ {{ sourcesCounter === 2 ? 'otra' : 'otras' }}
+                        (+ {{ sourcesCounter === 2 ? ('others.otherSingularF' | translate) : ('others.otherPluralF' |
+                        translate) }}
                         {{ sourcesCounter === 2 ? '' : sourcesCounter - 1 }} )
                     </span>
                 </div>
             </mat-select-trigger>
             <mat-option #allSelectedSources [value]="0" class="font-weight-bold"
                 (click)="toggleAllSelection('sources', 'source')">
-                Todas
+                {{ 'others.allPluralF' | translate | titlecase }}
             </mat-option>
 
             <ng-container *ngFor="let source of sourceList">
@@ -38,7 +41,7 @@
                     <span class="option-name">{{ source.name }}</span>
                     <button type="button" class="btn btn-sm btn-secondary"
                         (click)="uniqueSelection('sources', 'source', source)">
-                        Solamente
+                        {{ 'others.only' | translate | titlecase }}
                     </button>
                 </mat-option>
             </ng-container>
@@ -46,21 +49,23 @@
 
         <small class="text-danger"
             *ngIf="(sources?.value?.length < 1 && mediums?.value?.length < 1) && (sources.touched || mediums.touched)">
-            Selecciona al menos una Fuente o Medio
+            {{ 'filters.sourceError3' | translate }}
         </small>
     </div>
 
     <!-- medium -->
     <div class="col-12 col-sm-6 col-lg-3 mb-4">
-        <small class="h4 mb-1">Medio</small>
-        <mat-select [formControl]="mediums" multiple placeholder="Selecciona un Medio" disableOptionCentering>
+        <small class="h4 mb-1">{{ 'filters.medium' | translate }}</small>
+        <mat-select [formControl]="mediums" multiple [placeholder]="'filters.mediumPh' | translate"
+            disableOptionCentering>
             <div class="input-group input-group-alternative mb-1">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                 </div>
                 <input class="form-control" [(ngModel)]="mediumFilter" matInput type="text"
-                    (keyup)="filterFromList('mediums', 'medium', $event.target.value)" placeholder="Buscar Medio"
-                    [ngModelOptions]="{standalone: true}" (keydown.space)="$event.stopPropagation()">
+                    (keyup)="filterFromList('mediums', 'medium', $event.target.value)"
+                    [placeholder]="'filters.mediumSearchPh' | translate" [ngModelOptions]="{standalone: true}"
+                    (keydown.space)="$event.stopPropagation()">
             </div>
             <mat-select-trigger>
                 <div class="select-value-container">
@@ -72,14 +77,15 @@
                         : ''}}
                     </span>
                     <span *ngIf="mediumsCounter > 1" class="example-additional-selection ml-1">
-                        (+ {{ mediumsCounter === 2 ? 'otro' : 'otros' }}
+                        (+ {{ mediumsCounter === 2 ? ('others.otherSingularM' | translate) : ('others.otherPluralM' |
+                        translate) }}
                         {{ mediumsCounter === 2 ? '' : mediumsCounter - 1 }} )
                     </span>
                 </div>
             </mat-select-trigger>
             <mat-option #allSelectedMediums [value]="0" class="font-weight-bold"
                 (click)="toggleAllSelection('mediums', 'medium')">
-                Todos
+                {{ 'others.allPluralM' | translate | titlecase }}
             </mat-option>
 
             <ng-container *ngFor="let medium of mediumList">
@@ -88,7 +94,7 @@
                     <span class="option-name">{{ medium.name }}</span>
                     <button type="button" class="btn btn-sm btn-secondary"
                         (click)="uniqueSelection('mediums', 'medium', medium)">
-                        Solamente
+                        {{ 'others.only' | translate | titlecase }}
                     </button>
                 </mat-option>
             </ng-container>
@@ -97,17 +103,9 @@
 
     <!-- audiences -->
     <div class="col-12 col-sm-6 col-lg-3 mb-4">
-        <small class="h4 mb-1">Audiencias</small>
-        <mat-select [formControl]="audiences" multiple placeholder="Selecciona una Audiencia" disableOptionCentering>
-            <div class="input-group input-group-alternative mb-1">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                </div>
-                <input class="form-control" [(ngModel)]="audienceFilter" matInput type="text"
-                    (keyup)="filterFromList('audiences', 'audience', $event.target.value)"
-                    placeholder="Buscar Audiencia" [ngModelOptions]="{standalone: true}"
-                    (keydown.space)="$event.stopPropagation()">
-            </div>
+        <small class="h4 mb-1">{{ 'filters.audience' | translate }}</small>
+        <mat-select [formControl]="audiences" multiple [placeholder]="'filters.audicencePh' | translate"
+            disableOptionCentering>
             <mat-select-trigger>
                 <div class="select-value-container">
                     <span class="select-value">
@@ -118,14 +116,15 @@
                         : ''}}
                     </span>
                     <span *ngIf="audiencesCounter > 1" class="example-additional-selection ml-1">
-                        (+ {{ audiencesCounter === 2 ? 'otra' : 'otras' }}
+                        (+ {{ audiencesCounter === 2 ? ('others.otherSingularF' | translate) : ('others.otherPluralF'
+                        | translate) }}
                         {{ audiencesCounter === 2 ? '' : audiencesCounter - 1 }} )
                     </span>
                 </div>
             </mat-select-trigger>
             <mat-option #allSelectedAudiences [value]="0" class="font-weight-bold"
                 (click)="toggleAllSelection('audiences', 'audience')">
-                Todas
+                {{ 'others.allPluralF' | translate | titlecase }}
             </mat-option>
 
             <ng-container *ngFor="let audience of audienceList">
@@ -134,13 +133,13 @@
                     <span class="option-name">{{ audience.name }}</span>
                     <button type="button" class="btn btn-sm btn-secondary"
                         (click)="uniqueSelection('audiences', 'audience', audience)">
-                        Solamente
+                        {{ 'others.only' | translate | titlecase }}
                     </button>
                 </mat-option>
             </ng-container>
         </mat-select>
         <small class="text-danger" *ngIf="audiences?.value?.length < 1 && audiences.touched">
-            Selecciona al menos una Audiencia
+            {{ 'filters.audienceError1' | translate}}
         </small>
     </div>
 
@@ -151,7 +150,7 @@
                 (sources?.value?.length < 1 && mediums?.value?.length < 1) ||
                 audiences?.value.length < 1" (click)="applyFilters()">
                 <i class="fas fa-filter mr-2"></i>
-                Filtrar
+                {{ 'filters.filter' | translate }}
             </button>
         </div>
     </div>

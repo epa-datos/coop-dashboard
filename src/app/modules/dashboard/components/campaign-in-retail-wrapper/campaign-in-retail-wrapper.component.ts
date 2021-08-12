@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { KpiCard } from 'src/app/models/kpi';
 import { CampaignInRetailService } from '../../services/campaign-in-retail.service';
@@ -141,11 +142,18 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
 
   generalFiltersSub: Subscription;
   retailFiltersSub: Subscription;
+  translateSub: Subscription;
 
   constructor(
     private campInRetailService: CampaignInRetailService,
-    private filtersStateService: FiltersStateService
-  ) { }
+    private filtersStateService: FiltersStateService,
+    private translate: TranslateService,
+  ) {
+
+    this.translateSub = translate.stream('campInRetail').subscribe(() => {
+      this.loadI18nContent();
+    });
+  }
 
   ngOnInit(): void {
     this.generalFiltersSub = this.requestInfoChange.subscribe(() => {
@@ -268,9 +276,18 @@ export class CampaignInRetailWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
+  loadI18nContent() {
+    this.kpis[0].title = this.translate.instant('general.investment');
+    this.kpis[2].subKpis[0].title = this.translate.instant('general.users');
+    this.kpis[3].title = this.translate.instant('general.conversions');
+
+    this.metricBySectorInitial[2].title = this.translate.instant('general.sales');
+  }
+
   ngOnDestroy() {
     this.generalFiltersSub?.unsubscribe();
     this.retailFiltersSub?.unsubscribe();
+    this.translateSub?.unsubscribe();
   }
 
 }
