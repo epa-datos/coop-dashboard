@@ -5,6 +5,7 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { loadLanguage } from 'src/app/tools/functions/chart-lang';
 import { Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/services/app-state.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chart-column-line-mix',
@@ -22,7 +23,7 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDes
   @Input() height: string = '350px' // height property value valid in css
   @Input() status: number = 2; // 0) initial 1) load 2) ready 3) error
   @Input() errorLegend: string;
-  @Input() joinTextInTooltip: string = 'en';
+  @Input() joinTextInTooltip: string = this.translate.instant('others.onDay');;
   @Input() zebraBars: boolean;
   @Input() XYCursor: boolean;
 
@@ -50,12 +51,17 @@ export class ChartColumnLineMixComponent implements OnInit, AfterViewInit, OnDes
   langSub: Subscription;
 
   constructor(
-    private appStateService: AppStateService
+    private appStateService: AppStateService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
     this.langSub = this.appStateService.selectedLang$.subscribe((lang: string) => {
       this.loadChart(lang);
+
+      if (this.joinTextInTooltip === 'en') {
+        this.joinTextInTooltip = this.translate.instant('others.onDay');
+      }
     });
   }
 
