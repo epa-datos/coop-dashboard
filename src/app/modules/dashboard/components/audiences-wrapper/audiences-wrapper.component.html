@@ -11,19 +11,19 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                            (click)="getDomographicsByMetric('traffic')">{{ 'general.traffic' | translate }}</a>
+                            (click)="getDemographicsByMetric('traffic')">{{ 'general.traffic' | translate }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                            (click)="getDomographicsByMetric('conversions')">{{ 'general.conversions' | translate }}</a>
+                            (click)="getDemographicsByMetric('conversions')">{{ 'general.conversions' | translate }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
-                            (click)="getDomographicsByMetric('aup')">AUP</a>
+                            (click)="getDemographicsByMetric('aup')">AUP</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 4}"
-                            (click)="getDomographicsByMetric('bouncerate')">BR</a>
+                            (click)="getDemographicsByMetric('bouncerate')">BR</a>
                     </li>
                 </ul>
             </div>

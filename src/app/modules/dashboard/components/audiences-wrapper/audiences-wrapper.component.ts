@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/services/app-state.service';
+import { TranslationsService } from 'src/app/services/translations.service';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
-import { convertWeekdayToString } from 'src/app/tools/functions/data-convert';
 import { CampaignInRetailService } from '../../services/campaign-in-retail.service';
 import { FiltersStateService } from '../../services/filters-state.service';
 
@@ -43,6 +43,12 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
     { name: 'market-segment', reqStatus: 0 },
   ];
 
+  metricsForTab1: any[] = [
+    { tab: 1, metricType: 'traffic' },
+    { tab: 2, metricType: 'conversions' },
+    { tab: 3, metricType: 'aup' },
+    { tab: 4, metricType: 'bouncerate' }
+  ];
   selectedTab1: any = 1;
   selectedTab2: any = 1;
 
@@ -50,13 +56,20 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
 
   generalFiltersSub: Subscription;
   retailFiltersSub: Subscription;
+  translateSub: Subscription;
 
   constructor(
     private filtersStateService: FiltersStateService,
     private campInRetailService: CampaignInRetailService,
     private appStateService: AppStateService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+    private translationsServ: TranslationsService
+  ) {
+
+    this.translateSub = translate.stream('audiences').subscribe(() => {
+      this.loadI18nContent();
+    });
+  }
 
   ngOnInit(): void {
     this.retailerID = this.appStateService.selectedRetailer?.id;
@@ -73,7 +86,7 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
   }
 
   getAllData() {
-    this.getDomographicsByMetric(this.getSelectedMetricForDemo(null, this.selectedTab1));
+    this.getDemographicsByMetric(this.metricsForTab1.find(metric => metric.tab === this.selectedTab1)?.metricType);
     this.getWeekdaysAndHoursByMetric(this.selectedTab2 === 1 ? 'traffic' : 'conversions');
     this.getConversionsVsTraffic();
     this.getInterests();
@@ -81,7 +94,7 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
     this.chartsInitLoad = true;
   }
 
-  getDomographicsByMetric(metricType: any) {
+  getDemographicsByMetric(metricType: any) {
     const requiredData = ['device', 'gender', 'age', 'gender-and-age'];
 
     for (let subMetricType of requiredData) {
@@ -103,6 +116,11 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
 
           } else if (subMetricType === 'gender-and-age') {
             this.demographics['genderByAge'] = resp;
+
+          } else if (subMetricType === 'weekdayAndHour') {
+            this.demographics[subMetricType] = resp.map(item => {
+              return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+            });
           } else {
             this.demographics[subMetricType] = resp;
           }
@@ -115,7 +133,7 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
           reqStatusObj.reqStatus = 3;
         });
 
-      this.selectedTab1 = this.getSelectedMetricForDemo(metricType, null);
+      this.selectedTab1 = this.metricsForTab1.find(metric => metric.metricType === metricType)?.tab;
     }
   }
 
@@ -129,13 +147,13 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
         (resp: any[]) => {
           if (subMetricType === 'weekday-and-hour') {
             this.weekDaysAndHours['weekdayAndHour'] = resp.map(item => {
-              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
+              return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
             });
 
           } else if (subMetricType === 'weekday') {
             resp = resp.sort((a, b) => (a.weekday > b.weekday ? -1 : 1));
             this.weekDaysAndHours[subMetricType] = resp.map(item => {
-              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
+              return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
             });
 
           } else {
@@ -164,7 +182,7 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
         (resp: any[]) => {
           if (subMetricType === 'weekday') {
             this.conversionsVsTraffic[subMetricType] = resp.map(item => {
-              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
+              return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
             });
           } else {
             this.conversionsVsTraffic[subMetricType] = resp;
@@ -205,49 +223,24 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  getSelectedMetricForDemo(metricType: string, selectedTab: number) {
-    if (metricType) {
-      switch (metricType) {
-        case 'traffic':
-          return 1;
+  loadI18nContent() {
+    this.weekDaysAndHours['weekdayAndHour'] = this.weekDaysAndHours['weekdayAndHour']?.map(item => {
+      return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+    });
 
-        case 'conversions':
-          return 2;
+    this.weekDaysAndHours['weekday'] = this.weekDaysAndHours['weekday']?.map(item => {
+      return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+    });
 
-        case 'aup':
-          return 3;
-
-        case 'bouncerate':
-          return 4;
-
-        default:
-          return;
-      }
-    } else if (selectedTab) {
-      switch (selectedTab) {
-        case 1:
-          return 'traffic'
-          break;
-
-        case 2:
-          return 'conversions'
-
-        case 3:
-          return 'aup'
-
-        case 4:
-          return 'bouncerate'
-
-        default:
-          return;
-      }
-    }
-
+    this.conversionsVsTraffic['weekday'] = this.conversionsVsTraffic['weekday']?.map(item => {
+      return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+    });
   }
 
   ngOnDestroy() {
     this.generalFiltersSub?.unsubscribe();
     this.retailFiltersSub?.unsubscribe();
+    this.translateSub?.unsubscribe();
   }
 }
 
