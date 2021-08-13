@@ -145,7 +145,7 @@
                     <div class="card-body">
                         <app-chart-bar name="aud-devices" [data]="demographics?.device"
                             [status]="demoReqStatus[0].reqStatus" valueFormat="USD" category="name" height="280px"
-                            [legendsByCategory]="true">
+                            [legendsByCategory]="false">
                         </app-chart-bar>
                     </div>
                 </div>
@@ -160,7 +160,7 @@
                     <div class="card-body">
                         <app-chart-bar name="aud-gender" [data]="demographics?.gender"
                             [status]="demoReqStatus[1].reqStatus" valueFormat="USD" category="name" height="280px"
-                            [legendsByCategory]="true"
+                            [legendsByCategory]="false"
                             [emptyDataLegend]="retailerID === 11 && 'audiences.retailErrorMsg' | translate">
                         </app-chart-bar>
                     </div>
@@ -183,8 +183,8 @@
                 <div class="card-body">
                     <app-chart-lollipop name="aud-age" [data]="demographics?.age" category="age"
                         [value]="selectedTab1 === 1 ? 'visits' : selectedTab1 === 2 ? 'sales' : selectedTab1 === 3 ? 'aup' : 'value'"
-                        [valueFormat]="selectedTab1 === 2 || selectedTab1 === 3 ? 'USD' :  selectedTab1 === 4 && '%'"
-                        height="280px" [status]="demoReqStatus[2].reqStatus"
+                        [valueFormat]="selectedTab1 === 3 ? 'USD' :  selectedTab1 === 4 && '%'" height="280px"
+                        [status]="demoReqStatus[2].reqStatus"
                         [emptyDataLegend]="retailerID === 11 && 'audiences.retailErrorMsg' | translate">
                     </app-chart-lollipop>
                 </div>
@@ -209,14 +209,13 @@
                     </app-chart-loader>
 
                     <!-- ready -->
-                    <app-chart-pyramid *ngIf="demographics?.genderByAge?.length > 0" name="aud-age-and-gender"
-                        [data]="demographics?.genderByAge" [status]="demoReqStatus[3].reqStatus"
-                        [valueFormat]="selectedTab1 === 2 || selectedTab1 === 3 ? 'USD' :  selectedTab1 === 4 && '%'"
-                        height="280px">
+                    <app-chart-pyramid *ngIf="demographics?.genderAndAge?.length > 0" name="aud-age-and-gender"
+                        [data]="demographics?.genderAndAge" [status]="demoReqStatus[3].reqStatus"
+                        [valueFormat]="selectedTab1 === 3 ? 'USD' :  selectedTab1 === 4 && '%'" height="280px">
                     </app-chart-pyramid>
 
                     <!-- empty data -->
-                    <div *ngIf="demoReqStatus[3].reqStatus === 2 && demographics?.genderByAge?.length === 0"
+                    <div *ngIf="demoReqStatus[3].reqStatus === 2 && demographics?.genderAndAge?.length === 0"
                         class="chart-error-container text-muted text-center">
                         <p *ngIf="retailerID !== 11">
                             {{ 'general.withoutData' | translate }} <br>

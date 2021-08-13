@@ -21,12 +21,12 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
     { name: 'device', reqStatus: 0 },
     { name: 'gender', reqStatus: 0 },
     { name: 'age', reqStatus: 0 },
-    { name: 'gender-and-age', reqStatus: 0 }
+    { name: 'genderAndAge', reqStatus: 0 }
   ];
 
   weekDaysAndHours = {}; // for weekday, weekday and hour, and hour
   weekDaysAndHoursReqStatus = [
-    { name: 'weekday-and-hour', reqStatus: 0 },
+    { name: 'weekdayAndHour', reqStatus: 0 },
     { name: 'weekday', reqStatus: 0 },
     { name: 'hour', reqStatus: 0 },
   ];
@@ -39,8 +39,8 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
 
   interests = {}; // for affinity category and market-segment
   interestsReqStatus = [
-    { name: 'affinity-category', reqStatus: 0 },
-    { name: 'market-segment', reqStatus: 0 },
+    { name: 'affinityCategory', reqStatus: 0 },
+    { name: 'marketSegment', reqStatus: 0 },
   ];
 
   metricsForTab1: any[] = [
@@ -95,34 +95,48 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
   }
 
   getDemographicsByMetric(metricType: any) {
-    const requiredData = ['device', 'gender', 'age', 'gender-and-age'];
+    const requiredData = [
+      { subMetricType: 'device', name: 'device' },
+      { subMetricType: 'gender', name: 'gender' },
+      { subMetricType: 'age', name: 'age' },
+      { subMetricType: 'gender-and-age', name: 'genderAndAge' },
+    ];
 
-    for (let subMetricType of requiredData) {
-      const reqStatusObj = this.demoReqStatus.find(item => item.name === subMetricType);
+    for (let subMetric of requiredData) {
+      const reqStatusObj = this.demoReqStatus.find(item => item.name === subMetric.name);
       reqStatusObj.reqStatus = 1;
-      this.campInRetailService.getDataByMetric(metricType, subMetricType).subscribe(
+      this.campInRetailService.getDataByMetric(metricType, subMetric.subMetricType).subscribe(
         (resp: any[]) => {
-          if (subMetricType === 'device' && metricType !== 'aup') {
-            const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp, metricType === 'bouncerate' ? false : true);
-            this.demographics = { ...this.demographics, desktop, mobile };
+          switch (true) {
+            case subMetric.name === 'device' && metricType !== 'aup':
+              const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp, metricType === 'bouncerate' ? false : true);
+              this.demographics = { ...this.demographics, desktop, mobile };
+              break;
 
-          } else if (subMetricType === 'gender' && metricType !== 'aup') {
-            const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp, metricType === 'bouncerate' ? false : true);
+            case subMetric.name === 'gender':
+              if (metricType === 'aup') {
+                const men = resp.find(item => item.name === 'Hombre' || item.name === 'male');
+                const women = resp.find(item => item.name === 'Mujer');
 
-            hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
-            mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
+                const parsedResp = [
+                  { ...men, name: this.translate.instant('others.men') },
+                  { ...women, name: this.translate.instant('others.women') }
+                ]
+                this.demographics[subMetric.name] = parsedResp;
 
-            this.demographics = { ...this.demographics, men: hombre, women: mujer };
+              } else {
+                const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp, metricType === 'bouncerate' ? false : true);
 
-          } else if (subMetricType === 'gender-and-age') {
-            this.demographics['genderByAge'] = resp;
+                hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
+                mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
 
-          } else if (subMetricType === 'weekdayAndHour') {
-            this.demographics[subMetricType] = resp.map(item => {
-              return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
-            });
-          } else {
-            this.demographics[subMetricType] = resp;
+                this.demographics = { ...this.demographics, men: hombre, women: mujer };
+              }
+              break;
+
+            default:
+              this.demographics[subMetric.name] = resp;
+              break;
           }
 
           reqStatusObj.reqStatus = 2;
@@ -138,26 +152,30 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
   }
 
   getWeekdaysAndHoursByMetric(metricType: string) {
-    const requiredData = ['weekday-and-hour', 'weekday', 'hour'];
+    const requiredData = [
+      { subMetricType: 'weekday-and-hour', name: 'weekdayAndHour' },
+      { subMetricType: 'weekday', name: 'weekday' },
+      { subMetricType: 'hour', name: 'hour' },
+    ];
 
-    for (let subMetricType of requiredData) {
-      const reqStatusObj = this.weekDaysAndHoursReqStatus.find(item => item.name === subMetricType);
+    for (let subMetric of requiredData) {
+      const reqStatusObj = this.weekDaysAndHoursReqStatus.find(item => item.name === subMetric.name);
       reqStatusObj.reqStatus = 1;
-      this.campInRetailService.getDataByMetric(metricType, subMetricType).subscribe(
+      this.campInRetailService.getDataByMetric(metricType, subMetric.subMetricType).subscribe(
         (resp: any[]) => {
-          if (subMetricType === 'weekday-and-hour') {
+          if (subMetric.name === 'weekdayAndHour') {
             this.weekDaysAndHours['weekdayAndHour'] = resp.map(item => {
               return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
             });
 
-          } else if (subMetricType === 'weekday') {
+          } else if (subMetric.name === 'weekday') {
             resp = resp.sort((a, b) => (a.weekday > b.weekday ? -1 : 1));
-            this.weekDaysAndHours[subMetricType] = resp.map(item => {
+            this.weekDaysAndHours['weekday'] = resp.map(item => {
               return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
             });
 
           } else {
-            this.weekDaysAndHours[subMetricType] = resp;
+            this.weekDaysAndHours[subMetric.name] = resp;
           }
 
           reqStatusObj.reqStatus = 2;
@@ -199,20 +217,19 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
   }
 
   getInterests() {
-    const requiredData = ['affinity-category', 'market-segment'];
-    for (let subMetricType of requiredData) {
-      const reqStatusObj = this.interestsReqStatus.find(item => item.name === subMetricType);
+    const requiredData = [
+      { subMetricType: 'affinity-category', name: 'affinityCategory' },
+      { subMetricType: 'market-segment', name: 'marketSegment' }
+    ];
+
+    for (let subMetric of requiredData) {
+      const reqStatusObj = this.interestsReqStatus.find(item => item.name === subMetric.name);
       reqStatusObj.reqStatus = 1;
-      this.campInRetailService.getDataByMetric('interests', subMetricType).subscribe(
+      this.campInRetailService.getDataByMetric('interests', subMetric.subMetricType).subscribe(
         (resp: any[]) => {
           resp = resp.sort((a, b) => (a.users < b.users ? -1 : 1));
 
-          if (subMetricType === 'affinity-category') {
-            this.interests['affinityCategory'] = resp;
-          } else {
-            this.interests['marketSegment'] = resp;
-          }
-
+          this.interests[subMetric.name] = resp;
           reqStatusObj.reqStatus = 2;
         },
         error => {
@@ -224,6 +241,14 @@ export class AudiencesWrapperComponent implements OnInit, OnDestroy {
   }
 
   loadI18nContent() {
+    if (this.demographics['men']?.length > 0) {
+      this.demographics['men'][1].name = this.translate.instant('others.men');
+    }
+
+    if (this.demographics['women']?.length > 0) {
+      this.demographics['women'][1].name = this.translate.instant('others.women');
+    }
+
     this.weekDaysAndHours['weekdayAndHour'] = this.weekDaysAndHours['weekdayAndHour']?.map(item => {
       return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
     });
