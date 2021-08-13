@@ -230,8 +230,13 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
       // PRESERVE PREVIOUS SELECTION (TABS)
 
       // sectors heatmap
-      const previousSectorHM = this.selectedSectors.find(sector => sector.id === this.selectedSectorTabHM.id);
-      selectedSectorHM = previousSectorHM ? previousSectorHM : this.selectedSectors[0];
+      if (this.selectedTab1 !== 4) {
+        const previousSectorHM = this.selectedSectors.find(sector => sector.id === this.selectedSectorTabHM.id);
+        selectedSectorHM = previousSectorHM ? previousSectorHM : this.selectedSectors[0];
+      } else {
+        // onsite option is diplayed (and previous selected) apart of selected categories in filters
+        selectedSectorHM = { id: 4, name: 'onsite' };
+      }
 
       // demograhics
       demographicMetric = this.selectedTab2 === 1 ? 'traffic' : 'sales';
@@ -307,6 +312,9 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
     this.selectedSectorTabHM = selectedSector;
 
+    // Tabs are only used for country view
+    this.selectedTab1 = selectedSector.id;
+
     this.overviewService.getCategoriesBySector(selectedSector?.name).subscribe(
       (resp: any[]) => {
         this.categoriesBySector = resp;
@@ -320,6 +328,10 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
 
     this.investmentBySectorColumns[0].title = this.selectedType === 'country' ? 'Retailer' : 'Sector';
 
+    if (selectedSector?.name === 'onsite') {
+      return;
+    }
+
     this.overviewService.getInvestmentBySector(selectedSector?.name).subscribe(
       (resp: any[]) => {
         this.investmentBySectorTable.data = resp;
@@ -332,9 +344,6 @@ export class OverviewWrapperComponent implements OnInit, OnDestroy {
         this.investmentBySectorTable.data = [];
         this.investmentBySectorTable.reqStatus = 3;
       });
-
-    // Tabs are only used for country view
-    this.selectedTab1 = selectedSector.id;
   }
 
   getTrafficOrSales(metricType: string) {

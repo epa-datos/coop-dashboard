@@ -12,30 +12,38 @@
     </div>
 
     <div class="row mt-5">
-        <div class="col-12" *ngIf="selectedType === 'country'">
+        <div class="col-12 mb-4" *ngIf="selectedType === 'country'">
             <div class="pills-container">
-                <ul class="nav nav-pills nav-fill" *ngIf="selectedSectors?.length > 1">
+                <ul class="nav nav-pills nav-fill">
                     <li class="nav-item mb-2" *ngFor="let sector of selectedSectors; let i = index">
                         <a class="nav-link p-2" [ngClass]="{'active': sector.id === selectedTab1}"
                             (click)="getCategoriesBySector(sector)">
                             {{ sector.name }}
                         </a>
                     </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 4}"
+                            (click)="getCategoriesBySector({id: 4, name: 'onsite'})">
+                            On Site
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
 
-        <div class="col-12 mt-4">
+        <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header h4">
                     <ng-container *ngIf="selectedType === 'country'" [ngSwitch]="selectedTab1">
-                        <span *ngSwitchCase="1" class="h4">{{ 'overviewWrapper.chart1CardTitle1' | translate }}</span>
-                        <span *ngSwitchCase="2" class="h4">{{ 'overviewWrapper.chart1CardTitle2' | translate }}</span>
-                        <span *ngSwitchCase="3" class="h4">{{ 'overviewWrapper.chart1CardTitle3' | translate }}</span>
+                        <span *ngSwitchCase="1">{{ 'overviewWrapper.chart1CardTitle1' | translate }}</span>
+                        <span *ngSwitchCase="2">{{ 'overviewWrapper.chart1CardTitle2' | translate }}</span>
+                        <span *ngSwitchCase="3">{{ 'overviewWrapper.chart1CardTitle3' | translate }}</span>
+                        <span *ngSwitchCase="4">{{ 'overviewWrapper.chart1CardTitle4' | translate }}</span>
                     </ng-container>
 
-                    <span *ngIf="selectedType === 'retailer'" class="h4">{{ 'overviewWrapper.chart1CardTitle4' |
-                        translate }}</span>
+                    <span *ngIf="selectedType === 'retailer'">
+                        {{ 'overviewWrapper.chart1CardTitle5' | translate }}
+                    </span>
                 </div>
                 <div class="card-body">
                     <div class="chart-legend mt-0 mb-2">
@@ -57,17 +65,18 @@
             </div>
         </div>
 
-        <div class="col-12 mt-4">
+        <div class="col-12 mt-4" *ngIf="selectedTab1 !== 4">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header h4">
                     <ng-container *ngIf="selectedType === 'country'" [ngSwitch]="selectedTab1">
-                        <span *ngSwitchCase="1" class="h4">{{ 'overviewWrapper.chart1CardTitle1' | translate }}</span>
-                        <span *ngSwitchCase="2" class="h4">{{ 'overviewWrapper.chart1CardTitle2' | translate }}</span>
-                        <span *ngSwitchCase="3" class="h4">{{ 'overviewWrapper.chart1CardTitle3' | translate }}</span>
+                        <span *ngSwitchCase="1">{{ 'overviewWrapper.chart1CardTitle1' | translate }}</span>
+                        <span *ngSwitchCase="2">{{ 'overviewWrapper.chart1CardTitle2' | translate }}</span>
+                        <span *ngSwitchCase="3">{{ 'overviewWrapper.chart1CardTitle3' | translate }}</span>
                     </ng-container>
 
-                    <span *ngIf="selectedType === 'retailer'" class="h4">{{ 'overviewWrapper.chart1CardTitle4' |
-                        translate }}</span>
+                    <span *ngIf="selectedType === 'retailer'">
+                        {{ 'overviewWrapper.chart1CardTitle5' | translate }}
+                    </span>
                 </div>
                 <div class="card-body">
                     <app-generic-table [displayedColumns]="investmentBySectorColumns"
