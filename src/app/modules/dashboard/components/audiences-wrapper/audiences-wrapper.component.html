@@ -349,7 +349,8 @@
                     <app-chart-column-line-mix name="aud-conv-tra-hour" [data]="conversionsVsTraffic?.hour"
                         [status]="conversionsVsTrafficReqStatus[1].reqStatus" category="hour" columnValue="visits"
                         lineValue="conversions" [columnName]="'general.traffic' | translate"
-                        [lineName]="'general.conversions' | translate" joinTextInTooltip="a las" [XYCursor]="true">
+                        [lineName]="'general.conversions' | translate" [joinTextInTooltip]="'others.atHour' | translate"
+                        [XYCursor]="true">
                     </app-chart-column-line-mix>
                 </div>
             </div>
