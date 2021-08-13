@@ -3,7 +3,7 @@
     <div class="row mt-4">
         <div class="col-12">
             <div class="mb-3">
-                <span class="h3">Análisis por Tráfico, Conversiones, AUP y BR</span>
+                <span class="h3">{{ 'audiences.section1Title' | translate }}</span>
             </div>
         </div>
         <div class="col-12">
@@ -11,11 +11,11 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                            (click)="getDomographicsByMetric('traffic')">Tráfico</a>
+                            (click)="getDomographicsByMetric('traffic')">{{ 'general.traffic' | translate }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                            (click)="getDomographicsByMetric('conversions')">Conversiones</a>
+                            (click)="getDomographicsByMetric('conversions')">{{ 'general.conversions' | translate }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
@@ -36,12 +36,16 @@
             <!-- devices -->
             <div class="col-12 col-md-6 mt-4">
                 <div class="card height-fluid">
-                    <div class="card-header" [ngSwitch]="selectedTab1">
-                        <span *ngSwitchCase="1" class="h4">Tráfico por dispositivos</span>
-                        <span *ngSwitchCase="2" class="h4">Conversiones por dispositivos</span>
-                        <span *ngSwitchCase="3" class="h4">AUP por dispositivos</span>
-                        <span *ngSwitchCase="4" class="h4">BR por dispositivos</span>
+                    <div class="card-header h4">
+                        <ng-container [ngSwitch]="selectedTab1">
+                            <span *ngSwitchCase="1">{{ 'general.traffic' | translate }}</span>
+                            <span *ngSwitchCase="2">{{ 'general.conversions' | translate }}</span>
+                            <span *ngSwitchCase="3">AUP</span>
+                            <span *ngSwitchCase="4">BR</span>
+                        </ng-container>
+                        <span>{{ 'charts.byDevice' | translate }}</span>
                     </div>
+
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
@@ -78,12 +82,16 @@
             <!-- gender -->
             <div class="col-12 col-md-6 mt-4">
                 <div class="card height-fluid">
-                    <div class="card-header" [ngSwitch]="selectedTab1">
-                        <span *ngSwitchCase="1" class="h4">Tráfico por Género</span>
-                        <span *ngSwitchCase="2" class="h4">Conversiones por Género</span>
-                        <span *ngSwitchCase="3" class="h4">AUP por Género</span>
-                        <span *ngSwitchCase="4" class="h4">BR por Género</span>
+                    <div class="card-header h4">
+                        <ng-container [ngSwitch]="selectedTab1">
+                            <span *ngSwitchCase="1">{{ 'general.traffic' | translate }}</span>
+                            <span *ngSwitchCase="2">{{ 'general.conversions' | translate }}</span>
+                            <span *ngSwitchCase="3">AUP</span>
+                            <span *ngSwitchCase="4">BR</span>
+                        </ng-container>
+                        <span>{{ 'charts.byGender' | translate }}</span>
                     </div>
+
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-xl-6 mt-5 mt-xl-0">
@@ -99,7 +107,7 @@
                                 <app-chart-pictorial [data]="demographics?.men" name="aud-gender-man"
                                     [uniqueDimensionConf]="{color: '#67B6DC'}" category="name" iconType="man"
                                     [status]="demoReqStatus[1].reqStatus"
-                                    [emptyDataLegend]="retailerID === 11 && 'Sin acceso a información por decisión del Retail'"
+                                    [emptyDataLegend]="retailerID === 11 && 'audiences.retailErrorMsg' | translate"
                                     height="280px">
                                 </app-chart-pictorial>
                             </div>
@@ -116,7 +124,7 @@
                                 <app-chart-pictorial [data]="demographics?.women" name="aud-gender-woman"
                                     [uniqueDimensionConf]="{color: '#6794DC'}" category="name" iconType="woman"
                                     [status]="demoReqStatus[1].reqStatus"
-                                    [emptyDataLegend]="retailerID === 11 && 'Sin acceso a información por decisión del Retail'"
+                                    [emptyDataLegend]="retailerID === 11 && 'audiences.retailErrorMsg' | translate"
                                     height="280px">
                                 </app-chart-pictorial>
                             </div>
@@ -131,8 +139,8 @@
             <!-- devices -->
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
-                    <div class="card-header">
-                        <span class="h4">AUP por dispositivos</span>
+                    <div class="card-header h4">
+                        <span>AUP {{ 'charts.byDevice' | translate }}</span>
                     </div>
                     <div class="card-body">
                         <app-chart-bar name="aud-devices" [data]="demographics?.device"
@@ -146,14 +154,14 @@
             <!-- gender -->
             <div class="col-12 col-md-6 mt-4">
                 <div class="card">
-                    <div class="card-header">
-                        <span class="h4">AUP por Género</span>
+                    <div class="card-header h4">
+                        <span>AUP {{ 'charts.byGender' | translate }}</span>
                     </div>
                     <div class="card-body">
                         <app-chart-bar name="aud-gender" [data]="demographics?.gender"
                             [status]="demoReqStatus[1].reqStatus" valueFormat="USD" category="name" height="280px"
                             [legendsByCategory]="true"
-                            [emptyDataLegend]="retailerID === 11 && 'Sin acceso a información por decisión del Retail'">
+                            [emptyDataLegend]="retailerID === 11 && 'audiences.retailErrorMsg' | translate">
                         </app-chart-bar>
                     </div>
                 </div>
@@ -163,18 +171,21 @@
         <!-- age -->
         <div class="col-12 col-md-6 mt-4">
             <div class="card">
-                <div class="card-header" [ngSwitch]="selectedTab1">
-                    <span *ngSwitchCase="1" class="h4">Tráfico por Edad</span>
-                    <span *ngSwitchCase="2" class="h4">Conversiones por Edad</span>
-                    <span *ngSwitchCase="3" class="h4">AUP por Edad</span>
-                    <span *ngSwitchCase="4" class="h4">BR por Edad</span>
+                <div class="card-header h4">
+                    <ng-container [ngSwitch]="selectedTab1">
+                        <span *ngSwitchCase="1">{{ 'general.traffic' | translate }}</span>
+                        <span *ngSwitchCase="2">{{ 'general.conversions' | translate }}</span>
+                        <span *ngSwitchCase="3">AUP</span>
+                        <span *ngSwitchCase="4">BR</span>
+                    </ng-container>
+                    <span>{{ 'charts.byAge' | translate }}</span>
                 </div>
                 <div class="card-body">
                     <app-chart-lollipop name="aud-age" [data]="demographics?.age" category="age"
                         [value]="selectedTab1 === 1 ? 'visits' : selectedTab1 === 2 ? 'sales' : selectedTab1 === 3 ? 'aup' : 'value'"
                         [valueFormat]="selectedTab1 === 2 || selectedTab1 === 3 ? 'USD' :  selectedTab1 === 4 && '%'"
                         height="280px" [status]="demoReqStatus[2].reqStatus"
-                        [emptyDataLegend]="retailerID === 11 && 'Sin acceso a información por decisión del Retail'">
+                        [emptyDataLegend]="retailerID === 11 && 'audiences.retailErrorMsg' | translate">
                     </app-chart-lollipop>
                 </div>
             </div>
@@ -183,11 +194,14 @@
         <!-- age and gender -->
         <div class="col-12 col-md-6 mt-4">
             <div class="card">
-                <div class="card-header" [ngSwitch]="selectedTab1">
-                    <span *ngSwitchCase="1" class="h4">Tráfico por Género y Edad</span>
-                    <span *ngSwitchCase="2" class="h4">Conversiones por Género y Edad</span>
-                    <span *ngSwitchCase="3" class="h4">AUP por Género y Edad</span>
-                    <span *ngSwitchCase="4" class="h4">BR por Género y Edad</span>
+                <div class="card-header h4" [ngSwitch]="selectedTab1">
+                    <ng-container>
+                        <span *ngSwitchCase="1">{{ 'general.traffic' | translate }}</span>
+                        <span *ngSwitchCase="2">{{ 'general.conversions' | translate }}</span>
+                        <span *ngSwitchCase="3">AUP</span>
+                        <span *ngSwitchCase="4">BR</span>
+                    </ng-container>
+                    <span>{{ 'charts.byGenderAndAge' | translate }}</span>
                 </div>
                 <div class="card-body" style="height: 328px">
                     <!-- loader -->
@@ -209,7 +223,7 @@
                             {{ 'general.withoutData2' | translate }}
                         </p>
                         <p *ngIf="retailerID === 11">
-                            Sin acceso a información por decisión del Retail
+                            {{ 'audiences.retailErrorMsg' | translate }}
                         </p>
                     </div>
 
@@ -229,7 +243,7 @@
     <div class="row mt-5">
         <div class="col-12">
             <div class="mb-3">
-                <span class="h3">Tráfico y conversiones por hora y por día</span>
+                <span class="h3">{{ 'audiences.section2Title' | translate }}</span>
             </div>
         </div>
         <div class="col-12">
@@ -237,11 +251,12 @@
                 <ul class="nav nav-pills nav-fill">
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                            (click)="getWeekdaysAndHoursByMetric('traffic')">Tráfico</a>
+                            (click)="getWeekdaysAndHoursByMetric('traffic')">{{ 'general.traffic' | translate }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                            (click)="getWeekdaysAndHoursByMetric('conversions')">Conversiones</a>
+                            (click)="getWeekdaysAndHoursByMetric('conversions')">{{ 'general.conversions' | translate
+                            }}</a>
                     </li>
                 </ul>
             </div>
@@ -252,8 +267,10 @@
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}}
-                        por día de la semana y hora del día</span>
+                    <span class="h4">
+                        {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
+                        ('charts.byDayAndHour' | translate) }}
+                    </span>
                 </div>
                 <div class="card-body">
                     <app-chart-heat-map name="aud-weekday-sesions" [data]="weekDaysAndHours?.weekdayAndHour"
@@ -265,8 +282,10 @@
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}}
-                        por día de la semana</span>
+                    <span class="h4">
+                        {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
+                        ('charts.byWeekday' | translate) }}
+                    </span>
                 </div>
                 <div class="card-body">
                     <app-chart-bar-horizontal name="aud-traffic-day" [data]="weekDaysAndHours?.weekday"
@@ -278,8 +297,10 @@
 
             <div class="card mt-4">
                 <div class="card-header">
-                    <span class="h4">{{selectedTab2 === 1 ? 'Tráfico' : 'Conversiones'}}
-                        por hora del día</span>
+                    <span class="h4">
+                        {{ ((selectedTab2 === 1 ? 'general.traffic' : 'general.conversions') | translate) +
+                        ('charts.byHour' | translate) }}
+                    </span>
                 </div>
                 <div class="card-body">
                     <app-chart-lollipop name="aud-traffic-hour" [data]="weekDaysAndHours?.hour"
@@ -293,12 +314,12 @@
     <!-- CONVERSIONES VS TRÁFICO -->
     <div class="row mt-5">
         <div class="col-12">
-            <span class="h3">Conversiones - Tráfico</span>
+            <span class="h3">{{ 'audiences.section3Title' | translate }}</span>
         </div>
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">Conversiones y tráfico por día de la semana</span>
+                    <span class="h4">{{ 'audiences.chart10CardTitle' | translate }}</span>
                 </div>
                 <div class="card-body">
                     <!-- <app-chart-multiple-axes name="aud-conv-tra-day" category="weekday" value1="conversions" value2="visits"
@@ -308,8 +329,8 @@
 
                     <app-chart-column-line-mix name="aud-conv-tra-day" [data]="conversionsVsTraffic?.weekday"
                         [status]="conversionsVsTrafficReqStatus[0].reqStatus" category="weekdayName"
-                        columnValue="visits" lineValue="conversions" columnName="Tráfico" lineName="Conversiones"
-                        [XYCursor]="true">
+                        columnValue="visits" lineValue="conversions" [columnName]="'general.traffic' | translate"
+                        [lineName]="'general.conversions' | translate" [XYCursor]="true">
                     </app-chart-column-line-mix>
                 </div>
             </div>
@@ -317,7 +338,7 @@
         <div class="col-12 col-lg-6 mt-4">
             <div class="card">
                 <div class="card-header">
-                    <span class="h4">Conversiones y tráfico por hora del día</span>
+                    <span class="h4">{{ 'audiences.chart11CardTitle' | translate }}</span>
                 </div>
                 <div class="card-body">
                     <!-- <app-chart-multiple-axes name="aud-conv-tra-hour" category="hour" value1="conversions" value2="visits"
@@ -327,8 +348,8 @@
 
                     <app-chart-column-line-mix name="aud-conv-tra-hour" [data]="conversionsVsTraffic?.hour"
                         [status]="conversionsVsTrafficReqStatus[1].reqStatus" category="hour" columnValue="visits"
-                        lineValue="conversions" columnName="Tráfico" lineName="Conversiones" joinTextInTooltip="a las"
-                        [XYCursor]="true">
+                        lineValue="conversions" [columnName]="'general.traffic' | translate"
+                        [lineName]="'general.conversions' | translate" joinTextInTooltip="a las" [XYCursor]="true">
                     </app-chart-column-line-mix>
                 </div>
             </div>
@@ -339,22 +360,18 @@
 <!-- INTERESTS -->
 <div class="row mt-5">
     <div class="col-12">
-        <span class="h3">Audiencias - Afinidad y Mercado</span>
+        <span class="h3">{{ 'audiences.section4Title' | translate }}</span>
     </div>
     <div class="col-12 col-xl-6 mt-4">
         <div class="card height-fluid">
             <div class="card-header header-info">
-                <span class="h4 mr-2 mb-0">Categoría de afinidad</span>
+                <span class="h4 mr-2 mb-0">{{ 'charts.affinityCategory' | translate }}</span>
                 <div class="info-popover" ngbDropdown>
                     <a ngbDropdownToggle>
                         <i class="fas fa-info-circle"></i>
                     </a>
                     <div class="content" ngbDropdownMenu>
-                        <p>
-                            Las categorías de afinidad se utilizan para llegar a clientes potenciales, para que conozcan
-                            la marca o producto. Estos son usuarios que se encuentran más arriba en el embudo de compra,
-                            cerca del comienzo del proceso.
-                        </p>
+                        <p>{{ 'charts.affinityCategoryDesc' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -364,7 +381,8 @@
                 </app-chart-bar-horizontal>
 
                 <small class="text-muted mt-2 d-block d-sm-none">
-                    Para mejor visualización usar la versión de <strong>Escritorio</strong>
+                    {{ 'charts.mobileSuggestion' | translate }} <strong>{{ 'charts.mobileSuggestion2' | translate
+                        }}</strong>
                 </small>
             </div>
         </div>
@@ -372,17 +390,13 @@
     <div class="col-12 col-xl-6 mt-4">
         <div class="card height-fluid">
             <div class="card-header header-info">
-                <span class="h4 mr-2 mb-0">Segmento de mercado</span>
+                <span class="h4 mr-2 mb-0">{{ 'charts.marketSegment' | translate }}</span>
                 <div class="info-popover" ngbDropdown>
                     <a ngbDropdownToggle>
                         <i class="fas fa-info-circle"></i>
                     </a>
                     <div class="content" ngbDropdownMenu>
-                        <p>
-                            Es más probable que los usuarios de estos segmentos estén listos para comprar productos o
-                            servicios en la categoría especificada. Estos son los usuarios que se encuentran más abajo
-                            en el embudo de compra, cerca del final del proceso.
-                        </p>
+                        <p>{{ 'charts.marketSegmentDesc' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -391,7 +405,8 @@
                     [status]="interestsReqStatus[1].reqStatus" value="users" [singleColorBars]="true">
                 </app-chart-bar-horizontal>
                 <small class="text-muted mt-2 d-block d-sm-none">
-                    Para mejor visualización usar la versión de <strong>Escritorio</strong>
+                    {{ 'charts.mobileSuggestion' | translate }} <strong>{{ 'charts.mobileSuggestion2' | translate
+                        }}</strong>
                 </small>
             </div>
         </div>
