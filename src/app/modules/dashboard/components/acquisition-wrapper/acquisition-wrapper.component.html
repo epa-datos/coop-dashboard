@@ -4,12 +4,14 @@
         <div class="pills-container">
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                        (click)="getUsers('sectors')">Usuarios por Sector</a>
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}" (click)="getUsers('sectors')">
+                        {{ 'acquisition.chart1CardTitle1' | translate }}
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                        (click)="getUsers('sources')">Usuarios por Fuente</a>
+                    <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}" (click)="getUsers('sources')">
+                        {{ 'acquisition.chart1CardTitle2' | translate }}
+                    </a>
                 </li>
             </ul>
         </div>
@@ -17,10 +19,12 @@
     <div class="col-12 mt-4">
         <div class="card">
             <div class="card-header">
-                <span class="h4">Usuarios por {{ selectedTab1 === 1 ? 'Sector' : 'Fuente '}}</span>
+                <span *ngIf="selectedTab1 === 1" class="h4">{{ 'acquisition.chart1CardTitle1' | translate }}</span>
+                <span *ngIf="selectedTab1 === 2" class="h4">{{ 'acquisition.chart1CardTitle2' | translate }}</span>
             </div>
             <div class="card-body">
-                <app-chart-line-series name="acq-users-sector" [series]="users" yTitle="Usuarios" [status]="usersReqStatus">
+                <app-chart-line-series name="acq-users-sector" [series]="users" [yTitle]="'general.users' | translate"
+                    [status]="usersReqStatus">
                 </app-chart-line-series>
             </div>
         </div>

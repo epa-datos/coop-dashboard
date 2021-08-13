@@ -115,8 +115,8 @@
         "chart1Legend2": "Inativas"
     },
     "retailer": {
-        "campTowardsRetail": "Campanhas direcionadas para o varejo (retail)",
-        "campInRetail": "Campanhas no varejo (retail)"
+        "campTowardsRetail": "Campanhas direcionadas para o Retail",
+        "campInRetail": "Campanhas no Retail"
     },
     "campTowardsRetail": {
         "table1Error": "Erro ao consultar campanhas",
@@ -139,6 +139,10 @@
         "chart10CardTitle": "Conversões e Tráfego por dia",
         "chart11CardTitle": "Conversões e Tráfego por hora do dia",
         "section4Title": "Públicos - Afinidade e Mercado"
+    },
+    "acquisition": {
+        "chart1CardTitle1": "Usuários por Setor",
+        "chart1CardTitle2": "Usuários por Fonte"
     },
     "googleBusiness": {
         "province": "Província",
@@ -177,12 +181,15 @@
         "sector": "Setor",
         "category": "Categoria",
         "source": "Fonte",
-        "campaign": "Campaña",
+        "medium": "Mídia",
+        "campaign": "Campanha",
         "period": "Período",
         "traffic": "Tráfego",
         "conversions": "Conversões",
         "sales": "Vendas",
         "users": "Usuários",
+        "new_users": "Novos usuários",
+        "sessions": "Sessões",
         "investment": "Investimento",
         "ranking": "Ranking",
         "product": "Produtos",
@@ -193,6 +200,10 @@
         "impressions": "Impressões",
         "clicks": "Clicks",
         "name": "Nome",
+        "pagesBySessions": "Páginas por sessão",
+        "bounceRate": "Taxa de Rejeição",
+        "sessionDuration": "Duração média da sessão",
+        "productIncomes": "Receita do Produto",
         "usersVsSales": "Usuários - Conversões",
         "investmentVsRevenue": "Investimento - Revenue",
         "revenueVsAup": "Revenue - AUP",

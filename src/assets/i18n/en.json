@@ -140,6 +140,10 @@
         "chart11CardTitle": "Conversions and Traffic by time of day",
         "section4Title": "Audiences - Affinity and Market"
     },
+    "acquisition": {
+        "chart1CardTitle1": "Users by Sector",
+        "chart1CardTitle2": "Users by Source"
+    },
     "googleBusiness": {
         "province": "Province",
         "city": "City",
@@ -177,12 +181,15 @@
         "sector": "Sector",
         "category": "Category",
         "source": "Source",
+        "medium": "Medium",
         "campaign": "Campaign",
         "period": "Period",
         "traffic": "Traffic",
         "conversions": "Conversions",
         "sales": "Sales",
         "users": "Users",
+        "new_users": "New users",
+        "sessions": "Sessions",
         "investment": "Investment",
         "ranking": "Ranking",
         "product": "Product",
@@ -193,6 +200,10 @@
         "impressions": "Impressions",
         "clicks": "Clicks",
         "name": "Name",
+        "pagesBySessions": "Pages per session",
+        "bounceRate": "Bounce rate",
+        "sessionDuration": "Average session duration",
+        "productIncomes": "Product revenue",
         "usersVsSales": "Users - Conversions",
         "investmentVsRevenue": "Investment - Revenue",
         "revenueVsAup": "Revenue - AUP",
