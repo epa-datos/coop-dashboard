@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { CampaignInRetailService } from '../../services/campaign-in-retail.service';
 import { FiltersStateService } from '../../services/filters-state.service';
@@ -27,11 +28,18 @@ export class BehaviourWrapperComponent implements OnInit, OnDestroy {
 
   generalFiltersSub: Subscription;
   retailFiltersSub: Subscription;
+  translateSub: Subscription;
 
   constructor(
     private filtersStateService: FiltersStateService,
-    private campInRetailService: CampaignInRetailService
-  ) { }
+    private campInRetailService: CampaignInRetailService,
+    private translate: TranslateService
+  ) {
+
+    this.translateSub = translate.stream('behaviour').subscribe(() => {
+      this.loadI18nContent();
+    });
+  }
 
   ngOnInit(): void {
     this.getAllData();
@@ -84,7 +92,7 @@ export class BehaviourWrapperComponent implements OnInit, OnDestroy {
       this.campInRetailService.getDataByMetric('behavior', subMetric.subMetricType).subscribe(
         (resp: any[]) => {
           this.behavior[subMetric.name] = resp;
-
+          this.loadI18nContent(subMetric.name);
           reqStatusObj.reqStatus = 2;
         },
         error => {
@@ -95,8 +103,38 @@ export class BehaviourWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
+  loadI18nContent(metricName?: string) {
+    if (!metricName || metricName === 'newUsersVsCurrent') {
+      this.behavior['newUsersVsCurrent'] = this.behavior['newUsersVsCurrent']?.map(item => {
+        item.category = item.category === 'Visitantes Nuevos' ? this.translate.instant('general.newVisitors') : this.translate.instant('general.recurringVisitors');
+        return item;
+      });
+    }
+
+    if (!metricName || metricName === 'salesNewUsersVsCurrent') {
+      this.behavior['salesNewUsersVsCurrent'] = this.behavior['salesNewUsersVsCurrent']?.map(item => {
+        item.category = item.category === 'Visitantes Nuevos' ? this.translate.instant('general.newVisitors') : this.translate.instant('general.recurringVisitors');
+        return item;
+      });
+    }
+
+    if (!metricName || metricName === 'salesBySource') {
+      const othersSource = this.behavior['salesBySource']?.find(item => item.category === 'Others');
+      if (othersSource) {
+        const str = this.translate.instant('others.otherPluralM');
+        othersSource.category = str.charAt(0).toUpperCase() + str.slice(1);
+      }
+    }
+
+    if (!metricName || metricName === 'salesBySector') {
+      const salesSector = this.behavior['salesBySector']?.find(item => item.category === 'Ventas');
+      salesSector && (salesSector.category = this.translate.instant('general.sales'));
+    }
+  }
+
   ngOnDestroy() {
     this.generalFiltersSub?.unsubscribe();
     this.retailFiltersSub?.unsubscribe();
+    this.translateSub?.unsubscribe();
   }
 }

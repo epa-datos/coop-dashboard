@@ -3,12 +3,13 @@
     <div class="col-12 mt-4 mb-5">
         <div class="card">
             <div class="card-header">
-                <span class="h4">Porcentaje de rebote y páginas vistas </span>
+                <span class="h4">{{ 'behaviour.chart1CardTitle' | translate }}</span>
             </div>
             <div class="card-body">
-                <app-chart-multiple-axes name="bh-general-behavior" value1="page_views" valueName1="Páginas vistas"
-                    value2="bounce_rate" valueName2="Porcentaje de rebote" valueFormat2="%"
-                    [status]="brVsPagesViewedReqStatus" [data]="brVsPagesViewed">
+                <app-chart-multiple-axes name="bh-general-behavior" value1="page_views"
+                    [valueName1]="'general.pageViews' | translate" value2="bounce_rate"
+                    [valueName2]="'general.bounceRate' | translate" valueFormat2="%" [status]="brVsPagesViewedReqStatus"
+                    [data]="brVsPagesViewed">
                 </app-chart-multiple-axes>
             </div>
         </div>
@@ -21,7 +22,7 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Visitantes nuevos - Visitantes recurrentes</span>
+                <span class="h4">{{ 'behaviour.chart2CardTitle' | translate }}</span>
             </div>
             <div class="card-body">
                 <app-chart-pie name="bh-sessions-ret-visitor" [data]="behavior.newUsersVsCurrent"
@@ -35,7 +36,7 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Conversiones Visitantes nuevos - Visitantes recurrentes</span>
+                <span class="h4">{{ 'behaviour.chart3CardTitle' | translate }}</span>
             </div>
             <div class="card-body">
                 <app-chart-pie name="bh-sales-ret-visitor" [data]="behavior.salesNewUsersVsCurrent"
@@ -49,7 +50,7 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Conversiones por Fuente de conversión</span>
+                <span class="h4">{{ 'behaviour.chart4CardTitle' | translate }}</span>
             </div>
             <div class="card-body">
                 <app-chart-pie name="bh-sales-by-conv-sorce" [data]="behavior.salesBySource"
@@ -63,7 +64,7 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Conversiones por Sector</span>
+                <span class="h4">{{ 'behaviour.chart5CardTitle' | translate }}</span>
             </div>
             <div class="card-body">
                 <app-chart-pie name="bh-sales-by-sorce" [data]="behavior.salesBySector"
@@ -84,7 +85,7 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Sesiones por tipo de audiencia</span>
+                <span class="h4">{{ 'behaviour.chart6CardTitle' | translate }}</span>
             </div>
             <div class="card-body">
                 <app-chart-pie name="bh-sessions-by-audience" [data]="behavior.sessionsByAudience"
@@ -98,7 +99,7 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Usuarios nuevos por tipo de audiencia</span>
+                <span class="h4">{{ 'behaviour.chart7CardTitle' | translate }}</span>
             </div>
             <div class="card-body">
                 <app-chart-pie name="bh-users-by-audience" [data]="behavior.newUsersByAudience" [minLegendHeight]="150"
@@ -112,11 +113,11 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Cantidad por tipo de audiencia</span>
+                <span class="h4">{{ 'behaviour.chart8CardTitle' | translate }}</span>
             </div>
             <div class="card-body">
                 <app-chart-bar name="bh-quantity-by-audience" [data]="behavior.quantityByAudience"
-                    [minLegendHeight]="150" legendPosition="bottom" [status]="behaviorReqStatus[6].reqStatus">
+                    legendPosition="bottom" [status]="behaviorReqStatus[6].reqStatus">
                 </app-chart-bar>
             </div>
         </div>
@@ -126,12 +127,13 @@
     <div class="col-12 col-lg-6 col-xl-3 mt-4 mb-5">
         <div class="card">
             <div class="card-header">
-                <span class="h4">Revenue y AUP por tipo de audiencia</span>
+                <span class="h4">{{ 'behaviour.chart9CardTitle' | translate }}</span>
             </div>
             <div class="card-body">
                 <app-chart-column-line-mix name="bh-revenue-aup-audience" [data]="behavior.revenueAupByAudience"
                     category="audience" columnValue="revenue" columnName="Revenue" lineValue="aup" lineName="AUP"
-                    valueFormat="USD" [status]="behaviorReqStatus[7].reqStatus">
+                    valueFormat="USD" [status]="behaviorReqStatus[7].reqStatus"
+                    [joinTextInTooltip]="'others.in' | translate">
                 </app-chart-column-line-mix>
             </div>
         </div>
