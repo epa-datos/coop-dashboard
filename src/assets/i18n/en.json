@@ -145,6 +145,17 @@
         "chart1CardTitle1": "Users by Sector",
         "chart1CardTitle2": "Users by Source"
     },
+    "behaviour": {
+        "chart1CardTitle": "Bounce rate and Page views",
+        "chart2CardTitle": "New Visitors - Recurring Visitors",
+        "chart3CardTitle": "Conversions New Visitors - Returning Visitors",
+        "chart4CardTitle": "Conversions by Conversion Source",
+        "chart5CardTitle": "Conversions by Sector",
+        "chart6CardTitle": "Sessions by type of audience",
+        "chart7CardTitle": "New users by audience type",
+        "chart8CardTitle": "Amount by type of audience",
+        "chart9CardTitle": "Revenue and AUP by type of audience"
+    },
     "googleBusiness": {
         "province": "Province",
         "city": "City",
@@ -201,10 +212,13 @@
         "impressions": "Impressions",
         "clicks": "Clicks",
         "name": "Name",
+        "pageViews": "Page views",
         "pagesBySessions": "Pages per session",
         "bounceRate": "Bounce rate",
         "sessionDuration": "Average session duration",
         "productIncomes": "Product revenue",
+        "newVisitors": "New visitors",
+        "recurringVisitors": "Recurring Visitors",
         "usersVsSales": "Users - Conversions",
         "investmentVsRevenue": "Investment - Revenue",
         "revenueVsAup": "Revenue - AUP",
@@ -215,6 +229,7 @@
     },
     "others": {
         "by": "by",
+        "in": "in",
         "onDay": "on",
         "atHour": "at",
         "all": "all",

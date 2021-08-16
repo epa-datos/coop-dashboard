@@ -145,6 +145,17 @@
         "chart1CardTitle1": "Usuários por Setor",
         "chart1CardTitle2": "Usuários por Fonte"
     },
+    "behaviour": {
+        "chart1CardTitle": "Taxa de rejeição e visualizações de página",
+        "chart2CardTitle": "Novos usuários vs visitantes recorrentes",
+        "chart3CardTitle": "Vendas de novos visitantes vs  Visitantes recorrentes",
+        "chart4CardTitle": "Vendas por fonte de conversão",
+        "chart5CardTitle": "Vendas por setor",
+        "chart6CardTitle": "Sessões por tipo de público",
+        "chart7CardTitle": "Novos usuários por tipo de público",
+        "chart8CardTitle": "Quantidade por tipo de público",
+        "chart9CardTitle": "Revenue y AUP por tipo de público"
+    },
     "googleBusiness": {
         "province": "Província",
         "city": "Cidade",
@@ -201,10 +212,13 @@
         "impressions": "Impressões",
         "clicks": "Clicks",
         "name": "Nome",
+        "pageViews": "Número de visualizações de página",
         "pagesBySessions": "Páginas por sessão",
         "bounceRate": "Taxa de Rejeição",
         "sessionDuration": "Duração média da sessão",
         "productIncomes": "Receita do Produto",
+        "newVisitors": "Novos usuários",
+        "recurringVisitors": "Visitantes recorrentes",
         "usersVsSales": "Usuários - Conversões",
         "investmentVsRevenue": "Investimento - Revenue",
         "revenueVsAup": "Revenue - AUP",
@@ -215,6 +229,7 @@
     },
     "others": {
         "by": "por",
+        "in": "em",
         "onDay": "de",
         "atHour": "às",
         "all": "tudo",
