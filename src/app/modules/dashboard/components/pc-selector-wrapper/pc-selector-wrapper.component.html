@@ -6,7 +6,7 @@
     </div>
     <div class="col-12 mt-lg-3" [hidden]="kpisReqStatus !== 3">
         <p class="text-center text-muted mb-0">
-            Error al consultar datos
+            {{ 'general.errorData' | translate }}
         </p>
     </div>
 </div>
@@ -18,11 +18,15 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 1}"
-                        (click)="getUsersOrRevenue('conversions', 'users')">Usuarios - Conversiones</a>
+                        (click)="getUsersOrRevenue('conversions', 'users')">
+                        {{ 'general.usersVsSales' | translate }}
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 2}"
-                        (click)="getUsersOrRevenue('revenue-vs-aup')">Revenue - AUP</a>
+                        (click)="getUsersOrRevenue('revenue-vs-aup')">
+                        Revenue - AUP
+                    </a>
                 </li>
             </ul>
         </div>
@@ -32,17 +36,17 @@
         <div class="card">
             <div class="card-header">
                 <span class="h4">
-                    {{ selectedTab1 === 1 ? 'Usuarios - Conversiones' : 'Revenue - AUP '}}
+                    {{ selectedTab1 === 1 ? ('general.usersVsSales' | translate) : 'Revenue - AUP '}}
                 </span>
             </div>
             <div class="card-body">
                 <app-chart-multiple-axes [data]="usersOrRevenue"
                     [value1]="selectedTab1 === 1 ? 'transactions' : 'revenue'"
                     [value2]="selectedTab1 === 1 ? 'users' : 'aup'"
-                    [valueName1]="selectedTab1 === 1 ? 'Conversiones' : 'Revenue'"
-                    [valueName2]="selectedTab1 === 1 ? 'Usuarios' : 'AUP'" [valueFormat1]="selectedTab1 === 2 && 'USD'"
-                    [valueFormat2]="selectedTab1 === 2 && 'USD'" name="pc-selector-traffic-vs-conversions"
-                    [status]="usersOrRevenueReqStatus">
+                    [valueName1]="selectedTab1 === 1 ? ('general.conversions' | translate) : 'Revenue'"
+                    [valueName2]="selectedTab1 === 1 ? ('general.users' | translate): 'AUP'"
+                    [valueFormat1]="selectedTab1 === 2 && 'USD'" [valueFormat2]="selectedTab1 === 2 && 'USD'"
+                    name="pc-selector-traffic-vs-conversions" [status]="usersOrRevenueReqStatus">
                 </app-chart-multiple-axes>
             </div>
         </div>
@@ -54,7 +58,7 @@
 <div class="row mt-5">
     <div class="col-12">
         <div class="mb-3">
-            <span class="h3">Tráfico y Conversiones</span>
+            <span class="h3">{{ 'pcSelector.section1Title1' | translate }}</span>
         </div>
     </div>
     <div class="col-12">
@@ -62,11 +66,15 @@
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 1}"
-                        (click)="getTrafficOrConversions('traffic')">Tráfico</a>
+                        (click)="getTrafficOrConversions('traffic')">
+                        {{ 'general.traffic' | translate }}
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 2}"
-                        (click)="getTrafficOrConversions('conversions')">Conversiones</a>
+                        (click)="getTrafficOrConversions('conversions')">
+                        {{ 'general.conversions' | translate }}
+                    </a>
                 </li>
             </ul>
         </div>
@@ -76,7 +84,10 @@
     <div class="col-12 col-lg-6 mt-4" *ngIf="levelPage.latam">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por país</span>
+                <span class="h4">
+                    {{ (selectedTab2 === 1 ? 'general.traffic' : 'general.conversions' ) | translate }}
+                    {{ 'charts.byCountry' | translate }}
+                </span>
             </div>
             <div class="card-body">
                 <app-chart-bar-horizontal [data]="trafficOrConversions?.countries" name="pc-selector-chats-by-country"
@@ -91,7 +102,10 @@
         [ngClass]="{'col-lg-12' : !levelPage.latam}">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">{{ selectedTab2 === 1 ? 'Tráfico' : 'Conversiones' }} por Retailer</span>
+                <span class="h4">
+                    {{ (selectedTab2 === 1 ? 'general.traffic' : 'general.conversions' ) | translate }}
+                    {{ 'charts.byRetailer' | translate }}
+                </span>
             </div>
             <div class="card-body" [ngClass]="{'overfow-container': trafficOrConversions?.retailers?.length > 14}">
                 <app-chart-bar-horizontal [data]="trafficOrConversions?.retailers" name="pc-selector-chats-by-retailer"
@@ -110,7 +124,7 @@
                 <div class="col-12 col-lg-6 col-xl-12">
                     <div class="card">
                         <div class="card-header">
-                            <span class="h4">Tasa de Abandono</span>
+                            <span class="h4">{{ 'pcSelector.chart4CardTitle1' | translate }}</span>
                         </div>
                         <div class="card-body">
                             <app-chart-pie [data]="trafficOrConversions?.exitRate" name="pc-selector-churn-rate"
@@ -123,7 +137,7 @@
                 <div class="col-12 col-lg-6 col-xl-12 mt-4 mt-lg-0 mt-xl-4">
                     <div class="card">
                         <div class="card-header">
-                            <span class="h4">Tasa de Uso de Asistente Virtual</span>
+                            <span class="h4">{{ 'pcSelector.chart5CardTitle1' | translate }}</span>
                         </div>
                         <div class="card-body">
                             <app-chart-pie [data]="trafficOrConversions?.useRate" name="pc-selector-use-rate"
@@ -138,7 +152,7 @@
         <div class="col-12 col-xl-8 mt-4">
             <div class="card height-fluid">
                 <div class="card-header">
-                    <span class="h4">Tasa de Abandono por pregunta</span>
+                    <span class="h4">{{ 'pcSelector.chart6CardTitle1' | translate }}</span>
                 </div>
                 <div class="card-body">
                     <app-chart-funnel [data]="trafficOrConversions?.exitRateByStep" name="pc-selector-churn-rate"
@@ -154,7 +168,7 @@
     <div class="col-12 mt-4" *ngIf="selectedTab2 == 2">
         <div class="card height-fluid superimposed">
             <div class="card-header">
-                <span class="h4">Conversiones por producto</span>
+                <span class="h4">{{ 'pcSelector.chart7CardTitle1' | translate }}</span>
             </div>
             <div class="card-body">
                 <app-chart-bar-horizontal [data]="trafficOrConversions?.products"
@@ -162,7 +176,8 @@
                     [singleColorBars]="true" [status]="trafficOrConversionsReqStatus[5].reqStatus">
                 </app-chart-bar-horizontal>
                 <small class="text-muted mt-2 d-block d-sm-none">
-                    Para mejor visualización usar la versión de <strong>Escritorio</strong>
+                    {{ 'charts.mobileSuggestion' | translate }}
+                    <strong> {{ 'charts.mobileSuggestion2' | translate }}</strong>
                 </small>
             </div>
         </div>
@@ -172,26 +187,33 @@
     <div class="col-12 mt-4">
         <div class="card height-fluid">
             <div class="card-header">
-                <span class="h4">Usuarios, Conversiones y Tasa de conversión por fecha</span>
+                <span class="h4">{{ 'pcSelector.chart8CardTitle1' | translate }}</span>
             </div>
             <div class="card-body">
                 <div class="chart-legend mt-0 mb-2" *ngIf="performance?.length > 0">
                     <div class="legend-container legend-right">
                         <div class="legend-square color-1"></div>
-                        <div class="legend-label">Usuarios</div>
+                        <div class="legend-label">
+                            {{ 'general.users' | translate }}
+                        </div>
                     </div>
                     <div class="legend-container ml-3">
                         <div class="legend-square color-2"></div>
-                        <div class="legend-label">Conversiones</div>
+                        <div class="legend-label">
+                            {{ 'general.conversions' | translate }}
+                        </div>
                     </div>
                     <div class="legend-container ml-3">
                         <div class="legend-square color-3"></div>
-                        <div class="legend-label">Tasa de conversión</div>
+                        <div class="legend-label">
+                            {{ 'general.conversionRate' | translate }}
+                        </div>
                     </div>
                 </div>
                 <app-chart-bar-group [data]="performance" name="pc-selector-users-transactions-rate" height="325px"
-                    valueBar1="users" valueBar2="transactions" valueLine1="conversion_rate" valueNameBar1="Usuarios"
-                    valueNameBar2="Conversiones" valueFormatLine1="%" [status]="performanceReqStatus">
+                    valueBar1="users" valueBar2="transactions" valueLine1="conversion_rate"
+                    [valueNameBar1]="'general.users' | translate" [valueNameBar2]="'general.conversions' | translate"
+                    valueFormatLine1="%" [status]="performanceReqStatus">
                 </app-chart-bar-group>
             </div>
         </div>
@@ -202,7 +224,7 @@
 <!-- TRAFFIC AND CONVERSIONS - AUDIENCES (DEMOGRAPHICS) -->
 <div class="row mt-5">
     <div class="col-12">
-        <span class="h3">Audiencia</span>
+        <span class="h3">{{ 'general.audience' | translate }}</span>
     </div>
     <div class="col-12 mt-3">
         <div class="row">
@@ -211,11 +233,15 @@
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 1}"
-                                (click)="getAudienceByMetric('traffic'); chartsInitLoad = chartsInitLoad && false;">Tráfico</a>
+                                (click)="getAudienceByMetric('traffic'); chartsInitLoad = chartsInitLoad && false">
+                                {{ 'general.traffic' | translate }}
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link p-2" [ngClass]="{'active': selectedTab3 === 2}"
-                                (click)="getAudienceByMetric('conversions'); chartsInitLoad = chartsInitLoad && false;">Conversiones</a>
+                                (click)="getAudienceByMetric('conversions'); chartsInitLoad = chartsInitLoad && false">
+                                {{ 'general.conversions' | translate }}
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -223,10 +249,11 @@
 
             <!-- devices -->
             <div class="col-12 col-md-6 mt-4">
-                <div class="card">
+                <div class="card height-fluid">
                     <div class="card-header">
                         <span class="h4">
-                            {{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por dispositivos
+                            {{ (selectedTab3 === 1 ? 'general.traffic' : 'general.conversions' ) | translate }}
+                            {{ 'charts.byDevice' | translate }}
                         </span>
                     </div>
                     <div class="card-body">
@@ -263,10 +290,11 @@
 
             <!-- gender -->
             <div class="col-12 col-md-6 mt-4">
-                <div class="card">
+                <div class="card height-fluid">
                     <div class="card-header">
                         <span class="h4">
-                            {{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Género
+                            {{ (selectedTab3 === 1 ? 'general.traffic' : 'general.conversions' ) | translate }}
+                            {{ 'charts.byGender' | translate }}
                         </span>
                     </div>
                     <div class="card-body">
@@ -275,7 +303,9 @@
                                 <div class="chart-legend legend-center mt-0">
                                     <div class="legend-container" *ngIf="audience?.men?.length > 0">
                                         <div class="legend-square on color-4"></div>
-                                        <div class="legend-label">Hombres {{ audience.men[1].value }}%</div>
+                                        <div class="legend-label">
+                                            {{ 'others.men' | translate }} {{ audience.men[1].value }}%
+                                        </div>
                                     </div>
                                 </div>
                                 <app-chart-pictorial [data]="audience.men" name="pc-selectorgender-man"
@@ -288,7 +318,9 @@
                                 <div class="chart-legend legend-center mt-0">
                                     <div class="legend-container" *ngIf="audience?.women?.length > 0">
                                         <div class="legend-square on color-5"></div>
-                                        <div class="legend-label">Mujeres {{ audience.women[1].value }}%</div>
+                                        <div class="legend-label">
+                                            {{ 'others.women' | translate }} {{ audience.women[1].value }}%
+                                        </div>
                                     </div>
                                 </div>
                                 <app-chart-pictorial [data]="audience.women" name="pc-selectorgender-woman"
@@ -306,7 +338,8 @@
                 <div class="card">
                     <div class="card-header">
                         <span class="h4">
-                            {{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Edad
+                            {{ (selectedTab3 === 1 ? 'general.traffic' : 'general.conversions' ) | translate }}
+                            {{ 'charts.byAge' | translate }}
                         </span>
                     </div>
                     <div class="card-body">
@@ -323,7 +356,8 @@
                 <div class="card">
                     <div class="card-header">
                         <span class="h4">
-                            {{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por Género y Edad
+                            {{ (selectedTab3 === 1 ? 'general.traffic' : 'general.conversions' ) | translate }}
+                            {{ 'charts.byGenderAndAge' | translate }}
                         </span>
                     </div>
                     <div class="card-body" style="height: 328px">
@@ -340,15 +374,15 @@
                         <div *ngIf="audienceReqStatus[3].reqStatus === 2 && audience?.genderAndAge?.length === 0"
                             class="chart-error-container text-muted">
                             <p class="text-center">
-                                Sin datos disponibles <br>
-                                Muestra insuficiente
+                                {{ 'general.withoutData' | translate }} <br>
+                                {{ 'general.withoutData2' | translate }}
                             </p>
                         </div>
 
                         <!-- error -->
                         <div *ngIf="chartsInitLoad && audienceReqStatus[3].reqStatus === 3"
                             class="chart-error-container text-muted">
-                            <span>Error al consultar datos</span>
+                            <span>{{ 'general.errorData' | translate }}</span>
                         </div>
                     </div>
                 </div>
@@ -359,7 +393,8 @@
                 <div class="card">
                     <div class="card-header">
                         <span class="h4">
-                            {{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por día de la semana y hora del día
+                            {{ (selectedTab3 === 1 ? 'general.traffic' : 'general.conversions' ) | translate }}
+                            {{ 'charts.byDayAndHour' | translate }}
                         </span>
                     </div>
                     <div class="card-body">
@@ -375,7 +410,8 @@
                 <div class="card">
                     <div class="card-header">
                         <span class="h4">
-                            {{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por día de la semana
+                            {{ (selectedTab3 === 1 ? 'general.traffic' : 'general.conversions' ) | translate }}
+                            {{ 'charts.byWeekday' | translate }}
                         </span>
                     </div>
                     <div class="card-body">
@@ -389,7 +425,8 @@
                     <!-- hour -->
                     <div class="card-header">
                         <span class="h4">
-                            {{selectedTab3 === 1 ? 'Tráfico' : 'Conversiones'}} por hora del día
+                            {{ (selectedTab3 === 1 ? 'general.traffic' : 'general.conversions' ) | translate }}
+                            {{ 'charts.byHour' | translate }}
                         </span>
                     </div>
                     <div class="card-body">

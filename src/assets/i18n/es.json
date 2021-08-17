@@ -185,6 +185,20 @@
         "chatScore": "calificación del chat",
         "chatResult": "resultado"
     },
+    "pcSelector": {
+        "section1Title1": "Tráfico y Conversiones",
+        "chart4CardTitle1": "Tasa de Abandono",
+        "chart5CardTitle1": "Tasa de Uso de Asistente Virtual",
+        "chart6CardTitle1": "Tasa de Abandono por pregunta",
+        "chart7CardTitle1": "Conversiones por producto",
+        "chart8CardTitle1": "Usuarios, Conversiones y Tasa de conversión por fecha",
+        "leave": "Abandona",
+        "dontLeave": "No abandona",
+        "use": "Utiliza",
+        "dontUse": "No utiliza",
+        "question": "Pregunta",
+        "finish": "Termina el proceso"
+    },
     "charts": {
         "byCountry": " por País",
         "byRetailer": " por Retailer",

@@ -185,6 +185,20 @@
         "chatScore": "chat score",
         "chatResult": "result"
     },
+    "pcSelector": {
+        "section1Title1": "Traffic and Conversions",
+        "chart4CardTitle1": "Leaves rate",
+        "chart5CardTitle1": "Virtual Assistant Usage Rate",
+        "chart6CardTitle1": "Leaves rate per question",
+        "chart7CardTitle1": "Conversions by product",
+        "chart8CardTitle1": "Users, Conversions and Conversion rate by date",
+        "leave": "Leaves",
+        "dontLeave": "Doesn't leave",
+        "use": "Uses",
+        "dontUse": "Doesn't use",
+        "question": "Question",
+        "finish": "Ends the process"
+    },
     "charts": {
         "byCountry": " by Country",
         "byRetailer": " by Retailer",
