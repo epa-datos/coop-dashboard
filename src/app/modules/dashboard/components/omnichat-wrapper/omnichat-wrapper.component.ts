@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { convertMonthToString, convertWeekdayToString } from 'src/app/tools/functions/data-convert';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { OmnichatService } from '../../services/omnichat.service';
 import { TableItem } from '../generic-table/generic-table.component';
@@ -8,6 +7,7 @@ import { strTimeFormat } from 'src/app/tools/functions/time-format';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
 import { TranslateService } from '@ngx-translate/core';
 import { KpiCard } from 'src/app/models/kpi';
+import { TranslationsService } from 'src/app/services/translations.service';
 
 @Component({
   selector: 'app-omnichat-wrapper',
@@ -209,12 +209,19 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   chartsInitLoad: boolean = true;
 
   requestInfoSub: Subscription;
+  translateSub: Subscription;
 
   constructor(
     private omnichatService: OmnichatService,
     private filtersStateService: FiltersStateService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+    private translationsServ: TranslationsService
+  ) {
+
+    this.translateSub = translate.stream('omnichat').subscribe(() => {
+      this.loadI18nContent();
+    });
+  }
 
   ngOnInit(): void {
     let loadedFromInit: boolean; // first call to getAllData is from init
@@ -417,7 +424,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
         const newMonthsObj = {};
         for (let item in months) {
           const date = item.split('-');
-          const dateStrFormat = `${convertMonthToString(date[1])} ${date[0]}`;
+          const dateStrFormat = `${this.translationsServ.convertMonthToString(date[1])} ${date[0]}`;
 
           const obj = months[item];
           newMonthsObj[dateStrFormat] = obj;
@@ -468,29 +475,37 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       this.omnichatService.getDataByMetric(this.levelPage.latam, metricType, subMetric.subMetricType).subscribe(
         (resp: any[]) => {
 
-          if (subMetric.name === 'device') {
-            const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp);
-            this.audience = { ...this.audience, desktop, mobile };
+          switch (subMetric.name) {
+            case 'device':
+              const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp);
+              this.audience = { ...this.audience, desktop, mobile };
+              break;
 
-          } else if (subMetric.name === 'gender') {
-            const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp);
+            case 'gender':
+              const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp);
 
-            hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
-            mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
+              hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
+              mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
 
-            this.audience = { ...this.audience, men: hombre, women: mujer };
+              this.audience = { ...this.audience, men: hombre, women: mujer };
+              break;
 
-          } else if (subMetric.name === 'weekdayAndHour') {
-            this.audience[subMetric.name] = resp.map(item => {
-              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
-            });
-          } else if (subMetric.name === 'weekday') {
-            resp = resp.sort((a, b) => (a.weekday > b.weekday ? -1 : 1));
-            this.audience[subMetric.name] = resp.map(item => {
-              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
-            });
-          } else {
-            this.audience[subMetric.name] = resp;
+            case 'weekdayAndHour':
+              this.audience[subMetric.name] = resp.map(item => {
+                return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+              });
+              break;
+
+            case 'weekday':
+              resp = resp.sort((a, b) => (a.weekday > b.weekday ? -1 : 1));
+              this.audience[subMetric.name] = resp.map(item => {
+                return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+              });
+              break;
+
+            default:
+              this.audience[subMetric.name] = resp;
+              break;
           }
 
           reqStatusObj.reqStatus = 2;
@@ -542,7 +557,41 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
+  loadI18nContent() {
+    this.kpis[0].title = this.translate.instant('omnichat.totalChats');
+    this.kpis[1].title = this.translate.instant('omnichat.avgChatsPerDay');
+    this.kpis[2].title = this.translate.instant('omnichat.dedicatedCustomer');
+    this.kpis[3].title = this.translate.instant('general.sessionDuration');
+    this.kpis[4].title = this.translate.instant('general.pagesBySessions');
+    this.kpis[5].title = this.translate.instant('omnichat.chatScore');
+    this.kpis[6].title = this.translate.instant('general.users');
+    this.kpis[7].title = this.translate.instant('general.conversions');
+    this.kpis[8].title = this.translate.instant('general.conversionRate');
+
+    this.kpis[5].subKpis[0].title = this.translate.instant('omnichat.chatResult');
+
+    this.performanceByCategoryColumns[0].title = this.translate.instant('general.category');
+    this.performanceByCategoryColumns[1].title = this.translate.instant('general.amount');
+
+    if (this.audience['men']?.length > 0) {
+      this.audience['men'][1].name = this.translate.instant('others.men');
+    }
+
+    if (this.audience['women']?.length > 0) {
+      this.audience['women'][1].name = this.translate.instant('others.women');
+    }
+
+    this.audience['weekdayAndHour'] = this.audience['weekdayAndHour']?.map(item => {
+      return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+    });
+
+    this.audience['weekday'] = this.audience['weekday']?.map(item => {
+      return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+    });
+  }
+
   ngOnDestroy() {
     this.requestInfoSub?.unsubscribe();
+    this.translateSub?.unsubscribe();
   }
 }
