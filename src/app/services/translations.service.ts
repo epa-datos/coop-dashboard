@@ -41,40 +41,40 @@ export class TranslationsService {
     let monthName;
     switch (month) {
       case '01':
-        monthName = this.translate.instant('others.days.jan');
+        monthName = this.translate.instant('others.months.jan');
         break;
       case '02':
-        monthName = this.translate.instant('others.days.feb');
+        monthName = this.translate.instant('others.months.feb');
         break;
       case '03':
-        monthName = this.translate.instant('others.days.mar');
+        monthName = this.translate.instant('others.months.mar');
         break;
       case '04':
-        monthName = this.translate.instant('others.days.apr');
+        monthName = this.translate.instant('others.months.apr');
         break;
       case '05':
-        monthName = this.translate.instant('others.days.may');
+        monthName = this.translate.instant('others.months.may');
         break;
       case '06':
-        monthName = this.translate.instant('others.days.jun');
+        monthName = this.translate.instant('others.months.jun');
         break;
       case '07':
-        monthName = this.translate.instant('others.days.jul');
+        monthName = this.translate.instant('others.months.jul');
         break;
       case '08':
-        monthName = this.translate.instant('others.days.aug');
+        monthName = this.translate.instant('others.months.aug');
         break;
       case '09':
-        monthName = this.translate.instant('others.days.sep');
+        monthName = this.translate.instant('others.months.sep');
         break;
       case '10':
-        monthName = this.translate.instant('others.days.oct');
+        monthName = this.translate.instant('others.months.oct');
         break;
       case '11':
-        monthName = this.translate.instant('others.days.nov');
+        monthName = this.translate.instant('others.months.nov');
         break;
       case '12':
-        monthName = this.translate.instant('others.days.dec');
+        monthName = this.translate.instant('others.months.dec');
         break;
     }
 
