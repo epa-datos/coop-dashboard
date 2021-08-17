@@ -156,6 +156,12 @@
         "chart8CardTitle": "Quantidade por tipo de público",
         "chart9CardTitle": "Revenue y AUP por tipo de público"
     },
+    "googleBusiness": {
+        "province": "Província",
+        "city": "Cidade",
+        "store": "Armazenar",
+        "visits": "Visitas"
+    },
     "indexed": {
         "chart10CardTitle": "Porcentagem de saídas, rejeição e visualizações de página",
         "table1CardTitle": "Modelos mais visitados",
@@ -167,16 +173,24 @@
         "section1Title": "Públicos - Afinidade e Mercado",
         "pdfDownloads": "Downloads de PDF"
     },
-    "googleBusiness": {
-        "province": "Província",
-        "city": "Cidade",
-        "store": "Armazenar",
-        "visits": "Visitas"
+    "omnichat": {
+        "section1Title1": "Chats, Usuários, Conversões e Conversion rate",
+        "section1Title2": "Conversões and Conversion rate",
+        "section2Title1": "Análise de conversão por categoria",
+        "chart6CardTitle1": "Conversões por produto",
+        "chart7CardTitle1": "Usuários, Conversões e Taxa de conversão por período",
+        "totalChats": "total chats",
+        "avgChatsPerDay": "média de chats por dia",
+        "dedicatedCustomer": "% dedicado ao cliente",
+        "chatScore": "qualificação do chat",
+        "chatResult": "resultado"
     },
     "charts": {
         "byCountry": " por País",
+        "byRetailer": " por Retailer",
         "byCountries": " por Países",
         "byRetailers": " por Retailers",
+        "byCategory": " por Categoria",
         "byDevices": " por Dispositivos",
         "byGender": " por Gênero",
         "byAge": " por Idade",
@@ -226,11 +240,13 @@
         "clicks": "Clicks",
         "name": "Nome",
         "origin": "Fonte",
+        "audience": "Público",
         "pageViews": "Número de visualizações de página",
         "pageViewsNumber": "Visualizações de página",
         "pagesBySessions": "Páginas por sessão",
         "exiteRate": "Porcentagem de saídas",
         "bounceRate": "Taxa de Rejeição",
+        "conversionRate": "Conversion rate",
         "sessionDuration": "Duração média da sessão",
         "productIncomes": "Revenue de Produto",
         "newVisitors": "Novos visitantes",

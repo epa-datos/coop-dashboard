@@ -156,6 +156,12 @@
         "chart8CardTitle": "Amount by type of audience",
         "chart9CardTitle": "Revenue and AUP by type of audience"
     },
+    "googleBusiness": {
+        "province": "Province",
+        "city": "City",
+        "store": "Store",
+        "visits": "Visits"
+    },
     "indexed": {
         "chart10CardTitle": "Exit rate, bounce rate and page views",
         "table1CardTitle": "Most visited models",
@@ -167,16 +173,24 @@
         "section1Title": "Audiences - Affinity and Market",
         "pdfDownloads": "PDF downloads"
     },
-    "googleBusiness": {
-        "province": "Province",
-        "city": "City",
-        "store": "Store",
-        "visits": "Visits"
+    "omnichat": {
+        "section1Title1": "Chats, Users, Conversions and Conversion rate",
+        "section1Title2": "Conversions and Conversion rate",
+        "section2Title1": "Conversion analysis by category",
+        "chart6CardTitle1": "Conversions by product",
+        "chart7CardTitle1": "Users, Conversions and Conversion rate by date",
+        "totalChats": "total chats",
+        "avgChatsPerDay": "average chats per day",
+        "dedicatedCustomer": "% dedicated to the customer",
+        "chatScore": "chat score",
+        "chatResult": "result"
     },
     "charts": {
         "byCountry": " by Country",
+        "byRetailer": " by Retailer",
         "byCountries": " by Countries",
         "byRetailers": " by Retailers",
+        "byCategory": " por Category",
         "byDevice": " by Devices",
         "byGender": " by Gender",
         "byAge": " by Age",
@@ -226,11 +240,13 @@
         "clicks": "Clicks",
         "name": "Name",
         "origin": "Origin",
+        "audience": "Audience",
         "pageViews": "Page views",
         "pageViewsNumber": "Number of page views",
         "pagesBySessions": "Pages per session",
         "exiteRate": "Exit rate",
         "bounceRate": "Bounce rate",
+        "conversionRate": "Conversion rate",
         "sessionDuration": "Average session duration",
         "productIncomes": "Product revenue",
         "newVisitors": "New visitors",

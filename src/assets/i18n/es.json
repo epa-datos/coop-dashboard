@@ -156,6 +156,12 @@
         "chart8CardTitle": "Cantidad por tipo de audiencia",
         "chart9CardTitle": "Revenue y AUP por tipo de audiencia"
     },
+    "googleBusiness": {
+        "province": "Provincia",
+        "city": "Ciudad",
+        "store": "Tienda",
+        "visits": "Visitas"
+    },
     "indexed": {
         "chart10CardTitle": "Porcentaje de salidas, rebote y páginas vistas",
         "table1CardTitle": "Modelos más visitados",
@@ -167,16 +173,24 @@
         "section1Title": "Audiencias - Afinidad y Mercado",
         "pdfDownloads": "Descargas PDF"
     },
-    "googleBusiness": {
-        "province": "Provincia",
-        "city": "Ciudad",
-        "store": "Tienda",
-        "visits": "Visitas"
+    "omnichat": {
+        "section1Title1": "Chats, Usuarios, Conversiones y Tasa de conversión",
+        "section1Title2": "Conversiones y Tasa de conversión",
+        "section2Title1": "Análisis de conversión por categoría",
+        "chart6CardTitle1": "Conversiones por producto",
+        "chart7CardTitle1": "Usuarios, Conversiones y Tasa de conversión por fecha",
+        "totalChats": "total chats",
+        "avgChatsPerDay": "promedio de chats por día",
+        "dedicatedCustomer": "% dedicado al cliente",
+        "chatScore": "calificación del chat",
+        "chatResult": "resultado"
     },
     "charts": {
         "byCountry": " por País",
+        "byRetailer": " por Retailer",
         "byCountries": " por Países",
         "byRetailers": " por Retailers",
+        "byCategory": " por Categoría",
         "byDevice": " por Dispositivos",
         "byGender": " por Género",
         "byAge": " por Edad",
@@ -226,11 +240,13 @@
         "clicks": "Clicks",
         "name": "Nombre",
         "origin": "Origen",
+        "audience": "Audiencia",
         "pageViews": "Páginas vistas",
         "pageViewsNumber": "Número de páginas vistas",
         "pagesBySessions": "Páginas por sesión",
         "exiteRate": "Porcentaje de salidas",
         "bounceRate": "Porcentaje de rebote",
+        "conversionRate": "Tasa de conversión",
         "sessionDuration": "Duración media de la sesión",
         "productIncomes": "Ingresos del producto",
         "newVisitors": "Nuevos visitantes",
