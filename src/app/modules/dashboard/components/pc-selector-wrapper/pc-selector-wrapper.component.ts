@@ -2,8 +2,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { KpiCard } from 'src/app/models/kpi';
+import { TranslationsService } from 'src/app/services/translations.service';
 import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
-import { convertMonthToString, convertWeekdayToString } from 'src/app/tools/functions/data-convert';
 import { strTimeFormat } from 'src/app/tools/functions/time-format';
 import { FiltersStateService } from '../../services/filters-state.service';
 import { PcSelectorService } from '../../services/pc-selector.service';
@@ -120,12 +120,19 @@ export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
   chartsInitLoad: boolean = true;
 
   requestInfoSub: Subscription;
+  translateSub: Subscription;
 
   constructor(
     private filtersStateService: FiltersStateService,
     private pcSelectorService: PcSelectorService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+    private translationsServ: TranslationsService
+  ) {
+
+    this.translateSub = translate.stream('pcSelector').subscribe(() => {
+      this.loadI18nContent();
+    });
+  }
 
   ngOnInit(): void {
     let loadedFromInit: boolean; // first call to getAllData is from init
@@ -278,6 +285,8 @@ export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
             this.trafficOrConversions[metric.name] = resp;
           }
 
+          this.loadi18nCharts(metric.name);
+
           reqStatusObj.reqStatus = 2;
         },
         error => {
@@ -296,7 +305,7 @@ export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
         const newMonthsObj = {};
         for (let item in months) {
           const date = item.split('-');
-          const dateStrFormat = `${convertMonthToString(date[1])} ${date[0]}`;
+          const dateStrFormat = `${this.translationsServ.convertMonthToString(date[1])} ${date[0]}`;
 
           const obj = months[item];
           newMonthsObj[dateStrFormat] = obj;
@@ -336,29 +345,37 @@ export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
       this.pcSelectorService.getDataByMetric(this.levelPage.latam, metricType, subMetric.subMetricType).subscribe(
         (resp: any[]) => {
 
-          if (subMetric.name === 'device') {
-            const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp);
-            this.audience = { ...this.audience, desktop, mobile };
+          switch (subMetric.name) {
+            case 'device':
+              const { desktop, mobile }: any = disaggregatePictorialData('Desktop', 'Mobile', resp);
+              this.audience = { ...this.audience, desktop, mobile };
+              break;
 
-          } else if (subMetric.name === 'gender') {
-            const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp);
+            case 'gender':
+              const { hombre, mujer }: any = disaggregatePictorialData('Hombre', 'Mujer', resp);
 
-            hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
-            mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
+              hombre.length > 0 && (hombre[1].name = this.translate.instant('others.men'));
+              mujer.length > 0 && (mujer[1].name = this.translate.instant('others.women'));
 
-            this.audience = { ...this.audience, men: hombre, women: mujer };
+              this.audience = { ...this.audience, men: hombre, women: mujer };
+              break;
 
-          } else if (subMetric.name === 'weekdayAndHour') {
-            this.audience[subMetric.name] = resp.map(item => {
-              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
-            });
-          } else if (subMetric.name === 'weekday') {
-            resp = resp.sort((a, b) => (a.weekday > b.weekday ? -1 : 1));
-            this.audience[subMetric.name] = resp.map(item => {
-              return { ...item, weekdayName: convertWeekdayToString(item.weekday) }
-            });
-          } else {
-            this.audience[subMetric.name] = resp;
+            case 'weekdayAndHour':
+              this.audience[subMetric.name] = resp.map(item => {
+                return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+              });
+              break;
+
+            case 'weekday':
+              resp = resp.sort((a, b) => (a.weekday > b.weekday ? -1 : 1));
+              this.audience[subMetric.name] = resp.map(item => {
+                return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+              });
+              break;
+
+            default:
+              this.audience[subMetric.name] = resp;
+              break;
           }
 
           reqStatusObj.reqStatus = 2;
@@ -405,7 +422,59 @@ export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
+  loadI18nContent(metricName?: string) {
+    if (!metricName) {
+      this.kpis[0].title = this.translate.instant('general.users');
+      this.kpis[1].title = this.translate.instant('general.newUsers');
+      this.kpis[2].title = this.translate.instant('general.sessionDuration');
+      this.kpis[3].title = this.translate.instant('general.conversions');
+      this.kpis[4].title = this.translate.instant('general.conversionRate');
+    }
+
+    this.loadi18nCharts(metricName);
+  }
+
+  loadi18nCharts(metricName?: string) {
+    if (this.audience['men']?.length > 0) {
+      this.audience['men'][1].name = this.translate.instant('others.men');
+    }
+
+    if (this.audience['women']?.length > 0) {
+      this.audience['women'][1].name = this.translate.instant('others.women');
+    }
+
+    this.audience['weekdayAndHour'] = this.audience['weekdayAndHour']?.map(item => {
+      return { ...item, weekdayName: this.translationsServ.convertWeekdayToString(item.weekday) }
+    });
+
+    if (!metricName || metricName === 'exitRate') {
+      this.trafficOrConversions['exitRate'] = this.trafficOrConversions['exitRate']?.map(item => {
+        item.category = item.category === 'Abandona' ? this.translate.instant('pcSelector.leave') : this.translate.instant('pcSelector.dontLeave');
+        return item;
+      });
+    }
+
+    if (!metricName || metricName === 'useRate') {
+      this.trafficOrConversions['useRate'] = this.trafficOrConversions['useRate']?.map(item => {
+        item.category = item.category === 'Utiliza' ? this.translate.instant('pcSelector.use') : this.translate.instant('pcSelector.dontUse');
+        return item;
+      });
+    }
+
+    if (!metricName || metricName === 'exitRateByStep') {
+      this.trafficOrConversions['exitRateByStep'] = this.trafficOrConversions['exitRateByStep']?.map(item => {
+        if (item.name.includes('Pregunta')) {
+          item.name = item.name.replace('Pregunta', this.translate.instant('pcSelector.question'));
+        } else {
+          item.name = this.translate.instant('pcSelector.finish');
+        }
+        return item;
+      });
+    }
+  }
+
   ngOnDestroy() {
     this.requestInfoSub?.unsubscribe();
+    this.translateSub?.unsubscribe();
   }
 }
