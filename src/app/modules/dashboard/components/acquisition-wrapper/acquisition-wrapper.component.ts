@@ -182,9 +182,21 @@ export class AcquisitionWrapperComponent implements OnInit, OnDestroy {
   }
 
   loadi18ntoUsers() {
-    if (this.users.length > 0 && this.selectedTab1 === 1) {
-      const salesItem = this.users.find(item => item.name === 'Ventas');
-      salesItem.name = this.translate.instant('general.sales');
+    console.log('users', this.users)
+    if (this.users.length > 0) {
+
+      this.users = this.users.map(item => {
+
+        if (item.name === 'Ventas') {
+          item.name = this.translate.instant('general.sales');
+        }
+
+        if (item.name === 'others') {
+          item.name = this.translate.instant('general.others').toLowerCase();
+        }
+
+        return item;
+      });
     }
   }
 
