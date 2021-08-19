@@ -29,10 +29,10 @@
                         {{ 'general.revenueVsAup' | translate }}
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" [hidden]="true">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab1 === 3}"
                         (click)="selectedTab1 = 3; !usersAndConv && getUsersOrRevenuePromise('conversions-vs-users')">
-                        Conversion Rate
+                        {{ 'general.conversionRate' |translate }}
                     </a>
                 </li>
             </ul>
@@ -45,7 +45,7 @@
                 <ng-container [ngSwitch]="selectedTab1">
                     <span class="h4" *ngSwitchCase="1">{{ 'general.usersVsSales' | translate }}</span>
                     <span class="h4" *ngSwitchCase="2">{{ 'general.revenueVsAup' |translate }}</span>
-                    <span class="h4" *ngSwitchCase="3">Conversion Rate</span>
+                    <span class="h4" *ngSwitchCase="3">{{ 'general.conversionRate' |translate }}</span>
                 </ng-container>
             </div>
             <div class="card-body">
@@ -71,8 +71,8 @@
 <div class="row mt-5">
     <div class="col-12">
         <div class="mb-3">
-            <span class="h3" *ngIf="!levelPage.retailer">{{ 'omnichat.section1Title1' | translate }}</span>
-            <span class="h3" *ngIf="levelPage.retailer">{{ 'omnichat.section1Title2' | translate }}</span>
+            <span class="h3" *ngIf="!levelPage.retailer">{{ 'omnichat.section1Title1Prov' | translate }}</span>
+            <span class="h3" *ngIf="levelPage.retailer">{{ 'omnichat.section1Title2Prov' | translate }}</span>
         </div>
     </div>
 
@@ -91,7 +91,7 @@
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 3}"
                         (click)="getDataByLevel('sales')">{{ 'general.conversions' | translate }}</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" [hidden]="true">
                     <a class="nav-link p-2" [ngClass]="{'active': selectedTab2 === 4}"
                         (click)="getDataByLevel('conversion-rate')">{{ 'general.conversionRate' | translate }}</a>
                 </li>
@@ -150,7 +150,7 @@
 
     <!-- categories -->
     <div *ngIf="selectedTab2 > 2 || levelPage.retailer" class="col-12 col-lg-4 mt-4"
-        [ngClass]="{ 'col-lg-6' : !levelPage.latam }">
+        [ngClass]="{ 'col-lg-6' : !levelPage.latam, 'col-lg-12': levelPage.retailer}">
         <div class="card height-fluid">
             <div class="card-header h4">
                 <ng-container *ngIf="!levelPage.retailer">
@@ -176,7 +176,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="levelPage.retailer" class="col-12 col-lg-6 mt-4">
+    <div *ngIf="levelPage.retailer" class="col-12 col-lg-6 mt-4" [hidden]="true">
         <div class="card height-fluid">
             <div class="card-header">
                 <span class="h4">
@@ -231,7 +231,7 @@
             <div class="col-12 mt-4">
                 <div class="card height-fluid">
                     <div class="card-header">
-                        <span class="h4">{{ 'omnichat.chart7CardTitle1' | translate }}</span>
+                        <span class="h4">{{ 'omnichat.chart7CardTitle1Prov' | translate }}</span>
                     </div>
                     <div class="card-body">
                         <div class="chart-legend mt-0 mb-2">
@@ -243,16 +243,17 @@
                                 <div class="legend-square color-2"></div>
                                 <div class="legend-label">{{ 'general.conversions' | translate }}</div>
                             </div>
-                            <div class="legend-container ml-3">
+                            <div class="legend-container ml-3" [hidden]="true">
                                 <div class="legend-square color-3"></div>
                                 <div class="legend-label">{{ 'general.conversionRate' | translate }}</div>
                             </div>
                         </div>
                         <app-chart-bar-group [data]="usersSalesAndCR" name="omnichat-users-transactions-rate"
-                            height="325px" valueBar1="users" valueBar2="transactions" valueLine1="conversion_rate"
+                            height="325px" valueBar1="users" valueBar2="transactions"
                             [valueNameBar1]="'general.users' | translate"
                             [valueNameBar2]="'general.conversions' | translate" valueFormatLine1="%"
                             [status]="usersSalesAndCRReqStatus">
+                            <!-- valueLine1="conversion_rate" -->
                         </app-chart-bar-group>
                     </div>
                 </div>
