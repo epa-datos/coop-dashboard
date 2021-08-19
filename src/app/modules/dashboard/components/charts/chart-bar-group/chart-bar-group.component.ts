@@ -111,27 +111,29 @@ export class ChartBarGroupComponent implements OnInit, AfterViewInit, OnDestroy 
     hoverState.properties.fillOpacity = 1;
 
     // second value axis for valueLine1
-    let valueAxis2 = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis2.renderer.opposite = true;
-    valueAxis2.syncWithAxis = valueAxis;
-    valueAxis2.tooltip.disabled = true;
-    valueAxis2.renderer.labels.template.fontSize = 12;
-    valueAxis2.renderer.labels.template.adapter.add('text', (text) => {
-      return `${text}${this.valueFormatLine1 ? this.valueFormatLine1 : ''}`;
-    });
+    if (this.valueLine1) {
+      let valueAxis2 = chart.yAxes.push(new am4charts.ValueAxis());
+      valueAxis2.renderer.opposite = true;
+      valueAxis2.syncWithAxis = valueAxis;
+      valueAxis2.tooltip.disabled = true;
+      valueAxis2.renderer.labels.template.fontSize = 12;
+      valueAxis2.renderer.labels.template.adapter.add('text', (text) => {
+        return `${text}${this.valueFormatLine1 ? this.valueFormatLine1 : ''}`;
+      });
 
-    // valueLine1 line series
-    let lineSeries = chart.series.push(new am4charts.LineSeries());
-    lineSeries.tooltipText = `{valueY}${this.valueFormatLine1 ? this.valueFormatLine1 : ''}`;
-    lineSeries.dataFields.categoryX = 'category';
-    lineSeries.dataFields.valueY = this.valueLine1;
-    lineSeries.yAxis = valueAxis2;
-    lineSeries.bullets.push(new am4charts.CircleBullet());
-    lineSeries.stroke = am4core.color('#FCD713');
-    lineSeries.strokeOpacity = 0.8;
-    lineSeries.fill = lineSeries.stroke;
-    lineSeries.strokeWidth = 2;
-    lineSeries.snapTooltip = true;
+      // valueLine1 line series
+      let lineSeries = chart.series.push(new am4charts.LineSeries());
+      lineSeries.tooltipText = `{valueY}${this.valueFormatLine1 ? this.valueFormatLine1 : ''}`;
+      lineSeries.dataFields.categoryX = 'category';
+      lineSeries.dataFields.valueY = this.valueLine1;
+      lineSeries.yAxis = valueAxis2;
+      lineSeries.bullets.push(new am4charts.CircleBullet());
+      lineSeries.stroke = am4core.color('#FCD713');
+      lineSeries.strokeOpacity = 0.8;
+      lineSeries.fill = lineSeries.stroke;
+      lineSeries.strokeWidth = 2;
+      lineSeries.snapTooltip = true;
+    }
 
     // fill adapter, here we save color value to colors object so that each time the item has the same name, the same color is used
     columnSeries.columns.template.adapter.add('fill', ((fill, target) => {
@@ -192,13 +194,15 @@ export class ChartBarGroupComponent implements OnInit, AfterViewInit, OnDestroy 
       }
 
       // add quantity and count to middle data item (line series uses it)
-      let lineSeriesDataIndex = Math.floor(count / 2);
-      tempArray[lineSeriesDataIndex][this.valueLine1] = serieData[this.valueLine1];
-      tempArray[lineSeriesDataIndex].count = count;
-      // push to the final data
-      am4core.array.each(tempArray, function (item) {
-        chartData.push(item);
-      })
+      if (this.valueLine1) {
+        let lineSeriesDataIndex = Math.floor(count / 2);
+        tempArray[lineSeriesDataIndex][this.valueLine1] = serieData[this.valueLine1];
+        tempArray[lineSeriesDataIndex].count = count;
+        // push to the final data
+        am4core.array.each(tempArray, function (item) {
+          chartData.push(item);
+        })
+      }
 
       // create range (the additional label at the bottom)
       let range = categoryAxis.axisRanges.create();

@@ -175,10 +175,13 @@
     },
     "omnichat": {
         "section1Title1": "Chats, Users, Conversions and Conversion rate",
+        "section1Title1Prov": "Chats, Users and Conversions",
         "section1Title2": "Conversions and Conversion rate",
+        "section1TitleProv": "Conversions",
         "section2Title1": "Conversion analysis by category",
         "chart6CardTitle1": "Conversions by product",
         "chart7CardTitle1": "Users, Conversions and Conversion rate by date",
+        "chart7CardTitle1Prov": "Users, Conversions by date",
         "totalChats": "total chats",
         "avgChatsPerDay": "average chats per day",
         "dedicatedCustomer": "% dedicated to the customer",

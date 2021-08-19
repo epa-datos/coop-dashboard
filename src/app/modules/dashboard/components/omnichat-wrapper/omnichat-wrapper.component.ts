@@ -103,14 +103,14 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       icon: 'fas fa-shopping-basket',
       iconBg: '#a77dcc'
     },
-    {
-      title: 'tasa de conversión',
-      name: 'conversion_rate',
-      value: 0,
-      format: 'percentage',
-      icon: 'fas fa-percentage',
-      iconBg: '#fbc001'
-    },
+    // {
+    //   title: 'tasa de conversión',
+    //   name: 'conversion_rate',
+    //   value: 0,
+    //   format: 'percentage',
+    //   icon: 'fas fa-percentage',
+    //   iconBg: '#fbc001'
+    // },
     {
       title: 'revenue',
       name: 'revenue',
@@ -450,7 +450,8 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
           const dateStrFormat = `${this.translationsServ.convertMonthToString(date[1])} ${date[0]}`;
 
           const obj = months[item];
-          newMonthsObj[dateStrFormat] = obj;
+          // newMonthsObj[dateStrFormat] = obj;
+          newMonthsObj[dateStrFormat] = { users: obj.users, transactions: obj.transactions };
         }
 
         this.usersSalesAndCR = newMonthsObj;
@@ -589,7 +590,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
     this.kpis[5].title = this.translate.instant('omnichat.chatScore');
     this.kpis[6].title = this.translate.instant('general.users');
     this.kpis[7].title = this.translate.instant('general.conversions');
-    this.kpis[8].title = this.translate.instant('general.conversionRate');
+    // this.kpis[8].title = this.translate.instant('general.conversionRate');
 
     this.kpis[5].subKpis[0].title = this.translate.instant('omnichat.chatResult');
 

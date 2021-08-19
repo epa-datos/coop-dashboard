@@ -407,5 +407,10 @@ a:active{
 
 .chart {
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
+
+  @media print {
+    overflow: hidden;
+  }
 }
+
