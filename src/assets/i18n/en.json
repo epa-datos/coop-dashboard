@@ -291,6 +291,7 @@
         "men": "Men",
         "women": "Women",
         "years": "years",
+        "total": "total",
         "multSelection": "Ctrl + click for multiple selection",
         "days": {
             "mon": "Mon",

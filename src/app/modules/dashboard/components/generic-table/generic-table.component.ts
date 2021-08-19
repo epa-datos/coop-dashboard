@@ -104,6 +104,10 @@ export class GenericTableComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  getTotal(columnName: string) {
+    return this.tableData?.data?.map(i => i[columnName])?.reduce((acc, value) => acc + value, 0);
+  }
+
   ngOnDestroy() {
     this.langSub?.unsubscribe();
   }
