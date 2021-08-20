@@ -1,6 +1,6 @@
 <div class="row mt-4">
     <div class="col-12">
-        <p class="h2 mb-5 text-xl">Mi Perfil</p>
+        <p class="h2 mb-5 text-xl">{{ 'userProfile.profile' | translate }}</p>
     </div>
 </div>
 
@@ -39,18 +39,18 @@
 
                             <!-- invalid file -->
                             <small *ngIf="file?.status === 'invalid'" class="text-danger">
-                                Formato de imágen inválido <br>
-                                (debe de ser un .png, .jpg o .jpeg)
+                                {{ 'userProfile.invalidFormat' | translate }} <br>
+                                {{ 'userProfile.formatSuggestions' | translate }}
                             </small>
 
                             <!-- uploading error -->
                             <small *ngIf="file?.status === 'failed'" class="text-danger">
-                                Error al subir la imagen
+                                {{ 'userProfile.uploadErrorMsg' | translate }}
                             </small>
 
                             <!-- uploading success -->
                             <small *ngIf="file?.status === 'loaded'" class="text-success">
-                                Imagen de perfil actualizada
+                                {{ 'userProfile.uploadSuccessMsg' | translate }}
                             </small>
                         </div>
 
@@ -60,14 +60,14 @@
                                     (change)="onFileSelected($event.target.files)">
                                 <button class="btn btn-primary" (click)="fileInput.click()">
                                     <i class="fas fa-camera mr-2"></i>
-                                    Nueva foto de perfil
+                                    {{ 'userProfile.newPhoto' | translate }}
                                 </button>
                             </ng-container>
                             <ng-container *ngIf="file && file?.status !== 'invalid' && file?.status !== 'loaded'">
                                 <button class="btn btn-primary" (click)="uploadImage()"
                                     [disabled]="file?.status === 'loading'">
                                     <i class="fas fa-save mr-2"></i>
-                                    Guardar foto de perfil
+                                    {{ 'userProfile.savePhoto' | translate }}
                                 </button>
                             </ng-container>
                         </div>
@@ -84,49 +84,57 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group mb-3">
-                                    <label class="form-control-label" for="input-name">Apellido</label>
+                                    <label class="form-control-label" for="input-name">
+                                        {{ 'userProfile.name' | translate }}
+                                    </label>
 
                                     <div class="input-group input-group-alternative"
                                         [ngClass]="{'is-invalid': !name.valid && name.touched || !name.valid && name.touched}">
                                         <input [formControl]="name" id="input-name" class="form-control"
-                                            placeholder="Nombre" type="text" autocomplete="new-name" disabled>
+                                            [placeholder]="'userProfile.name' | translate" type="text"
+                                            autocomplete="new-name" disabled>
                                     </div>
 
                                     <small class="text-danger"
                                         *ngIf="!name.valid && name.touched || !name.valid && name.touched">
-                                        Ingresa un nombre válido.
+                                        {{ 'userProfile.invalidName' | translate }}
                                     </small>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group mb-3">
-                                    <label class="form-control-label" for="input-last-name">Apellido</label>
+                                    <label class="form-control-label" for="input-last-name">
+                                        {{ 'userProfile.lastName' | translate }}
+                                    </label>
 
                                     <div class="input-group input-group-alternative"
                                         [ngClass]="{'is-invalid': !lastName.valid && lastName.touched || !lastName.valid && lastName.touched}">
                                         <input [formControl]="lastName" id="input-last-name" class="form-control"
-                                            placeholder="Apellido" type="text" autocomplete="new-last-name" disabled>
+                                            [placeholder]="'userProfile.lastName' | translate" type="text"
+                                            autocomplete="new-last-name" disabled>
                                     </div>
 
                                     <small class="text-danger"
                                         *ngIf="!lastName.valid && lastName.touched || !lastName.valid && lastName.touched">
-                                        Ingresa un apellido válido.
+                                        {{ 'userProfile.invalidLastName' | translate }}
                                     </small>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-email">Email address</label>
+                                    <label class="form-control-label" for="input-email">
+                                        {{ 'userProfile.email' | translate }}
+                                    </label>
 
                                     <div class="input-group input-group-alternative"
                                         [ngClass]="{'is-invalid': !email.valid && email.touched || !email.valid && email.touched}">
                                         <input [formControl]="email" class="form-control"
-                                            placeholder="Correo electrónico" type="email" disabled>
+                                            [placeholder]="'userProfile.email' | translate" type="email" disabled>
                                     </div>
 
                                     <small class="text-danger"
                                         *ngIf="!email.valid && email.touched || !email.valid && email.touched">
-                                        Ingresa un correo electrónico válido.
+                                        {{ 'userProfile.invalidEmail' | translate }}
                                     </small>
                                 </div>
                             </div>
