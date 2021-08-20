@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { AUDIENCES, MEDIUMS, SOURCES } from 'src/app/tools/constants/filters';
 import { FiltersStateService } from '../../services/filters-state.service';
 
@@ -9,7 +11,7 @@ import { FiltersStateService } from '../../services/filters-state.service';
   templateUrl: './retail-filters.component.html',
   styleUrls: ['./retail-filters.component.scss']
 })
-export class RetailFiltersComponent implements OnInit {
+export class RetailFiltersComponent implements OnInit, OnDestroy {
 
   sourceList: any[] = SOURCES.filter(item => item.id !== 'banner' && item.id !== 'institucional');
   mediumList: any[] = MEDIUMS;
@@ -36,14 +38,22 @@ export class RetailFiltersComponent implements OnInit {
   mediums: AbstractControl;
   audiences: AbstractControl;
 
+  translateSub: Subscription;
+
   @ViewChild('allSelectedSources') private allSelectedSources: MatOption;
   @ViewChild('allSelectedMediums') private allSelectedMediums: MatOption;
   @ViewChild('allSelectedAudiences') private allSelectedAudiences: MatOption;
 
   constructor(
     private fb: FormBuilder,
-    private filtersStateService: FiltersStateService
-  ) { }
+    private filtersStateService: FiltersStateService,
+    private translate: TranslateService
+  ) {
+
+    this.translateSub = translate.stream('filters').subscribe(() => {
+      this.loadI18nContent();
+    });
+  }
 
   async ngOnInit() {
     this.form = this.fb.group({
@@ -207,6 +217,18 @@ export class RetailFiltersComponent implements OnInit {
 
 
     this.filtersStateService.retailFiltersChange();
+  }
+
+  loadI18nContent() {
+    this.mediumList = this.mediumList.map(item => {
+      item.id === 'institucional' && (item.name = this.translate.instant('general.institutional').toLowerCase());
+      item.id === 'others' && (item.name = this.translate.instant('general.others').toLowerCase());
+      return item;
+    });
+  }
+
+  ngOnDestroy() {
+    this.translateSub?.unsubscribe();
   }
 
 }
