@@ -217,6 +217,11 @@
         "question": "Questão",
         "finish": "Termina o processo"
     },
+    "campaignComparator": {
+        "firstCampaign": "Primeira campanha",
+        "secondCampaign": "Segunda campanha",
+        "compare": "Comparar"
+    },
     "charts": {
         "byCountry": " por País",
         "byRetailer": " por Retailer",
@@ -256,6 +261,7 @@
         "campaign": "Campanha",
         "period": "Período",
         "traffic": "Tráfego",
+        "conversion": "Conversão",
         "conversions": "Conversões",
         "sales": "Vendas",
         "users": "Usuários",
@@ -273,6 +279,7 @@
         "name": "Nome",
         "origin": "Fonte",
         "audience": "Público",
+        "acquisition": "Aquisição",
         "pageViews": "Número de visualizações de página",
         "pageViewsNumber": "Visualizações de página",
         "pagesBySessions": "Páginas por sessão",
