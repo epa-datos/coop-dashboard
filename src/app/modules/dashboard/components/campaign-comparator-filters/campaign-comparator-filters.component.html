@@ -3,9 +3,9 @@
 
         <!-- RETAILER -->
         <div class="col-12 col-sm-6 mb-4">
-            <mat-select formControlName="retailer" placeholder="Selecciona un Retailer" [(value)]="selectedRetailer"
-                (selectionChange)="retailerChange()" (openedChange)="openedChange('retailer', $event)"
-                disableOptionCentering>
+            <mat-select formControlName="retailer" [placeholder]="'filters.retailerPh' | translate"
+                [(value)]="selectedRetailer" (selectionChange)="retailerChange()"
+                (openedChange)="openedChange('retailer', $event)" disableOptionCentering>
 
                 <!-- search -->
                 <div class="input-group input-group-alternative mb-1">
@@ -39,9 +39,9 @@
 
         <!-- CAMPAIGN -->
         <div class="col-12 col-sm-6 mb-4">
-            <mat-select formControlName="campaign" placeholder="Selecciona un Campaña" [(value)]="selectedCampaign"
-                (selectionChange)="campaignChange()" (openedChange)="openedChange('campaign', $event)"
-                disableOptionCentering>
+            <mat-select formControlName="campaign" [placeholder]="'filters.campaignPh' | translate"
+                [(value)]="selectedCampaign" (selectionChange)="campaignChange()"
+                (openedChange)="openedChange('campaign', $event)" disableOptionCentering>
 
                 <!-- search -->
                 <div class="input-group input-group-alternative mb-1">
