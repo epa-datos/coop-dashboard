@@ -290,9 +290,7 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       selectedCategory = previousCategory ? previousCategory : this.selectedCategories?.[0];
     }
 
-
     this.getStaticDataByMetric();
-
     if (this.selectedTab1 === 3 && preserveSelectedTabs) {
       this.getUsersOrRevenuePromise('conversions-vs-users');
     } else {
@@ -311,8 +309,6 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
 
   getStaticDataByMetric() {
     this.kpisReqStatus = 1;
-
-
 
     this.omnichatService.getDataByMetric(this.levelPage.latam, 'kpis').subscribe(
       (resp: any[]) => {
