@@ -18,6 +18,18 @@
 
 <div class="row mt-5">
     <div class="col-12">
+        <div class="header-info text-right mb-2" *ngIf="!isVisitRate">
+            <div class="info-popover" ngbDropdown>
+                <a ngbDropdownToggle>
+                    <i class="fas fa-info-circle"></i>
+                </a>
+                <div class="content" ngbDropdownMenu>
+                    <p>{{ 'googleBusiness.tableInfoLegend1' | translate }}
+                        <span>{{ 'googleBusiness.tableInfoLegend2' | translate }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
         <app-generic-table [displayedColumns]="locationColumns" [tableData]="locations"
             [tableDataChange]="locations.data">
         </app-generic-table>
