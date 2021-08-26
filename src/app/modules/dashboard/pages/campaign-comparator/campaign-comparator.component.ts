@@ -248,6 +248,17 @@ export class CampaignComparatorComponent implements OnInit, OnDestroy {
   selections: { retailer: any, campaign: any, selection: string }[];
   showComparison: boolean;
 
+  total = {
+    camp1: {
+      conversions: 0,
+      revenue: 0
+    },
+    camp2: {
+      conversions: 0,
+      revenue: 0
+    }
+  };
+
   translateSub: Subscription;
 
   constructor(
@@ -273,28 +284,27 @@ export class CampaignComparatorComponent implements OnInit, OnDestroy {
     selection === 2 && (this.validFilters.secondSelection = value);
   }
 
-  compareCampaigns() {
+  async compareCampaigns() {
     this.showComparison = true;
     this.selections = [
       { ...this.firstSelection, selection: 'camp1' },
       { ...this.secondSelection, selection: 'camp2' }
     ];
 
-    this.getKpis();
-    this.getAcquisition();
-    this.getConversion();
+    await this.getKpis();
   }
 
   getKpis() {
     for (let item of this.selections) {
       this.kpisCamps[item.selection].reqStatus = 1;
 
-      this.campaignCompService.getCampKpis(item.retailer.id, item.campaign.id).subscribe(
-        (kpisList: any[]) => {
+      this.campaignCompService.getCampKpis(item.retailer.id, item.campaign.id)
+        .toPromise()
+        .then((kpisList: any[]) => {
           if (!kpisList || kpisList.length < 1) {
             this.clearKpis(item.selection);
             this.kpisCamps[item.selection].reqStatus = 2;
-          };
+          }
 
           const mainKpis = kpisList.filter(kpi => this.kpisLegends1.includes(kpi.string));
 
@@ -326,16 +336,20 @@ export class CampaignComparatorComponent implements OnInit, OnDestroy {
 
           this.kpisCamps[item.selection].kpis = campaignKpis;
           this.loadI18nKpis(this.kpisCamps[item.selection]);
-          this.kpisCamps[item.selection].reqStatus = 2;
+          // this.kpisCamps[item.selection].reqStatus = 2;
 
-        },
-        error => {
+          if (item.selection === 'camp2') {
+            this.getAcquisition();
+          }
+
+        })
+        .catch(error => {
           this.clearKpis(item.selection);
           this.kpisCamps[item.selection].reqStatus = 3;
 
           console.error(`[campaign-comparator.component]: ${error}`);
         }
-      )
+        );
     }
   }
 
@@ -343,24 +357,28 @@ export class CampaignComparatorComponent implements OnInit, OnDestroy {
     for (let item of this.selections) {
       this.acqCamps[item.selection].reqStatus = 1;
 
-      this.campaignCompService.getCampAcquisition(item.retailer.id, item.campaign.id).subscribe(
-        (campaigns: any[]) => {
+      this.campaignCompService.getCampAcquisition(item.retailer.id, item.campaign.id)
+        .toPromise()
+        .then((campaigns: any[]) => {
 
           this.acqCamps[item.selection].data = campaigns.map(item => {
             item.session_duration = strTimeFormat(item.session_duration);
             return { ...item };
           });
 
-          this.acqCamps[item.selection].reqStatus = 2;
+          // this.acqCamps[item.selection].reqStatus = 2;
 
-        },
-        error => {
+          if (item.selection === 'camp2') {
+            this.getConversion();
+          }
+        })
+        .catch(error => {
           this.acqCamps[item.selection].data = [];
           this.acqCamps[item.selection].reqStatus = 3;
 
           console.error(`[campaign-comparator.component]: ${error}`);
         }
-      )
+        );
     }
   }
 
@@ -368,23 +386,53 @@ export class CampaignComparatorComponent implements OnInit, OnDestroy {
     for (let item of this.selections) {
       this.convCamps[item.selection].reqStatus = 1;
 
-      this.campaignCompService.getCampConversion(item.retailer.id, item.campaign.id).subscribe(
-        (conversions: any[]) => {
+      this.campaignCompService.getCampConversion(item.retailer.id, item.campaign.id)
+        .toPromise()
+        .then((conversions: any[]) => {
+          this.total[item.selection].conversions = 0;
+          this.total[item.selection].revenue = 0;
 
-          this.convCamps[item.selection].data = conversions.map(item => {
-            return { ...item, yoy_amount: '-', yoy_product_revenue: '-', yoy_aup: '-' };
+          this.convCamps[item.selection].data = conversions.map(conv => {
+            this.total[item.selection].conversions = this.total[item.selection].conversions + conv.amount;
+            this.total[item.selection].revenue = this.total[item.selection].revenue + conv.product_revenue;
+
+            return { ...conv, yoy_amount: '-', yoy_product_revenue: '-', yoy_aup: '-' };
           });
 
           this.convCamps[item.selection].reqStatus = 2;
 
-        },
-        error => {
+          if (this.convCamps.camp1.reqStatus === 2 && this.convCamps.camp2.reqStatus === 2) {
+            this.updateMetricValues();
+          }
+        })
+        .catch(error => {
           this.convCamps[item.selection].data = [];
           this.convCamps[item.selection].reqStatus = 3;
 
           console.error(`[campaign-comparator.component]: ${error}`);
         }
-      )
+        );
+    }
+  }
+
+  updateMetricValues() {
+    for (const item of this.selections) {
+      if (this.acqCamps[item.selection].data.length === 1) {
+
+        this.kpisCamps[item.selection].kpis[4].value = this.total[item.selection].conversions;
+        this.kpisCamps[item.selection].kpis[5].value = this.total[item.selection].revenue;
+
+        // update cr to 0 i conversions = 0
+        if (this.total[item.selection].conversions === 0) {
+          this.kpisCamps[item.selection].kpis[4].subKpis[0].value = 0;
+        }
+
+        this.acqCamps[item.selection].data[0].amount = this.total[item.selection].conversions;
+        this.acqCamps[item.selection].data[0].income = this.total[item.selection].revenue;
+      }
+
+      this.kpisCamps[item.selection].reqStatus = 2;
+      this.acqCamps[item.selection].reqStatus = 2;
     }
   }
 
