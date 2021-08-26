@@ -8,6 +8,7 @@ import { disaggregatePictorialData } from 'src/app/tools/functions/chart-data';
 import { TranslateService } from '@ngx-translate/core';
 import { KpiCard } from 'src/app/models/kpi';
 import { TranslationsService } from 'src/app/services/translations.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-omnichat-wrapper',
@@ -215,11 +216,15 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   requestInfoSub: Subscription;
   translateSub: Subscription;
 
+  userRole: string;
+
   constructor(
     private omnichatService: OmnichatService,
     private filtersStateService: FiltersStateService,
     private translate: TranslateService,
-    private translationsServ: TranslationsService
+    private translationsServ: TranslationsService,
+    private userService: UserService
+
   ) {
 
     this.translateSub = translate.stream('omnichat').subscribe(() => {
@@ -230,6 +235,10 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     let loadedFromInit: boolean; // first call to getAllData is from init
     let firstTimeSub: boolean = true; // first time requestInfoSub listen a change
+
+    // hide average_of_answer_time kpi for users with retailer role
+    this.userRole = this.userService.user.role_name;
+    this.userRole === 'retailer' && this.kpis.splice(2, 1);
 
     // validate if filters are already loaded
     if (this.filtersAreReady()) {
@@ -281,7 +290,9 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
       selectedCategory = previousCategory ? previousCategory : this.selectedCategories?.[0];
     }
 
+
     this.getStaticDataByMetric();
+
     if (this.selectedTab1 === 3 && preserveSelectedTabs) {
       this.getUsersOrRevenuePromise('conversions-vs-users');
     } else {
@@ -299,8 +310,9 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   }
 
   getStaticDataByMetric() {
-
     this.kpisReqStatus = 1;
+
+
 
     this.omnichatService.getDataByMetric(this.levelPage.latam, 'kpis').subscribe(
       (resp: any[]) => {
@@ -583,15 +595,22 @@ export class OmnichatWrapperComponent implements OnInit, OnDestroy {
   loadI18nContent() {
     this.kpis[0].title = this.translate.instant('omnichat.totalChats');
     this.kpis[1].title = this.translate.instant('omnichat.avgChatsPerDay');
-    this.kpis[2].title = this.translate.instant('omnichat.dedicatedCustomer');
-    this.kpis[3].title = this.translate.instant('general.sessionDuration');
-    this.kpis[4].title = this.translate.instant('general.pagesBySessions');
-    this.kpis[5].title = this.translate.instant('omnichat.chatScore');
-    this.kpis[6].title = this.translate.instant('general.users');
-    this.kpis[7].title = this.translate.instant('general.conversions');
-    this.kpis[8].title = this.translate.instant('general.conversionRate');
 
-    this.kpis[5].subKpis[0].title = this.translate.instant('omnichat.chatResult');
+    let i = 2;
+    if (this.userRole !== 'retailer') {
+      this.kpis[i].title = this.translate.instant('omnichat.dedicatedCustomer');
+    } else {
+      i = 1;
+    }
+
+    this.kpis[i + 1].title = this.translate.instant('general.sessionDuration');
+    this.kpis[i + 2].title = this.translate.instant('general.pagesBySessions');
+    this.kpis[i + 3].title = this.translate.instant('omnichat.chatScore');
+    this.kpis[i + 4].title = this.translate.instant('general.users');
+    this.kpis[i + 5].title = this.translate.instant('general.conversions');
+    this.kpis[i + 6].title = this.translate.instant('general.conversionRate');
+
+    this.kpis[i + 3].subKpis[0].title = this.translate.instant('omnichat.chatResult');
 
     this.performanceByCategoryColumns[0].title = this.translate.instant('general.category');
     this.performanceByCategoryColumns[1].title = this.translate.instant('general.amount');
