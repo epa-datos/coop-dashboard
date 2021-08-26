@@ -402,7 +402,7 @@ export class CampaignComparatorComponent implements OnInit, OnDestroy {
           this.convCamps[item.selection].reqStatus = 2;
 
           if (this.convCamps.camp1.reqStatus === 2 && this.convCamps.camp2.reqStatus === 2) {
-            this.updateKpis();
+            this.updateMetricValues();
           }
         })
         .catch(error => {
@@ -415,7 +415,7 @@ export class CampaignComparatorComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateKpis() {
+  updateMetricValues() {
     for (const item of this.selections) {
       if (this.acqCamps[item.selection].data.length === 1) {
 
