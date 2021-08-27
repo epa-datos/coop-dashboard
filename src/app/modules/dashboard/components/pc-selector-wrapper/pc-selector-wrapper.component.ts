@@ -137,6 +137,7 @@ export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     let loadedFromInit: boolean; // first call to getAllData is from init
     let firstTimeSub: boolean = true; // first time requestInfoSub listen a change
+    let reqCounter = 0;
 
     // validate if filters are already loaded
     if (this.filtersAreReady()) {
@@ -146,11 +147,12 @@ export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
       // when dashboard component is loaded for first time
       // (e.g after page refresh or be redirected from other component that doesn't belong to to dashboard module)
       loadedFromInit = true;
+      reqCounter++;
     }
 
     this.requestInfoSub = this.requestInfoChange.subscribe(({ manualChange, selectedSection }) => {
       // avoid repeated call to getAllData()
-      if (loadedFromInit && firstTimeSub && !manualChange) {
+      if (loadedFromInit && firstTimeSub && reqCounter !== 1 && !manualChange) {
         firstTimeSub = false;
         return;
       }
@@ -160,6 +162,7 @@ export class PcSelectorWrapperComponent implements OnInit, OnDestroy {
 
       if (selectedSection === 'pc-selector' && this.filtersAreReady() && !loadedFromInit) {
         this.getAllData(manualChange);
+        reqCounter++;
       }
     });
   }
